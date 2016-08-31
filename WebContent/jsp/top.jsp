@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>无标题文档</title>
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body style="background:url(../../images/topbg.gif) repeat-x;">
+	<header>
+		<div class="topleft">
+			<a href="main.html" target="_parent"><img class="img-logo"
+				src="../../images/logo1.png" title="系统首页" /></a>
+		</div>
+
+		<div class="topright">
+			<ul>
+				<li><span><img src="../../images/help.png" title="帮助"
+						class="helpimg" /></span> <a href="#">帮助</a></li>
+				<li><a href="#">关于</a></li>
+				<li><a href="login.html" target="_parent">退出</a></li>
+			</ul>
+
+			<div class="user">
+				<span>admin</span> <i>消息</i> <b>5</b>
+			</div>
+
+		</div>
+	</header>
