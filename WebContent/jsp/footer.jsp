@@ -1,13 +1,15 @@
-<footer> </footer>
-<script type="text/javascript" src="../../js/lib/jquery-1.9.1.min.js"></script>
+</section>
+<!-- <footer> </footer> -->
+<script type="text/javascript" src="${ctx}/js/lib/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/lib/jquery.json-2.2.min.js"></script>   
 <!-- AngularJS dependences -->
-<script type="text/javascript" src="../../js/lib/angular/angular.js"></script>
-<script type="text/javascript" src="../../js/lib/angular/angular-route.js"></script>
+<script type="text/javascript" src="${ctx}/js/lib/angular/angular.js"></script>
+<script type="text/javascript" src="${ctx}/js/lib/angular/angular-route.js"></script>
 
 
 <script type="text/javascript">
 	$(function() {
-		//顶部导航切换
+		//é¡¶é¨å¯¼èªåæ¢
 		$(".nav li a").click(function() {
 			$(".nav li a.selected").removeClass("selected");
 			$(this).addClass("selected");
@@ -15,7 +17,7 @@
 	});
 
 	$(function() {
-		//导航切换
+		//å¯¼èªåæ¢
 		$(".menuson li").click(function() {
 			$(".menuson li.active").removeClass("active");
 			$(this).addClass("active");

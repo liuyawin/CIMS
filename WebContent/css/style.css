@@ -1,12 +1,15 @@
 ﻿@charset "utf-8";
 
 /* CSS Document */
-
 * {
 	font-size: 9pt;
 	border: 0;
 	margin: 0;
 	padding: 0;
+}
+
+html, body {
+	height: 100%;
 }
 
 body {
@@ -32,25 +35,22 @@ li {
 img {
 	border: 0;
 }
-header{
-	position:relative;
-	overflow:hidden;
+
+header {
+	overflow: hidden;
 }
-dl,
-dt,
-dd,
-span {
+
+dl, dt, dd, span {
 	margin: 0;
 	padding: 0;
 	display: block;
 }
 
-a,
-a:focus {
+a, a:focus {
 	text-decoration: none;
 	color: #000;
 	outline: none;
-	blr: expression(this.onFocus=this.blur());
+	blr: expression(this.onFocus = this.blur ());
 }
 
 a:hover {
@@ -72,7 +72,6 @@ h2 {
 }
 
 /*top.html*/
-
 .header {
 	height: 88px;
 }
@@ -224,11 +223,28 @@ h2 {
 	color: #b8ceda;
 }
 
-
 /*left.html*/
-.leftbar{
-	float:left;
+.containner {
+	zoom: 1;
+	/* overflow: hidden; */
+	padding-left: 187px;
+	position: absolute;
+	top: 88px;
+	bottom: 0px;
+	left:0;
+	right:0;
+	/* width: 100%; */
+	/* min-height:100%; */
 }
+
+.leftbar {
+	width: 187px;
+	float: left;
+	margin-left: -100%;
+	position: relative;
+	left: -187px
+}
+
 .lefttop {
 	background: url(../images/lefttop.gif) repeat-x;
 	height: 40px;
@@ -335,15 +351,12 @@ h2 {
 }
 
 /* main */
-.main{
-	width:100%;
-	margin-left:187px;
-	position:absolute;
-	float:left;
+.main {
+	float: left;
+	width: 100%;
 }
 
 /*right.html*/
-
 .place {
 	height: 40px;
 	background: url(../images/righttop.gif) repeat-x;
@@ -425,7 +438,7 @@ h2 {
 	margin-top: 5px;
 }
 
-.tablelist {	
+.tablelist {
 	width: 100%;
 	clear: both;
 	border-collapse: collapse;
@@ -463,9 +476,7 @@ h2 {
 	padding-left: 3px;
 }
 
-
 /*page*/
-
 .pagin {
 	position: relative;
 	margin-top: 10px;
@@ -512,8 +523,8 @@ h2 {
 	border-top-right-radius: 5px;
 }
 
-.pagin .paginList .paginItem.current,
-.pagin .paginList .paginItem.current a {
+.pagin .paginList .paginItem.current, .pagin .paginList .paginItem.current a
+	{
 	background: #f5f5f5;
 	cursor: default;
 	color: #737373;
@@ -523,8 +534,8 @@ h2 {
 	background: #f5f5f5;
 }
 
-.pagin .paginList .paginItem.more,
-.pagin .paginList .paginItem.more a:hover {
+.pagin .paginList .paginItem.more, .pagin .paginList .paginItem.more a:hover
+	{
 	cursor: default;
 }
 
@@ -548,9 +559,7 @@ h2 {
 	height: 28px;
 }
 
-
 /*index*/
-
 .mainindex {
 	padding: 20px;
 	overflow: hidden;
@@ -669,9 +678,7 @@ h2 {
 	margin-right: 15px;
 }
 
-
 /*default*/
-
 .mainbox {
 	padding: 8px;
 	position: relative;
@@ -790,9 +797,7 @@ h2 {
 	text-align: center;
 }
 
-
 /*form*/
-
 .formbody {
 	padding: 10px 18px;
 }
@@ -881,9 +886,7 @@ h2 {
 	cursor: pointer;
 }
 
-
 /*tip*/
-
 .tip {
 	width: 485px;
 	height: 260px;
@@ -961,8 +964,7 @@ h2 {
 	margin-left: 125px;
 }
 
-.sure,
-.cancel {
+.sure, .cancel {
 	width: 96px;
 	height: 35px;
 	line-height: 35px;
@@ -980,9 +982,7 @@ h2 {
 	font-weight: normal;
 }
 
-
 /*tools*/
-
 .toolsli {
 	clear: both;
 	overflow: hidden;
@@ -1029,9 +1029,7 @@ h2 {
 	display: block;
 }
 
-
 /*error 404*/
-
 .error {
 	background: url(../images/404.png) no-repeat;
 	width: 490px;
@@ -1069,9 +1067,7 @@ h2 {
 	margin-top: 20px;
 }
 
-
 /*computer*/
-
 .comtitle {
 	padding: 20px;
 	clear: both;
@@ -1111,8 +1107,7 @@ h2 {
 	width: 275px;
 	_width: 270px;
 	float: left;
-	margin-right: 10px;
-	px;
+	margin-right: 10px; px;
 	height: 70px;
 	cursor: pointer;
 	margin-bottom: 5px;
@@ -1217,9 +1212,7 @@ h2 {
 	cursor: pointer;
 }
 
-
 /*imglist*/
-
 .imglist {
 	clear: both;
 	overflow: hidden;
@@ -1266,9 +1259,7 @@ h2 {
 	color: #F60;
 }
 
-
 /*imgtable*/
-
 .imgtable {
 	width: 100%;
 	border: solid 1px #cbcbcb;
@@ -1314,9 +1305,7 @@ h2 {
 	background: #e5ebee;
 }
 
-
 /*tab*/
-
 .itab {
 	height: 36px;
 	border-bottom: solid 1px #d0dee5;
@@ -1366,9 +1355,7 @@ h2 {
 	padding-left: 3px;
 }
 
-
 /*class*/
-
 .classlist li {
 	float: left;
 	margin-right: 10px;
@@ -1427,9 +1414,7 @@ h2 {
 	clear: both;
 }
 
-
 /*seachform*/
-
 .seachform {
 	height: 42px;
 }
@@ -1470,23 +1455,24 @@ h2 {
 }
 
 /*new lyy*/
-.img-logo{
-	height:68px;
+.img-logo {
+	height: 68px;
 }
+
 .width20 {
 	width: 20%;
 }
 
-.text-center{
+.text-center {
 	text-align: center;
 }
 
-.div-checkbox{
+.div-checkbox {
 	display: inline-block;
 	float: left;
 	margin-left: 16px;
 }
 
-.div-checkbox input{
+.div-checkbox input {
 	margin-right: 4px;
 }

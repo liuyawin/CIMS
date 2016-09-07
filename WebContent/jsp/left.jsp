@@ -1,10 +1,11 @@
-﻿		<section class="leftbar">
+﻿		
+		<section class="leftbar">
 		<dl class="leftmenu">
 
 			<dd>
 				<div class="title">
 					<!-- <a href="#/test"><span><img src="../../images/leftico01.png" /></span>合同信息管理</a> -->
-					<span><img src="../../images/leftico01.png" /></span>合同信息管理
+					<span><img src="${ctx}/images/leftico01.png" /></span>合同信息管理
 				</div>
 				<ul class="menuson">
 					<li><cite></cite>
@@ -17,7 +18,7 @@
 
 			<dd>
 				<div class="title">
-					<span><img src="../../images/leftico02.png" /></span>执行过程管控
+					<span><img src="${ctx}/images/leftico02.png" /></span>执行过程管控
 				</div>
 				<ul class="menuson">
 					<li><cite></cite>
@@ -34,7 +35,7 @@
 			</dd>
 
 			<dd>
-				<div class="title"><span><img src="../../images/leftico03.png" /></span>合同执行记录管理</div>
+				<div class="title"><span><img src="${ctx}/images/leftico03.png" /></span>合同执行记录管理</div>
 				<ul class="menuson">
 					<li><cite></cite>
 						<a href="#">自定义</a><i></i></li>
@@ -48,7 +49,7 @@
 			</dd>
 
 			<dd>
-				<div class="title"><span><img src="../../images/leftico04.png" /></span>报表统计</div>
+				<div class="title"><span><img src="${ctx}/images/leftico04.png" /></span>报表统计</div>
 				<ul class="menuson">
 					<li><cite></cite>
 						<a href="#">自定义</a><i></i></li>
@@ -63,7 +64,7 @@
 			</dd>
 			
 			<dd>
-				<div class="title"><span><img src="../../images/leftico04.png" /></span>系统权限管理</div>
+				<div class="title"><span><img src="${ctx}/images/leftico04.png" /></span>系统权限管理</div>
 				<ul class="menuson">
 					<li><cite></cite>
 						<a href="#">自定义</a><i></i></li>
