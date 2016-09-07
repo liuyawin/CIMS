@@ -168,9 +168,9 @@ h2 {
 }
 
 .loginuser {
-	width: 299px;
+	width: 253px;
 	height: 48px;
-	background: url(../images/loginuser.png) no-repeat;
+	background: url(../images/loginuser1.png) no-repeat;
 	border: none;
 	line-height: 48px;
 	padding-left: 44px;
@@ -179,9 +179,9 @@ h2 {
 }
 
 .loginpwd {
-	width: 299px;
+	width: 253px;
 	height: 48px;
-	background: url(../images/loginpassword.png) no-repeat;
+	background: url(../images/loginpassword1.png) no-repeat;
 	border: none;
 	line-height: 48px;
 	padding-left: 44px;
@@ -218,4 +218,11 @@ h2 {
 
 .loginbm a:hover {
 	color: #fff;
+}
+
+.loginbox ul li .error-label{
+	padding-left:8px;
+	font-weight: bold;
+	font-size:14px;
+	color:red;
 }
