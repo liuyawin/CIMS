@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class Permission {
 	private Integer perm_id;// ID
 	private Integer perm_rank;// 权限等级,0:无权限，1查看，2添加，3修改，4删除
-	private User user;// 用户外键
+	private Role role;// 用户外键
 	private Module module;// 模块外键
 
 	@Id
@@ -41,13 +41,13 @@ public class Permission {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	public User getUser() {
-		return user;
+	@JoinColumn(name = "role_id")
+	public Role getRole() {
+		return role;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	@ManyToOne
