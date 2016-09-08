@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mvc.entity.User;
+import com.mvc.repository.DepartmentRepository;
 import com.mvc.service.UserService;
 import com.alibaba.fastjson.JSON;
 
@@ -30,7 +31,6 @@ import net.sf.json.JSONObject;
 public class UserController {
 	@Autowired
 	UserService userService;
-
 	// @RequestMapping("/getStaffInfo")
 	// public @ResponseBody JSONObject getStaffInfo(HttpServletRequest req) {
 	// System.out.println("进入controller");
@@ -53,19 +53,21 @@ public class UserController {
 	 * @param map
 	 * @return
 	 */
-	@RequestMapping("/getStaffInfo")
-	public @ResponseBody String addStore(HttpServletRequest request, HttpSession session, ModelMap map) {
-		System.out.println("进入getStaffInfo");
-		User user = new User();
-		System.out.println(request.getParameter("name") + request.getParameter("pwd") + request.getParameter("age"));
-		user.setName(request.getParameter("name"));
-		user.setPwd(request.getParameter("pwd"));
-		user.setAge(Integer.valueOf(request.getParameter("age")));
-		User user2 = userService.save(user);
-		user2.setName("张");
-		System.out.println(user2.getName());
-		return JSON.toJSONString(user2);
-	}
+	// @RequestMapping("/getStaffInfo")
+	// public @ResponseBody String addStore(HttpServletRequest request,
+	// HttpSession session, ModelMap map) {
+	// System.out.println("进入getStaffInfo");
+	// User user = new User();
+	// System.out.println(request.getParameter("name") +
+	// request.getParameter("pwd") + request.getParameter("age"));
+	// user.setName(request.getParameter("name"));
+	// user.setPwd(request.getParameter("pwd"));
+	// user.setAge(Integer.valueOf(request.getParameter("age")));
+	// User user2 = userService.save(user);
+	// user2.setName("张");
+	// System.out.println(user2.getName());
+	// return JSON.toJSONString(user2);
+	// }
 
 	@RequestMapping(value = "/getConByName.do")
 	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {

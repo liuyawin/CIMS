@@ -23,5 +23,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("select count(id) from User u ")
 	public Long countId();
-
 }
