@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -26,7 +28,7 @@ public class User implements Serializable {
 	private Integer user_sex;// 性别，1：女，0：男
 	private String user_tel;// 电话
 	private String user_email;// 邮箱
-	private String user_role;// 职位
+	private Role role;// 职位
 	private Integer user_isdelete;// 员工状态，1：已删除，0：未删除
 
 	@Id
@@ -87,12 +89,14 @@ public class User implements Serializable {
 		this.user_email = user_email;
 	}
 
-	public String getUser_role() {
-		return user_role;
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	public Role getRole() {
+		return role;
 	}
 
-	public void setUser_role(String user_role) {
-		this.user_role = user_role;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public Integer getUser_isdelete() {
