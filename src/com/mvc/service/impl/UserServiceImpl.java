@@ -1,7 +1,5 @@
 package com.mvc.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +29,15 @@ public class UserServiceImpl implements UserService {
 		return userRepository.saveAndFlush(user);
 	}
 
-	@Override
-	public List<User> findAllUser(String name) {
-		return userDao.findAllUser(name);
+	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
+	public Integer isExist(String userNum) {
+		int result = userRepository.countByUserNum(userNum);
+		return result;
+	}
+
+	// 根据userNum查询用户信息
+	public User findByUserNum(String userNum) {
+		return userRepository.findByUserNum(userNum);
 	}
 
 }

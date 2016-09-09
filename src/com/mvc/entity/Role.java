@@ -5,6 +5,7 @@ package com.mvc.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +26,7 @@ public class Role implements Serializable {
 
 	private Integer role_id;
 	private String role_name;
+	private Integer role_state;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,11 +38,20 @@ public class Role implements Serializable {
 		this.role_id = role_id;
 	}
 
+	@Column(length = 32)
 	public String getRole_name() {
 		return role_name;
 	}
 
 	public void setRole_name(String role_name) {
 		this.role_name = role_name;
+	}
+
+	public Integer getRole_state() {
+		return role_state;
+	}
+
+	public void setRole_state(Integer role_state) {
+		this.role_state = role_state;
 	}
 }

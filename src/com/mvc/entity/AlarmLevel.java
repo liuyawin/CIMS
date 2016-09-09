@@ -2,10 +2,13 @@ package com.mvc.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -21,7 +24,7 @@ public class AlarmLevel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer alle_id;// ID
 	private Integer alle_rank;// 报警等级
-	private Integer alle_role;// 角色，0-文书，1-主任，2-副院长，3-院长
+	private Role role;// 角色，0-文书，1-主任，2-副院长，3-院长
 	private Integer alle_days;// 报警间隔
 
 	@Id
@@ -42,19 +45,21 @@ public class AlarmLevel implements Serializable {
 		this.alle_rank = alle_rank;
 	}
 
-	public Integer getAlle_role() {
-		return alle_role;
-	}
-
-	public void setAlle_role(Integer alle_role) {
-		this.alle_role = alle_role;
-	}
-
 	public Integer getAlle_days() {
 		return alle_days;
 	}
 
 	public void setAlle_days(Integer alle_days) {
 		this.alle_days = alle_days;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 }

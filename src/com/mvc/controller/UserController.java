@@ -7,7 +7,9 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,20 +33,21 @@ import net.sf.json.JSONObject;
 public class UserController {
 	@Autowired
 	UserService userService;
-	// @RequestMapping("/getStaffInfo")
-	// public @ResponseBody JSONObject getStaffInfo(HttpServletRequest req) {
-	// System.out.println("进入controller");
-	// // User user = new User();
-	// // user.setName("name");
-	// // user.setPwd("pwd");
-	// // user.setAge(36);
-	// // User user2 = userService.save(user);
-	// // System.out.println(user2.getName());
-	// JSONObject jsonObject = new JSONObject();
-	// jsonObject.put("now", 1);
-	// jsonObject.put("he", 2);
-	// return jsonObject;
-	// }
+
+	@RequestMapping("/getStaffInfo")
+	public @ResponseBody JSONObject getStaffInfo(HttpServletRequest req) {
+		System.out.println("进入controller");
+		// User user = new User();
+		// user.setName("name");
+		// user.setPwd("pwd");
+		// user.setAge(36);
+		// User user2 = userService.save(user);
+		// System.out.println(user2.getName());
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("now", 1);
+		jsonObject.put("he", 2);
+		return jsonObject;
+	}
 
 	/**
 	 * 
@@ -69,10 +72,12 @@ public class UserController {
 	// return JSON.toJSONString(user2);
 	// }
 
-	@RequestMapping(value = "/getConByName.do")
-	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {
-		String name = request.getParameter("cName");
-		List<User> result = userService.findAllUser(name);
-		return JSON.toJSONString(result);
-	}
+	// @RequestMapping(value = "/getConByName.do")
+	// public @ResponseBody String getStores(HttpServletRequest request,
+	// HttpSession session) {
+	// String name = request.getParameter("cName");
+	// List<User> result = userService.findAllUser(name);
+	// return JSON.toJSONString(result);
+	// }
+
 }

@@ -1,7 +1,5 @@
 package com.mvc.service;
 
-import java.util.List;
-
 import com.mvc.entity.User;
 
 /**
@@ -19,9 +17,9 @@ public interface UserService {
 	 */
 	public User save(User user);
 
-	/**
-	 * 
-	 * @return
-	 */
-	public List<User> findAllUser(String name);
+	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
+	public Integer isExist(String userNum);
+
+	// 根据userNum查询用户信息
+	public User findByUserNum(String userNum);
 }
