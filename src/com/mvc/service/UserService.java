@@ -17,4 +17,9 @@ public interface UserService {
 	 */
 	public User save(User user);
 
+	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
+	public Integer isExist(String userNum);
+
+	// 根据userNum查询用户信息
+	public User findByUserNum(String userNum);
 }
