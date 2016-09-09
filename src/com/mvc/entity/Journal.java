@@ -6,6 +6,7 @@ package com.mvc.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,7 +41,7 @@ public class Journal implements Serializable {
 	public void setJour_id(Integer jour_id) {
 		this.jour_id = jour_id;
 	}
-
+	@Column(length = 100)
 	public String getJour_content() {
 		return jour_content;
 	}

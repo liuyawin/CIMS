@@ -3,6 +3,7 @@
  */
 package com.mvc.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,7 +23,6 @@ public class Department {
 
 	private Integer dept_id; // Id
 	private String dept_name; // 部门名称
-	private String dept_remark; // 备注
 	private Integer dept_state;// 部门状态，1表示存在，0表示不存在
 	private Integer dept_pid;// 父ID
 
@@ -36,6 +36,7 @@ public class Department {
 		this.dept_id = dept_id;
 	}
 
+	@Column(length = 32)
 	public String getDept_name() {
 		return dept_name;
 	}
@@ -44,14 +45,7 @@ public class Department {
 		this.dept_name = dept_name;
 	}
 
-	public String getDept_remark() {
-		return dept_remark;
-	}
-
-	public void setDept_remark(String dept_remark) {
-		this.dept_remark = dept_remark;
-	}
-
+	@Column(columnDefinition = "INT default 0")
 	public Integer getDept_state() {
 		return dept_state;
 	}

@@ -6,6 +6,7 @@ package com.mvc.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -48,6 +49,7 @@ public class ProjectStage implements Serializable {
 		this.prst_id = prst_id;
 	}
 
+	@Column(length = 64)
 	public String getPrst_content() {
 		return prst_content;
 	}

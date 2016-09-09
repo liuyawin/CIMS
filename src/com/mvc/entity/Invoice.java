@@ -2,6 +2,7 @@ package com.mvc.entity;
 
 import java.sql.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 public class Invoice {
 	private Integer invo_id;// ID
 	private Integer invo_state;// 任务状态,0:待接收，1:主任审核，2:文书处理，3:已完成
-	private String invo_money;// 金额
+	private Float invo_money;// 金额
 	private String invo_firm;// 业主公司名称
 	private Date invo_stime;// 开始时间
 	private Date invo_etime;// 截止时间
@@ -48,14 +49,15 @@ public class Invoice {
 		this.invo_id = invo_id;
 	}
 
-	public String getInvo_money() {
+	public Float getInvo_money() {
 		return invo_money;
 	}
 
-	public void setInvo_money(String invo_money) {
+	public void setInvo_money(Float invo_money) {
 		this.invo_money = invo_money;
 	}
 
+	@Column(length = 64)
 	public String getInvo_firm() {
 		return invo_firm;
 	}
@@ -80,6 +82,7 @@ public class Invoice {
 		this.invo_etime = invo_etime;
 	}
 
+	@Column(length = 32)
 	public String getInvo_num() {
 		return invo_num;
 	}
@@ -88,6 +91,7 @@ public class Invoice {
 		this.invo_num = invo_num;
 	}
 
+	@Column(length = 64)
 	public String getInvo_name() {
 		return invo_name;
 	}
@@ -128,7 +132,8 @@ public class Invoice {
 		this.invo_atime = invo_atime;
 	}
 
-	public Integer isInvo_isdelete() {
+	@Column(columnDefinition = "INT default 0")
+	public Integer getInvo_isdelete() {
 		return invo_isdelete;
 	}
 
