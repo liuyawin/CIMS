@@ -33,20 +33,21 @@ import net.sf.json.JSONObject;
 public class UserController {
 	@Autowired
 	UserService userService;
-	// @RequestMapping("/getStaffInfo")
-	// public @ResponseBody JSONObject getStaffInfo(HttpServletRequest req) {
-	// System.out.println("进入controller");
-	// // User user = new User();
-	// // user.setName("name");
-	// // user.setPwd("pwd");
-	// // user.setAge(36);
-	// // User user2 = userService.save(user);
-	// // System.out.println(user2.getName());
-	// JSONObject jsonObject = new JSONObject();
-	// jsonObject.put("now", 1);
-	// jsonObject.put("he", 2);
-	// return jsonObject;
-	// }
+
+	@RequestMapping("/getStaffInfo")
+	public @ResponseBody JSONObject getStaffInfo(HttpServletRequest req) {
+		System.out.println("进入controller");
+		// User user = new User();
+		// user.setName("name");
+		// user.setPwd("pwd");
+		// user.setAge(36);
+		// User user2 = userService.save(user);
+		// System.out.println(user2.getName());
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("now", 1);
+		jsonObject.put("he", 2);
+		return jsonObject;
+	}
 
 	/**
 	 * 
