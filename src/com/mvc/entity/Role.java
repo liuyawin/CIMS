@@ -25,6 +25,7 @@ public class Role implements Serializable {
 
 	private Integer role_id;
 	private String role_name;
+	private Integer role_state;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,5 +43,13 @@ public class Role implements Serializable {
 
 	public void setRole_name(String role_name) {
 		this.role_name = role_name;
+	}
+
+	public Integer getRole_state() {
+		return role_state;
+	}
+
+	public void setRole_state(Integer role_state) {
+		this.role_state = role_state;
 	}
 }
