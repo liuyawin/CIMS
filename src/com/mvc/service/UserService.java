@@ -1,7 +1,5 @@
 package com.mvc.service;
 
-import java.util.List;
-
 import com.mvc.entity.User;
 
 /**
@@ -19,9 +17,4 @@ public interface UserService {
 	 */
 	public User save(User user);
 
-	/**
-	 * 
-	 * @return
-	 */
-	public List<User> findAllUser(String name);
 }

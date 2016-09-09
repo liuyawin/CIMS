@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.UserDao;
+import com.mvc.entity.Department;
 import com.mvc.entity.User;
 
 /**
@@ -25,32 +26,37 @@ public class UserDaoImpl implements UserDao {
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
-	/**
-	 * 根据用户名查找用户信息
-	 */
-	public User findByUsername(String name) {
+	// /**
+	// * 对用户进行增加
+	// */
+	// public boolean increaseByContent(Department dept ){
+	// EntityManager em = emf.createEntityManager();
+	// String selectSql = " insert into
+	// cims(user_id,user_email,user_isdelete,user_name,user_num,user_pwd,user_role,user_sex,user_tel)
+	// values('"+dept.getDept_id()+"','"+ dept.getDept_fid() +"','"+
+	// dept.getDept_name() +"','"+ dept.getDept_remark() +"','"+
+	// dept.getDept_state() +"') ";
+	// Query query = em.createNativeQuery(selectSql);
+	// query.executeUpdate();
+	// em.flush();
+	// em.getTransaction().commit();
+	// em.close();
+	// return true;
+	// }
+	// 根据用户id修改状态
+	public boolean updateState(Integer id, Integer user_delete) {
 		EntityManager em = emf.createEntityManager();
-		String selectSql = " select * from  user u where  u.name = :name";
-		Query query = em.createNativeQuery(selectSql, User.class);
-		query.setParameter("name", name);
-		List<User> list = query.getResultList();
-		em.close();
-		if (list == null || list.isEmpty()) {
-			return null;
+		try {
+			String selectSql = " update dept set 'user_delete' = :user_delete  where user_id =:user_id ";
+			Query query = em.createNativeQuery(selectSql);
+			query.setParameter("user_delete", user_delete);
+			query.setParameter("user_id", id);
+			query.executeUpdate();
+			em.flush();
+			em.getTransaction().commit();
+		} finally {
+			em.close();
 		}
-		return list.get(0);
-	}
-
-	/**
-	 * 查找所有用户
-	 */
-	public List<User> findAllUser(String name) {
-		EntityManager em = emf.createEntityManager();
-		String selectSql = "select * from user where name like '%" + name + "%' ";
-
-		Query query = em.createNativeQuery(selectSql, User.class);
-		List<User> list = query.getResultList();
-		em.close();
-		return list;
+		return true;
 	}
 }

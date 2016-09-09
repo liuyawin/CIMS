@@ -1,7 +1,5 @@
 package com.mvc.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +27,6 @@ public class UserServiceImpl implements UserService {
 	 */
 	public User save(User user) {
 		return userRepository.saveAndFlush(user);
-	}
-
-	@Override
-	public List<User> findAllUser(String name) {
-		return userDao.findAllUser(name);
 	}
 
 }
