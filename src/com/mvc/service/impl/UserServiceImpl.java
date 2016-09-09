@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// 根据userNum查询用户信息
-	public User findByUserNum(String userNum) {
-		return userRepository.findByUserNum(userNum);
+	public User findByUserNum(String user_num) {
+		return userRepository.findByUserNum(user_num);
 	}
 
 }

@@ -23,11 +23,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("select u from User u where user_isdelete=0 ")
 	public List<User> findAlls();
 
+	//
 	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
-	@Query("select count(id) from User u where user_num = :user_num and status==0")
-	public Integer countByUserNum(@Param("userNum") String user_num);
+	@Query("select count(id) from User u where user_num = :user_num and status=0")
+	public Integer countByUserNum(@Param("user_num") String user_num);
 
 	// 根据userNum查询用户信息
-	@Query("select u from User u where user_num = :userNum")
-	public User findByUserNum(@Param("userNum") String userNum);
+	@Query("select u from User u where user_num = :user_num")
+	public User findByUserNum(@Param("user_num") String user_num);
 }
