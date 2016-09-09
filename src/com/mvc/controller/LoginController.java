@@ -36,7 +36,7 @@ public class LoginController {
 	 */
 	@RequestMapping("/toLoginPage.do")
 	public String contractInformationPage() {
-		return "contractInformation/index";
+		return "login";
 	}
 
 	/**
@@ -48,9 +48,10 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping("/checkUserName.do")
-	public @ResponseBody Integer checkUserName(HttpServletRequest request, HttpSession session, ModelMap map) {
+	public @ResponseBody Long checkUserName(HttpServletRequest request, HttpSession session, ModelMap map) {
 		String userNum = request.getParameter("userName");
-		int result = userService.isExist(userNum);
+		Long result = userService.isExist(userNum);
+		System.out.println(result);
 		return result;
 	}
 

@@ -6,7 +6,7 @@ var $pwdInput = $("#password");
 $pwdInput.on('click',function(){
 	var $userName = $nameInput.val();
 	$.ajax({
-        url: "login/checkUserName.do",
+        url: "/CIMS/login/checkUserName.do",
         data: {"username": $userName},
         type: "POST"
     }).done(function (data) {
@@ -39,7 +39,7 @@ $loginBtn.on('click', function(event) {
 		console.log($password);
 		console.log($isRemember);
 		$.ajax({
-			url: "login/loginValidate.do",
+			url: "/CIMS/login/loginValidate.do",
         	data: {
         		"userName"  : $username,
         		"password"  : $password,
