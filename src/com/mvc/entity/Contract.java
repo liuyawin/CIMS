@@ -5,6 +5,7 @@ package com.mvc.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,7 +30,7 @@ public class Contract {
 	private Integer cont_initiation;// 是否立项，0:未立项，1:已立项(默认已立项)
 	private String cont_project;// 项目名称
 	private String cont_pnum;// 项目编码
-	private String cont_type;// 合同的类型，0:规划，1:可行性，2:施工图，3:评估，4:其他
+	private Integer cont_type;// 合同的类型，0:规划，1:可行性，2:施工图，3:评估，4:其他
 	private Date cont_stime;// 合同签订时间
 	private String cont_saddress;// 合同签订地点
 	private Float cont_money;// 合同金额
@@ -67,6 +68,7 @@ public class Contract {
 		this.cont_id = cont_id;
 	}
 
+	@Column(length = 32)
 	public String getCont_onum() {
 		return cont_onum;
 	}
@@ -75,6 +77,7 @@ public class Contract {
 		this.cont_onum = cont_onum;
 	}
 
+	@Column(length = 32)
 	public String getCont_cnum() {
 		return cont_cnum;
 	}
@@ -83,6 +86,7 @@ public class Contract {
 		this.cont_cnum = cont_cnum;
 	}
 
+	@Column(length = 64)
 	public String getCont_name() {
 		return cont_name;
 	}
@@ -99,6 +103,7 @@ public class Contract {
 		this.cont_initiation = cont_initiation;
 	}
 
+	@Column(length = 64)
 	public String getCont_project() {
 		return cont_project;
 	}
@@ -107,6 +112,7 @@ public class Contract {
 		this.cont_project = cont_project;
 	}
 
+	@Column(length = 32)
 	public String getCont_pnum() {
 		return cont_pnum;
 	}
@@ -115,11 +121,11 @@ public class Contract {
 		this.cont_pnum = cont_pnum;
 	}
 
-	public String getCont_type() {
+	public Integer getCont_type() {
 		return cont_type;
 	}
 
-	public void setCont_type(String cont_type) {
+	public void setCont_type(Integer cont_type) {
 		this.cont_type = cont_type;
 	}
 
@@ -131,6 +137,7 @@ public class Contract {
 		this.cont_stime = cont_stime;
 	}
 
+	@Column(length = 64)
 	public String getCont_saddress() {
 		return cont_saddress;
 	}
@@ -155,6 +162,7 @@ public class Contract {
 		this.cont_hasproxy = cont_hasproxy;
 	}
 
+	@Column(length = 64)
 	public String getCont_client() {
 		return cont_client;
 	}
@@ -163,6 +171,7 @@ public class Contract {
 		this.cont_client = cont_client;
 	}
 
+	@Column(length = 64)
 	public String getCont_cadress() {
 		return cont_cadress;
 	}
@@ -171,6 +180,7 @@ public class Contract {
 		this.cont_cadress = cont_cadress;
 	}
 
+	@Column(length = 16)
 	public String getCont_cheader() {
 		return cont_cheader;
 	}
@@ -179,6 +189,7 @@ public class Contract {
 		this.cont_cheader = cont_cheader;
 	}
 
+	@Column(length = 32)
 	public String getCont_cdept() {
 		return cont_cdept;
 	}
@@ -187,6 +198,7 @@ public class Contract {
 		this.cont_cdept = cont_cdept;
 	}
 
+	@Column(length = 32)
 	public String getCont_ctel() {
 		return cont_ctel;
 	}
@@ -195,6 +207,7 @@ public class Contract {
 		this.cont_ctel = cont_ctel;
 	}
 
+	@Column(length = 32)
 	public String getCont_cemail() {
 		return cont_cemail;
 	}
@@ -203,6 +216,7 @@ public class Contract {
 		this.cont_cemail = cont_cemail;
 	}
 
+	@Column(length = 16)
 	public String getCont_cfax() {
 		return cont_cfax;
 	}
@@ -211,6 +225,7 @@ public class Contract {
 		this.cont_cfax = cont_cfax;
 	}
 
+	@Column(length = 16)
 	public String getCont_czipcode() {
 		return cont_czipcode;
 	}
@@ -227,6 +242,7 @@ public class Contract {
 		this.cont_ctime = cont_ctime;
 	}
 
+	@Column(length = 32)
 	public String getCont_bank() {
 		return cont_bank;
 	}
@@ -235,6 +251,7 @@ public class Contract {
 		this.cont_bank = cont_bank;
 	}
 
+	@Column(length = 32)
 	public String getCont_account() {
 		return cont_account;
 	}
@@ -243,6 +260,7 @@ public class Contract {
 		this.cont_account = cont_account;
 	}
 
+	@Column(length = 64)
 	public String getCont_taxidennum() {
 		return cont_taxidennum;
 	}
@@ -251,6 +269,7 @@ public class Contract {
 		this.cont_taxidennum = cont_taxidennum;
 	}
 
+	@Column(length = 64)
 	public String getCont_orgcodenum() {
 		return cont_orgcodenum;
 	}
@@ -327,6 +346,7 @@ public class Contract {
 		this.manager = manager;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getCont_ishistory() {
 		return cont_ishistory;
 	}

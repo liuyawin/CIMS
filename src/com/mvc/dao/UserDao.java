@@ -1,9 +1,5 @@
 package com.mvc.dao;
 
-import java.util.List;
-
-import com.mvc.entity.User;
-
 /**
  * User相关Dao层接口
  * 
@@ -12,17 +8,6 @@ import com.mvc.entity.User;
  */
 public interface UserDao {
 
-	/**
-	 * 根据用户名查找用户信息
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public User findByUsername(String name);
-
-	/**
-	 * 
-	 * @return
-	 */
-	public List<User> findAllUser(String name);
+	// 根据部门id修改状态
+	public boolean updateState(Integer id, Integer state);
 }

@@ -2,6 +2,7 @@ package com.mvc.entity;
 
 import java.sql.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,6 +36,7 @@ public class Receipt {
 		return rece_id;
 	}
 
+	@Column(length = 64)
 	public void setRece_id(Integer rece_id) {
 		this.rece_id = rece_id;
 	}

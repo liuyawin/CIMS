@@ -6,6 +6,7 @@ package com.mvc.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,7 +42,7 @@ public class ContractRecord implements Serializable {
 	public void setConre_id(Integer conre_id) {
 		this.conre_id = conre_id;
 	}
-
+	@Column(length = 64)
 	public String getConre_content() {
 		return conre_content;
 	}

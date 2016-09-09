@@ -2,6 +2,7 @@ package com.mvc.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,6 +42,7 @@ public class User implements Serializable {
 		this.uesr_id = uesr_id;
 	}
 
+	@Column(length = 16)
 	public String getUser_num() {
 		return user_num;
 	}
@@ -49,6 +51,7 @@ public class User implements Serializable {
 		this.user_num = user_num;
 	}
 
+	@Column(length = 64)
 	public String getUser_pwd() {
 		return user_pwd;
 	}
@@ -57,6 +60,7 @@ public class User implements Serializable {
 		this.user_pwd = user_pwd;
 	}
 
+	@Column(length = 16)
 	public String getUser_name() {
 		return user_name;
 	}
@@ -65,7 +69,8 @@ public class User implements Serializable {
 		this.user_name = user_name;
 	}
 
-	public Integer isUser_sex() {
+	@Column(length = 1)
+	public Integer getUser_sex() {
 		return user_sex;
 	}
 
@@ -73,6 +78,7 @@ public class User implements Serializable {
 		this.user_sex = user_sex;
 	}
 
+	@Column(length = 32)
 	public String getUser_tel() {
 		return user_tel;
 	}
@@ -81,6 +87,7 @@ public class User implements Serializable {
 		this.user_tel = user_tel;
 	}
 
+	@Column(length = 32)
 	public String getUser_email() {
 		return user_email;
 	}
@@ -99,6 +106,7 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getUser_isdelete() {
 		return user_isdelete;
 	}

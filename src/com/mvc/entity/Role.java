@@ -5,6 +5,7 @@ package com.mvc.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,6 +38,7 @@ public class Role implements Serializable {
 		this.role_id = role_id;
 	}
 
+	@Column(length = 32)
 	public String getRole_name() {
 		return role_name;
 	}

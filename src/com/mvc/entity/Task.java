@@ -2,6 +2,7 @@ package com.mvc.entity;
 
 import java.sql.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -84,7 +85,8 @@ public class Task {
 		this.task_content = task_content;
 	}
 
-	public Integer isTask_state() {
+	@Column(length = 1)
+	public Integer getTask_state() {
 		return task_state;
 	}
 
@@ -92,7 +94,8 @@ public class Task {
 		this.task_state = task_state;
 	}
 
-	public Integer isTask_isdelete() {
+	@Column(length = 1)
+	public Integer getTask_isdelete() {
 		return task_isdelete;
 	}
 
@@ -146,6 +149,7 @@ public class Task {
 		this.task_alarmnum = task_alarmnum;
 	}
 
+	@Column(length = 1)
 	public Integer getTask_type() {
 		return task_type;
 	}

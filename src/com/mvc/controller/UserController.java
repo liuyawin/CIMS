@@ -71,11 +71,12 @@ public class UserController {
 	// return JSON.toJSONString(user2);
 	// }
 
-	@RequestMapping(value = "/getConByName.do")
-	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {
-		String name = request.getParameter("cName");
-		List<User> result = userService.findAllUser(name);
-		return JSON.toJSONString(result);
-	}
+	// @RequestMapping(value = "/getConByName.do")
+	// public @ResponseBody String getStores(HttpServletRequest request,
+	// HttpSession session) {
+	// String name = request.getParameter("cName");
+	// List<User> result = userService.findAllUser(name);
+	// return JSON.toJSONString(result);
+	// }
 
 }

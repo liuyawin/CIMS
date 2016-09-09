@@ -3,6 +3,7 @@ package com.mvc.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -43,7 +44,7 @@ public class ReceiveNode implements Serializable {
 	public void setReno_id(Integer reno_id) {
 		this.reno_id = reno_id;
 	}
-
+	@Column(length = 64)
 	public String getReno_content() {
 		return reno_content;
 	}

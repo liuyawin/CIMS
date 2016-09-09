@@ -3,6 +3,7 @@ package com.mvc.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -56,6 +57,7 @@ public class Alarm implements Serializable {
 		this.alar_content = alar_content;
 	}
 
+	@Column(length = 32)
 	public String getAlar_code() {
 		return alar_code;
 	}
@@ -64,6 +66,7 @@ public class Alarm implements Serializable {
 		this.alar_code = alar_code;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getAlar_isremove() {
 		return alar_isremove;
 	}
