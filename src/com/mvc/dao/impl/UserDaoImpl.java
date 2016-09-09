@@ -47,7 +47,7 @@ public class UserDaoImpl implements UserDao {
 	public boolean updateState(Integer id, Integer user_delete) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			String selectSql = " update dept set 'user_delete' = :user_delete  where user_id =:user_id ";
+			String selectSql = " update dept set 'user_delete' = :user_delete where user_id =:user_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("user_delete", user_delete);
 			query.setParameter("user_id", id);
