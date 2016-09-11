@@ -13,10 +13,10 @@ import com.mvc.entity.User;
  * @author zjn
  * @date 2016年9月7日
  */
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 	// 根据ID查询用户信息
 	@Query("select u from User u where user_id = :id")
-	public User findById(@Param("id") Long id);
+	public User findById(@Param("id") Integer id);
 
 	// 根据ID查询全部用户信息
 	@Query("select u from User u where user_isdelete=0 ")
