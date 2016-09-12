@@ -40,10 +40,10 @@
 		<span class="systemlogo"></span>
 
 		<div class="loginbox">
-			<form action="login/login.do" method="post" id="login-form">
+			<form action="/CIMS/login/login.do" method="post" id="login-form">
 				<ul>
 					<li><input name="userName" type="text" class="loginuser" id="userName" placeholder="用户名" /><label style="visibility:hidden" id="userError" class="error-label">用户不存在</label></li>
-					<li><input name="password" type="text" class="loginpwd" id="password" placeholder="密码" /><label style="visibility:hidden" id="pwdError" class="error-label">密码错误</label></li>
+					<li><input name="password" type="password" class="loginpwd" id="password" placeholder="密码" /><label style="visibility:hidden" id="pwdError" class="error-label">密码错误</label></li>
 					<li><input type="button" class="loginbtn" value="登录"
 						id="login-btn"/><label><input
 							name="" type="checkbox" checked="checked" id="rememberMe" />记住密码</label><label><a

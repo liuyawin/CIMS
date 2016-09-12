@@ -7,7 +7,7 @@ $pwdInput.on('click',function(){
 	var $userName = $nameInput.val();
 	$.ajax({
         url: "/CIMS/login/checkUserName.do",
-        data: {"username": $userName},
+        data: {"userName": $userName},
         type: "POST"
     }).done(function (data) {
         if (data == '0') {
@@ -41,17 +41,17 @@ $loginBtn.on('click', function(event) {
 		$.ajax({
 			url: "/CIMS/login/loginValidate.do",
         	data: {
-        		"userName"  : $username,
+        		"userName"  : $userName,
         		"password"  : $password,
         		"isRemember":$isRemember
         	},
         	type: "POST",
 		}).done(function(data){
-        	if(data === "err_user"){
+        	if(data.err_message === "err_user"){
         		showNameError();
-        	}else if(data === "err_password"){
+        	}else if(data.err_message === "err_password"){
         		showPwdError();
-        	}else if(data === "OK"){
+        	}else if(data.err_message === "OK"){
         		$("#login-form").submit();
         	}
         	
