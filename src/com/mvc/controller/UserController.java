@@ -56,28 +56,26 @@ public class UserController {
 	 * @param map
 	 * @return
 	 */
-	// @RequestMapping("/getStaffInfo")
-	// public @ResponseBody String addStore(HttpServletRequest request,
-	// HttpSession session, ModelMap map) {
-	// System.out.println("进入getStaffInfo");
-	// User user = new User();
-	// System.out.println(request.getParameter("name") +
-	// request.getParameter("pwd") + request.getParameter("age"));
-	// user.setName(request.getParameter("name"));
-	// user.setPwd(request.getParameter("pwd"));
-	// user.setAge(Integer.valueOf(request.getParameter("age")));
-	// User user2 = userService.save(user);
-	// user2.setName("张");
-	// System.out.println(user2.getName());
-	// return JSON.toJSONString(user2);
-	// }
+//	@RequestMapping("/getStaffInfo")
+//	public @ResponseBody String addStore(HttpServletRequest request, HttpSession session, ModelMap map) {
+//		System.out.println("进入getStaffInfo");
+//		User user = new User();
+//		System.out.println(request.getParameter("name") + request.getParameter("pwd") + request.getParameter("age"));
+//		user.setName(request.getParameter("name"));
+//		user.setPwd(request.getParameter("pwd"));
+//		user.setAge(Integer.valueOf(request.getParameter("age")));
+//		User user2 = userService.save(user);
+//		user2.setName("张");
+//		System.out.println(user2.getName());
+//		return JSON.toJSONString(user2);
+//	}
 
-	// @RequestMapping(value = "/getConByName.do")
-	// public @ResponseBody String getStores(HttpServletRequest request,
-	// HttpSession session) {
-	// String name = request.getParameter("cName");
-	// List<User> result = userService.findAllUser(name);
-	// return JSON.toJSONString(result);
-	// }
+//	 @RequestMapping(value = "/getConByName.do")
+//	 public @ResponseBody String getStores(HttpServletRequest request,
+//	 HttpSession session) {
+//	 String name = request.getParameter("cName");
+//	 List<User> result = userService.findAllUser(name);
+//	 return JSON.toJSONString(result);
+//	 }
 
 }

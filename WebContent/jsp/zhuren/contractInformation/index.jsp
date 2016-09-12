@@ -11,7 +11,7 @@
 </section>
 <jsp:include page="/jsp/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
-<script src="${ctx}/CIMS/js/app/zhuren/contractMgmt.js"></script>
+<script src="${ctx}/js/app/zhuren/contractMgmt.js"></script>
 
 </body>
 </html>
