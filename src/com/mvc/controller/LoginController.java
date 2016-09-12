@@ -10,13 +10,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.base.CookieKeyConstants;
-import com.base.CookieUtil;
-import com.base.HttpRedirectUtil;
-import com.base.PageNameConstants;
-import com.base.SessionKeyConstants;
+import com.base.constants.CookieKeyConstants;
+import com.base.constants.PageNameConstants;
+import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.User;
 import com.mvc.service.UserService;
+import com.utils.CookieUtil;
+import com.utils.HttpRedirectUtil;
+
+import net.sf.json.JSONObject;
 
 /**
  * 登陆
@@ -68,23 +70,26 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping("/loginValidate.do")
-	public String loginValidate(HttpSession session, HttpServletRequest request, ModelMap model,
+	public @ResponseBody JSONObject loginValidate(HttpSession session, HttpServletRequest request, ModelMap model,
 			HttpServletResponse res) {
 		System.out.println("loginValidate");
 		String userNum = request.getParameter("userName");
 		String passWord = request.getParameter("password");
 		User user = userService.findByUserNum(userNum);
+
+		JSONObject jsonObject = new JSONObject();
+
 		if (user != null) {
 			String passwd = user.getUser_pwd();
 			if (passwd != null && passwd.equals(passWord)) {
-				System.out.println("OK");
-				return "OK";
+				jsonObject.put("err_message", "OK");
 			} else {
-				return "err_password";
+				jsonObject.put("err_message", "err_password");
 			}
 		} else {
-			return "err_user";
+			jsonObject.put("err_message", "err_user");
 		}
+		return jsonObject;
 	}
 
 	/**
