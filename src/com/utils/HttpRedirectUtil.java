@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.base;
+package com.utils;
 
 /**
  * 专门对response封装的Util
