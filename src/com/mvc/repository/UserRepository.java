@@ -23,7 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("select u from User u where user_isdelete=0 ")
 	public List<User> findAlls();
 
-	//
 	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
 	@Query("select count(id) from User u where user_num = :user_num and user_isdelete=0")
 	public Long countByUserNum(@Param("user_num") String user_num);
