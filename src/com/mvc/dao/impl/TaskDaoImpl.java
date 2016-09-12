@@ -17,7 +17,7 @@ import com.mvc.dao.TaskDao;
  * @date 2016年9月9日
  */
 @Repository("taskDaoImpl")
-public class TaskDaoImpl implements TaskDao {
+public class TaskDaoImpl implements TaskDao{
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
