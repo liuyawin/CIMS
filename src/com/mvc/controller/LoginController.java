@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.CookieKeyConstants;
 import com.base.CookieUtil;
+import com.base.HttpRedirectUtil;
+import com.base.PageNameConstants;
 import com.base.SessionKeyConstants;
 import com.mvc.entity.User;
 import com.mvc.service.UserService;
@@ -50,13 +52,14 @@ public class LoginController {
 	@RequestMapping("/checkUserName.do")
 	public @ResponseBody Long checkUserName(HttpServletRequest request, HttpSession session, ModelMap map) {
 		String userNum = request.getParameter("userName");
+		System.out.println(userNum);
 		Long result = userService.isExist(userNum);
 		System.out.println(result);
 		return result;
 	}
 
 	/**
-	 * 用户登录验证
+	 * 登录验证用户名和密码是否正确
 	 * 
 	 * @param session
 	 * @param request
@@ -65,32 +68,78 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping("/loginValidate.do")
-	public String login(HttpSession session, HttpServletRequest request, ModelMap model, HttpServletResponse res) {
-		String result = "";
-		String userNum = request.getParameter("username");
+	public String loginValidate(HttpSession session, HttpServletRequest request, ModelMap model,
+			HttpServletResponse res) {
+		System.out.println("loginValidate");
+		String userNum = request.getParameter("userName");
 		String passWord = request.getParameter("password");
+		User user = userService.findByUserNum(userNum);
+		if (user != null) {
+			String passwd = user.getUser_pwd();
+			if (passwd != null && passwd.equals(passWord)) {
+				System.out.println("OK");
+				return "OK";
+			} else {
+				return "err_password";
+			}
+		} else {
+			return "err_user";
+		}
+	}
+
+	/**
+	 * 验证登陆之后写入Cookie和Session
+	 * 
+	 * @param session
+	 * @param request
+	 * @param model
+	 * @param res
+	 * @return
+	 */
+	@RequestMapping("/login.do")
+	public String login(HttpSession session, HttpServletRequest request, ModelMap model, HttpServletResponse res) {
+		String error_msg = "";
+		System.out.println("login");
+		String userNum = request.getParameter("userName");
+		String password = request.getParameter("password");
 		String isRemember = request.getParameter("isRemember"); // 记住密码
 		User user = userService.findByUserNum(userNum);
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
 			String passwd = user.getUser_pwd();
-			if (passwd != null && passwd.equals(passWord)) {
+			if (passwd != null && passwd.equals(password)) {
 				session.setAttribute(SessionKeyConstants.LOGIN, user);
 				model.addAttribute("user", user);
 				cookie_u.add_cookie(CookieKeyConstants.USERNAME, userNum, res, 60 * 60 * 24 * 15);
 				if (isRemember == "true") {
-					cookie_u.add_cookie(CookieKeyConstants.PASSWORD, passWord, res, 60 * 60 * 24 * 7);
+					cookie_u.add_cookie(CookieKeyConstants.PASSWORD, password, res, 60 * 60 * 24 * 7);
 				} else {
 					cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);
 				}
-				result = "OK";
+				model.addAttribute("password", password);
+				return "zhuren/contractInformation/index";// 起始页还未定
 			} else { // 密码错误
+				error_msg = "err_password";
 				cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);
-				result = "err_password";
+				model.addAttribute("error", error_msg);
+				return HttpRedirectUtil.redirectStr(PageNameConstants.TOLOGIN);
 			}
 		} else { // 用户不存在
-			result = "err_user";
+			error_msg = "err_user";
+			model.addAttribute("error", error_msg);
+			return HttpRedirectUtil.redirectStr(PageNameConstants.TOLOGIN);
 		}
-		return result;
+	}
+
+	/**
+	 * 退出登录
+	 * 
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/logout.do")
+	public String logout(HttpSession session) {
+		session.removeAttribute(SessionKeyConstants.LOGIN);
+		return HttpRedirectUtil.redirectStr(PageNameConstants.TOLOGIN);
 	}
 }
