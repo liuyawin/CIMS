@@ -56,7 +56,7 @@ public class UserController {
 	 * @param map
 	 * @return
 	 */
-//	@RequestMapping("/getStaffInfo")
+//	 @RequestMapping("/getStaffInfo")
 //	public @ResponseBody String addStore(HttpServletRequest request, HttpSession session, ModelMap map) {
 //		System.out.println("进入getStaffInfo");
 //		User user = new User();

@@ -22,4 +22,9 @@ public interface UserService {
 
 	// 根据userNum查询用户信息
 	public User findByUserNum(String userNum);
+	
+	//根据id删除
+	public boolean isDelete(Integer dept_id);
+	
+
 }
