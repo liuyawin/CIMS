@@ -40,5 +40,11 @@ public class UserServiceImpl implements UserService {
 	public User findByUserNum(String user_num) {
 		return userRepository.findByUserNum(user_num);
 	}
+	//根据id删除
+	@Override
+	public boolean isDelete(Integer user_id) {
+		userRepository.deleteByUserId(user_id);
+		return true;
+	}
 
 }
