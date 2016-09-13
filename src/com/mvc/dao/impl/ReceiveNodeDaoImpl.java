@@ -4,15 +4,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
-import org.hibernate.hql.internal.ast.tree.IsNotNullLogicOperatorNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import com.mvc.dao.ReceiveNodeDao;
-
 /**
- *  * @author wanghuimin
+ * 收款节点
+ * 
+ * @author wanghuimin
  * @date 2016年9月9日
  */
 @Repository("ReceiveNodeDaoIpml")
@@ -20,9 +19,10 @@ public class ReceiveNodeDaoImpl {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
-	/*修改收款节点状态*/
-	public boolean updateState(Integer id, Integer state){
-		EntityManager em = emf.createEntityManager();									
+
+	/* 修改收款节点状态 */
+	public boolean updateState(Integer id, Integer state) {
+		EntityManager em = emf.createEntityManager();
 		try {
 			String selectSql = " update recive_node set 'reno_state' = :reno_state  where reno_id =:reno_id ";
 			Query query = em.createNativeQuery(selectSql);
@@ -34,9 +34,8 @@ public class ReceiveNodeDaoImpl {
 		} finally {
 			em.close();
 		}
-		
-		
-		return true;		
+
+		return true;
 	}
 
 }

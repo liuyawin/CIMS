@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.mvc.dao.RoleDao;
 
 /**
+ * 角色，职位
  * 
  * @author wanghuimin
  * @date 2016年9月9日
@@ -20,8 +21,8 @@ public class RoleDaoImpl implements RoleDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
- 
-	@Override
+
+	// 删除
 	public boolean updateState(Integer id, Integer state) {
 		EntityManager em = emf.createEntityManager();
 		try {

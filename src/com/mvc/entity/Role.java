@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mvc.entity;
 
 import java.io.Serializable;
@@ -26,7 +23,8 @@ public class Role implements Serializable {
 
 	private Integer role_id;
 	private String role_name;
-	private Integer role_state;
+	private Integer role_state;// 0表示未删除，1表示删除
+	private String role_permission;// 角色权限
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,5 +51,14 @@ public class Role implements Serializable {
 
 	public void setRole_state(Integer role_state) {
 		this.role_state = role_state;
+	}
+
+	@Column(length = 128)
+	public String getRole_permission() {
+		return role_permission;
+	}
+
+	public void setRole_permission(String role_permission) {
+		this.role_permission = role_permission;
 	}
 }

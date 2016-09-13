@@ -11,17 +11,18 @@ import org.springframework.stereotype.Repository;
 import com.mvc.dao.ContractDao;
 
 /**
+ * 合同
  * 
  * @author wanghuimin
  * @date 2016年9月9日
  */
 @Repository("contractDaoImpl")
-public class ContractDaoImpl implements ContractDao{
+public class ContractDaoImpl implements ContractDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
-	@Override
+	// 根据合同id修改状态
 	public boolean updateState(Integer id, Integer state) {
 		EntityManager em = emf.createEntityManager();
 		try {

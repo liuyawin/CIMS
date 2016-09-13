@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import com.mvc.entity.Department;
 
 /**
- * 角色
+ * 部门
  * 
  * @author zjn
  * @date 2016年9月7日
@@ -23,11 +23,11 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
 	public Department findById(@Param("dept_id") Integer dept_id);
 
 	// 筛选出所有部门列表
-	@Query("select d from Department d where dept_state=1")
+	@Query("select d from Department d where dept_state=0")
 	public List<Department> findAlls();
 
 	// 根据部门ID和名称查询部门列表
-	@Query("select d from Department d where dept_id=:dept_id and dept_name=:dept_name and dept_state=1")
+	@Query("select d from Department d where dept_id=:dept_id and dept_name=:dept_name and dept_state=0")
 	public List<Department> findByName(@Param("dept_id") Integer dept_id, @Param("dept_name") String dept_name);
 
 	//根据部门id修改部门状态

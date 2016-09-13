@@ -17,12 +17,12 @@ import com.mvc.dao.TaskDao;
  * @date 2016年9月9日
  */
 @Repository("taskDaoImpl")
-public class TaskDaoImpl implements TaskDao{
+public class TaskDaoImpl implements TaskDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
-	@Override
+	// 根据任务id修改状态
 	public boolean updateState(Integer id, Integer state) {
 		EntityManager em = emf.createEntityManager();
 		try {
@@ -39,7 +39,7 @@ public class TaskDaoImpl implements TaskDao{
 		return true;
 	}
 
-	@Override
+	// 根据任务id修改状态
 	public boolean delete(Integer id, Integer isdelete) {
 		EntityManager em = emf.createEntityManager();
 		try {
