@@ -31,6 +31,7 @@ public class User implements Serializable {
 	private String user_email;// 邮箱
 	private Role role;// 职位
 	private Integer user_isdelete;// 员工状态，1：已删除，0：未删除
+	private String user_permission;// 用户所对应的角色权限
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -113,6 +114,14 @@ public class User implements Serializable {
 
 	public void setUser_isdelete(Integer user_isdelete) {
 		this.user_isdelete = user_isdelete;
+	}
+
+	public String getUser_permission() {
+		return user_permission;
+	}
+
+	public void setUser_permission(String user_permission) {
+		this.user_permission = user_permission;
 	}
 
 }

@@ -16,12 +16,12 @@ import com.mvc.dao.SubTaskDao;
  * @date 2016年9月9日
  */
 @Repository("subTaskDaoImpl")
-public class SubTaskDaoImpl implements SubTaskDao{
+public class SubTaskDaoImpl implements SubTaskDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
-	@Override
+	// 根据子任务id修改状态
 	public boolean updateState(Integer id, Integer state) {
 		EntityManager em = emf.createEntityManager();
 		try {
@@ -36,7 +36,7 @@ public class SubTaskDaoImpl implements SubTaskDao{
 			em.close();
 		}
 		return true;
-		
+
 	}
 
 }

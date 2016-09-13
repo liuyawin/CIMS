@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.mvc.dao.ProjectStageDao;
 
 /**
+ * 工期阶段
  * 
  * @author wanghuimin
  * @date 2016年9月9日
@@ -20,7 +21,9 @@ public class ProjectStageDaoImpl implements ProjectStageDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
-	public boolean updateState(Integer id, Integer state){
+
+	// 根据工期阶段id修改状态
+	public boolean updateState(Integer id, Integer state) {
 		EntityManager em = emf.createEntityManager();
 		try {
 			String selectSql = " update project_stage set 'prst_state' = :prst_state  where prst_id =:prst_id ";
@@ -34,7 +37,7 @@ public class ProjectStageDaoImpl implements ProjectStageDao {
 			em.close();
 		}
 		return true;
-		
+
 	}
 
 }
