@@ -30,4 +30,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	// 根据userNum查询用户信息
 	@Query("select u from User u where user_num = :user_num")
 	public User findByUserNum(@Param("user_num") String user_num);
+	
+	//根据id删除
+	@Query("update User set user_isdelete=1 where user_id = :user_id")
+	public boolean deleteByUserId(@Param("user_id") Integer user_id);
 }
