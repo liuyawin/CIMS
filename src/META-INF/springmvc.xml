@@ -44,6 +44,6 @@
 	-->
 	<mvc:interceptors>
 		<bean class="com.base.SharedRenderVariableInterceptor"></bean>
-	</mvc:interceptors>
+	</mvc:interceptors> 
 	
 </beans>

@@ -5,5 +5,6 @@
   </head>  
   <body>       
         <a href="${pageContext.request.contextPath}/login/toLoginPage.do">ajaxPage</a><br>
+        <a href="${pageContext.request.contextPath}/login/toLoginPage1.do">assistant</a><br>
   </body>
 </html>

@@ -23,4 +23,9 @@ public class LoginController {
 	public String contractInformationPage() {
 		return "contractInformation/index";
 	}
+
+	@RequestMapping("/toLoginPage1.do")
+	public String contractInformationPage1() {
+		return "assistant2/index";
+	}
 }
