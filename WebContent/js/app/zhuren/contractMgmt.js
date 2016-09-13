@@ -67,13 +67,16 @@ app.run([ '$rootScope', '$location', function($rootScope, $location) {
 // 路由配置
 app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/contractList', {
-		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contract.html',
+		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
 		controller : 'ContractController'
 	}).when('/debtContract', {
-		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contract.html',
+		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
 		controller : 'ContractController'
 	}).when('/overdueContract', {
-		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contract.html',
+		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
+		controller : 'ContractController'
+	}).when('/contractAdd', {
+		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractAdd.html',
 		controller : 'ContractController'
 	});
 } ]);
@@ -106,6 +109,24 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	
+	services.selectConByName = function(data) {
+		console.log("按名字查找合同");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/selectConByName.do',
+			data : data
+		});
+	};
+	//分页获取合同数据
+	services.selectConByPage = function(data) {
+		console.log("按页码查找合同");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/selectConByPage.do',
+			data : data
+		});
+	};
 
 	return services;
 } ]);
@@ -131,6 +152,15 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 			// 获取逾期合同
 			contract.getOverdueContract = function() {
 				services.getOverdueContract({}).success(function(data) {
+					console.log("获取逾期合同成功！");
+					contract.contracts = data;
+				});
+			};
+			
+			contract.selectConByName = function(){
+				services.selectConByName({
+					conName: $("#cName").val()
+				}).success(function(data) {
 					console.log("获取逾期合同成功！");
 					contract.contracts = data;
 				});
@@ -161,6 +191,20 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 						state : "已完成",
 						alertTimes : "5"
 					} ];
+					var $pages = $(".tcdPageCode");
+					var $tablelist = $(".tablelist");
+					console.log($pages.length);
+					console.log($tablelist.length);
+					if($pages.length != 0){
+						$(".tcdPageCode").createPage({
+					        pageCount:30,
+					        current:3,
+					        backFn:function(p){
+					            console.log(p);
+					            
+					        }
+					    });
+					}
 				} else if ($location.path().indexOf('/debtContract') == 0) {
 					// contract.getDebtContract();
 					contract.contracts = [ {

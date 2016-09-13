@@ -8,8 +8,11 @@
 				<span><img src="${ctx}/images/leftico01.png" /></span>合同信息管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a href="#/test">合同列表</a><i></i></li>
-				<li><cite></cite> <a href="#/test">合同列表</a><i></i></li>
+				<li><cite></cite> <a href="#/contractList">合同信息管理</a><i></i></li>
+				<li><cite></cite> <a href="#/debtContract">欠款合同信息</a><i></i></li>
+				<li><cite></cite> <a href="#/overdueContract">工程逾期合同</a><i></i></li>
+				<li><cite></cite> <a href="#/test">合同处理记录</a><i></i></li>
+				<li><cite></cite> <a href="#/test">终结合同信息</a><i></i></li>
 				<li>
 			</ul>
 		</dd>

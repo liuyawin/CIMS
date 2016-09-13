@@ -1,0 +1,59 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li>首页</li>
+		<li>合同信息</li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div class="tools">
+
+		<form class="toolbar">
+			<input name="" type="text" class="dfinput" id="cName" /> <input
+				class="btn" type="submit" value="查询" ng-click="selectConByName()">
+		</form>
+
+		<ul class="toolbar1">
+			<li class="click"><a href="contractAdd.html"><span><img
+						src="../images/t01.png" /></span>新建</a></li>
+		</ul>
+
+	</div>
+
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th>合同名称</th>
+				<th>合同编号</th>
+				<th>合同状态</th>
+				<th>报警次数</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="con in contracts">
+				<td><a href="#">{{con.name}}</a></td>
+				<td>{{con.number}}</td>
+				<td>{{con.state}}</td>
+				<td>{{con.alertTimes}}</td>
+				<td><a href="#" class="tablelink">查看</a><a href="#"
+					class="tablelink"> 修改</a><a href="#" class="tablelink"> 删除</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	<div class="tcdPageCode">
+	页码容器
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+</script>
+
+
+
