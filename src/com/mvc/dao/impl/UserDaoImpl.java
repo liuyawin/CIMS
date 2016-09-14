@@ -43,7 +43,10 @@ public class UserDaoImpl implements UserDao {
 	// em.close();
 	// return true;
 	// }
-	// 根据用户id修改状态
+
+	/**
+	 * 删除用户
+	 */
 	public boolean updateState(Integer id, Integer user_delete) {
 		EntityManager em = emf.createEntityManager();
 		try {

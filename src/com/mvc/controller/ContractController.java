@@ -40,7 +40,7 @@ public class ContractController {
 	public @ResponseBody String getContList(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 获取Session中的user对象
-		List<Contract> list = contractService.findAllCont(user.getUesr_id());
+		List<Contract> list = contractService.findAllCont(user.getUser_id());
 		return JSON.toJSONString(list);
 	}
 
@@ -54,7 +54,7 @@ public class ContractController {
 	public @ResponseBody String getDebtContList(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		List<Contract> list = contractService.findAllDebtCont(user.getUesr_id());
+		List<Contract> list = contractService.findAllDebtCont(user.getUser_id());
 		return JSON.toJSONString(list);
 	}
 
@@ -68,7 +68,7 @@ public class ContractController {
 	public @ResponseBody String getOverdueContList(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		List<Contract> list = contractService.findAllDebtCont(user.getUesr_id());
+		List<Contract> list = contractService.findAllDebtCont(user.getUser_id());
 		return JSON.toJSONString(list);
 	}
 

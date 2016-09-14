@@ -1,5 +1,9 @@
 package com.mvc.dao;
 
+import java.util.List;
+
+import com.mvc.entity.Task;
+
 /**
  * 文书任务
  * 
@@ -9,9 +13,12 @@ package com.mvc.dao;
 public interface TaskDao {
 
 	// 根据任务id修改删除状态,相当于删除
-	public boolean delete(Integer id, Integer isdelete);
+	boolean delete(Integer id, Integer isdelete);
 
 	// 根据任务id修改状态
-	public boolean updateState(Integer id, Integer state);
-	
+	boolean updateState(Integer id, Integer state);
+
+	// 根据页数返回任务列表
+	List<Task> findByPage(Integer receiver_id, Integer task_state, Integer offset, Integer end);
+
 }
