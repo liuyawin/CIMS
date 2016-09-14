@@ -26,7 +26,7 @@ import com.mvc.service.TaskService;
  * @date 2016年9月12日
  */
 @Controller
-@RequestMapping("/assistant2")
+@RequestMapping("/task")
 public class TaskController {
 	@Autowired
 	TaskService taskService;
@@ -34,9 +34,12 @@ public class TaskController {
 	// 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
 	@RequestMapping(value = "/selectTaskByState.do")
 	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {
+		
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer taskState = Integer.valueOf(request.getParameter("taskState"));
+		System.out.println("进来了"+taskState+"用户ID"+user.getUesr_id());
 		List<Task> result = taskService.findTaskByState(user.getUesr_id(), taskState);
+		System.out.println("任务的个数"+result.size());
 		return JSON.toJSONString(result);
 	}
 
