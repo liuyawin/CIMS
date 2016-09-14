@@ -29,7 +29,7 @@ public class ContractDaoImpl implements ContractDao {
 	public boolean updateState(Integer cont_id, Integer cont_state) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			String selectSql = "update contract c set c.cont_state=:state where c.cont_id=:cont_id";
+			String selectSql = "update contract c set c.cont_state=:cont_state where c.cont_id=:cont_id";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("cont_state", cont_state);
 			query.setParameter("cont_id", cont_id);
@@ -42,11 +42,12 @@ public class ContractDaoImpl implements ContractDao {
 		return true;
 	}
 
+	// 返回所有合同列表
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Contract> findAllCont(int creator_id) {
 		EntityManager em = emf.createEntityManager();
-		String sql = "select * from contract c where c.user_id=:creator_id and c.cont_ishistory=0";
+		String sql = "select * from contract c where c.creator_id=:creator_id and c.cont_ishistory=0";
 		// 创建原生SQL查询QUERY实例,指定了返回的实体类型
 		Query query = em.createNativeQuery(sql, Contract.class);
 		query.setParameter("creator_id", creator_id);
@@ -55,12 +56,13 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
+	// 返回欠款合同信息
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Contract> findAllDebtCont(int creator_id) {
 		EntityManager em = emf.createEntityManager();
 		String sql = "select * from contract c where c.cont_id in (select rn.cont_id from receive_node rn "
-				+ "where rn.reno_time<=now() and rn.reno_state in (0,2)) and c.user_id=:creator_id and c.cont_ishistory=0";
+				+ "where rn.reno_time<=now() and rn.reno_state in (0,2)) and c.creator_id=:creator_id and c.cont_ishistory=0";
 		Query query = em.createNativeQuery(sql, Contract.class);
 		query.setParameter("creator_id", creator_id);
 		List<Contract> list = query.getResultList();
@@ -68,14 +70,28 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
+	// 返回逾期合同信息
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Contract> findAllOverdueCont(int creator_id) {
 		EntityManager em = emf.createEntityManager();
 		String sql = "select * from contract c where c.cont_id in (select t.cont_id from task t "
-				+ "where t.task_etime<=now() and t.task_state in (0,1) and t.task_isdelete=0) and c.user_id=:creator_id and c.cont_ishistory=0";
+				+ "where t.task_etime<=now() and t.task_state in (0,1) and t.task_isdelete=0) and c.creator_id=:creator_id and c.cont_ishistory=0";
 		Query query = em.createNativeQuery(sql, Contract.class);
 		query.setParameter("creator_id", creator_id);
+		List<Contract> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 根据页数选择合同列表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Contract> findByPage(int creator_id, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		String sql = "select * from contract c where c.creator_id=:creator_id and c.cont_ishistory=0 order by cont_id limit :offset,:end";
+		Query query = em.createNativeQuery(sql, Contract.class);
+		query.setParameter("creator_id", creator_id).setParameter("offset", offset).setParameter("end", end);
 		List<Contract> list = query.getResultList();
 		em.close();
 		return list;

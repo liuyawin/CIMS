@@ -327,7 +327,7 @@ public class Contract {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "creator_id")
 	public User getCreator() {
 		return creator;
 	}

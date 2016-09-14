@@ -35,7 +35,7 @@ public class TaskController {
 
 	// 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
 	@RequestMapping(value = "/selectTaskByState.do")
-	public @ResponseBody JSONObject getStores(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		int totalRow = taskService.countTotal();
@@ -47,6 +47,6 @@ public class TaskController {
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		System.out.println("返回列表和总页数:" + jsonObject.toString());
-		return jsonObject;
+		return jsonObject.toString();
 	}
 }
