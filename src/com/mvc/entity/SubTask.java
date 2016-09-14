@@ -1,5 +1,6 @@
 package com.mvc.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,6 +42,7 @@ public class SubTask {
 		this.suta_content = suta_content;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getSuta_state() {
 		return suta_state;
 	}

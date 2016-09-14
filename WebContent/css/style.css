@@ -1532,3 +1532,22 @@ h2 {
 	border-radius: 4px;
 	vertical-align: middle;
 }
+
+/* 下拉框 */
+.dfselect{
+	width: 300px;
+	height: 36px;
+	margin-right: 12px;
+	line-height: 32px;
+	border-top: solid 1px #a7b5bc;
+	border-left: solid 1px #a7b5bc;
+	border-right: solid 1px #ced9df;
+	border-bottom: solid 1px #ced9df;
+	background: url(../images/inputbg.gif) repeat-x;
+	text-indent: 4px;
+}
+
+.dfselect option{
+	word-space:2px;
+	margin:8px 12px;
+}
