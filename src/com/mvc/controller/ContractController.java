@@ -15,7 +15,9 @@ import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.Contract;
 import com.mvc.entity.User;
 import com.mvc.service.ContractService;
-import com.mvc.service.impl.ContractServiceImpl;
+import com.utils.Pager;
+
+import net.sf.json.JSONObject;
 
 /**
  * 合同控制器
@@ -31,17 +33,24 @@ public class ContractController {
 	ContractService contractService;
 
 	/**
-	 * 根据合同创建者id获取合同列表
+	 * 获取指定页面的十条合同信息，总页数
 	 * 
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/getContractList.do")
 	public @ResponseBody String getContList(HttpServletRequest request) {
+		JSONObject jsonObject = new JSONObject();
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 获取Session中的user对象
-		List<Contract> list = contractService.findAllCont(user.getUser_id());
-		return JSON.toJSONString(list);
+		int totalRow = contractService.countTotal(user.getUser_id());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+		List<Contract> list = contractService.findByPage(user.getUser_id(), pager.getOffset(), pager.getPageSize());
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
 	}
 
 	/**
@@ -69,6 +78,20 @@ public class ContractController {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		List<Contract> list = contractService.findAllDebtCont(user.getUser_id());
+		return JSON.toJSONString(list);
+	}
+
+	/**
+	 * 根据合同名获取合同信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectConByName.do")
+	public @ResponseBody String selectConByName(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		List<Contract> list = contractService.findConByName(user.getUser_id(), request.getParameter("contName"));// 合同名
 		return JSON.toJSONString(list);
 	}
 

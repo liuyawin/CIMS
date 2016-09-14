@@ -35,7 +35,6 @@ public class TaskController {
 
 	// 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
 	@RequestMapping(value = "/selectTaskByState.do")
-
 	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
@@ -44,10 +43,8 @@ public class TaskController {
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(Integer.parseInt(totalRow.toString()));
-		System.out.println(request.getParameter("taskState"));
 		Integer taskState = Integer.valueOf(request.getParameter("taskState"));
 		List<Task> list = taskService.findByPage(user.getUser_id(), taskState, pager.getOffset(), pager.getLimit());
-		System.out.println(list.toString());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		System.out.println("返回列表:" + jsonObject.toString());
