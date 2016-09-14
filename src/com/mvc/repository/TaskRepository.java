@@ -21,7 +21,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 	// 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
 	@Query("select t from Task t where receiver_id = :receiver_id and task_state=:task_state and task_isdelete=0 ")
-	public List<Task> findAllByState(@Param("receiver_id") Integer receiver_id,
-			@Param("task_state") Integer task_state);
+	List<Task> findAllByState(@Param("receiver_id") Integer receiver_id, @Param("task_state") Integer task_state);
 
+	// 查询任务总条数
+	@Query("select count(task_id) from Task t where  task_isdelete=0")
+	int countTotal();
 }
