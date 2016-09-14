@@ -22,7 +22,7 @@ import javax.persistence.Table;
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Integer uesr_id; // id
+	private Integer user_id; // id
 	private String user_num; // 账号
 	private String user_pwd; // 密码
 	private String user_name;// 姓名
@@ -36,11 +36,11 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer getUesr_id() {
-		return uesr_id;
+		return user_id;
 	}
 
-	public void setUesr_id(Integer uesr_id) {
-		this.uesr_id = uesr_id;
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
 	}
 
 	@Column(length = 16)
