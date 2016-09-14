@@ -22,7 +22,7 @@ public interface TaskService {
 	boolean updateState(Integer taskId, Integer task_state);
 
 	// 查询任务总条数
-	int countTotal();
+	Long countTotal();
 
 	// 根据页数返回任务列表
 	List<Task> findByPage(Integer receiver_id, Integer task_state, Integer offset, Integer end);
