@@ -122,7 +122,7 @@ public class LoginController {
 					cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);
 				}
 				model.addAttribute("password", password);
-				return "zhuren/contractInformation/index";// 起始页还未定
+				return "userManagement/index";// 起始页还未定
 			} else { // 密码错误
 				error_msg = "err_password";
 				cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);

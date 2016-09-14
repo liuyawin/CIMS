@@ -1,6 +1,10 @@
 eclipse.preferences.version=1
+encoding//WebContent/css/select.css=UTF-8
 encoding//WebContent/jsp/contractInformation/another.html=UTF-8
 encoding//WebContent/jsp/contractInformation/test.html=UTF-8
 encoding//WebContent/jsp/footer.jsp=UTF-8
 encoding//WebContent/jsp/top.jsp=UTF-8
+encoding//WebContent/jsp/userManagement/departAdd.html=UTF-8
+encoding//WebContent/jsp/userManagement/departList.html=UTF-8
+encoding//WebContent/jsp/userManagement/left.jsp=UTF-8
 encoding/<project>=UTF-8
