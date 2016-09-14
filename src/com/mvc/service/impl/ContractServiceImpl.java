@@ -44,7 +44,7 @@ public class ContractServiceImpl implements ContractService {
 
 	// 查询合同总条数
 	@Override
-	public int countTotal(int creator_id) {
+	public Long countTotal(int creator_id) {
 		return contractRepository.countTotal(creator_id);
 	}
 
@@ -56,8 +56,8 @@ public class ContractServiceImpl implements ContractService {
 
 	// 根据合同名获取合同信息
 	@Override
-	public List<Contract> findConByName(int creator_id, String contName) {
-		return contractRepository.findConByName(creator_id, contName);
+	public List<Contract> findConByName(int creator_id, String contName, Integer offset, Integer end) {
+		return contractDao.findConByName(creator_id, contName, offset, end);
 	}
 
 }

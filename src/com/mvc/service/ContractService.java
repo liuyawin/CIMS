@@ -16,11 +16,11 @@ public interface ContractService {
 	List<Contract> findAllOverdueCont(int creator_id);
 
 	// 查询合同总条数
-	int countTotal(int creator_id);
+	Long countTotal(int creator_id);
 
 	// 根据页数选择合同列表
 	List<Contract> findByPage(int creator_id, Integer offset, Integer end);
 
 	// 根据合同名获取合同信息
-	List<Contract> findConByName(int creator_id, String contName);
+	List<Contract> findConByName(int creator_id, String contName, Integer offset, Integer end);
 }

@@ -97,4 +97,21 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
+	// 根据合同名获取合同信息
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Contract> findConByName(int creator_id, String contName, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		String sql = "select * from contract c where c.creator_id=:creator_id and c.cont_ishistory=0 ";
+		if (null != contName) {
+			sql += " and (c.cont_name like '%" + contName + "%')";
+		}
+		sql += " order by cont_id limit :offset,:end";
+		Query query = em.createNativeQuery(sql, Contract.class);
+		query.setParameter("creator_id", creator_id).setParameter("offset", offset).setParameter("end", end);
+		List<Contract> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
 }

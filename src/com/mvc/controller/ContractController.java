@@ -39,11 +39,10 @@ public class ContractController {
 	 * @return
 	 */
 	@RequestMapping("/getContractList.do")
-	public @ResponseBody String getContList(HttpServletRequest request) {
+	public @ResponseBody String getContList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 获取Session中的user对象
-		int totalRow = contractService.countTotal(user.getUser_id());
+		int totalRow = Integer.parseInt(contractService.countTotal(user.getUser_id()).toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
@@ -60,8 +59,8 @@ public class ContractController {
 	 * @return
 	 */
 	@RequestMapping("/getDebtContract.do")
-	public @ResponseBody String getDebtContList(HttpServletRequest request) {
-		HttpSession session = request.getSession();
+	public @ResponseBody String getDebtContList(HttpServletRequest request, HttpSession session) {
+
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		List<Contract> list = contractService.findAllDebtCont(user.getUser_id());
 		return JSON.toJSONString(list);
@@ -74,8 +73,7 @@ public class ContractController {
 	 * @return
 	 */
 	@RequestMapping("/getOverdueContract.do")
-	public @ResponseBody String getOverdueContList(HttpServletRequest request) {
-		HttpSession session = request.getSession();
+	public @ResponseBody String getOverdueContList(HttpServletRequest request, HttpSession session) {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		List<Contract> list = contractService.findAllDebtCont(user.getUser_id());
 		return JSON.toJSONString(list);
@@ -88,11 +86,18 @@ public class ContractController {
 	 * @return
 	 */
 	@RequestMapping("/selectConByName.do")
-	public @ResponseBody String selectConByName(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		List<Contract> list = contractService.findConByName(user.getUser_id(), request.getParameter("contName"));// 合同名
-		return JSON.toJSONString(list);
+	public @ResponseBody String selectConByName(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 获取Session中的user对象
+		int totalRow = Integer.parseInt(contractService.countTotal(user.getUser_id()).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+		List<Contract> list = contractService.findConByName(user.getUser_id(), request.getParameter("contName"),
+				pager.getOffset(), pager.getPageSize());// 合同名
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
 	}
 
 }
