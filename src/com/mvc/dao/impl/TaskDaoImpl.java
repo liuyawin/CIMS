@@ -68,7 +68,7 @@ public class TaskDaoImpl implements TaskDao {
 		// selectSql += " and (dname like '%" + name + "%' or dno like '%" +
 		// name + "%' )";
 		// }
-		selectSql += " order by id desc	limit :offset, :end";
+		selectSql += " order by task_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, Task.class);
 		query.setParameter("receiver_id", receiver_id);
 		query.setParameter("task_state", task_state);

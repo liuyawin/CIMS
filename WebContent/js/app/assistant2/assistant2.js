@@ -84,7 +84,7 @@ app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
 	services.getTaskList = function(data) {
-		console.log("发送请求获取合同信息");
+		console.log("发送请求获取合同信息data"+data);
 		return $http({
 			method : 'post',
 			url : baseUrl + 'task/selectTaskByState.do',
@@ -143,40 +143,14 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/newTask') == 0) {
 					// contract.getContractList();
-					services.getTaskList({taskState: 0 }).success(function(data) {
+					services.getTaskList({taskState: 0 ,
+						page:1}).success(function(data) {
 						console.log("获取合同列表成功！");
-						contract.tasks = data;
+						
+						contract.tasks = data.list;
+						
 					});
-					
-					/*contract.tasks = [ {
-						task_content : "新任务1...",
-						task_type : "文书任务",
-						task_state : "未接收",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同1"
-					}, {
-						task_content : "新任务2...",
-						task_type : "文书任务",
-						task_state : "未接收",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同1"
-					}, {
-						task_content : "新任务3...",
-						task_type : "文书任务",
-						task_state : "未接收",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同1"
-					}, {
-						task_content : "新任务4...",
-						task_type : "文书任务",
-						task_state : "未接收",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同1"
-					} ];*/
+				
 				} else if ($location.path().indexOf('/unfinishTask') == 0) {
 					// contract.getDebtContract();
 					contract.tasks =[ {
