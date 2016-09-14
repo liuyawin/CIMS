@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.mvc.dao.SubTaskDao;
 
 /**
+ * 文书子任务
  * 
  * @author wanghuimin
  * @date 2016年9月9日
