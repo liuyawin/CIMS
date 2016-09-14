@@ -5,7 +5,7 @@
 <meta charset="utf-8" />
 <title>无标题文档</title>
 <link href="${ctx}/css/style.css" rel="stylesheet" type="text/css" />
-
+<link href="${ctx}/css/admin.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body style="background:url(${ctx}/images/topbg.gif) repeat-x;">
