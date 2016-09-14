@@ -33,5 +33,9 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
 	//根据部门id修改部门状态
 	@Query("update Department set dept_state=0 where dept_id=:dept_id")
 	public boolean deleteById(@Param("dept_id") Integer dept_id);
+	
+	// 查询部门总条数
+	@Query("select count(dept_id) from department d where dept_state=0")
+	public	Long countTotal();
 
 }
