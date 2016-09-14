@@ -37,11 +37,11 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	// 查询任务总条数
-	public int countTotal() {
+	public Long countTotal() {
 		return taskRepository.countTotal();
 	}
 
-	@Override
+	// 根据页数返回任务列表
 	public List<Task> findByPage(Integer receiver_id, Integer task_state, Integer offset, Integer end) {
 		return taskDao.findByPage(receiver_id, task_state, offset, end);
 	}
