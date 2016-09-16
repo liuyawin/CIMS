@@ -6,12 +6,11 @@
 			+ path + "/";
 %>
 <jsp:include page="/jsp/top.jsp" />
-<section class="main" ng-app="assistant2">
+<section class="main" ng-app="taskSendMgmt">
 	<div ng-view></div>
 </section>
 <jsp:include page="/jsp/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
-<script src="${ctx}/js/app/assistant2/assistant2.js"></script>
-
+<script src="${ctx}/js/app/assistant2/taskSendMgmt.js"></script>
 </body>
 </html>

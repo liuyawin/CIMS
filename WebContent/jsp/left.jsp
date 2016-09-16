@@ -68,14 +68,15 @@
 
 		</dd>
 	</dl>
-	
+
 	<!-- 文书2的左侧列表始 -->
 	<dl class="leftmenu">
 
 		<dd>
 			<div class="title">
 				<!-- <a href="#/test"><span><img src="../../images/leftico01.png" /></span>合同信息管理</a> -->
-				<span><img src="${ctx}/images/leftico01.png" /></span>接收的任务
+				<span><img src="${ctx}/images/leftico01.png" /></span><a
+					href="${ctx}/task/toTaskReceivePage.do">接收的任务</a>
 			</div>
 			<ul class="menuson">
 				<li><cite></cite> <a href="#/newTask">新消息</a><i></i></li>
@@ -86,12 +87,12 @@
 		<dd>
 			<div class="title">
 				<!-- <a href="#/test"><span><img src="../../images/leftico01.png" /></span>合同信息管理</a> -->
-				<span><img src="${ctx}/images/leftico02.png" /></span>发出的任务
+				<span><img src="${ctx}/images/leftico02.png" /></span><a
+					href="${ctx}/task/toTaskSendPage.do">发出的任务</a>
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a href="#/finishTask">新消息</a><i></i></li>
-				<li><cite></cite> <a href="#/another">处理中</a><i></i></li>
-				<li><cite></cite> <a href="#/another">已处理</a><i></i></li>
+				<li><cite></cite> <a href="#/unfinishTask2">处理中</a><i></i></li>
+				<li><cite></cite> <a href="#/finishTask2">已处理</a><i></i></li>
 			</ul>
 		</dd>
 		<dd>
@@ -115,7 +116,7 @@
 			</ul>
 		</dd>
 	</dl>
-	
+
 	<!-- 文书2的左侧列表终 -->
-	
+
 </section>

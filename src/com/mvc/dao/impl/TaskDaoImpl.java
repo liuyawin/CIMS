@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.TaskDao;
-//import com.mvc.dao.TaskDao;
 import com.mvc.entity.Task;
 
 /**
@@ -27,12 +26,12 @@ public class TaskDaoImpl implements TaskDao {
 	EntityManagerFactory emf;
 
 	// 根据任务id修改状态
-	public boolean delete(Integer id, Integer isdelete) {
+	public boolean delete(Integer id) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			String selectSql = " update task set 'task_isdelete' = :task_isdelete  where task_id =:task_id ";
+			em.getTransaction().begin();
+			String selectSql = "update task set  `task_isdelete` = 1  where task_id =:task_id";
 			Query query = em.createNativeQuery(selectSql);
-			query.setParameter("task_isdelete", isdelete);
 			query.setParameter("task_id", id);
 			query.executeUpdate();
 			em.flush();
@@ -47,7 +46,8 @@ public class TaskDaoImpl implements TaskDao {
 	public boolean updateState(Integer id, Integer state) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			String selectSql = " update task set 'task_state' = :task_state  where task_id =:task_id ";
+			em.getTransaction().begin();
+			String selectSql = " update task set `task_state` = :task_state  where task_id =:task_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("task_state", state);
 			query.setParameter("task_id", id);
@@ -61,23 +61,53 @@ public class TaskDaoImpl implements TaskDao {
 		return true;
 	}
 
-	// 根据页数返回任务列表
-	public List<Task> findByPage(Integer receiver_id, Integer task_state, Integer offset, Integer end) {
+	// 根据页数,状态，关键字返回任务列表
+	@SuppressWarnings("unchecked")
+	public List<Task> findByPage(Integer user_id, Integer task_state, String searchKey, Integer offset, Integer end,
+			Integer sendOrReceive) {
 		EntityManager em = emf.createEntityManager();
-		String selectSql = "select * from task where  receiver_id =:receiver_id and task_state=:task_state";
-		// if (null != name) {
-		// selectSql += " and (dname like '%" + name + "%' or dno like '%" +
-		// name + "%' )";
-		// }
+		String selectSql = "";
+		// 0表示发送，1表示接收
+		if (sendOrReceive == 1) {
+			selectSql = "select * from task where  receiver_id =:user_id and task_state=:task_state and task_isdelete=0";
+		} else {
+			selectSql = "select * from task where  creator_id =:user_id and task_state=:task_state and task_isdelete=0";
+		}
+
+		if (null != searchKey) {
+			selectSql += " and ( task_content like '%" + searchKey + "%' )";
+		}
 		selectSql += " order by task_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, Task.class);
-		query.setParameter("receiver_id", receiver_id);
+		query.setParameter("user_id", user_id);
 		query.setParameter("task_state", task_state);
 		query.setParameter("offset", offset);
 		query.setParameter("end", end);
 		List<Task> list = query.getResultList();
 		em.close();
 		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	// 根据状态，关键字查询任务总条数
+	public Integer countByParam(Integer user_id, Integer task_state, String searchKey, Integer sendOrReceive) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = "";
+		// 0表示发送，1表示接收
+		if (sendOrReceive == 1) {
+			countSql = " select count(task_id) from task where task_isdelete=0 and task_state=:task_state and receiver_id=:user_id";
+		} else {
+			countSql = " select count(task_id) from task where task_isdelete=0 and task_state=:task_state and creator_id=:user_id ";
+		}
+		if (null != searchKey) {
+			countSql += "   and (task_content like '%" + searchKey + "%'  )";
+		}
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("task_state", task_state);
+		query.setParameter("user_id", user_id);
+		List<Object> result = query.getResultList();
+		em.close();
+		return Integer.parseInt(result.get(0).toString());
 	}
 
 }

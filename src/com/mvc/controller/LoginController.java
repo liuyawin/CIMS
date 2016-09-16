@@ -123,7 +123,7 @@ public class LoginController {
 				}
 				model.addAttribute("password", password);
 				if (user.getUser_name().equals("zhou"))
-					return "assistant2/index";// 返回到文书二主页
+					return "assistant2/taskReceiveInformation/index";// 返回到文书二主页
 				else if (user.getUser_name().equals("admin"))
 					return "userManagement/index";// 返回到管理员主页
 				else
