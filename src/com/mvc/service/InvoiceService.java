@@ -1,4 +1,7 @@
-package com.mvc.dao;
+/**
+ * 
+ */
+package com.mvc.service;
 
 import java.util.List;
 
@@ -10,15 +13,15 @@ import com.mvc.entity.Invoice;
  * @author zjn
  * @date 2016年9月16日
  */
-public interface InvoiceDao {
+public interface InvoiceService {
 
-	// 根据发票id修改状态
-	boolean updateState(Integer id, Integer state);
+	// 根据发票ID查询发票详情
+	Invoice findById(Integer invoiceId);
 
 	// 根据发票id删除发票
 	boolean delete(Integer invoiceId);
 
-	// 根据合同ID，页数，关键字返回任务列表
+	// 根据合同id，页数,关键字返回任务列表
 	List<Invoice> findByPage(Integer cont_id, String searchKey, Integer offset, Integer end);
 
 	// 根据合同ID，关键字查询任务总条数

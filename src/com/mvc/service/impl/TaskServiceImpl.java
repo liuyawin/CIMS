@@ -36,14 +36,34 @@ public class TaskServiceImpl implements TaskService {
 		return taskDao.updateState(taskId, task_state);
 	}
 
-	// 查询任务总条数
-	public Long countTotal() {
-		return taskRepository.countTotal();
+	// 根据状态，关键字查询任务总条数
+	public Integer countByParam(Integer user_id, Integer task_state, String searchKey, Integer sendOrReceive) {
+		return taskDao.countByParam(user_id, task_state, searchKey,sendOrReceive);
 	}
 
-	// 根据页数返回任务列表
-	public List<Task> findByPage(Integer receiver_id, Integer task_state, Integer offset, Integer end) {
-		return taskDao.findByPage(receiver_id, task_state, offset, end);
+	// 根据页数,状态，关键字返回任务列表
+	public List<Task> findByPage(Integer user_id, Integer task_state, String searchKey, Integer offset, Integer end,
+			Integer sendOrReceive) {
+		return taskDao.findByPage(user_id, task_state, searchKey, offset, end, sendOrReceive);
+	}
+
+	// 根据任务ID查询任务详情
+	public Task findById(Integer taskId) {
+		return taskRepository.findById(taskId);
+	}
+
+	// 保存
+	public boolean save(Task task) {
+		Task result = taskRepository.save(task);
+		if (result.getTask_id() != null)
+			return true;
+		else
+			return false;
+	}
+
+	// 根据任务Id删除任务
+	public boolean delete(Integer taskId) {
+		return taskDao.delete(taskId);
 	}
 
 }

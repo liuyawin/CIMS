@@ -1,5 +1,7 @@
 package com.mvc.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +27,18 @@ public class UserServiceImpl implements UserService {
 	/**
 	 * 
 	 */
-	public User save(User user) {
-		return userRepository.saveAndFlush(user);
+	public boolean save(User user) {
+		User result = userRepository.saveAndFlush(user);
+		if (result.getUser_id() != null)
+			return true;
+		else
+			return false;
 	}
 
 	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
 	public Long isExist(String userNum) {
 		Long result = userRepository.countByUserNum(userNum);
-		System.out.println("验证用户名是否存在返回結果"+result);
+		System.out.println("验证用户名是否存在返回結果" + result);
 		return result;
 	}
 
@@ -40,11 +46,17 @@ public class UserServiceImpl implements UserService {
 	public User findByUserNum(String user_num) {
 		return userRepository.findByUserNum(user_num);
 	}
-	//根据id删除
+
+	// 根据id删除
 	@Override
 	public boolean isDelete(Integer user_id) {
 		userRepository.deleteByUserId(user_id);
 		return true;
+	}
+
+	// 查询所有用户列表
+	public List<User> findAll() {
+		return userRepository.findAll();
 	}
 
 }

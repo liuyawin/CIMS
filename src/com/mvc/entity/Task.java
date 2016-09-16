@@ -1,6 +1,7 @@
 package com.mvc.entity;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -94,7 +95,7 @@ public class Task {
 		this.task_state = task_state;
 	}
 
-	@Column(length = 1)
+	@Column(columnDefinition = "INT default 0")
 	public Integer getTask_isdelete() {
 		return task_isdelete;
 	}

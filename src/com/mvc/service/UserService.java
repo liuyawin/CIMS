@@ -1,5 +1,7 @@
 package com.mvc.service;
 
+import java.util.List;
+
 import com.mvc.entity.User;
 
 /**
@@ -10,21 +12,20 @@ import com.mvc.entity.User;
  */
 
 public interface UserService {
-	/**
-	 * 
-	 * @param user
-	 * @return
-	 */
-	public User save(User user);
+
+	// 新建用户保存
+	boolean save(User user);
 
 	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
-	public Long isExist(String userNum);
+	Long isExist(String userNum);
 
 	// 根据userNum查询用户信息
-	public User findByUserNum(String userNum);
-	
-	//根据id删除
-	public boolean isDelete(Integer dept_id);
-	
+	User findByUserNum(String userNum);
+
+	// 根据id删除
+	boolean isDelete(Integer user_id);
+
+	// 查询所有用户列表
+	List<User> findAll();
 
 }
