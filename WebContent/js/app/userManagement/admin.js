@@ -68,74 +68,82 @@ app.run([ '$rootScope', '$location', function($rootScope, $location) {
 app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/departmentList', {
 		templateUrl : '/CIMS/jsp/userManagement/departList.html',
-		controller : 'ContractController'
+		controller : 'AdminController'
 	}).when('/departmentAdd', {
 		templateUrl : '/CIMS/jsp/userManagement/departAdd.html',
-		controller : 'ContractController'
+		controller : 'AdminController'
 	}).when('/bulkImportStaff', {
 		templateUrl : '/CIMS/jsp/userManagement/bulkImportStaff.html',
-		controller : 'ContractController'
+		controller : 'AdminController'
 	}).when('/roleSet', {
 		templateUrl : '/CIMS/jsp/userManagement/roleSet.html',
-		controller : 'ContractController'
+		controller : 'AdminController'
 	}).when('/userList', {
 		templateUrl : '/CIMS/jsp/userManagement/userList.html',
-		controller : 'ContractController'
+		controller : 'AdminController'
 	}).when('/userAdd', {
 		templateUrl : '/CIMS/jsp/userManagement/userAdd.html',
-		controller : 'ContractController'
+		controller : 'AdminController'
 	}).when('/alarm', {
 		templateUrl : '/CIMS/jsp/userManagement/',
-		controller : 'ContractController'
+		controller : 'AdminController'
 	}).when('/journal', {
 		templateUrl : '/CIMS/jsp/userManagement/',
-		controller : 'ContractController'
+		controller : 'AdminController'
 	});
 } ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	services.getContractList = function(data) {
-		console.log("发送请求获取部门信息");
+	services.getDepartmentListByPage = function(data) {
+		console.log("发送请求根据页数获取部门信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'department/getDepartmentList.do',
+			url : baseUrl + 'department/getDepartmentListByPage.do',
 			data : data
 		});
 	};
 
-	services.getDebtContract = function(data) {
-		console.log("发送请求获取部门信息");
+	services.getAllDepartmentList = function(data) {
+		console.log("发送请求获取所有部门信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'department/getDepartmentList.do',
-			data : data
-		});
-	};
-
-	services.getOverdueContract = function(data) {
-		console.log("发送请求获取部门信息");
-		return $http({
-			method : 'post',
-			url : baseUrl + 'department/getDepartmentList.do',
+			url : baseUrl + 'department/getAllDepartmentList.do',
 			data : data
 		});
 	};
 	
-	services.selectConByName = function(data) {
-		console.log("按名字查找合同");
+	services.addDepart = function(data) {
+		console.log("发送请求增加部门信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'contract/selectConByName.do',
+			url : baseUrl + 'department/addDepart.do',
 			data : data
 		});
 	};
-	//分页获取合同数据
-	services.selectConByPage = function(data) {
-		console.log("按页码查找合同");
+	services.deleteDepart = function(data) {
+		console.log("发送请求删除部门信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'contract/selectConByPage.do',
+			url : baseUrl + 'department/deleteDepart.do',
+			data : data
+		});
+	};
+
+	services.selectDeptByName = function(data) {
+		console.log("按名字查找部门");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'department/selectDeptByName.do',
+			data : data
+		});
+	};
+	// 分页获取部门数据
+	services.selectConByPage = function(data) {
+		console.log("按页码查找部门");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'department/selectDeptByPage.do',
 			data : data
 		});
 	};
@@ -143,126 +151,92 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	return services;
 } ]);
 
-app.controller('ContractController', [ '$scope', 'services', '$location',
+app.controller('AdminController', [ '$scope', 'services', '$location',
 		function($scope, services, $location) {
-			// 合同
-			var contract = $scope;
-			// 获取合同列表
-			contract.getContractList = function() {
-				services.getContractList({}).success(function(data) {
+
+			var admin = $scope;
+			// 获取部门列表
+			function getAllDepartmentList() {
+				services.getAllDepartmentList({}).success(function(data) {
 					console.log("获取部门列表成功！");
-					contract.contracts = data;
-				});
-			};
-			// 获取欠款合同
-			contract.getDebtContract = function() {
-				services.getDebtContract({}).success(function(data) {
-					console.log("获取欠款合同成功！");
-					contract.contracts = data;
+					admin.departs = data;
 				});
 			}
-			// 获取逾期合同
-			contract.getOverdueContract = function() {
-				services.getOverdueContract({}).success(function(data) {
-					console.log("获取逾期合同成功！");
-					contract.contracts = data;
+           //添加部门
+			admin.department={}; 
+			admin.addDepart = function() {
+
+				services.addDepart({
+					dept_name : $scope.department.dept_name,
+					dept_pid : $scope.department.dept_pid,
+					dept_remark : $scope.department.dept_remark
+					}).success(function(data) {
+					admin.result = data;
+					if (data == "true") {
+						console.log("添加部门列表成功！");
+					} else {
+						console.log("添加部门列表失败！");
+					}
 				});
-			};
-			
-			contract.selectConByName = function(){
+			}
+
+			admin.deleteDepart = function(dept_id) {
+				$(".tip").fadeIn(200);
+				$(".sure").click(function() {
+					services.deleteDepart({
+						deptId : dept_id
+					}).success(function(data) {
+
+						admin.result = data;
+						if (data == "true") {
+							console.log("删除部门列表成功！");
+							$("#" + dept_id).hide();
+						} else {
+							console.log("删除部门列表失败！");
+						}
+					});
+					$(".tip").fadeOut(100);
+				});
+				$(".cancel").click(function() {
+					$(".tip").fadeOut(100);
+				});
+			}
+
+			admin.selectDeptByName = function() {
 				services.selectConByName({
-					conName: $("#cName").val()
+					conName : $("#cName").val()
 				}).success(function(data) {
-					console.log("获取逾期合同成功！");
-					contract.contracts = data;
+					admin.departs = data;
 				});
 			};
 
 			function initData() {
 				console.log("初始化页面信息");
-				if ($location.path().indexOf('/departList') == 0) {
-					// contract.getContractList();
-					contract.contracts = [ {
-						name : "所有合同1",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "所有合同2",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "所有合同3",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "所有合同4",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					} ];
+				if ($location.path().indexOf('/departmentList') == 0) {
+					services.getDepartmentListByPage({
+						page : 1
+					}).success(function(data) {
+						admin.departs = data.list;
+					});
+
 					var $pages = $(".tcdPageCode");
 					var $tablelist = $(".tablelist");
-					console.log($pages.length);
-					console.log($tablelist.length);
-					if($pages.length != 0){
+					if ($pages.length != 0) {
 						$(".tcdPageCode").createPage({
-					        pageCount:30,
-					        current:3,
-					        backFn:function(p){
-					            console.log(p);
-					            
-					        }
-					    });
+							pageCount : 10,
+							current : 1,
+							backFn : function(p) {
+								console.log(p);
+
+							}
+						});
 					}
-				} else if ($location.path().indexOf('/debtContract') == 0) {
-					// contract.getDebtContract();
-					contract.contracts = [ {
-						name : "欠款合同1",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "欠款合同2",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "欠款合同3",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "欠款合同4",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					} ];
+				} else if ($location.path().indexOf('/departmentAdd') == 0) {
+					console.log("初始化部门新增信息");
+					getAllDepartmentList();
+
 				} else if ($location.path().indexOf('/overdueContract') == 0) {
-					// contract.getOverdueContract();
-					contract.contracts = [ {
-						name : "逾期合同1",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "逾期合同2",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "逾期合同3",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "逾期合同4",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					} ];
+
 				}
 			}
 

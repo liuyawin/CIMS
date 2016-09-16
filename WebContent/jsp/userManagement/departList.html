@@ -6,17 +6,20 @@
 	</ul>
 </div>
 
+
+
+
 <div class="rightinfo">
 
 	<div class="tools">
 
 		<form class="toolbar">
 			<input name="" type="text" class="dfinput" id="cName" /> <input
-				class="btn" type="submit" value="查询" ng-click="selectConByName()">
+				class="btn" type="submit" value="查询" ng-click="selectDeptByName()">
 		</form>
 
 		<ul class="toolbar1">
-			<li class="click"><a href="#/contractAdd"><span><img
+			<li class="click"><a href=""><span><img
 						src="../images/t01.png" /></span>新建</a></li>
 		</ul>
 
@@ -32,27 +35,52 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="con in contracts">
-				<td><a href="#">{{con.name}}</a></td>
-				<td>{{con.number}}</td>
-				<td>{{con.state}}</td>
-				<td>{{con.alertTimes}}</td>
-				<td><a href="#" class="tablelink">查看</a><a href="#"
-					class="tablelink"> 修改</a><a href="#" class="tablelink"> 删除</a></td>
+			<tr ng-repeat="depart in departs"  id={{depart.dept_id}}>
+				<td>{{depart.dept_id}}</td>
+				<td>{{depart.dept_name}}</td>
+				<td>
+					<div ng-switch on={{depart.department.dept_name}}>
+						<div>{{depart.department.dept_name}}</div>
+						<div ng-switch-default>
+							无
+						</div>
+					</div>
+				</td>
+				<td>
+				<a class="tablelink"> 修改</a>
+				<a ng-click="deleteDepart(depart.dept_id)" class="tablelink"> 删除</a>
+				<a class="tablelink">批量导入员工</a>
+				<a class="tablelink">查看现有员工</a>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 
+	<div class="tip">
+		<div class="tiptop">
+			<span>提示信息</span>
+		</div>
 
-	<div class="tcdPageCode">
-	页码容器
+		<div class="tipinfo">
+			<div class="tipright">
+				<p>是否确认对信息的删除 ？</p>
+				<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+			</div>
+		</div>
+
+		<div class="tipbtn">
+			<input name="" type="button" class="sure" value="确定" />&nbsp; <input
+				name="" type="button" class="cancel" value="取消" />
+		</div>
+
 	</div>
+
+	<div class="tcdPageCode">页码容器</div>
 
 </div>
 
 <script type="text/javascript">
 	$('.tablelist tbody tr:odd').addClass('odd');
 </script>
-
 
 
