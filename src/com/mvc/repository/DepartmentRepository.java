@@ -25,13 +25,15 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
 	// 筛选出所有部门列表
 	@Query("select d from Department d where dept_state=0")
 	public List<Department> findAlls();
+	
+	
 
 	// 根据部门ID和名称查询部门列表
 	@Query("select d from Department d where dept_id=:dept_id and dept_name=:dept_name and dept_state=0")
 	public List<Department> findByName(@Param("dept_id") Integer dept_id, @Param("dept_name") String dept_name);
 
-	//根据部门id修改部门状态
-	@Query("update Department set dept_state=0 where dept_id=:dept_id")
-	public boolean deleteById(@Param("dept_id") Integer dept_id);
+	// 查询部门总条数
+	@Query("select count(dept_id) from Department d where dept_state=0")
+	public	Long countTotal();
 
 }
