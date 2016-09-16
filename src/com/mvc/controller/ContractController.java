@@ -60,7 +60,6 @@ public class ContractController {
 	 */
 	@RequestMapping("/getDebtContract.do")
 	public @ResponseBody String getDebtContList(HttpServletRequest request, HttpSession session) {
-
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		List<Contract> list = contractService.findAllDebtCont(user.getUser_id());
 		return JSON.toJSONString(list);
@@ -97,6 +96,7 @@ public class ContractController {
 				pager.getOffset(), pager.getPageSize());// 合同名
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
+		System.out.println(jsonObject.toString());
 		return jsonObject.toString();
 	}
 
