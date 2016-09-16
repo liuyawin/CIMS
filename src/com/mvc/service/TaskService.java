@@ -21,9 +21,20 @@ public interface TaskService {
 	// 更新任务状态
 	boolean updateState(Integer taskId, Integer task_state);
 
-	// 查询任务总条数
-	Long countTotal();
+	// 根据状态，关键字查询任务总条数
+	Integer countByParam(Integer user_id, Integer task_state, String searchKey, Integer sendOrReceive);
 
-	// 根据页数返回任务列表
-	List<Task> findByPage(Integer receiver_id, Integer task_state, Integer offset, Integer end);
+	// 根据页数,状态，关键字返回任务列表
+	List<Task> findByPage(Integer user_id, Integer task_state, String searchKey, Integer offset, Integer end,
+			Integer sendOrReceive);
+
+	// 根据任务ID查询任务详情
+	Task findById(Integer taskId);
+
+	// 保存
+	boolean save(Task task);
+
+	// 根据任务Id删除任务
+	boolean delete(Integer taskId);
+
 }

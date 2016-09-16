@@ -8,7 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.ManyToAny;
 
 /**
  * 部门
@@ -24,7 +29,8 @@ public class Department {
 	private Integer dept_id; // Id
 	private String dept_name; // 部门名称
 	private Integer dept_state;// 部门状态，1表示存在，0表示不存在
-	private Integer dept_pid;// 父ID
+	private Department department;
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -54,12 +60,14 @@ public class Department {
 		this.dept_state = dept_state;
 	}
 
-	public Integer getDept_pid() {
-		return dept_pid;
+	@ManyToOne
+	@JoinColumn(name="dept_pid")
+	public Department getDepartment() {
+		return department;
 	}
 
-	public void setDept_pid(Integer dept_pid) {
-		this.dept_pid = dept_pid;
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 }

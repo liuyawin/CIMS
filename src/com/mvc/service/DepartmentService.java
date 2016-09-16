@@ -13,15 +13,20 @@ import com.mvc.entity.Department;
 public interface DepartmentService {
 	
 	// 根据用户ID和部门名称筛选部门列表
-	public List<Department> findDepartmentByName(Integer dept_id, String dept_name);
+	 List<Department> findDepartmentByName(Integer dept_id, String dept_name);
+	
+	// 根据页数筛选全部部门列表
+	List<Department> findDepartmentAllByPage(Integer offset, Integer end);
 	
 	// 筛选全部部门列表
-	public List<Department> findDepartmentAlls();
-	
+	 List<Department> findDepartmentAlls();
 	//根据id删除
-	public boolean deleteState(Integer dept_id);
+	boolean deleteState(Integer dept_id);
 	
 	//增加一条数据
-	public Department save(Department department);
+	 boolean save(Department department);
+	
+	// 查询任务总条数
+	Long countTotal();
 
 }

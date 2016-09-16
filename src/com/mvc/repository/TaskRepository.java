@@ -26,4 +26,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 	// 查询任务总条数
 	@Query("select count(task_id) from Task t where task_isdelete=0")
 	Long countTotal();
+
+	// 根据任务ID查询任务详情
+	@Query("select t from Task t where task_id=:task_id")
+	Task findById(@Param("task_id") Integer taskId);
 }

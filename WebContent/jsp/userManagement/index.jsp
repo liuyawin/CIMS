@@ -14,5 +14,3 @@
 
 <script src="${ctx}/js/app/userManagement/admin.js"></script>
 
-</body>
-</html>

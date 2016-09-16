@@ -1,6 +1,6 @@
 var app = angular
 		.module(
-				'assistant2',
+				'contract',
 				[ 'ngRoute' ],
 				function($httpProvider) {// ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -66,28 +66,28 @@ app.run([ '$rootScope', '$location', function($rootScope, $location) {
 
 // 路由配置
 app.config([ '$routeProvider', function($routeProvider) {
-	$routeProvider.when('/newTask', {
-		templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
+	$routeProvider.when('/contractList', {
+		templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractList.html',
 		controller : 'ContractController'
-	}).when('/unfinishTask', {
-		templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
+	}).when('/debtContract', {
+		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
 		controller : 'ContractController'
-	}).when('/finishTask', {
-		templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
+	}).when('/overdueContract', {
+		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
 		controller : 'ContractController'
-	}).when('/taskAdd', {
-		templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskAdd.html',
+	}).when('/contractAdd', {
+		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractAdd.html',
 		controller : 'ContractController'
 	});
 } ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	services.getTaskList = function(data) {
-		console.log("发送请求获取合同信息data"+data);
+	services.getContractList = function(data) {
+		console.log("发送请求获取合同信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'task/selectTaskByState.do',
+			url : baseUrl + 'contract/getContractList.do',
 			data : data
 		});
 	};
@@ -106,6 +106,24 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'contract/getOverdueContract.do',
+			data : data
+		});
+	};
+	
+	services.selectConByName = function(data) {
+		console.log("按名字查找合同");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/selectConByName.do',
+			data : data
+		});
+	};
+	//分页获取合同数据
+	services.selectConByPage = function(data) {
+		console.log("按页码查找合同");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/selectConByPage.do',
 			data : data
 		});
 	};
@@ -138,80 +156,100 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					contract.contracts = data;
 				});
 			};
+			
+			contract.selectConByName = function(){
+				services.selectConByName({
+					conName: $("#cName").val()
+				}).success(function(data) {
+					console.log("获取逾期合同成功！");
+					contract.contracts = data;
+				});
+			};
 
 			function initData() {
 				console.log("初始化页面信息");
-				if ($location.path().indexOf('/newTask') == 0) {
+				if ($location.path().indexOf('/contractList') == 0) {
 					// contract.getContractList();
-					services.getTaskList({taskState: 0 ,
-						page:1}).success(function(data) {
-						console.log("获取合同列表成功！");
-						
-						contract.tasks = data.list;
-						
-					});
-				
-				} else if ($location.path().indexOf('/unfinishTask') == 0) {
-					// contract.getDebtContract();
-					contract.tasks =[ {
-						task_content : "待处理1...",
-						task_type : "文书任务",
-						task_state : "待处理",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同2"
+					contract.contracts = [ {
+						name : "所有合同1",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
 					}, {
-						task_content : "待处理2...",
-						task_type : "文书任务",
-						task_state : "待处理",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同2"
+						name : "所有合同2",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
 					}, {
-						task_content : "待处理3...",
-						task_type : "文书任务",
-						task_state : "待处理",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同2"
+						name : "所有合同3",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
 					}, {
-						task_content : "待处理4...",
-						task_type : "文书任务",
-						task_state : "待处理",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同2"
+						name : "所有合同4",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
 					} ];
-				} else if ($location.path().indexOf('/finishTask') == 0) {
+					var $pages = $(".tcdPageCode");
+					var $tablelist = $(".tablelist");
+					console.log($pages.length);
+					console.log($tablelist.length);
+					if($pages.length != 0){
+						$(".tcdPageCode").createPage({
+					        pageCount:30,
+					        current:3,
+					        backFn:function(p){
+					            console.log(p);
+					            
+					        }
+					    });
+					}
+				} else if ($location.path().indexOf('/debtContract') == 0) {
+					// contract.getDebtContract();
+					contract.contracts = [ {
+						name : "欠款合同1",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
+					}, {
+						name : "欠款合同2",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
+					}, {
+						name : "欠款合同3",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
+					}, {
+						name : "欠款合同4",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
+					} ];
+				} else if ($location.path().indexOf('/overdueContract') == 0) {
 					// contract.getOverdueContract();
-					contract.tasks = [ {
-						task_content : "已完成1...",
-						task_type : "文书任务",
-						task_state : "已完成",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同3"
+					contract.contracts = [ {
+						name : "逾期合同1",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
 					}, {
-						task_content : "已完成2...",
-						task_type : "文书任务",
-						task_state : "已完成",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同3"
+						name : "逾期合同2",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
 					}, {
-						task_content : "已完成3...",
-						task_type : "文书任务",
-						task_state : "已完成",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同3"
+						name : "逾期合同3",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
 					}, {
-						task_content : "已完成4...",
-						task_type : "文书任务",
-						task_state : "已完成",
-						creator : "主任",
-						task_alarmnum : "4",
-						contract:"合同3"
+						name : "逾期合同4",
+						number : "89757",
+						state : "已完成",
+						alertTimes : "5"
 					} ];
 				}
 			}
