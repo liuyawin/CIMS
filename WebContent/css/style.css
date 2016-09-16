@@ -831,6 +831,7 @@ h2 {
 .forminfo li {
 	margin-bottom: 13px;
 	clear: both;
+	overflow: auto;
 }
 
 .forminfo li label {
@@ -1472,10 +1473,13 @@ h2 {
 	display: inline-block;
 	float: left;
 	margin-left: 16px;
+	height: 30px;
+	padding-top: 6px;
 }
 
 .div-checkbox input {
 	margin-right: 4px;
+	margin-top: 2px;
 }
 
 .tcdPageCode {
@@ -1534,7 +1538,7 @@ h2 {
 }
 
 /* 下拉框 */
-.dfselect{
+.dfselect {
 	width: 300px;
 	height: 36px;
 	margin-right: 12px;
@@ -1547,7 +1551,25 @@ h2 {
 	text-indent: 4px;
 }
 
-.dfselect option{
-	word-space:2px;
-	margin:8px 12px;
+.dfselect option {
+	word-space: 2px;
+	margin: 8px 12px;
+}
+
+.textarea {
+	width: 302px;
+	height: 80px;
+	padding:8px;
+	line-height:16px;
+	border-top: solid 1px #a7b5bc;
+	border-left: solid 1px #a7b5bc;
+	border-right: solid 1px #ced9df;
+	border-bottom: solid 1px #ced9df;
+}
+
+.text-center {
+    text-align: center;
+}
+.width20 {
+    width: 20%;
 }

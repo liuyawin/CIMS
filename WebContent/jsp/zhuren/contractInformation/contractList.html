@@ -2,7 +2,7 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li>首页</li>
-		<li>合同信息</li>
+		<li>合同列表</li>
 	</ul>
 </div>
 
@@ -26,18 +26,20 @@
 		<thead>
 			<tr>
 				<th>合同名称</th>
-				<th>合同编号</th>
+				<th>本公司编号</th>
 				<th>合同状态</th>
-				<th>报警次数</th>
+				<th>工程阶段报警次数</th>
+				<th>收款节点报警次数</th>
 				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="con in contracts">
-				<td><a href="#">{{con.name}}</a></td>
-				<td>{{con.number}}</td>
-				<td>{{con.state}}</td>
-				<td>{{con.alertTimes}}</td>
+				<td><a href="#contractDetail">{{con.cont_name}}</a></td>
+				<td>{{con.cont_onum}}</td>
+				<td>{{con.cont_state | conState}}</td>
+				<td>{{con.cont_proalanum}}</td>
+				<td>{{con.cont_payalanum}}</td>
 				<td><a href="#" class="tablelink">查看</a><a href="#"
 					class="tablelink"> 修改</a><a href="#" class="tablelink"> 删除</a></td>
 			</tr>

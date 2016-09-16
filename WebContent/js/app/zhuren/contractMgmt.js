@@ -78,6 +78,9 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/contractAdd', {
 		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractAdd.html',
 		controller : 'ContractController'
+	}).when('/contractDetail', {
+		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractDetail.html',
+		controller : 'ContractController'
 	});
 } ]);
 app.constant('baseUrl', '/CIMS/');
@@ -127,6 +130,22 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	
+	services.addContract = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/addContract.do',
+			data : data
+		});
+	};
+	
+	services.addTask = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'task/addTask.do',
+			data : data
+		});
+	};
 
 	return services;
 } ]);
@@ -136,10 +155,10 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 			// 合同
 			var contract = $scope;
 			// 获取合同列表
-			contract.getContractList = function() {
-				services.getContractList({}).success(function(data) {
-					console.log("获取合同列表成功！");
-					contract.contracts = data;
+			contract.getContractList = function(page) {
+				services.getContractList({page:page}).success(function(data) {
+					contract.contracts = data.list;
+					contract.totalPage = data.totalPage;
 				});
 			};
 			// 获取欠款合同
@@ -148,63 +167,77 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					console.log("获取欠款合同成功！");
 					contract.contracts = data;
 				});
-			}
+			};
 			// 获取逾期合同
 			contract.getOverdueContract = function() {
 				services.getOverdueContract({}).success(function(data) {
 					console.log("获取逾期合同成功！");
-					contract.contracts = data;
+					contract.contracts = data.list;
 				});
 			};
-			
+			//通过合同名获取合同信息
 			contract.selectConByName = function(){
 				services.selectConByName({
-					conName: $("#cName").val()
+					contName: $("#cName").val(),
+					    page: 1
 				}).success(function(data) {
-					console.log("获取逾期合同成功！");
-					contract.contracts = data;
+					console.log("选择合同成功！");
+					contract.contracts = data.list;
+					contract.totalPage = data.totalPage;
 				});
 			};
-
+			//添加合同
+			contract.addContract = function(){
+				console.log(contract.contract);
+				var conFormData = JSON.stringify(contract.contract);
+				console.log(conFormData);
+				services.addContract({
+					contract: conFormData
+				}).success(function(data) {
+					/*window.sessionStorage.setItem("contractId",);*/
+					alert("添加合同成功！");
+				});
+			};
+			//添加文书任务
+			contract.addTask1 = function(){
+				services.addTask({
+					task: contract.task1,
+					taskType:"task1",
+					conId: sessionStorage.getItem(contractId)
+				}).success(function(data) {
+					alert("添加文书任务成功！");
+				});
+			};
+			//添加执行管控任务
+			contract.addTask2 = function(){
+				services.addTask({
+					task: contract.task2,
+					taskType:"task2",
+					conId: sessionStorage.getItem(contractId)
+				}).success(function(data) {
+					alert("添加执行管控任务成功！");
+				});
+			};
+			//初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
-				if ($location.path().indexOf('/contractList') == 0) {
-					// contract.getContractList();
-					contract.contracts = [ {
-						name : "所有合同1",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "所有合同2",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "所有合同3",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "所有合同4",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					} ];
-					var $pages = $(".tcdPageCode");
-					var $tablelist = $(".tablelist");
-					console.log($pages.length);
-					console.log($tablelist.length);
-					if($pages.length != 0){
-						$(".tcdPageCode").createPage({
-					        pageCount:30,
-					        current:3,
-					        backFn:function(p){
-					            console.log(p);
-					            
-					        }
-					    });
-					}
+				if ($location.path().indexOf('/contractList') == 0) {//如果是合同列表页
+					services.getContractList({page:1}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if($pages.length != 0){
+							$pages.createPage({
+						        pageCount:contract.totalPage,
+						        current:1,
+						        backFn:function(p){
+						        	contract.getContractList(p);//点击页码时获取第p页的数据					            
+						        }
+						    });
+						}
+					});
+					
 				} else if ($location.path().indexOf('/debtContract') == 0) {
 					// contract.getDebtContract();
 					contract.contracts = [ {
@@ -251,11 +284,37 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 						state : "已完成",
 						alertTimes : "5"
 					} ];
+				}else if ($location.path().indexOf('/addContract') == 0) {
+					//这里先获取人员列表
+					// contract.getOverdueContract();
+					var $select = $("select");
+					for(var i=0;i<$select.length;i++){
+						$select[i].options[0].selected = true; 
+					}
+					$('select').prop('selectedIndex', 1);
 				}
 			}
 
-			initData();
+			initData();			
 		} ]);
+//合同状态过滤器
+app.filter('conState',function(){
+    return function(input){
+        var state = "";
+        /*switch(input){
+        case "0":state="在建";
+        break;
+        case "1":state="竣工";
+        break;
+        case "2":state="停建";
+        break;
+        }*/
+        if(input=="0")state="在建";
+        else if(input=="1")state="竣工";
+        else if(input=="2")state="停建";
+        return state;
+    }
+});
 
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
