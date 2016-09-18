@@ -1,6 +1,6 @@
 var app = angular
 		.module(
-				'admin',
+				'department',
 				[ 'ngRoute' ],
 				function($httpProvider) {// ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -67,28 +67,13 @@ app.run([ '$rootScope', '$location', function($rootScope, $location) {
 // 路由配置
 app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/departmentList', {
-		templateUrl : '/CIMS/jsp/userManagement/departList.html',
+		templateUrl : '/CIMS/jsp/userManagement/departInformation/departList.html',
 		controller : 'AdminController'
 	}).when('/departmentAdd', {
-		templateUrl : '/CIMS/jsp/userManagement/departAdd.html',
+		templateUrl : '/CIMS/jsp/userManagement/departInformation/departAdd.html',
 		controller : 'AdminController'
 	}).when('/bulkImportStaff', {
-		templateUrl : '/CIMS/jsp/userManagement/bulkImportStaff.html',
-		controller : 'AdminController'
-	}).when('/roleSet', {
-		templateUrl : '/CIMS/jsp/userManagement/roleSet.html',
-		controller : 'AdminController'
-	}).when('/userList', {
-		templateUrl : '/CIMS/jsp/userManagement/userList.html',
-		controller : 'AdminController'
-	}).when('/userAdd', {
-		templateUrl : '/CIMS/jsp/userManagement/userAdd.html',
-		controller : 'AdminController'
-	}).when('/alarm', {
-		templateUrl : '/CIMS/jsp/userManagement/',
-		controller : 'AdminController'
-	}).when('/journal', {
-		templateUrl : '/CIMS/jsp/userManagement/',
+		templateUrl : '/CIMS/jsp/userManagement/departInformation/bulkImportStaff.html',
 		controller : 'AdminController'
 	});
 } ]);
@@ -138,15 +123,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	// 分页获取部门数据
-	services.selectConByPage = function(data) {
-		console.log("按页码查找部门");
-		return $http({
-			method : 'post',
-			url : baseUrl + 'department/selectDeptByPage.do',
-			data : data
-		});
-	};
 
 	return services;
 } ]);
@@ -155,6 +131,29 @@ app.controller('AdminController', [ '$scope', 'services', '$location',
 		function($scope, services, $location) {
 
 			var admin = $scope;
+			// 换页
+			function pageTurn(totalPage, page) {
+
+				var $pages = $(".tcdPageCode");
+				console.log($pages.length);
+				if ($pages.length != 0) {
+					$(".tcdPageCode").createPage({
+						pageCount : totalPage,
+						current : page,
+						backFn : function(p) {
+							getDepartmentListByPage(p)
+						}
+					});
+				}
+			}
+			// 根据页数获取部门列表
+			function getDepartmentListByPage(page) {
+				services.getDepartmentListByPage({
+					page : page
+				}).success(function(data) {
+					admin.departs = data.list;
+				});
+			}
 			// 获取部门列表
 			function getAllDepartmentList() {
 				services.getAllDepartmentList({}).success(function(data) {
@@ -168,18 +167,19 @@ app.controller('AdminController', [ '$scope', 'services', '$location',
 
 				services.addDepart({
 					dept_name : $scope.department.dept_name,
-					dept_pid : $scope.department.dept_pid,
+					dept_pid : $("#departSelect").val(),
 					dept_remark : $scope.department.dept_remark
 					}).success(function(data) {
 					admin.result = data;
 					if (data == "true") {
 						console.log("添加部门列表成功！");
+						
 					} else {
 						console.log("添加部门列表失败！");
 					}
 				});
 			}
-
+			 //删除部门
 			admin.deleteDepart = function(dept_id) {
 				$(".tip").fadeIn(200);
 				$(".sure").click(function() {
@@ -201,15 +201,15 @@ app.controller('AdminController', [ '$scope', 'services', '$location',
 					$(".tip").fadeOut(100);
 				});
 			}
-
+           //根据输入筛选部门
 			admin.selectDeptByName = function() {
 				services.selectConByName({
-					conName : $("#cName").val()
+					departName : $("#dName").val()
 				}).success(function(data) {
 					admin.departs = data;
 				});
 			};
-
+             //初始化
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/departmentList') == 0) {
@@ -217,27 +217,13 @@ app.controller('AdminController', [ '$scope', 'services', '$location',
 						page : 1
 					}).success(function(data) {
 						admin.departs = data.list;
-					});
-
-					var $pages = $(".tcdPageCode");
-					var $tablelist = $(".tablelist");
-					if ($pages.length != 0) {
-						$(".tcdPageCode").createPage({
-							pageCount : 10,
-							current : 1,
-							backFn : function(p) {
-								console.log(p);
-
-							}
-						});
-					}
+						pageTurn(data.totalPage, 1)
+					});					
 				} else if ($location.path().indexOf('/departmentAdd') == 0) {
 					console.log("初始化部门新增信息");
 					getAllDepartmentList();
 
-				} else if ($location.path().indexOf('/overdueContract') == 0) {
-
-				}
+				} 
 			}
 
 			initData();

@@ -17,7 +17,7 @@ import com.mvc.entity.User;
 /**
  * User相关Dao层接口实现
  * 
- * @author zjn
+ * @author wanghuimin
  * @date 2016年9月7日
  */
 @Repository("userDaoImpl")
@@ -47,12 +47,12 @@ public class UserDaoImpl implements UserDao {
 	/**
 	 * 删除用户
 	 */
-	public boolean updateState(Integer id, Integer user_delete) {
+	public boolean updateState(Integer id) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			String selectSql = " update dept set 'user_delete' = :user_delete where user_id =:user_id ";
+			em.getTransaction().begin();
+			String selectSql = " update user set `user_isdelete` = 1 where user_id =:user_id ";
 			Query query = em.createNativeQuery(selectSql);
-			query.setParameter("user_delete", user_delete);
 			query.setParameter("user_id", id);
 			query.executeUpdate();
 			em.flush();
@@ -61,5 +61,31 @@ public class UserDaoImpl implements UserDao {
 			em.close();
 		}
 		return true;
+	}
+	//根据页数筛选全部用户列表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> findUserAllByPage(Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		String selectSql = "select * from User where user_isdelete=0";		
+		selectSql += " order by user_id desc limit :offset, :end";
+		Query query = em.createNativeQuery(selectSql, User.class);
+		query.setParameter("offset", offset);
+		query.setParameter("end", end);
+		List<User> list = query.getResultList();
+		em.close();
+		return list;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> findUserFromDesign() {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		String selectSql = "select * from user_dept_relation where department.dept_name='设计部'";	
+		Query query = em.createNativeQuery(selectSql, Department.class);
+		List<User> list = query.getResultList();
+		em.close();
+		return list;
 	}
 }

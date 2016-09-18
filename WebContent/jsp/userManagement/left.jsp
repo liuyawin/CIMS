@@ -20,7 +20,8 @@
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
 			</div>
 			<ul class="menuson">
-			   <li><cite></cite> <a href="#/roleSet">角色权限</a><i></i></li>
+			   <li><cite></cite> <a href="#/roleList">权限列表</a><i></i></li>
+			   <li><cite></cite> <a href="#/roleAdd">角色权限</a><i></i></li>
 			   <li><cite></cite> <a href="#/userList">用户列表</a><i></i></li>
 			   <li><cite></cite> <a href="#/userAdd">添加用户</a><i></i></li>
 			</ul>

@@ -7,13 +7,13 @@ import com.mvc.entity.User;
 /**
  * User相关Service层接口
  * 
- * @author zjn
+ * @author wanghuimin
  * @date 2016年9月7日
  */
 
 public interface UserService {
 
-	// 新建用户保存
+	// 添加用户
 	boolean save(User user);
 
 	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
@@ -23,9 +23,19 @@ public interface UserService {
 	User findByUserNum(String userNum);
 
 	// 根据id删除
-	boolean isDelete(Integer user_id);
+	boolean deleteIsdelete(Integer user_id);
 
-	// 查询所有用户列表
-	List<User> findAll();
+	//  查询部门总条数
+	Long countTotal();
+	
+	// 根据页数筛选全部用户列表
+	List<User> findUserAllByPage(Integer offset, Integer end);
+	
+	//获取用户列表，无翻页功能
+	List<User> findUserAlls();
+	
+	//只要设计部人员列表
+	List<User> findUserFromDesign();
+	
 
 }
