@@ -65,24 +65,42 @@ app.run([ '$rootScope', '$location', function($rootScope, $location) {
 } ]);
 
 // 路由配置
-app.config([ '$routeProvider', function($routeProvider) {
-	$routeProvider.when('/contractList', {
-		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
-		controller : 'ContractController'
-	}).when('/debtContract', {
-		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
-		controller : 'ContractController'
-	}).when('/overdueContract', {
-		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
-		controller : 'ContractController'
-	}).when('/contractAdd', {
-		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractAdd.html',
-		controller : 'ContractController'
-	}).when('/contractDetail', {
-		templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractDetail.html',
-		controller : 'ContractController'
-	});
-} ]);
+app
+		.config([
+				'$routeProvider',
+				function($routeProvider) {
+					$routeProvider
+							.when(
+									'/contractList',
+									{
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/debtContract',
+									{
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/overdueContract',
+									{
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/contractAdd',
+									{
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractAdd.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/contractDetail',
+									{
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractDetail.html',
+										controller : 'ContractController'
+									});
+				} ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
@@ -112,7 +130,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	
+
 	services.selectConByName = function(data) {
 		console.log("按名字查找合同");
 		return $http({
@@ -121,7 +139,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	//分页获取合同数据
+	// 分页获取合同数据
 	services.selectConByPage = function(data) {
 		console.log("按页码查找合同");
 		return $http({
@@ -130,7 +148,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	
+
 	services.addContract = function(data) {
 		return $http({
 			method : 'post',
@@ -138,7 +156,15 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	
+
+	services.deleteContract = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/deleteContract.do',
+			data : data
+		});
+	};
+
 	services.addTask = function(data) {
 		return $http({
 			method : 'post',
@@ -156,7 +182,9 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 			var contract = $scope;
 			// 获取合同列表
 			contract.getContractList = function(page) {
-				services.getContractList({page:page}).success(function(data) {
+				services.getContractList({
+					page : page
+				}).success(function(data) {
 					contract.contracts = data.list;
 					contract.totalPage = data.totalPage;
 				});
@@ -175,134 +203,205 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					contract.contracts = data.list;
 				});
 			};
-			//通过合同名获取合同信息
-			contract.selectConByName = function(){
+			// 通过合同名获取合同信息
+			contract.selectConByName = function() {
 				services.selectConByName({
-					contName: $("#cName").val(),
-					    page: 1
+					contName : $("#cName").val(),
+					page : 1
 				}).success(function(data) {
 					console.log("选择合同成功！");
 					contract.contracts = data.list;
 					contract.totalPage = data.totalPage;
 				});
 			};
-			//添加合同
-			contract.addContract = function(){
-				console.log(contract.contract);
+			// 添加合同
+			contract.addContract = function() {
 				var conFormData = JSON.stringify(contract.contract);
-				console.log(conFormData);
+
 				services.addContract({
-					contract: conFormData
+					contract : conFormData
 				}).success(function(data) {
-					sessionStorage.setItem("contractId",data);
+					sessionStorage.setItem("contractId", data);
+					alert("创建合同成功！");
 				});
 			};
-			//添加文书任务
-			contract.addTask1 = function(){
+			// 删除合同
+			contract.deleteContract = function(obj) {
+				var conId = this.con.cont_id;
+				var msg = "确认删除该合同？";
+				if (confirm(msg) == true) {
+					services.deleteContract({
+						conId : conId
+					}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						alert("删除成功！");
+					});
+				} else {
+					return false;
+				}		
+			}
+			// 添加文书任务
+			contract.addTask1 = function() {
+				var conId = sessionStorage.getItem("contractId");
+				console.log(conId);
+				if (conId.trim() == "") {
+					alert("请先录入合同信息！");
+					return false;
+				}
+				var task1 = JSON.stringify(contract.task1);
+				console.log(task1);
 				services.addTask({
-					task: contract.task1,
-					taskType:"task1",
-					conId: sessionStorage.getItem(contractId)
+					task : task1,
+					taskType : "task1",
+					conId : conId
 				}).success(function(data) {
 					alert("添加文书任务成功！");
 				});
 			};
-			//添加执行管控任务
-			contract.addTask2 = function(){
+			// 添加执行管控任务
+			contract.addTask2 = function() {
+				var conId = sessionStorage.getItem("contractId");
+				console.log(conId);
+				if (conId.trim() == "") {
+					alert("请先录入合同信息！");
+					return false;
+				}
+				var task2 = JSON.stringify(contract.task2);
 				services.addTask({
-					task: contract.task2,
-					taskType:"task2",
-					conId: sessionStorage.getItem(contractId)
+					task : task2,
+					taskType : "task2",
+					conId : conId
 				}).success(function(data) {
 					alert("添加执行管控任务成功！");
 				});
 			};
-			//初始化页面信息
+			// 初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
-				if ($location.path().indexOf('/contractList') == 0) {//如果是合同列表页
-					services.getContractList({page:1}).success(function(data) {
+				if ($location.path().indexOf('/contractList') == 0) {// 如果是合同列表页
+					services.getContractList({
+						page : 1
+					}).success(function(data) {
 						contract.contracts = data.list;
 						contract.totalPage = data.totalPage;
 						var $pages = $(".tcdPageCode");
 						console.log(contract.totalPage);
-						if($pages.length != 0){
+						if ($pages.length != 0) {
 							$pages.createPage({
-						        pageCount:contract.totalPage,
-						        current:1,
-						        backFn:function(p){
-						        	contract.getContractList(p);//点击页码时获取第p页的数据					            
-						        }
-						    });
+								pageCount : contract.totalPage,
+								current : 1,
+								backFn : function(p) {
+									contract.getContractList(p);// 点击页码时获取第p页的数据
+								}
+							});
 						}
 					});
-					
+
 				} else if ($location.path().indexOf('/debtContract') == 0) {
 					// contract.getDebtContract();
-					services.getDebtContract({page:1}).success(function(data) {
+					services.getDebtContract({
+						page : 1
+					}).success(function(data) {
 						contract.contracts = data.list;
 						contract.totalPage = data.totalPage;
 						var $pages = $(".tcdPageCode");
 						console.log(contract.totalPage);
-						if($pages.length != 0){
+						if ($pages.length != 0) {
 							$pages.createPage({
-						        pageCount:contract.totalPage,
-						        current:1,
-						        backFn:function(p){
-						        	contract.getDebtContract(p);//点击页码时获取第p页的数据					            
-						        }
-						    });
+								pageCount : contract.totalPage,
+								current : 1,
+								backFn : function(p) {
+									contract.getDebtContract(p);// 点击页码时获取第p页的数据
+								}
+							});
 						}
 					});
 				} else if ($location.path().indexOf('/overdueContract') == 0) {
 					// contract.getOverdueContract();
-					services.getOverdueContract({page:1}).success(function(data) {
+					services.getOverdueContract({
+						page : 1
+					}).success(function(data) {
 						contract.contracts = data.list;
 						contract.totalPage = data.totalPage;
 						var $pages = $(".tcdPageCode");
 						console.log(contract.totalPage);
-						if($pages.length != 0){
+						if ($pages.length != 0) {
 							$pages.createPage({
-						        pageCount:contract.totalPage,
-						        current:1,
-						        backFn:function(p){
-						        	contract.getOverdueContract(p);//点击页码时获取第p页的数据					            
-						        }
-						    });
+								pageCount : contract.totalPage,
+								current : 1,
+								backFn : function(p) {
+									contract.getOverdueContract(p);// 点击页码时获取第p页的数据
+								}
+							});
 						}
 					});
-				}else if ($location.path().indexOf('/addContract') == 0) {
-					//这里先获取人员列表
+				} else if ($location.path().indexOf('/addContract') == 0) {
+					// 这里先获取人员列表
 					// contract.getOverdueContract();
+					sessionStorage.setItem("contractId", "");
 					var $select = $("select");
-					for(var i=0;i<$select.length;i++){
-						$select[i].options[0].selected = true; 
+					for (var i = 0; i < $select.length; i++) {
+						$select[i].options[0].selected = true;
 					}
 					$('select').prop('selectedIndex', 1);
 				}
 			}
 
-			initData();			
+			initData();
+			// 验证日期输入格式
+			var $dateFormat = $(".dateFormat");
+			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+			$(".dateFormat").blur(function() {
+				if (!dateRegexp.test(this.value)) {
+					$(this).parent().children("span").css('display', 'inline');
+				}
+			});
+			$(".dateFormat").click(function() {
+				$(this).parent().children("span").css('display', 'none');
+			});
 		} ]);
-//合同状态过滤器
-app.filter('conState',function(){
-    return function(input){
-        var state = "";
-        /*switch(input){
-        case "0":state="在建";
-        break;
-        case "1":state="竣工";
-        break;
-        case "2":state="停建";
-        break;
-        }*/
-        if(input=="0")state="在建";
-        else if(input=="1")state="竣工";
-        else if(input=="2")state="停建";
-        return state;
-    }
+// 合同状态过滤器
+app.filter('conState', function() {
+	return function(input) {
+		var state = "";
+		/*
+		 * switch(input){ case "0":state="在建"; break; case "1":state="竣工";
+		 * break; case "2":state="停建"; break; }
+		 */
+		if (input == "0")
+			state = "在建";
+		else if (input == "1")
+			state = "竣工";
+		else if (input == "2")
+			state = "停建";
+		return state;
+	}
 });
+// 自定义表单验证日期格式
+app.directive("dateFormat", function() {
+	return {
+		restrict : 'A',
+		require : 'ngModel',
+		scope : true,
+		link : function(scope, elem, attrs, controller) {
+			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
 
+			// Model变化时执行
+			// 初始化指令时BU执行
+			scope.$watch(attrs.ngModel, function(val) {
+				if (!val) {
+					return;
+				}
+				if (!dateRegexp.test(val)) {
+					controller.$setValidity('dateformat', false);
+				} else {
+					controller.$setValidity('dateformat', true);
+				}
+			});
+		}
+	}
+});
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
  * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,

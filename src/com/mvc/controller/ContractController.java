@@ -1,5 +1,6 @@
 package com.mvc.controller;
 
+import java.awt.print.Paper;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -252,6 +253,8 @@ public class ContractController {
 					pager.getPageSize());
 			jsonObject.put("list", list);
 			jsonObject.put("totalPage", pager.getTotalPage());
+			System.out.println(list);
+			System.out.println( pager.getTotalPage());
 		}
 		return jsonObject.toString();
 	}

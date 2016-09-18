@@ -1,0 +1,19 @@
+.input_border {
+	border: none;
+	width: 300px !important;
+	height: 100% !important
+}
+
+.text_border {
+	
+	overflow: auto;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	border-style: solid;
+	border-color: #FFFFFF;
+	width: 900px ;
+}
+
+.table_title_width{
+	width : 45% !important
+}

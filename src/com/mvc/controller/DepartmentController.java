@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.Department;
+import com.mvc.entity.Task;
+import com.mvc.entity.User;
 import com.mvc.service.DepartmentService;
 import com.utils.Pager;
 
@@ -90,10 +93,14 @@ public class DepartmentController {
 	 */
 	@RequestMapping(value = "/addDepart.do")
 	public @ResponseBody String addDepart(HttpServletRequest request, HttpSession session) {
+		System.out.println("pid:"+request.getParameter("dept_name")+request.getParameter("dept_pid")+request.getParameter("dept_remark"));
 		Department department=new Department();
-//		department.setDept_name(request.getAttribute("params"));
-//		department.setDepartment(department);
-//		department.set(request.getAttribute("params"));
+		department.setDept_name(request.getParameter("dept_name"));
+		Department pId=new Department();
+		pId.setDept_id(Integer.valueOf(request.getParameter("dept_pid")));
+		department.setDepartment(pId);
+		department.setDept_remark(request.getParameter("dept_remark"));
+		department.setDept_state(0);
 		boolean result = departmentService.save(department);
 		return JSON.toJSONString(result);
 	}

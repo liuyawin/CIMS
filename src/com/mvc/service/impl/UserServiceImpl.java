@@ -13,7 +13,7 @@ import com.mvc.service.UserService;
 /**
  * User相关Service层接口实现
  * 
- * @author zjn
+ * @author wanghuimin
  * @date 2016年9月7日
  */
 
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 	UserDao userDao;
 
 	/**
-	 * 
+	 * 添加用户
 	 */
 	public boolean save(User user) {
 		User result = userRepository.saveAndFlush(user);
@@ -47,18 +47,38 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByUserNum(user_num);
 	}
 
-	// 根据id删除
-	@Override
-	public boolean isDelete(Integer user_id) {
-		userRepository.deleteByUserId(user_id);
-		return true;
-	}
-
 	// 查询所有用户列表
 	public List<User> findAll() {
 		return userRepository.findAll();
 	}
 
+	// 查询部门总条数
+	@Override
+	public Long countTotal() {		
+		return userRepository.countTotal();
+	}
+	// 根据页数筛选全部用户列表
+	@Override
+	public List<User> findUserAllByPage(Integer offset, Integer end) {			
+		return userDao.findUserAllByPage(offset,end);
+	}
+	//获取用户列表，无翻页功能	
+	@Override
+	public List<User> findUserAlls() {
+		return userRepository.findAlls();
+	}
+	//只要设计部人员列表
+	@Override
+	public List<User> findUserFromDesign() {
+		return userDao.findUserFromDesign();
+	}
+
+	@Override
+	public boolean deleteIsdelete(Integer user_id) {
+		// TODO Auto-generated method stub
+		return userDao.updateState(user_id);
+	}
+	
 	// 根据ID查询用户信息
 	@Override
 	public User findById(Integer user_id) {

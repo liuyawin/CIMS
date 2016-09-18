@@ -35,13 +35,13 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="con in contracts">
-				<td><a href="#contractDetail">{{con.cont_name}}</a></td>
+				<td><a class="underline" href="#contractDetail">{{con.cont_name}}</a></td>
 				<td>{{con.cont_onum}}</td>
 				<td>{{con.cont_state | conState}}</td>
 				<td>{{con.cont_proalanum}}</td>
 				<td>{{con.cont_payalanum}}</td>
-				<td><a href="#" class="tablelink">查看</a><a href="#"
-					class="tablelink"> 修改</a><a href="#" class="tablelink"> 删除</a></td>
+				<td><a href="#" class="tablelink underline">查看</a><a href="#"
+					class="tablelink underline"> 修改</a><a ng-click="deleteContract(this)" href="#contractList" class="tablelink underline"> 删除</a><label class="hidden">{{con.cont_id}}</label></td>
 			</tr>
 		</tbody>
 	</table>

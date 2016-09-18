@@ -17,7 +17,7 @@
 		</form>
 
 		<ul class="toolbar1">
-			<li class="click"><a href="#/taskAdd2"><span><img
+			<li class="click"><a href="#/taskAdd"><span><img
 						src="../images/t01.png" /></span>新建</a></li>
 		</ul>
 	</div>
@@ -51,8 +51,8 @@
 					</div></td>
 				<td>{{t.creator.user_name}}</td>
 				<td>{{t.task_alarmnum}}</td>
-				<td>{{t.contract.cont_name}}</td>
-				<td><a  href="#/taskCheck2"  ng-click="getTaskId(t.task_id)" class="tablelink">查看</a><a ng-click="show(t.task_id)"
+				<td><a class="tablelink" href="/CIMS/contract/toAssistant2ContractPage.do#/contractDetail" ng-click="getContId(t.contract.cont_id)">{{t.contract.cont_name}}</a></td>
+				<td><a  href="#/taskCheck"  ng-click="getTaskId(t.task_id)" class="tablelink">查看</a><a ng-click="show(t.task_id)"
 					class="tablelink"> 删除</a></td>
 			</tr>
 		</tbody>
@@ -78,7 +78,7 @@
 		<input name="" type="button" class="cancel" value="取消"
 			 />
 	</div>
-
+</div>
 
 	<script type="text/javascript">
 		$('.tablelist tbody tr:odd').addClass('odd');

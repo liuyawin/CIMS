@@ -6,11 +6,11 @@
 			+ path + "/";
 %>
 <jsp:include page="/jsp/top.jsp" />
-<section class="main" ng-app="contract">
+<section class="main" ng-app="user">
 	<div ng-view></div>
 </section>
-<jsp:include page="/jsp/left.jsp" />
+<jsp:include page="/jsp/userManagement/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
-<script src="${ctx}/js/app/assistant2/contractMgmt.js"></script>
-</body>
-</html>
+
+<script src="${ctx}/js/app/userManagement/user.js"></script>
+

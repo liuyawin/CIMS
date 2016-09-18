@@ -29,7 +29,8 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	public boolean updateState(Integer id, Integer state) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			String selectSql = " update invoice set 'invo_state' = :invo_state  where invo_id =:invo_id ";
+			em.getTransaction().begin();
+			String selectSql = " update invoice set `invo_state` = :invo_state  where invo_id =:invo_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("invo_state", state);
 			query.setParameter("invo_id", id);
