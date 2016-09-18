@@ -16,7 +16,7 @@
 
 			<div class="vocation">
 				<select class="select1">
-					<option ng-repeat="depart in departs" value={{depart.dept_id}}>
+					<option ng-repeat="depart in departs" id="departSelect" value={{depart.dept_id}} ng-model="department.dept_pid">
 						<span>{{depart.dept_name}}</span>
 					</option>
 

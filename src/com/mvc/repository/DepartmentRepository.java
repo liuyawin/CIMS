@@ -33,7 +33,7 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
 	public List<Department> findByName(@Param("dept_id") Integer dept_id, @Param("dept_name") String dept_name);
 
 	// 查询部门总条数
-	@Query("select count(dept_id) from Department d where dept_state=0")
+	@Query("select count(*) from Department d where dept_state=0")
 	public	Long countTotal();
 
 }
