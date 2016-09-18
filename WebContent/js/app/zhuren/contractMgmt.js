@@ -139,6 +139,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 	
+	services.deleteContract = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/deleteContract.do',
+			data : data
+		});
+	};
+	
 	services.addTask = function(data) {
 		return $http({
 			method : 'post',
@@ -188,32 +196,58 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 			};
 			//添加合同
 			contract.addContract = function(){
-				console.log(contract.contract);
 				var conFormData = JSON.stringify(contract.contract);
-				console.log(conFormData);
+				
 				services.addContract({
 					contract: conFormData
 				}).success(function(data) {
-					/*window.sessionStorage.setItem("contractId",);*/
-					alert("添加合同成功！");
+					sessionStorage.setItem("contractId",data);
+					alert("创建合同成功！");
 				});
 			};
+			//删除合同
+			contract.deleteContract = function(obj){
+				var conId = this.con.cont_id;
+				confirm("确认删除该合同？");
+				services.deleteContract({
+					conId: conId
+				}).success(function(data) {
+					contract.contracts = data.list;
+					contract.totalPage = data.totalPage;
+					alert("删除成功！");					
+				});
+			}
 			//添加文书任务
 			contract.addTask1 = function(){
+				var conId = sessionStorage.getItem("contractId");
+				console.log(conId);
+				if(conId.trim()==""){
+					alert("请先录入合同信息！");
+					return false;
+				}
+				var task1 = JSON.stringify(contract.task1);
+				console.log(task1);
 				services.addTask({
-					task: contract.task1,
+					task: task1,
 					taskType:"task1",
-					conId: sessionStorage.getItem(contractId)
+					conId: conId
 				}).success(function(data) {
 					alert("添加文书任务成功！");
 				});
 			};
 			//添加执行管控任务
 			contract.addTask2 = function(){
+				var conId = sessionStorage.getItem("contractId");
+				console.log(conId);
+				if(conId.trim()==""){
+					alert("请先录入合同信息！");
+					return false;
+				}
+				var task2 = JSON.stringify(contract.task2);
 				services.addTask({
-					task: contract.task2,
+					task: task2,
 					taskType:"task2",
-					conId: sessionStorage.getItem(contractId)
+					conId: conId
 				}).success(function(data) {
 					alert("添加执行管控任务成功！");
 				});
@@ -240,53 +274,42 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					
 				} else if ($location.path().indexOf('/debtContract') == 0) {
 					// contract.getDebtContract();
-					contract.contracts = [ {
-						name : "欠款合同1",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "欠款合同2",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "欠款合同3",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "欠款合同4",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					} ];
+					services.getDebtContract({page:1}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if($pages.length != 0){
+							$pages.createPage({
+						        pageCount:contract.totalPage,
+						        current:1,
+						        backFn:function(p){
+						        	contract.getDebtContract(p);//点击页码时获取第p页的数据					            
+						        }
+						    });
+						}
+					});
 				} else if ($location.path().indexOf('/overdueContract') == 0) {
 					// contract.getOverdueContract();
-					contract.contracts = [ {
-						name : "逾期合同1",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "逾期合同2",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "逾期合同3",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "逾期合同4",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					} ];
+					services.getOverdueContract({page:1}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if($pages.length != 0){
+							$pages.createPage({
+						        pageCount:contract.totalPage,
+						        current:1,
+						        backFn:function(p){
+						        	contract.getOverdueContract(p);//点击页码时获取第p页的数据					            
+						        }
+						    });
+						}
+					});
 				}else if ($location.path().indexOf('/addContract') == 0) {
 					//这里先获取人员列表
 					// contract.getOverdueContract();
+					sessionStorage.setItem("contractId", "");
 					var $select = $("select");
 					for(var i=0;i<$select.length;i++){
 						$select[i].options[0].selected = true; 
@@ -295,7 +318,18 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				}
 			}
 
-			initData();			
+			initData();	
+			//验证日期输入格式
+			var $dateFormat = $(".dateFormat");
+			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+			$(".dateFormat").blur(function(){
+				if (!dateRegexp.test(this.value)) {
+					$(this).parent().children("span").css('display','inline');
+                }
+			});	
+			$(".dateFormat").click(function(){
+					$(this).parent().children("span").css('display','none');
+			});	
 		} ]);
 //合同状态过滤器
 app.filter('conState',function(){
@@ -315,7 +349,30 @@ app.filter('conState',function(){
         return state;
     }
 });
-
+//自定义表单验证日期格式
+app.directive("dateFormat", function() {
+    return {
+        restrict : 'A',
+        require : 'ngModel',
+        scope : true,
+        link : function(scope, elem, attrs, controller) {
+            var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+            
+            //Model变化时执行
+            //初始化指令时BU执行
+            scope.$watch(attrs.ngModel, function (val) {
+                if (!val) {
+                    return;
+                }
+                if (!dateRegexp.test(val)) {
+                    controller.$setValidity('dateformat', false);
+                } else {
+                    controller.$setValidity('dateformat', true);
+                }
+            });
+        }
+    }
+});
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
  * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,

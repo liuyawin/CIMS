@@ -107,7 +107,7 @@ public class LoginController {
 		System.out.println("login");
 		String userNum = request.getParameter("userName");
 		String password = request.getParameter("password");
-		String isRemember = request.getParameter("isRemember"); // 记住密码
+		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
@@ -116,7 +116,7 @@ public class LoginController {
 				session.setAttribute(SessionKeyConstants.LOGIN, user);
 				model.addAttribute("user", user);
 				cookie_u.add_cookie(CookieKeyConstants.USERNAME, userNum, res, 60 * 60 * 24 * 15);
-				if (isRemember == "true") {
+				if (isRemember!=null) {
 					cookie_u.add_cookie(CookieKeyConstants.PASSWORD, password, res, 60 * 60 * 24 * 7);
 				} else {
 					cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);
@@ -128,7 +128,6 @@ public class LoginController {
 					return "userManagement/index";// 返回到管理员主页
 				else
 					return "zhuren/contractInformation/index";// 返回到主任主页
-
 			} else { // 密码错误
 				error_msg = "err_password";
 				cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);

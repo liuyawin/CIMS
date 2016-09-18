@@ -159,12 +159,16 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	return services;
 } ]);
 
-app.controller('TaskController', [ '$scope', 'services', '$location',
+app.controller('TaskController', [
+		'$scope',
+		'services',
+		'$location',
 		function($scope, services, $location) {
 			// 合同
 			var taskHtml = $scope;
 			var tState;
-
+			taskHtml.stime = "";
+			taskHtml.etime = "";
 			taskHtml.task = {};
 			// 根据内容查询任务列表
 			taskHtml.getTaskByContext = function() {
@@ -176,19 +180,24 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 				}).success(function(data) {
 					console.log("根据内容获取任务列表成功！");
 					taskHtml.tasks = data.list;
+					pageTurnByContent(tState, data.totalPage, 1)
 				});
 			};
 
 			// 添加任务
 			taskHtml.addTask = function() {
+
+				var taskFormData = JSON.stringify(taskHtml.task);
+				console.log(taskFormData);
 				services.addTask({
-					user_id : $scope.task.receiverId,
+					task : taskFormData,
+					/*user_id : $scope.task.receiverId,
 					task_content : $scope.task.task_content,
 					task_type : $scope.task.task_type,
 					task_stime : $scope.task.task_stime,
-					task_etime : $scope.task.task_etime,
+					task_etime : $scope.task.task_etime,*/
 					cont_id : "",
-					task_remark : $scope.task.task_content
+					/*task_remark : $scope.task.task_content*/
 				}).success(function(data) {
 					console.log("根据内容获取任务列表成功！");
 					if (data.result == "true") {
@@ -200,10 +209,13 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 				});
 			};
 
+			taskHtml.getContId = function(cont_id) {
+				sessionStorage.setItem('contId', cont_id); // 存入合同ID
+			};
+
 			// 将任务ID放到sessionStorage中
 			taskHtml.getTaskId = function(task_id) {
 				sessionStorage.setItem('taskId', task_id); // 存入一个值
-
 			};
 
 			// 显示提示框及删除功能的实现
@@ -216,12 +228,11 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 						taskId : task_id
 					}).success(function(data) {
 						console.log("根据内容获取任务列表成功！");
-						if (data == "true") {
-							alert("删除成功！");
-							$("#" + task_id + "").hide();
-						} else {
-							alert("删除失败！");
-						}
+						/*
+						 * if (data == "true") { alert("删除成功！"); $("#" + task_id +
+						 * "").hide(); } else { alert("删除失败！"); }
+						 */
+						$("#" + task_id + "").hide();
 						$(".tip").fadeOut(100);
 					});
 				});
@@ -235,9 +246,16 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 			function checkTask() {
 				services.checkTask({
 					ID : sessionStorage.getItem('taskId')
-				}).success(function(data) {
-					taskHtml.task = data.task;
-				});
+				}).success(
+						function(data) {
+							taskHtml.task = data.task;
+							taskHtml.stime = new Date(
+									taskHtml.task.task_stime.time)
+									.toLocaleDateString().replace(/\//g, '-');
+							taskHtml.etime = new Date(
+									taskHtml.task.task_etime.time)
+									.toLocaleDateString().replace(/\//g, '-');
+						});
 			}
 
 			// 获取所有用户
@@ -248,7 +266,7 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 				});
 			}
 
-			// 获取任务列表
+			// 获取所有任务列表
 			function getTaskList(taskState, page) {
 				services.getTaskList({
 					taskState : taskState,
@@ -258,7 +276,7 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 					taskHtml.tasks = data.list;
 				});
 			}
-			// 换页
+			// 所有任务换页
 			function pageTurn(taskState, totalPage, page) {
 
 				var $pages = $(".tcdPageCode");
@@ -274,6 +292,37 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 				}
 			}
 
+			// 获取任务列表按照内容翻页查找函数
+			function getTaskListByContent(taskState, page) {
+				services.getTaskByContext({
+					context : $("#tContent").val(),
+					page : page,
+					taskState : taskState,
+					sendOrReceive : 1
+				}).success(function(data) {
+					console.log("根据内容获取任务列表成功！");
+					taskHtml.tasks = data.list;
+
+				});
+			}
+
+			// 按查询内容获取任务列表的换页
+			function pageTurnByContent(taskState, totalPage, page) {
+
+				var $pages = $(".tcdPageCode");
+				console.log($pages.length);
+				if ($pages.length != 0) {
+					$(".tcdPageCode").createPage({
+						pageCount : totalPage,
+						current : page,
+						backFn : function(p) {
+							getTaskListByContent(taskState, p);
+						}
+					});
+				}
+			}
+
+			// 初始化
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/newTask') == 0) {
@@ -297,7 +346,7 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 						sendOrReceive : 1
 					}).success(function(data) {
 						taskHtml.tasks = data.list;
-						pageTurn(0, data.totalPage, 1)
+						pageTurn(1, data.totalPage, 1)
 					});
 				} else if ($location.path().indexOf('/finishTask') == 0) {
 					// contract.getOverdueContract();
@@ -308,7 +357,7 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 						sendOrReceive : 1
 					}).success(function(data) {
 						taskHtml.tasks = data.list;
-						pageTurn(0, data.totalPage, 1)
+						pageTurn(2, data.totalPage, 1)
 					});
 				} else if ($location.path().indexOf('/taskAdd') == 0) {
 					selectAllUsers();
@@ -318,6 +367,24 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 			}
 			initData();
 		} ]);
+
+// 合同状态过滤器
+app.filter('taskType', function() {
+	return function(input) {
+		var type = "";
+		/*
+		 * switch(input){ case "0":state="在建"; break; case "1":state="竣工";
+		 * break; case "2":state="停建"; break; }
+		 */
+		if (input == "0")
+			type = "普通任务";
+		else if (input == "1")
+			type = "文书任务";
+		else if (input == "2")
+			type = "其他";
+		return type;
+	}
+});
 
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:

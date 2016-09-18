@@ -38,7 +38,7 @@ public class TaskServiceImpl implements TaskService {
 
 	// 根据状态，关键字查询任务总条数
 	public Integer countByParam(Integer user_id, Integer task_state, String searchKey, Integer sendOrReceive) {
-		return taskDao.countByParam(user_id, task_state, searchKey,sendOrReceive);
+		return taskDao.countByParam(user_id, task_state, searchKey, sendOrReceive);
 	}
 
 	// 根据页数,状态，关键字返回任务列表
@@ -53,12 +53,8 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	// 保存
-	public boolean save(Task task) {
-		Task result = taskRepository.save(task);
-		if (result.getTask_id() != null)
-			return true;
-		else
-			return false;
+	public Task save(Task task) {
+		return taskRepository.saveAndFlush(task);
 	}
 
 	// 根据任务Id删除任务

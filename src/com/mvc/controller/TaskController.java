@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.Contract;
+import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 import com.mvc.entity.User;
+import com.mvc.service.SubTaskService;
 import com.mvc.service.TaskService;
 import com.utils.Pager;
 
@@ -37,7 +39,9 @@ import net.sf.json.JSONObject;
 public class TaskController {
 	@Autowired
 	TaskService taskService;
-	
+	@Autowired
+	SubTaskService subTaskService;
+
 	/**
 	 * 设置进入接收任务起始页
 	 * 
@@ -57,10 +61,6 @@ public class TaskController {
 	public String taskInSendPage() {
 		return "assistant2/taskSendInformation/index";
 	}
-
-	
-	
-	
 
 	/**
 	 * 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
@@ -142,34 +142,52 @@ public class TaskController {
 	 */
 	@RequestMapping(value = "/createNormalTask.do")
 	public @ResponseBody String save(HttpServletRequest request, HttpSession session) throws ParseException {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject result = new JSONObject();
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("task"));
 		long time = System.currentTimeMillis();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Task task = new Task();
-		if (!request.getParameter("cont_id").equals("")) {
-			Contract contract = new Contract();
-			contract.setCont_id(Integer.valueOf(request.getParameter("cont_id")));
-			task.setContract(contract);
-		}
+		// if (!request.getParameter("cont_id").equals("")) {
+		// Contract contract = new Contract();
+		// contract.setCont_id(Integer.valueOf(jsonObject.getString("cont_id")));
+		// task.setContract(contract);
+		// }
 		task.setCreator(user);
 		User receiver = new User();
-		receiver.setUser_id(Integer.valueOf(request.getParameter("user_id")));
+		receiver.setUser_id(Integer.valueOf(jsonObject.getString("receiver_id")));
 		task.setReceiver(receiver);
-		task.setTask_content(request.getParameter("task_content"));
-		task.setTask_remark(request.getParameter("task_remark"));
-		task.setTask_type(Integer.valueOf(request.getParameter("task_type")));
+		task.setTask_content(jsonObject.getString("task_content"));
+		task.setTask_type(Integer.valueOf(jsonObject.getString("task_type")));
 		task.setTask_ctime(new Date(time));
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date sdate = format.parse(request.getParameter("task_stime"));
-		Date edate = format.parse(request.getParameter("task_etime"));
+		Date sdate = format.parse(jsonObject.getString("task_stime"));
+		Date edate = format.parse(jsonObject.getString("task_etime"));
 		task.setTask_stime(sdate);
 		task.setTask_etime(edate);
 		task.setTask_isdelete(0);
 		task.setTask_state(0);
 		task.setTask_alarmnum(0);
-		jsonObject.put("result", taskService.save(task));
-		System.out.println("返回列表:" + jsonObject.toString());
-		return jsonObject.toString();
+		Task taskResult = taskService.save(task);
+		if (taskResult.getTask_id() != null) {
+			// if (taskType != 1) {
+			result.put("result", "true");
+			System.out.println("普通任务创建成功");
+			// } else {
+			// result.put("result", taskResult.getTask_id());
+			// SubTask subTask = new SubTask();
+			// subTask.setSuta_content(request.getParameter("suta_content"));
+			// subTask.setSuta_state(0);
+			// subTask.setSuta_remark(request.getParameter("suta_remark"));
+			// subTask.setTask(taskResult);
+			// result.put("result", subTaskService.save(subTask,
+			// taskResult.getTask_id()));
+			// System.out.println("文书任务创建成功，任务的id是：" + taskResult.getTask_id());
+			// }
+		} else {
+			result.put("result", "false");
+			System.out.println("普通任务创建失败");
+		}
+		return result.toString();
 	}
 
 	/**
