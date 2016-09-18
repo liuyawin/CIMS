@@ -1458,6 +1458,15 @@ h2 {
 }
 
 /*new lyy*/
+.noColor {
+	width:186px;
+	height:35px;
+}
+
+.noColor:hover {
+	color:#000000;
+}
+
 .img-logo {
 	height: 68px;
 }

@@ -8,29 +8,23 @@
 </div>
 
 <div class="formbody">
+ <div class="formtitle"><span>任务信息</span></div>
 	<ul class="forminfo">
-		<li><label>任务类型</label> 
-		<div>
-				<div ng-switch={{task.task_type}}>
-				<div ng-switch-when="0">普通任务</div>
-				<div ng-switch-when="1">文书任务</div>
-				<div ng-switch-when="2">其他</div>
-				</div>	
-	</li>
-		<li><label>接收人</label><select name="tReceiver" class="dfselect" >
-				<option  value={{task.receiver.user_id}}>
-				<span>{{task.receiver.user_name}}</span>
-				</option>
-		</select></li>
-		<li><label>内容</label><textarea name="" cols="" rows="" class="textinput" ng-model="task.task_content" value={{task.task_name}}></textarea></li>
-		<li><label>开始</label><input type="date" name="task_stime" id="task_stime" ng-model="task.task_stime"></li>
-		<li><label>截止</label><input type="date" name="task_etime" id="task_etime" ng-model="task.task_etime"></li>
-		
-		<li><label>&nbsp;</label><input type="button" class="btn" ng-click="addTask()"
-			value="创建任务" /></li>
+	<li><label>任务类型</label>
+		<input
+			name="" type="text" class="dfinput" value="{{task.task_type | taskType}}" /></li>
+		<li ng-switch-when="2"><input name="" type="text" class="dfinput"
+			value="其他" /></li>
+		</li>
+		<li><label>接收人</label><input name="" type="text" class="dfinput"
+			value={{task.receiver.user_name}} readonly /></li>
+		<li><label>内容</label>
+		<textarea name="" cols="" rows="" class="textinput" readonly
+				ng-model="task.task_content" value={{task.task_name}}></textarea></li>
+		<li><label>开始时间</label><input type="text" name="task_stime"
+			id="task_stime" class="dfinput" readonly value={{stime}}></li>
+		<li><label>截止时间</label><input type="text" name="task_etime"
+			id="task_etime" class="dfinput" readonly value={{etime}}></li>
 	</ul>
-	{{task.task_type}}
-	
 </div>
 <br>
-<span>success!</span>

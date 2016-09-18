@@ -32,7 +32,7 @@ public interface TaskService {
 	Task findById(Integer taskId);
 
 	// 保存
-	boolean save(Task task);
+	Task save(Task task);
 
 	// 根据任务Id删除任务
 	boolean delete(Integer taskId);
