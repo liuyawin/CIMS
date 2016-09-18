@@ -14,17 +14,15 @@
 	</div>
 
 	<ul class="forminfo">
-		<li><label>合同名称</label><input type="text" ng-model="contract.cont_name"
+		<li><label>乙方合同编号</label><input type="text" ng-model="contract.cont_onum"
 			class="dfinput" /></li>
-		<li><label>项目名称</label><input type="text" ng-model="contract.cont_project"
+		<li><label>甲方合同编号</label><input type="text" ng-model="contract.cont_cnum"
 			class="dfinput" /></li>
-		<li><label>合同类型</label> <select class="dfselect" ng-model="contract.cont_type">
-				<option value="规划">规划</option>
-				<option value="可行性">预可行性</option>
-				<option value="可行性">可行性</option>
-				<option value="施工图">施工图</option>
-				<option value="评估">评估</option>
-				<option value="其他">其他</option>
+			<li><label>项目编码</label><input type="text" ng-model="contract.cont_pnum"
+			class="dfinput" /></li>
+		<li><label>是否立项</label> <select class="dfselect" ng-model="contract. cont_initiation">
+				<option value="1">已立项</option>
+				<option value="0">未立项</option>
 		</select></li>
 		<li><label>甲方联系人</label><input type="text" ng-model="contract.cont_cheader"
 			class="dfinput" /></li>

@@ -22,14 +22,13 @@ public class SubTaskDaoImpl implements SubTaskDao {
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
-	// 根据子任务id修改状态
-	public boolean updateState(Integer id, Integer state) {
+	// 根据子任务id修改状态,0改为1表示未完成改为已完成
+	public boolean updateState(Integer subTaskId) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			String selectSql = " update sub_task set 'suta_state' = :suta_state  where suta_id =:suta_id ";
+			String selectSql = " update sub_task set `suta_state` = 1  where suta_id =:suta_id ";
 			Query query = em.createNativeQuery(selectSql);
-			query.setParameter("suta_state", state);
-			query.setParameter("suta_id", id);
+			query.setParameter("suta_id", subTaskId);
 			query.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();
