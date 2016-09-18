@@ -37,5 +37,7 @@ public interface UserService {
 	//只要设计部人员列表
 	List<User> findUserFromDesign();
 	
+	// 根据ID查询用户信息
+	User findById(Integer user_id);
 
 }

@@ -78,5 +78,11 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return userDao.updateState(user_id);
 	}
+	
+	// 根据ID查询用户信息
+	@Override
+	public User findById(Integer user_id) {
+		return userRepository.findById(user_id);
+	}
 
 }

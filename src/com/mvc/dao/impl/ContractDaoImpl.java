@@ -27,7 +27,7 @@ public class ContractDaoImpl implements ContractDao {
 	EntityManagerFactory emf;
 
 	// 根据合同id修改状态
-	public boolean updateState(Integer cont_id, Integer cont_state) {
+	public Boolean updateState(Integer cont_id, Integer cont_state) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		try {
@@ -48,7 +48,7 @@ public class ContractDaoImpl implements ContractDao {
 	// 返回欠款合同信息
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Contract> findAllDebtCont(int creator_id, String contName, Integer offset, Integer end) {
+	public List<Contract> findAllDebtCont(Integer creator_id, String contName, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from contract c where c.cont_id in (select distinct(rn.cont_id) from receive_node rn ");
@@ -68,7 +68,7 @@ public class ContractDaoImpl implements ContractDao {
 	// 返回逾期合同信息
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Contract> findAllOverdueCont(int creator_id, String contName, Integer offset, Integer end) {
+	public List<Contract> findAllOverdueCont(Integer creator_id, String contName, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append(
@@ -89,7 +89,7 @@ public class ContractDaoImpl implements ContractDao {
 	// 根据合同名获取合同信息
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Contract> findConByName(int creator_id, String contName, Integer offset, Integer end) {
+	public List<Contract> findConByName(Integer creator_id, String contName, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from contract c where c.creator_id=:creator_id and c.cont_ishistory=0");
@@ -106,7 +106,7 @@ public class ContractDaoImpl implements ContractDao {
 
 	// 根据创建者ID和合同名查询合同总条数
 	@Override
-	public Long countTotal(int creator_id, String contName, String methodType) {
+	public Long countTotal(Integer creator_id, String contName, String methodType) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(cont_id) from contract c where c.creator_id=:creator_id and c.cont_ishistory=0 ");
@@ -131,7 +131,7 @@ public class ContractDaoImpl implements ContractDao {
 
 	// 删除合同
 	@Override
-	public boolean delete(Integer cont_id) {
+	public Boolean delete(Integer cont_id) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		try {
@@ -147,4 +147,5 @@ public class ContractDaoImpl implements ContractDao {
 		}
 		return true;
 	}
+
 }
