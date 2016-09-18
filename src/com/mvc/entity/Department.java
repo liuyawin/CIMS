@@ -28,6 +28,7 @@ public class Department {
 	private String dept_name; // 部门名称
 	private Integer dept_state;// 部门状态，1表示存在，0表示不存在
 	private Department department;
+	private String dept_remark;
 
 
 	@Id
@@ -66,6 +67,14 @@ public class Department {
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+
+	public String getDept_remark() {
+		return dept_remark;
+	}
+
+	public void setDept_remark(String dept_remark) {
+		this.dept_remark = dept_remark;
 	}
 
 }
