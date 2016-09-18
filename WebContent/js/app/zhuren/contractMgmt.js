@@ -253,7 +253,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				console.log(task1);
 				services.addTask({
 					task : task1,
-					taskType : "task1",
+					taskType : "1",
 					conId : conId
 				}).success(function(data) {
 					alert("添加文书任务成功！");
@@ -270,7 +270,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				var task2 = JSON.stringify(contract.task2);
 				services.addTask({
 					task : task2,
-					taskType : "task2",
+					taskType : "2",
 					conId : conId
 				}).success(function(data) {
 					alert("添加执行管控任务成功！");
