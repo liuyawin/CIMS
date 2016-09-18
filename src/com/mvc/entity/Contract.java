@@ -36,7 +36,7 @@ public class Contract {
 	private Float cont_money;// 合同金额
 	private Integer cont_hasproxy;// 是否有委托书，0表示没有，1表示有
 	private String cont_client;// 业主公司名称
-	private String cont_cadress;// 业主地址
+	private String cont_caddress;// 业主地址
 	private String cont_cheader;// 业主联系人
 	private String cont_cdept;// 业主联系部门
 	private String cont_ctel;// 业主联系方式
@@ -172,12 +172,12 @@ public class Contract {
 	}
 
 	@Column(length = 64)
-	public String getCont_cadress() {
-		return cont_cadress;
+	public String getCont_caddress() {
+		return cont_caddress;
 	}
 
-	public void setCont_cadress(String cont_cadress) {
-		this.cont_cadress = cont_cadress;
+	public void setCont_caddress(String cont_caddress) {
+		this.cont_caddress = cont_caddress;
 	}
 
 	@Column(length = 16)

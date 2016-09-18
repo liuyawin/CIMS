@@ -194,8 +194,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				services.addContract({
 					contract: conFormData
 				}).success(function(data) {
-					/*window.sessionStorage.setItem("contractId",);*/
-					alert("添加合同成功！");
+					sessionStorage.setItem("contractId",data);
 				});
 			};
 			//添加文书任务
@@ -240,50 +239,38 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					
 				} else if ($location.path().indexOf('/debtContract') == 0) {
 					// contract.getDebtContract();
-					contract.contracts = [ {
-						name : "欠款合同1",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "欠款合同2",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "欠款合同3",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "欠款合同4",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					} ];
+					services.getDebtContract({page:1}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if($pages.length != 0){
+							$pages.createPage({
+						        pageCount:contract.totalPage,
+						        current:1,
+						        backFn:function(p){
+						        	contract.getDebtContract(p);//点击页码时获取第p页的数据					            
+						        }
+						    });
+						}
+					});
 				} else if ($location.path().indexOf('/overdueContract') == 0) {
 					// contract.getOverdueContract();
-					contract.contracts = [ {
-						name : "逾期合同1",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "逾期合同2",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "逾期合同3",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					}, {
-						name : "逾期合同4",
-						number : "89757",
-						state : "已完成",
-						alertTimes : "5"
-					} ];
+					services.getOverdueContract({page:1}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if($pages.length != 0){
+							$pages.createPage({
+						        pageCount:contract.totalPage,
+						        current:1,
+						        backFn:function(p){
+						        	contract.getOverdueContract(p);//点击页码时获取第p页的数据					            
+						        }
+						    });
+						}
+					});
 				}else if ($location.path().indexOf('/addContract') == 0) {
 					//这里先获取人员列表
 					// contract.getOverdueContract();

@@ -27,5 +27,8 @@ public interface UserService {
 
 	// 查询所有用户列表
 	List<User> findAll();
+	
+	// 根据ID查询用户信息
+	User findById(Integer user_id);
 
 }

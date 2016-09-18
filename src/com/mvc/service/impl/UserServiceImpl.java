@@ -59,4 +59,10 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAll();
 	}
 
+	// 根据ID查询用户信息
+	@Override
+	public User findById(Integer user_id) {
+		return userRepository.findById(user_id);
+	}
+
 }
