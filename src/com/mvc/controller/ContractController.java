@@ -136,6 +136,7 @@ public class ContractController {
 				pager.getOffset(), pager.getPageSize());// 合同名
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
+		System.out.println(jsonObject.toString());
 		return jsonObject.toString();
 	}
 
