@@ -8,7 +8,7 @@ package com.base.enums;
  */
 public enum TaskStatus {
 
-	waitingReceipt(0), dealing(1), accomplish(2);
+	waitingReceipt(0), dealing(1), finish(2);
 
 	public int value;
 

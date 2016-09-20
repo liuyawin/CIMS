@@ -26,8 +26,6 @@ public class SubTaskServiceImpl implements SubTaskService {
 	SubTaskRepository subTaskRepository;
 	@Autowired
 	SubTaskDao subTaskDao;
-	@Autowired
-	TaskService taskService;
 
 	// 根据任务ID获取子任务列表
 	public List<SubTask> findByTaskId(Integer taskId) {
@@ -45,7 +43,16 @@ public class SubTaskServiceImpl implements SubTaskService {
 		if (result.getSuta_id() != 0)
 			return true;
 		else {
-			boolean delete = taskService.delete(taskId);
+			return false;
+		}
+	}
+
+	// 添加保存子任务
+	public boolean save(SubTask subTask) {
+		SubTask result = subTaskRepository.saveAndFlush(subTask);
+		if (result.getSuta_id() != 0)
+			return true;
+		else {
 			return false;
 		}
 	}

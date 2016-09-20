@@ -1,10 +1,11 @@
-/**
+﻿/**
  * 
  */
 package com.mvc.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.base.constants.SessionKeyConstants;
+import com.base.enums.IsDelete;
+import com.base.enums.TaskStatus;
 import com.mvc.entity.Contract;
 import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
@@ -125,8 +128,11 @@ public class TaskController {
 	@RequestMapping(value = "/selectTaskById.do")
 	public @ResponseBody String findByTaskId(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
+		boolean result = false;
 		Integer taskId = Integer.valueOf(request.getParameter("ID"));
 		Task task = taskService.findById(taskId);
+		if (task.getTask_state() == TaskStatus.waitingReceipt.value)
+			result = taskService.updateState(taskId, TaskStatus.dealing.value);
 		jsonObject.put("task", task);
 		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
@@ -141,17 +147,13 @@ public class TaskController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/createNormalTask.do")
-	public @ResponseBody String save(HttpServletRequest request, HttpSession session) throws ParseException {
+	public @ResponseBody String createNormalTask(HttpServletRequest request, HttpSession session)
+			throws ParseException {
 		JSONObject result = new JSONObject();
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("task"));
 		long time = System.currentTimeMillis();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Task task = new Task();
-		// if (!request.getParameter("cont_id").equals("")) {
-		// Contract contract = new Contract();
-		// contract.setCont_id(Integer.valueOf(jsonObject.getString("cont_id")));
-		// task.setContract(contract);
-		// }
 		task.setCreator(user);
 		User receiver = new User();
 		receiver.setUser_id(Integer.valueOf(jsonObject.getString("receiver_id")));
@@ -169,23 +171,96 @@ public class TaskController {
 		task.setTask_alarmnum(0);
 		Task taskResult = taskService.save(task);
 		if (taskResult.getTask_id() != null) {
-			// if (taskType != 1) {
 			result.put("result", "true");
 			System.out.println("普通任务创建成功");
-			// } else {
-			// result.put("result", taskResult.getTask_id());
-			// SubTask subTask = new SubTask();
-			// subTask.setSuta_content(request.getParameter("suta_content"));
-			// subTask.setSuta_state(0);
-			// subTask.setSuta_remark(request.getParameter("suta_remark"));
-			// subTask.setTask(taskResult);
-			// result.put("result", subTaskService.save(subTask,
-			// taskResult.getTask_id()));
-			// System.out.println("文书任务创建成功，任务的id是：" + taskResult.getTask_id());
-			// }
 		} else {
 			result.put("result", "false");
 			System.out.println("普通任务创建失败");
+		}
+		return result.toString();
+	}
+
+	/**
+	 * 创建文书任务
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/addTask.do")
+	public @ResponseBody String addTask(HttpServletRequest request, HttpSession session) throws ParseException {
+		JSONObject result = new JSONObject();
+		JSONObject jsonObject = new JSONObject();
+		Task task = new Task();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		long time = System.currentTimeMillis();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+		Contract contract = new Contract();
+		System.out.println("conId:" + request.getParameter("conId"));
+		if (request.getParameter("conId") != null) {
+			contract.setCont_id(Integer.valueOf(request.getParameter("conId")));
+		}
+
+		System.out.println("taskType:" + request.getParameter("taskType"));
+		Integer taskType = Integer.valueOf(request.getParameter("taskType"));
+		task.setTask_type(taskType);
+		task.setContract(contract);
+		task.setCreator(user);
+		jsonObject = JSONObject.fromObject(request.getParameter("task"));
+		System.out.println("task" + request.getParameter("task"));
+
+		User receiver = new User();
+		receiver.setUser_id(Integer.valueOf(jsonObject.getString("receiver_id")));
+		task.setReceiver(receiver);
+		task.setTask_ctime(new Date(time));
+		Date sdate = format.parse(jsonObject.getString("task_stime"));
+		Date edate = format.parse(jsonObject.getString("task_etime"));
+		if (jsonObject.containsKey("task_content")) {
+			task.setTask_content(jsonObject.getString("task_content"));// 备注，张群刘亚赢不统一
+		}
+		task.setTask_stime(sdate);
+		task.setTask_etime(edate);
+		task.setTask_isdelete(IsDelete.NO.value);
+		task.setTask_state(TaskStatus.waitingReceipt.value);
+		task.setTask_alarmnum(0);
+		if (taskType != 1) {// 0代表普通任务；2代表执行管控任务
+			Task taskResult = taskService.save(task);
+			if (taskResult.getTask_id() != null) {
+				result.put("result", "true");
+				System.out.println("任务创建成功");
+			} else {
+				result.put("result", "false");
+				System.out.println("任务创建失败");
+			}
+		} else {// 1代表文书任务
+			List<String> subTasks = new ArrayList<String>();
+			if (jsonObject.containsKey("print")) // 打印
+				subTasks.add("print");
+			if (jsonObject.containsKey("sign")) // 签字
+				subTasks.add("sign");
+			if (jsonObject.containsKey("seal")) // 盖章
+				subTasks.add("seal");
+			if (jsonObject.containsKey("post")) // 邮寄
+				subTasks.add("post");
+			if (jsonObject.containsKey("file")) // 归档
+				subTasks.add("file");
+			Task taskResult = taskService.save(task);
+			boolean flag = false;
+			for (int j = 0; j < subTasks.size(); j++) {
+				SubTask subTask = new SubTask();
+				subTask.setSuta_content(subTasks.get(j));
+				subTask.setSuta_state(0);
+				subTask.setTask(taskResult);
+				flag = subTaskService.save(subTask);
+			}
+			if (flag) {
+				System.out.println("re:" + flag);
+				result.put("result", "true");
+			} else
+				result.put("result", "false");
+
 		}
 		return result.toString();
 	}
@@ -202,6 +277,21 @@ public class TaskController {
 		Integer taskId = Integer.valueOf(request.getParameter("taskId"));
 		boolean result = taskService.delete(taskId);
 		return JSON.toJSONString(result);
+	}
+
+	/**
+	 * 完成任务确认
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/finishTask.do")
+	public @ResponseBody String finishTask(HttpServletRequest request, HttpSession session) {
+		Integer taskId = Integer.valueOf(request.getParameter("taskId"));
+		boolean result = taskService.updateState(taskId, TaskStatus.finish.value);
+		return JSON.toJSONString(result);
+
 	}
 
 }

@@ -24,4 +24,7 @@ public interface SubTaskService {
 	// 添加保存子任务
 	boolean save(SubTask subTask, Integer taskId);
 
+	// 添加保存子任务
+	boolean save(SubTask subTask);
+
 }
