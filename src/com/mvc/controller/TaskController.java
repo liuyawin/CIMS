@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.base.constants.SessionKeyConstants;
+import com.base.enums.IsDelete;
+import com.base.enums.TaskStatus;
 import com.mvc.entity.Contract;
 import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
@@ -126,8 +128,11 @@ public class TaskController {
 	@RequestMapping(value = "/selectTaskById.do")
 	public @ResponseBody String findByTaskId(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
+		boolean result = false;
 		Integer taskId = Integer.valueOf(request.getParameter("ID"));
 		Task task = taskService.findById(taskId);
+		if (task.getTask_state() == TaskStatus.waitingReceipt.value)
+			result = taskService.updateState(taskId, TaskStatus.dealing.value);
 		jsonObject.put("task", task);
 		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
@@ -191,7 +196,7 @@ public class TaskController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		long time = System.currentTimeMillis();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		
+
 		Contract contract = new Contract();
 		System.out.println("conId:" + request.getParameter("conId"));
 		if (request.getParameter("conId") != null) {
@@ -217,8 +222,8 @@ public class TaskController {
 		}
 		task.setTask_stime(sdate);
 		task.setTask_etime(edate);
-		task.setTask_isdelete(0);
-		task.setTask_state(0);
+		task.setTask_isdelete(IsDelete.NO.value);
+		task.setTask_state(TaskStatus.waitingReceipt.value);
 		task.setTask_alarmnum(0);
 		if (taskType != 1) {// 0代表普通任务；2代表执行管控任务
 			Task taskResult = taskService.save(task);
@@ -272,6 +277,21 @@ public class TaskController {
 		Integer taskId = Integer.valueOf(request.getParameter("taskId"));
 		boolean result = taskService.delete(taskId);
 		return JSON.toJSONString(result);
+	}
+
+	/**
+	 * 完成任务确认
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/finishTask.do")
+	public @ResponseBody String finishTask(HttpServletRequest request, HttpSession session) {
+		Integer taskId = Integer.valueOf(request.getParameter("taskId"));
+		boolean result = taskService.updateState(taskId, TaskStatus.finish.value);
+		return JSON.toJSONString(result);
+
 	}
 
 }
