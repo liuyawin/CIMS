@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.TaskDao;
+import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
+import com.mvc.repository.SubTaskRepository;
+import com.mvc.repository.TaskRepository;
 
 /**
  * 文书任务
@@ -24,6 +27,10 @@ public class TaskDaoImpl implements TaskDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
+	@Autowired
+	TaskRepository taskRepository;
+	@Autowired
+	SubTaskRepository subTaskRepository;
 
 	// 根据任务id修改状态
 	public boolean delete(Integer id) {
@@ -108,6 +115,25 @@ public class TaskDaoImpl implements TaskDao {
 		List<Object> result = query.getResultList();
 		em.close();
 		return Integer.parseInt(result.get(0).toString());
+	}
+
+	// 创建文书任务
+	public boolean addAssitantTask(Task task, List<SubTask> subTasks) {
+		int size = subTasks.size();
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			Task taskResult = taskRepository.saveAndFlush(task);
+			for (int i = 0; i < size; i++) {
+				subTasks.get(i).setTask(taskResult);
+				SubTask subTaskResult = subTaskRepository.saveAndFlush(subTasks.get(i));
+			}
+			em.flush();
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+		return true;
 	}
 
 }

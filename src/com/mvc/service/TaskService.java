@@ -5,6 +5,7 @@ package com.mvc.service;
 
 import java.util.List;
 
+import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 
 /**
@@ -36,5 +37,8 @@ public interface TaskService {
 
 	// 根据任务Id删除任务
 	boolean delete(Integer taskId);
+
+	// 创建文书任务
+	boolean addAssitantTask(Task task, List<SubTask> subTasks);
 
 }
