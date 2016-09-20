@@ -1,6 +1,5 @@
 package com.mvc.controller;
 
-import java.awt.print.Paper;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,15 +59,13 @@ public class ContractController {
 	@RequestMapping("/getContractList.do")
 	public @ResponseBody String getContList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 获取Session中的user对象
-		int totalRow = Integer.parseInt(
-				contractService.countTotal(user.getUser_id(), request.getParameter("contName"), "name").toString());
+		int totalRow = Integer
+				.parseInt(contractService.countTotal(request.getParameter("contName"), "name").toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 		// 和根据名字查找共用一个方法，contName为null
-		List<Contract> list = contractService.findConByName(user.getUser_id(), null, pager.getOffset(),
-				pager.getPageSize());
+		List<Contract> list = contractService.findConByName(null, pager.getOffset(), pager.getPageSize());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -83,14 +80,12 @@ public class ContractController {
 	@RequestMapping("/getDebtContract.do")
 	public @ResponseBody String getDebtContList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 获取Session中的user对象
-		int totalRow = Integer.parseInt(
-				contractService.countTotal(user.getUser_id(), request.getParameter("contName"), "Debt").toString());
+		int totalRow = Integer
+				.parseInt(contractService.countTotal(request.getParameter("contName"), "Debt").toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
-		List<Contract> list = contractService.findAllDebtCont(user.getUser_id(), null, pager.getOffset(),
-				pager.getPageSize());
+		List<Contract> list = contractService.findAllDebtCont(null, pager.getOffset(), pager.getPageSize());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -105,14 +100,12 @@ public class ContractController {
 	@RequestMapping("/getOverdueContract.do")
 	public @ResponseBody String getOverdueContList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 获取Session中的user对象
-		int totalRow = Integer.parseInt(
-				contractService.countTotal(user.getUser_id(), request.getParameter("contName"), "Overdue").toString());
+		int totalRow = Integer
+				.parseInt(contractService.countTotal(request.getParameter("contName"), "Overdue").toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
-		List<Contract> list = contractService.findAllOverdueCont(user.getUser_id(), null, pager.getOffset(),
-				pager.getPageSize());
+		List<Contract> list = contractService.findAllOverdueCont(null, pager.getOffset(), pager.getPageSize());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -127,14 +120,13 @@ public class ContractController {
 	@RequestMapping("/selectConByName.do")
 	public @ResponseBody String selectConByName(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 获取Session中的user对象
-		int totalRow = Integer.parseInt(
-				contractService.countTotal(user.getUser_id(), request.getParameter("contName"), "name").toString());
+		int totalRow = Integer
+				.parseInt(contractService.countTotal(request.getParameter("contName"), "name").toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
-		List<Contract> list = contractService.findConByName(user.getUser_id(), request.getParameter("contName"),
-				pager.getOffset(), pager.getPageSize());// 合同名
+		List<Contract> list = contractService.findConByName(request.getParameter("contName"), pager.getOffset(),
+				pager.getPageSize());// 合同名
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		System.out.println(jsonObject.toString());
@@ -168,6 +160,14 @@ public class ContractController {
 		contract.setCont_ctime(new Date(time));// 合同创建时间
 		contract.setCreator(user);// 合同创建者
 		contractService.addContract(contract);
+		System.out.println("测试事务add");
+		Contract cc = contractService.selectContById(100);
+		if (cc == null) {
+			throw new RuntimeException();
+		}
+
+		contractService.deleteContract(100);
+		System.out.println("测试事务delete");
 		return contract.getCont_id();
 	}
 
@@ -243,18 +243,16 @@ public class ContractController {
 		JSONObject jsonObject = new JSONObject();
 		boolean isdelete = contractService.deleteContract(Integer.parseInt(request.getParameter("conId")));
 		if (isdelete) {// 删除成功
-			User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-			int totalRow = Integer.parseInt(
-					contractService.countTotal(user.getUser_id(), request.getParameter("contName"), "name").toString());
+			int totalRow = Integer
+					.parseInt(contractService.countTotal(request.getParameter("contName"), "name").toString());
 			Pager pager = new Pager();
 			pager.setPage(1);// 返回前十条
 			pager.setTotalRow(totalRow);
-			List<Contract> list = contractService.findConByName(user.getUser_id(), null, pager.getOffset(),
-					pager.getPageSize());
+			List<Contract> list = contractService.findConByName(null, pager.getOffset(), pager.getPageSize());
 			jsonObject.put("list", list);
 			jsonObject.put("totalPage", pager.getTotalPage());
 			System.out.println(list);
-			System.out.println( pager.getTotalPage());
+			System.out.println(pager.getTotalPage());
 		}
 		return jsonObject.toString();
 	}

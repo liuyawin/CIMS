@@ -125,7 +125,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		console.log("发送请求获取合同信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'user/selectAllUsers.do',
+			url : baseUrl + 'user/getAllUserList.do',
 			data : data
 		});
 	};
@@ -134,7 +134,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		console.log("发送请求添加任务");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'task/createNormalTask.do',
+			url : baseUrl + 'task/addTask.do',
 			data : data,
 		});
 	};
@@ -183,16 +183,12 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 			// 添加任务
 			taskHtml.addTask = function() {
 				var taskFormData = JSON.stringify(taskHtml.task);
+				var taskType = taskHtml.task.task_type;
 				console.log(taskFormData);
 				services.addTask({
 					task : taskFormData,
-					/*user_id : $scope.task.receiverId,
-					task_content : $scope.task.task_content,
-					task_type : $scope.task.task_type,
-					task_stime : $scope.task.task_stime,
-					task_etime : $scope.task.task_etime,*/
-					cont_id : "",
-					/*task_remark : $scope.task.task_content*/
+					conId : "",
+					taskType : taskType
 				}).success(function(data) {
 					console.log("根据内容获取任务列表成功！");
 					if (data.result == "true") {
@@ -352,6 +348,17 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 				}
 			}
 			initData();
+			var $dateFormat = $(".dateFormat");
+			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+			$(".dateFormat").blur(function() {
+				if (!dateRegexp.test(this.value)) {
+					$(this).parent().children("span").css('display', 'inline');
+				}
+			});
+			$(".dateFormat").click(function() {
+				$(this).parent().children("span").css('display', 'none');
+			});
+			
 		} ]);
 
 //合同状态过滤器
@@ -369,6 +376,33 @@ app.filter('taskType',function(){
     }
 });
 
+
+//自定义表单验证日期格式
+app.directive("dateFormat", function() {
+	return {
+		restrict : 'A',
+		require : 'ngModel',
+		scope : true,
+		link : function(scope, elem, attrs, controller) {
+			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+
+			// Model变化时执行
+			// 初始化指令时BU执行
+			scope.$watch(attrs.ngModel, function(val) {
+				if (!val) {
+					return;
+				}
+				if (!dateRegexp.test(val)) {
+					controller.$setValidity('dateformat', false);
+					
+				} else {
+					controller.$setValidity('dateformat', true);
+					
+				}
+			});
+		}
+	}
+});
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
  * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,
