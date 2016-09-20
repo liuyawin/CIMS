@@ -124,8 +124,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 	
-	
-
 	services.selectUserByName = function(data) {
 		console.log("按名字查找用户");
 		return $http({
@@ -135,6 +133,32 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 
+	
+	services.getRoleListByPage = function(data) {
+		console.log("发送请求根据页数获取角色信息");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'role/getRoleListByPage.do',
+			data : data
+		});
+	};
+	
+	services.deleteRole = function(data) {
+		console.log("发送请求删除角色信息");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'role/deleteRole.do',
+			data : data
+		});
+	};
+	services.getAllRoleList = function(data) {
+		console.log("发送请求获取所有角色信息");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'role/getAllRoleList.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 
@@ -157,7 +181,7 @@ app.controller('userController', [ '$scope', 'services', '$location',
 					});
 				}
 			}
-			// 根据页数获取部门列表
+			// 根据页数获取用户列表
 			function getUserListByPage(page) {
 				services.getUserListByPage({
 					page : page
@@ -165,13 +189,7 @@ app.controller('userController', [ '$scope', 'services', '$location',
 					user.users = data.list;
 				});
 			}
-			// 获取部门列表
-			function getAllDepartmentList() {
-				services.getAllDepartmentList({}).success(function(data) {
-					console.log("获取部门列表成功！");
-					user.departs = data;
-				});
-			}
+			
 			//添加用户
 			user.addUser = function(){
 				console.log(user.user);
@@ -184,7 +202,7 @@ app.controller('userController', [ '$scope', 'services', '$location',
 				});
 			};
 
-			 //删除部门
+			 //删除用户
 			user.deleteUser = function(user_id) {
 				$(".tip").fadeIn(200);
 				$(".sure").click(function() {
@@ -206,6 +224,52 @@ app.controller('userController', [ '$scope', 'services', '$location',
 					$(".tip").fadeOut(100);
 				});
 			}
+			// 根据页数获取角色列表
+			function getRoleListByPage(page) {
+				services.getRoleListByPage({
+					page : page
+				}).success(function(data) {
+					role.roles = data.list;
+				});
+			}
+			
+			 //删除角色
+			user.deleteUser = function(role_id) {
+				$(".tip").fadeIn(200);
+				$(".sure").click(function() {
+					services.deleteRole({
+						roleId : role_id
+					}).success(function(data) {
+
+						role.result = data;
+						if (data == "true") {
+							console.log("删除用户列表成功！");
+							$("#" + user_id).hide();
+						} else {
+							console.log("删除用户列表失败！");
+						}
+					});
+					$(".tip").fadeOut(100);
+				});
+				$(".cancel").click(function() {
+					$(".tip").fadeOut(100);
+				});
+			}
+			// 获取部门列表
+			function getAllDepartmentList() {
+				services.getAllDepartmentList({}).success(function(data) {
+					console.log("获取部门列表成功！");
+					user.departs = data;
+				});
+			}
+			// 获取角色列表
+			function getAllRoleList() {
+				services.getAllRoleList({}).success(function(data) {
+					console.log("获取角色列表成功！");
+					user.roles = data;
+				});
+			}
+		
            //根据输入筛选用户
 			user.selectUserByName = function() {
 				services.selectUserByName({
@@ -225,10 +289,23 @@ app.controller('userController', [ '$scope', 'services', '$location',
 						pageTurn(data.totalPage, 1)
 					});					
 				} else if ($location.path().indexOf('/userAdd') == 0) {
-					console.log("初始化部门新增信息");
+					console.log("初始化用户新增信息");
+				
 					getAllDepartmentList();
+					getAllRoleList();
+					if($("#mustInput").val()==""){
+						alert("带*号的必须填写哦！");
+					}
 
-				} 
+				} else if($location.path().indexOf('/roleList') == 0){
+				
+					services.getRoleListByPage({
+						page : 1
+					}).success(function(data) {
+						user.roles = data.list;
+						pageTurn(data.totalPage, 1)
+					});	
+				}
 			}
 
 			initData();

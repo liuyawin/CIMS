@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.RoleDao;
+import com.mvc.repository.UserRepository;
+
 
 /**
  * 角色，职位
@@ -21,22 +23,29 @@ public class RoleDaoImpl implements RoleDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
+	@Autowired
+	UserRepository userRepository;
 
-	// 删除
-	public boolean updateState(Integer id, Integer state) {
-		EntityManager em = emf.createEntityManager();
-		try {
-			String selectSql = " update role set 'role_state' = :role_state  where role_id =:role_id ";
-			Query query = em.createNativeQuery(selectSql);
-			query.setParameter("role_state", state);
-			query.setParameter("role_id", id);
-			query.executeUpdate();
-			em.flush();
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-		return true;
+	// 删除，修改角色状态列表
+	public boolean updateState(Integer role_id) {
+		EntityManager em = emf.createEntityManager();		
+			em.getTransaction().begin();
+			
+			int count=userRepository.countRoleTotal(role_id);
+			if (count<1) {
+				String selectSql = " update role set `role_state` = 1  where role_id =:role_id ";
+				Query query = em.createNativeQuery(selectSql);
+				query.setParameter("role_id", role_id);
+				query.executeUpdate();
+				em.flush();
+				em.getTransaction().commit();
+				em.close();
+				return true;
+				}
+			else {
+				return false;
+				}
+				
 	}
 
 }
