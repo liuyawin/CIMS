@@ -36,7 +36,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="con in contracts">
+			<tr ng-repeat="con in contracts" >
 				<td><a href="#contractInfo" ng-click="getContId(con.cont_id)">{{con.cont_name}}</a></td>
 				<td>{{con.cont_onum}}</td>
 				<td>{{con.cont_state | conState}}</td>

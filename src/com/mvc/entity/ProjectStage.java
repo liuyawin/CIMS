@@ -32,6 +32,7 @@ public class ProjectStage implements Serializable {
 	private Date prst_etime; // 阶段截止时间
 	private Integer prst_state; // 阶段状态,0:未完成，1已完成
 	private Date prst_wtime; // 工作结束提醒时间
+	private Integer prst_wday; // 工作提醒天数
 	private Date prst_atime; // 实际完成时间
 	private Date prst_ctime; // 阶段录入时间
 	private String prst_remark; // 备注
@@ -134,6 +135,14 @@ public class ProjectStage implements Serializable {
 
 	public void setManager(User manager) {
 		this.manager = manager;
+	}
+
+	public Integer getPrst_wday() {
+		return prst_wday;
+	}
+
+	public void setPrst_wday(Integer prst_wday) {
+		this.prst_wday = prst_wday;
 	}
 
 }
