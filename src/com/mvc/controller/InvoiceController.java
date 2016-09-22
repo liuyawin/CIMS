@@ -30,6 +30,16 @@ public class InvoiceController {
 	InvoiceService invoiceService;
 
 	/**
+	 * 返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toAssistant2InvoicePage.do")
+	public String taskReceivePage() {
+		return "assistant2/invoiceInformation/index";
+	}
+	
+	/**
 	 * 根据发票ID查询发票详情
 	 * 
 	 * @param request

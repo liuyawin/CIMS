@@ -1,7 +1,7 @@
 package com.mvc.dao;
 
 /**
- * 工期阶段
+ * 工期阶段持久层接口
  * 
  * @author wanghuimin
  * @date 2016年9月9日

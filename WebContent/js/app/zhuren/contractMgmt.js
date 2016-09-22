@@ -99,6 +99,12 @@ app
 									{
 										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractDetail.html',
 										controller : 'ContractController'
+									})
+							.when(
+									'/contractDetail',
+									{
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractDetail.html',
+										controller : 'ContractController'
 									});
 				} ]);
 app.constant('baseUrl', '/CIMS/');
@@ -247,7 +253,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					});
 				} else {
 					return false;
-				}		
+				}
 			}
 			// 添加文书任务
 			contract.addTask1 = function() {

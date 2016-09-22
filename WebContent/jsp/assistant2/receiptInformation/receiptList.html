@@ -1,0 +1,60 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li>首页</li>
+		<li>合同列表</li>
+		<li>收据列表</li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<!-- <div class="tools">
+
+		<form class="toolbar">
+			<input name="" type="text" class="dfinput" id="cName" /> <input
+				class="btn" type="submit" value="查询" ng-click="selectConByName()">
+		</form>
+
+		<ul class="toolbar1">
+			<li class="click"><a href="#/contractAdd"><span><img
+						src="../images/t01.png" /></span>新建</a></li>
+		</ul>
+
+	</div> -->
+
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th>收据编号</th>
+				<th>金额（万元）</th>
+				<th>收款时间</th>
+				<th>交款业主公司</th>
+				<th>收款人</th>
+				<th>备注</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="rece in receipts">
+				<td class="width10">收据{{$index + 1}}</td>
+				<td class="width10">{{rece.rece_money}}</td>
+				<td class="width15">{{rece.rece_atime.time | dateType}}</td>
+				<td class="width15">{{rece.rece_firm}}</td>
+				<td class="width15">{{rece.user.user_name}}</td>
+				<td class="width15">{{rece.rece_remark}}</td>
+				<td class="width15"><a>详情</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="tcdPageCode">页码容器</div>
+
+</div>
+
+<script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+</script>
+
+
+

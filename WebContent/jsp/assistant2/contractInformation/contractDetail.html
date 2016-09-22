@@ -107,8 +107,8 @@
 				<td colspan='2' class="width20 text-center table_title_width">项目负责人</td>
 				<td colspan='1'><select class="dfselect input_border"
 					ng-model="contract.manager_id">
-						<option value="1">admin</option>
-						<option value="2">zhou</option>
+						<option value={{userDept.user.user_name}} ng-repeat="userDept in userDepts" >{{userDept.user.user_name}}</option>
+						
 				</select></td>
 				<td colspan='1' class="width20 text-center">是否立项</td>
 				<td colspan='1'><div class="div-checkbox">
@@ -162,39 +162,72 @@
 		<div class="formtitle">
 			<span>工期阶段详情</span>
 		</div>
-		<ul class="forminfo">
-			<li><div>
-					<label>阶段内容</label><input type="text" class="dfinput" />
+		<ul class="forminfo" id="stageList">
+			<li id="ps{{$index + 1}}" ng-repeat="stage in fchat.stages" ng-mouseover="psShowDel($index+1)" ng-mouseout="psHideDel($index+1)"><div
+					class="stage_style">
+					<label>阶段{{$index + 1}}</label><input type="text"
+						class="dfinput long_input" id="stageContent" name="stageContent"
+						ng-model="stage.prst_content" />
+						<img class="hand small_image"  src='../images/addsel.png' alt='添加'
+				ng-click="fchat.incrStage($index)"><img
+				class="hand small_image" src='../images/delsel.gif' alt='删除'
+				ng-click="fchat.decrStage($index)" ng-show="fchat.canDescStage"><img
+				class="hand small_image" src='../images/delsel.gif' alt='删除'
+				ng-click="fchat.decrStage($index)" ng-show="!fchat.canDescStage">
+				</div><br>
+				<div class="stage_style top_length">
+					<label>完工时间</label><input type="text" class="dfinput dateFormat"
+						placeholder="格式：2016-09-07" id="stageEtime" name="stageEtime"
+						ng-model="stage.prst_etime" /><span class="error-span">日期格式：2016-09-07</span>
 				</div>
-				<div>
-					<label>完工时间</label><input type="date" class="dfinput" />
-				</div></li>
+				<div class="stage_style top_length left_length">
+					<label>提醒天数设置</label><input type="text"
+						class="dfinput" id="stageWtime" name="stageWtime" placeholder="格式：7"
+						ng-model="stage.prst_wtime" />天
+				</div><br><br>
+				<!-- <hr class="line_style" /> -->
+				</li>
 		</ul>
+		<input type="submit" id="addprojectStage" class="btn" value="添加工期阶段" />
 	</form>
-
-	<label class="col-md-2 control-label">答复内容:</label>
-	<div class="col-md-10">
-		<div ng-repeat="reply in fchat.replies">
-			<div class="form-group">
-				<div class="col-md-12">
-					<div class="col-md-1">
-						<label for="reply{{$index + 1}}">回答{{$index + 1}}</label>
-					</div>
-					<div class="col-md-9">
-						<input type="text" class="dfinput" ng-model="reply.value"
-							id="reply{{$index + 1}}" name="reply{{$index + 1}}" />
-					</div>
-					<div class="col-md-2 img-link">
-						<a href="" ng-click="fchat.incrReply($index)"> 添加 </a> <a href=""
-							ng-click="fchat.decrReply($index)" ng-show="fchat.canDescReply">
-							删除
-						</a> <img src="/images/dis_minus.png" alt="minus" width="30px"
-							height="30px" ng-show="!fchat.canDescReply" />
-					</div>
-				</div>
-			</div>
+</div>
+<div class="formbody">
+	<form ng-submit="addReceiveNode()">
+		<div class="formtitle">
+			<span>收款节点详情</span>
 		</div>
-	<!-- 	<input type="hidden" id="replies" name="replies"
-			value="{{fchat.combineReplies()}}" /> -->
-	</div>
+		<ul class="forminfo" id="node">
+			<li id="rn{{$index + 1}}" ng-repeat="node in rnchat.nodes" ng-mouseover="rnShowDel($index+1)" ng-mouseout="rnHideDel($index+1)"><div
+					class="stage_style">
+					<label>节点{{$index + 1}}</label><input type="text"
+						class="dfinput middle_input" id="nodeContent" name="nodeContent"
+						ng-model="node.reno_content" />
+				</div>
+
+				<div class="stage_style left_length">
+					<label>收款时间</label><input type="text" class="dfinput dateFormat"
+						placeholder="格式：2016-09-07" id="nodeEtime" name="nodeEtime"
+						ng-model="node.reno_time" /><span class="error-span">日期格式：2016-09-07</span>
+					<img class="hand small_image" src='../images/addsel.png' alt='添加'
+						ng-click="rnchat.incrNode($index)"><img
+						class="hand small_image" src='../images/delsel.gif' alt='删除'
+						ng-click="rnchat.decrNode($index)" ng-show="rnchat.canDescNode"><img
+						class="hand small_image" src='../images/delsel.gif' alt='删除'
+						ng-click="rnchat.decrNode($index)" ng-show="!rnchat.canDescNode">
+				</div> <br>
+				<div class="stage_style top_length">
+					<label>工期阶段</label><select class="dfselect middle_input"
+						ng-model="node.projectStage"><option value={{stage.prst_id}} ng-repeat="stage in prst" >{{stage.prst_content}}</option>
+						</select>
+				</div>
+				<div class="stage_style top_length left_length">
+					<label>实际应收金额</label><input type="text"
+						class="dfinput" id="nodeMoney" name="nodeMoney"
+						ng-model="node.reno_money" />万元
+				</div>
+			</li>
+		</ul>
+
+		<input type="submit" id="addReceiveNode" class="btn" style="display:none" value="添加收款节点" />
+	</form>
 </div>
