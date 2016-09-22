@@ -36,7 +36,7 @@ public class ReceiptDaoImpl implements ReceiptDao {
 		if (null != searchKey) {
 			selectSql += " and (rece_firm like '%" + searchKey + "%' )";
 		}
-		selectSql += " order by receipt_id desc limit :offset, :end";
+		selectSql += " order by rece_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, Receipt.class);
 		query.setParameter("cont_id", cont_id);
 		query.setParameter("offset", offset);
@@ -50,7 +50,7 @@ public class ReceiptDaoImpl implements ReceiptDao {
 	@SuppressWarnings("unchecked")
 	public Integer countByParam(Integer cont_id, String searchKey) {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select count(receipt_id) from receipt where cont_id=:cont_id ";
+		String countSql = " select count(rece_id) from receipt where cont_id=:cont_id ";
 		if (null != searchKey) {
 			countSql += "   and (rece_firm like '%" + searchKey + "%'  )";
 		}

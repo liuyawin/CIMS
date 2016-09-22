@@ -26,7 +26,7 @@
 	height: 15px;
 	margin-left: 15px;
 	margin-top: 8px;
-	visibility:hidden;
+	visibility: hidden;
 }
 
 .stage_style {
@@ -52,6 +52,15 @@
 .line_style {
 	border-bottom: solid 1px #d0dee5;
 	width: 97%;
-	
-	
+}
+
+.width10 {
+	width: 10%;
+}
+.width15 {
+	width: 15%;
+}
+.width35 {
+	width: 35%;
+}
 }

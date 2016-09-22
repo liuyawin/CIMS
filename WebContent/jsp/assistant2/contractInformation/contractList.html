@@ -30,22 +30,25 @@
 				<th>合同状态</th>
 				<th>工程阶段报警次数</th>
 				<th>收款节点报警次数</th>
+				<th>发票</th>
+				<th>收据</th>
 				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="con in contracts">
-				<td><a href="#contractDetail">{{con.cont_name}}</a></td>
+				<td><a href="#contractInfo" ng-click="getContId(con.cont_id)">{{con.cont_name}}</a></td>
 				<td>{{con.cont_onum}}</td>
 				<td>{{con.cont_state | conState}}</td>
 				<td>{{con.cont_proalanum}}</td>
 				<td>{{con.cont_payalanum}}</td>
-				<td><a href="#" class="tablelink">查看</a><a href="#"
-					class="tablelink"> 修改</a><a href="#" class="tablelink"> 删除</a></td>
+				<td><a href="#"
+					class="tablelink">录发票</a><a href="/CIMS/invoice/toAssistant2InvoicePage.do#invoicetList" class="tablelink" ng-click="getContId(con.cont_id)">详情</a></td>
+				<td><a href="/CIMS/receipt/toAssistant2ReceiptPage.do#receiptInfo" class="tablelink" ng-click="getContId(con.cont_id)">录收据</a><a href="/CIMS/receipt/toAssistant2ReceiptPage.do#receiptList" class="tablelink" ng-click="getContId(con.cont_id)">详情</a></td>
+				<td><a href="#" class="tablelink">修改</a></td>
 			</tr>
 		</tbody>
 	</table>
-
 
 	<div class="tcdPageCode">
 	页码容器

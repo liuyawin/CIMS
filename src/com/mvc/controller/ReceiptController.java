@@ -33,6 +33,18 @@ public class ReceiptController {
 	ReceiptService receiptService;
 
 	/**
+	 * 返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toAssistant2ReceiptPage.do")
+	public String taskReceivePage() {
+		return "assistant2/receiptInformation/index";
+	}
+	
+	
+	
+	/**
 	 * 根据页数,合同，关键字返回任务列表
 	 * 
 	 * @param request
