@@ -104,6 +104,7 @@ app
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
+	//zq获取任务列表
 	services.getTaskList = function(data) {
 		console.log("发送请求获取合同信息data" + data);
 		return $http({
@@ -112,7 +113,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-
+	// zq通过内容查找任务
 	services.getTaskByContext = function(data) {
 		console.log("发送请求获取合同信息");
 		return $http({
@@ -121,25 +122,25 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-
+	// zq选择所有用户
 	services.selectAllUsers = function(data) {
 		console.log("发送请求获取合同信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'user/selectAllUsers.do',
+			url : baseUrl + 'user/getAllUserList.do',
 			data : data
 		});
 	};
-
+	// zq添加任务
 	services.addTask = function(data) {
 		console.log("发送请求添加任务");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'task/createNormalTask.do',
+			url : baseUrl + 'task/addTask.do',
 			data : data,
 		});
 	};
-
+	// zq删除任务
 	services.deleteTask = function(data) {
 		console.log("发送请求删除任务");
 		return $http({
@@ -148,12 +149,20 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data,
 		});
 	};
-
+	// zq查看任务
 	services.checkTask = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'task/selectTaskById.do',
 			data : data,
+		});
+	};
+	//zq完成任务
+	services.finishTask=function(data){
+		return $http({
+			method:'post',
+			url:baseUrl +'task/finishTask.do',
+			data:data
 		});
 	};
 	return services;
@@ -164,13 +173,13 @@ app.controller('TaskController', [
 		'services',
 		'$location',
 		function($scope, services, $location) {
-			// 合同
+			// zq合同
 			var taskHtml = $scope;
 			var tState;
 			taskHtml.stime = "";
 			taskHtml.etime = "";
 			taskHtml.task = {};
-			// 根据内容查询任务列表
+			// zq根据内容查询任务列表
 			taskHtml.getTaskByContext = function() {
 				services.getTaskByContext({
 					context : $("#tContent").val(),
@@ -184,20 +193,17 @@ app.controller('TaskController', [
 				});
 			};
 
-			// 添加任务
+			// zq添加任务
 			taskHtml.addTask = function() {
 
 				var taskFormData = JSON.stringify(taskHtml.task);
-				console.log(taskFormData);
+				var taskType = taskHtml.task.task_type;
+				console.log(taskFormData.task_type);
 				services.addTask({
 					task : taskFormData,
-					/*user_id : $scope.task.receiverId,
-					task_content : $scope.task.task_content,
-					task_type : $scope.task.task_type,
-					task_stime : $scope.task.task_stime,
-					task_etime : $scope.task.task_etime,*/
-					cont_id : "",
-					/*task_remark : $scope.task.task_content*/
+					conId : "",
+					taskType : taskType
+
 				}).success(function(data) {
 					console.log("根据内容获取任务列表成功！");
 					if (data.result == "true") {
@@ -208,12 +214,13 @@ app.controller('TaskController', [
 
 				});
 			};
-
+			// zq跳转合同页面，将合同ID存入sessionStorage中
 			taskHtml.getContId = function(cont_id) {
 				sessionStorage.setItem('contId', cont_id); // 存入合同ID
+
 			};
 
-			// 将任务ID放到sessionStorage中
+			// zq将任务ID放到sessionStorage中
 			taskHtml.getTaskId = function(task_id) {
 				sessionStorage.setItem('taskId', task_id); // 存入一个值
 			};
@@ -242,6 +249,16 @@ app.controller('TaskController', [
 				});
 
 			};
+			// zq完成任务确认
+			taskHtml.finishTask = function(taskId) {
+				services.finishTask({
+					taskId : taskId
+				}).success(function(data) {
+					alert("任务完成!");
+				});
+
+			};
+
 			// 查看任务
 			function checkTask() {
 				services.checkTask({
@@ -258,15 +275,16 @@ app.controller('TaskController', [
 						});
 			}
 
-			// 获取所有用户
+			// zq获取所有用户
 			function selectAllUsers() {
 				services.selectAllUsers({}).success(function(data) {
 					console.log("获取用户列表成功！");
 					taskHtml.users = data;
+
 				});
 			}
 
-			// 获取所有任务列表
+			// zq获取所有任务列表
 			function getTaskList(taskState, page) {
 				services.getTaskList({
 					taskState : taskState,
@@ -276,7 +294,7 @@ app.controller('TaskController', [
 					taskHtml.tasks = data.list;
 				});
 			}
-			// 所有任务换页
+			// zq所有任务换页
 			function pageTurn(taskState, totalPage, page) {
 
 				var $pages = $(".tcdPageCode");
@@ -292,7 +310,7 @@ app.controller('TaskController', [
 				}
 			}
 
-			// 获取任务列表按照内容翻页查找函数
+			// zq 获取任务列表按照内容翻页查找函数
 			function getTaskListByContent(taskState, page) {
 				services.getTaskByContext({
 					context : $("#tContent").val(),
@@ -306,7 +324,7 @@ app.controller('TaskController', [
 				});
 			}
 
-			// 按查询内容获取任务列表的换页
+			// zq按查询内容获取任务列表的换页
 			function pageTurnByContent(taskState, totalPage, page) {
 
 				var $pages = $(".tcdPageCode");
@@ -322,7 +340,7 @@ app.controller('TaskController', [
 				}
 			}
 
-			// 初始化
+			// zq初始化
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/newTask') == 0) {
@@ -366,9 +384,20 @@ app.controller('TaskController', [
 				}
 			}
 			initData();
+			var $dateFormat = $(".dateFormat");
+			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+			$(".dateFormat").blur(function() {
+				if (!dateRegexp.test(this.value)) {
+					$(this).parent().children("span").css('display', 'inline');
+				}
+			});
+			$(".dateFormat").click(function() {
+				$(this).parent().children("span").css('display', 'none');
+			});
+
 		} ]);
 
-// 合同状态过滤器
+// zq合同状态过滤器
 app.filter('taskType', function() {
 	return function(input) {
 		var type = "";
@@ -386,6 +415,30 @@ app.filter('taskType', function() {
 	}
 });
 
+// zq自定义表单验证日期格式
+app.directive("dateFormat", function() {
+	return {
+		restrict : 'A',
+		require : 'ngModel',
+		scope : true,
+		link : function(scope, elem, attrs, controller) {
+			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+
+			// Model变化时执行
+			// 初始化指令时BU执行
+			scope.$watch(attrs.ngModel, function(val) {
+				if (!val) {
+					return;
+				}
+				if (!dateRegexp.test(val)) {
+					controller.$setValidity('dateformat', false);
+				} else {
+					controller.$setValidity('dateformat', true);
+				}
+			});
+		}
+	}
+});
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
  * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,

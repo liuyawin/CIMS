@@ -52,7 +52,8 @@
 				<td>{{t.creator.user_name}}</td>
 				<td>{{t.task_alarmnum}}</td>
 				<td><a class="tablelink" href="/CIMS/contract/toAssistant2ContractPage.do#/contractDetail" ng-click="getContId(t.contract.cont_id)">{{t.contract.cont_name}}</a></td>
-				<td><a  href="#/taskCheck"  ng-click="getTaskId(t.task_id)" class="tablelink">查看</a><a ng-click="show(t.task_id)"
+				<td><a  href="#/taskCheck"  ng-click="getTaskId(t.task_id)" class="tablelink">查看</a><a ng-click="finishTask(t.task_id)"
+					class="tablelink"> 完成</a><a ng-click="show(t.task_id)"
 					class="tablelink"> 删除</a></td>
 			</tr>
 		</tbody>
