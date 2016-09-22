@@ -74,7 +74,7 @@ public class ProjectStageController {
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(date);
 				int days = Integer.parseInt(stage.getString("prst_wtime"));// 完工提醒天数
-				calendar.add(Calendar.DAY_OF_MONTH, days);// 工作结束提醒时间=阶段截止时间+完工提醒天数
+				calendar.add(Calendar.DAY_OF_MONTH, -days);// 工作结束提醒时间=阶段截止时间-完工提醒天数
 				projectStage.setPrst_wtime(calendar.getTime());// 工作结束提醒时间
 				projectStage.setPrst_ctime(new Date(time));// 阶段录入时间
 				User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 录入人
