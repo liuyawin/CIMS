@@ -3,6 +3,7 @@ package com.mvc.service;
 import java.util.List;
 
 import com.mvc.entity.User;
+import com.mvc.entity.UserDeptRelation;
 
 /**
  * User相关Service层接口
@@ -35,7 +36,7 @@ public interface UserService {
 	List<User> findUserAlls();
 	
 	//只要设计部人员列表
-	List<User> findUserFromDesign();
+	List<UserDeptRelation> findUserFromDesign();
 	
 	// 根据ID查询用户信息
 	User findById(Integer user_id);

@@ -1,4 +1,4 @@
-package com.mvc.service.impl;
+﻿package com.mvc.service.impl;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.UserDao;
 import com.mvc.entity.User;
+import com.mvc.entity.UserDeptRelation;
 import com.mvc.repository.UserRepository;
 import com.mvc.service.UserService;
 
@@ -69,13 +70,12 @@ public class UserServiceImpl implements UserService {
 	}
 	//只要设计部人员列表
 	@Override
-	public List<User> findUserFromDesign() {
+	public List<UserDeptRelation> findUserFromDesign() {
 		return userDao.findUserFromDesign();
 	}
-
+	//根据id删除
 	@Override
 	public boolean deleteIsdelete(Integer user_id) {
-		// TODO Auto-generated method stub
 		return userDao.updateState(user_id);
 	}
 	
