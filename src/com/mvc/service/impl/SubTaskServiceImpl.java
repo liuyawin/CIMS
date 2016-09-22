@@ -47,4 +47,14 @@ public class SubTaskServiceImpl implements SubTaskService {
 		}
 	}
 
+	// 添加保存子任务
+	public boolean save(SubTask subTask) {
+		SubTask result = subTaskRepository.saveAndFlush(subTask);
+		if (result.getSuta_id() != 0)
+			return true;
+		else {
+			return false;
+		}
+	}
+
 }

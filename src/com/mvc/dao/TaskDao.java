@@ -2,6 +2,7 @@ package com.mvc.dao;
 
 import java.util.List;
 
+import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 
 /**
@@ -23,6 +24,9 @@ public interface TaskDao {
 			Integer sendOrReceive);
 
 	// 根据状态，关键字查询任务总条数
-	Integer countByParam(Integer user_id, Integer task_state, String searchKey,Integer sendOrReceive);
+	Integer countByParam(Integer user_id, Integer task_state, String searchKey, Integer sendOrReceive);
+
+	// 创建文书任务
+	boolean addAssitantTask(Task task, List<SubTask> subTasks);
 
 }
