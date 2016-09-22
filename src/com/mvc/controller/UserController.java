@@ -97,11 +97,11 @@ public class UserController {
 		user.setUser_num(jsonObject.getString("user_num"));
 		user.setUser_name(jsonObject.getString("user_name"));
 		user.setUser_pwd(jsonObject.getString("user_pwd"));
-		user.setUser_sex(jsonObject.getInt("user_sex"));
+		user.setUser_sex(Integer.parseInt(jsonObject.getString("user_sex")));
 		user.setUser_tel(jsonObject.getString("user_tel"));
 		user.setUser_email(jsonObject.getString("user_email"));
 		Role role=new Role();
-		role.setRole_id(jsonObject.getInt("role_id"));
+		role.setRole_id(Integer.parseInt(jsonObject.getString("roleId")));
 		user.setRole(role);
 		user.setUser_isdelete(0);
 //		user.setUser_permission(request.getParameter("user_permission"));		

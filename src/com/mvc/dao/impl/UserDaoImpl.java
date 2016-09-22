@@ -57,8 +57,8 @@ public class UserDaoImpl implements UserDao {
 	public boolean updateState(Integer id) {
 		EntityManager em = emf.createEntityManager();		
 			em.getTransaction().begin();
-			int count=userRepository.countUserByroleid(id);
-			if(count<1){
+			Number count=userRepository.countUserByroleid(id);
+			if(count.intValue()<1){
 				try {
 					String selectSql = " update user set `user_isdelete` = 1 where user_id =:user_id ";
 					Query query = em.createNativeQuery(selectSql);

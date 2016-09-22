@@ -23,4 +23,8 @@ public interface RoleRepository extends JpaRepository<Role, Integer> {
 	@Query("select r from Role r where role_state=0")
 	public List<Role> findAlls();
 
+	// 查询角色总条数
+	@Query("select count(role_id) from Role r where role_state=0")
+	public Long countTotal();
+
 }
