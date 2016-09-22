@@ -13,8 +13,12 @@
         http://www.springframework.org/schema/task  
 		http://www.springframework.org/schema/task/spring-task-3.1.xsd  ">
 
-	<context:component-scan base-package="com.mvc.dao" />
-	<context:component-scan base-package="com.mvc.service" />
+	<!-- <context:component-scan base-package="com.mvc.dao" /> <context:component-scan 
+		base-package="com.mvc.service" /> -->
+	<context:component-scan base-package="com.mvc">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
 
 	<bean id="configProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -73,7 +77,34 @@
 
 	<!-- Spring Data Jpa配置 -->
 	<jpa:repositories base-package="com.mvc.repository"
-		entity-manager-factory-ref="entityManagerFactory"></jpa:repositories>
+		entity-manager-factory-ref="entityManagerFactory"
+		transaction-manager-ref="transactionManager"></jpa:repositories>
+
+	<!-- 开启注解事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- 启动对@AspectJ（面向切面）注解的支持 -->
+	<!-- <aop:aspectj-autoproxy /> -->
+
+	<!-- 配置事务属性（需要事务管理器） -->
+	<!-- <tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice> -->
+
+	<!-- 配置事务切点，并把切点和事务属性关联起来 -->
+	<!-- <aop:config>
+		<aop:pointcut id="bussinessService"
+			expression="execution(public 
+		* com.mvc.service..*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="bussinessService" />
+	</aop:config> -->
+
 </beans>
 
 

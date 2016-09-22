@@ -5,15 +5,53 @@
 }
 
 .text_border {
-	
 	overflow: auto;
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	border-style: solid;
 	border-color: #FFFFFF;
-	width: 900px ;
+	width: 900px;
 }
 
-.table_title_width{
-	width : 45% !important
+.table_title_width {
+	width: 45% !important
+}
+
+.hand {
+	cursor: pointer;
+}
+
+.small_image {
+	width: 15px;
+	height: 15px;
+	margin-left: 15px;
+	margin-top: 8px;
+	visibility:hidden;
+}
+
+.stage_style {
+	float: left;
+}
+
+.left_length {
+	margin-left: 30px;
+}
+
+.middle_input {
+	width: 350px !important;
+}
+
+.long_input {
+	width: 730px !important;
+}
+
+.top_length {
+	margin-top: 20px;
+}
+
+.line_style {
+	border-bottom: solid 1px #d0dee5;
+	width: 97%;
+	
+	
 }

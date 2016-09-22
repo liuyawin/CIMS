@@ -14,7 +14,6 @@
 				ng-model="task.task_type">
 					<option value="0">普通任务</option>
 					<option value="1">文书任务</option>
-					<option value="2">其他</option>
 			</select></li>
 			<li><label>接收人</label><select name="tReceiver" class="dfselect"
 				ng-model="task.receiver_id">
@@ -24,10 +23,14 @@
 			</select></li>
 			<li><label>内容</label> <textarea name="" cols="" rows=""
 					class="textinput" ng-model="task.task_content"></textarea></li>
-			<li><label>开始</label><input type="date" name="task_stime"
-				class="dfinput" id="task_stime" ng-model="task.task_stime"></li>
-			<li><label>截止</label><input type="date" name="task_etime"
-				class="dfinput" id="task_etime" ng-model="task.task_etime"></li>
+			<li>
+				<label>开始时间</label><input type="text"
+				ng-model="task.task_stime" class="dfinput dateFormat"
+				placeholder="格式：2016-09-07" /><span class="error-span">日期格式：2016-09-07</span>
+				</li>
+			<li><label>结束时间</label><input type="text" name="task1_etime"
+				ng-model="task.task_etime" class="dfinput dateFormat"
+				placeholder="格式：2016-09-07" /><span class="error-span">日期格式：2016-09-07</span></li>
 			<li><label>&nbsp;</label><input type="submit" class="btn"
 				value="创建任务" /></li>
 		</ul>
