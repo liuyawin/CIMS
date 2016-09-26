@@ -100,8 +100,8 @@
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a href="#/test">待处理</a><i></i></li>
-				<li><cite></cite> <a href="#/another">已处理</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/alarm/toAssistant2AlarmPage.do#/newAlarmList">待处理</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/alarm/toAssistant2AlarmPage.do#/doneAlarmList">已处理</a><i></i></li>
 			</ul>
 		</dd>
 		<dd>

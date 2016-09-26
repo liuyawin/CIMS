@@ -49,6 +49,7 @@ public class Invoice {
 		this.invo_id = invo_id;
 	}
 
+	@Column(columnDefinition = "float(10,2) default '0.00'")
 	public Float getInvo_money() {
 		return invo_money;
 	}

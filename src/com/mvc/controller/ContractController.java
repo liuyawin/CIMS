@@ -40,13 +40,25 @@ public class ContractController {
 	@Autowired
 	UserService userService;
 
+	
+	/**
+	 * 返回合同界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toManagerContractPage.do")
+	public String managerContractPage() {
+		return "manager/contractInformation/index";
+	}
+	
+	
 	/**
 	 * 返回合同界面
 	 * 
 	 * @return
 	 */
 	@RequestMapping("/toAssistant2ContractPage.do")
-	public String taskReceivePage() {
+	public String assistant2ContractPage() {
 		return "assistant2/contractInformation/index";
 	}
 
@@ -160,14 +172,6 @@ public class ContractController {
 		contract.setCont_ctime(new Date(time));// 合同创建时间
 		contract.setCreator(user);// 合同创建者
 		contractService.addContract(contract);
-		System.out.println("测试事务add");
-		Contract cc = contractService.selectContById(100);
-		if (cc == null) {
-			throw new RuntimeException();
-		}
-
-		contractService.deleteContract(100);
-		System.out.println("测试事务delete");
 		return contract.getCont_id();
 	}
 

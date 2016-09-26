@@ -47,7 +47,8 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	public boolean delete(Integer invoiceId) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			String selectSql = " update invoice set 'invo _isdelete' = 1  where invo_id =:invo_id ";
+			em.getTransaction().begin();
+			String selectSql = " update invoice set `invo _isdelete` = 1  where invo_id =:invo_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("invo_id", invoiceId);
 			query.executeUpdate();
@@ -61,15 +62,12 @@ public class InvoiceDaoImpl implements InvoiceDao {
 
 	@SuppressWarnings("unchecked")
 	// 根据合同ID，页数，关键字返回任务列表
-	public List<Invoice> findByPage(Integer cont_id, String searchKey, Integer offset, Integer end) {
+	public List<Invoice> findByPage(Integer cont_id, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
-		String selectSql = "select * from invoice where cont_id=:cont_id and invo _isdelete=0";
-		if (null != searchKey) {
-			selectSql += " and ( invo_firm like '%" + searchKey + "%' )";
-		}
+		String selectSql = "select * from invoice where contract_id=:contract_id and invo_isdelete=0 ";
 		selectSql += " order by invo_id  desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, Invoice.class);
-		query.setParameter("cont_id", cont_id);
+		query.setParameter("contract_id", cont_id);
 		query.setParameter("offset", offset);
 		query.setParameter("end", end);
 		List<Invoice> list = query.getResultList();
@@ -77,19 +75,28 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		return list;
 	}
 
-	// 根据合同ID，关键字查询任务总条数
+	// 根据合同ID，关键字查询发票总条数
 	@SuppressWarnings("unchecked")
-	public Integer countByParam(Integer cont_id, String searchKey) {
+	public Integer countByParam(Integer cont_id) {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select count(invoice_id) from invoice where invo _isdelete=0 and cont_id=:cont_id ";
-		if (null != searchKey) {
-			countSql += "   and (invo_firm like '%" + searchKey + "%'  )";
-		}
+		String countSql = " select count(invo_id) from invoice where invo_isdelete=0 and contract_id=:contract_id ";
 		Query query = em.createNativeQuery(countSql);
-		query.setParameter("cont_id", cont_id);
+		query.setParameter("contract_id", cont_id);
 		List<Object> result = query.getResultList();
 		em.close();
 		return Integer.parseInt(result.get(0).toString());
+	}
+
+	// 根据合同ID查询发票总金额
+	@SuppressWarnings("unchecked")
+	public Float totalMoneyOfInvoice(Integer contId) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = " select sum(invo_money) from invoice i where contract_id=:contract_id ";
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("contract_id", contId);
+		List<Object> result = query.getResultList();
+		em.close();
+		return Float.valueOf(result.get(0).toString());
 	}
 
 }

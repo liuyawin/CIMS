@@ -1,4 +1,4 @@
-package com.mvc.dao.impl;
+﻿package com.mvc.dao.impl;
 
 import java.util.List;
 
@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.UserDao;
-import com.mvc.entity.Department;
 import com.mvc.entity.User;
+import com.mvc.entity.UserDeptRelation;
+import com.mvc.repository.DepartmentRepository;
+import com.mvc.repository.UserRepository;
 
 /**
  * User相关Dao层接口实现
@@ -25,6 +27,11 @@ public class UserDaoImpl implements UserDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
+	@Autowired
+	DepartmentRepository departmentRepository;
+	@Autowired
+	UserRepository userRepository;
+
 
 	// /**
 	// * 对用户进行增加
@@ -48,19 +55,29 @@ public class UserDaoImpl implements UserDao {
 	 * 删除用户
 	 */
 	public boolean updateState(Integer id) {
-		EntityManager em = emf.createEntityManager();
-		try {
+		EntityManager em = emf.createEntityManager();		
 			em.getTransaction().begin();
-			String selectSql = " update user set `user_isdelete` = 1 where user_id =:user_id ";
-			Query query = em.createNativeQuery(selectSql);
-			query.setParameter("user_id", id);
-			query.executeUpdate();
-			em.flush();
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-		return true;
+			Number count=userRepository.countUserByroleid(id);
+			if(count.intValue()<1){
+				try {
+					String selectSql = " update user set `user_isdelete` = 1 where user_id =:user_id ";
+					Query query = em.createNativeQuery(selectSql);
+					query.setParameter("user_id", id);
+					query.executeUpdate();
+					String selectSql1=" update user_dept_relation set `user_dept_relation_state`=1 where user_id=:user_id ";
+					Query query1=em.createNativeQuery(selectSql1);
+					query1.setParameter("user_id", id);
+					query1.executeUpdate();			
+					em.flush();
+					em.getTransaction().commit();
+				} finally {
+					em.close();
+				}
+				return true;
+				}
+			else
+				return false;
+		
 	}
 	//根据页数筛选全部用户列表
 	@SuppressWarnings("unchecked")
@@ -77,14 +94,16 @@ public class UserDaoImpl implements UserDao {
 		em.close();
 		return list;
 	}
+	//只要设计部人员列表	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> findUserFromDesign() {
+	public List<UserDeptRelation> findUserFromDesign() {
 		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		String selectSql = "select * from user_dept_relation where department.dept_name='设计部'";	
-		Query query = em.createNativeQuery(selectSql, Department.class);
-		List<User> list = query.getResultList();
+		em.getTransaction().begin();		
+		int deptid=departmentRepository.findOnlyUserDesign();		
+		String selectSql = "select * from user_dept_relation where dept_id="+ deptid +" and user_dept_relation_state=0";	
+		Query query = em.createNativeQuery(selectSql, UserDeptRelation.class);
+		List<UserDeptRelation> list = query.getResultList();
 		em.close();
 		return list;
 	}

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mvc.entity.Role;
 import com.mvc.entity.User;
+import com.mvc.entity.UserDeptRelation;
 import com.mvc.service.UserService;
 import com.utils.Pager;
 
@@ -32,7 +33,13 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
-	//根据页数筛选用户列表
+	/**
+	 *根据页数筛选用户列表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return 
+	 */
 	@RequestMapping(value = "/getUserListByPage.do")
 	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {	
 		JSONObject jsonObject = new JSONObject();
@@ -47,7 +54,13 @@ public class UserController {
 		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
-	//获取用户列表，无翻页功能
+	/**
+	 *获取用户列表，无翻页功能
+	 * 
+	 * @param request
+	 * @param session
+	 * @return 
+	 */
 	@RequestMapping(value = "/getAllUserList.do")
 	public @ResponseBody String getAllStores(HttpServletRequest request, HttpSession session) {
 		List<User> result = userService.findUserAlls();
@@ -66,57 +79,29 @@ public class UserController {
 		Integer userid = Integer.valueOf(request.getParameter("userId"));
 		boolean result = userService.deleteIsdelete(userid);
 		return JSON.toJSONString(result);
-	}
-	
+	}		
 	
 	/**
-	 * 添加合同
+	 * 添加用户
 	 * 
 	 * @param request
 	 * @param session
-	 * @return 合同ID
+	 * @return
 	 */
-//	@RequestMapping("/addContract.do")
-//	public @ResponseBody Integer addContract(HttpServletRequest request, HttpSession session) {
-//		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-//		JSONObject jsonObject = new JSONObject();
-//		jsonObject = JSONObject.fromObject(request.getParameter("contract"));
-//		long time = System.currentTimeMillis();
-//		Contract contract = new Contract();
-//		contract.setCont_name(jsonObject.getString("cont_name"));// 合同名称
-//		contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
-//		ContractType ct = Enum.valueOf(ContractType.class, jsonObject.getString("cont_type"));
-//		contract.setCont_type(ct.value);// 枚举,合同的类型
-//		contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
-//		contract.setCont_ctel(jsonObject.getString("cont_ctel"));// 业主联系方式
-//		contract.setCont_cdept(jsonObject.getString("cont_cdept"));// 业主联系部门
-//		contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
-//		contract.setCont_initiation(1);// 已立项
-//		contract.setCont_ishistory(0);// 未删除
-//		contract.setCont_ctime(new Date(time));// 合同创建时间
-//		contract.setCreator(user);// 合同创建者
-//		contractService.addContract(contract);
-//		return contract.getCont_id();
-//	}
-//	
-//	
-	
-	
-	
-	
-	
-	//添加用户
 	@RequestMapping(value = "/addUser.do")
-	public @ResponseBody String addDepart(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String addUser(HttpServletRequest request, HttpSession session) {
+		
+		JSONObject jsonObject=new JSONObject();
+		jsonObject=JSONObject.fromObject(request.getParameter("user"));		
 		User user=new User();
-		user.setUser_num(request.getParameter("user_num"));
-		user.setUser_name(request.getParameter("user_name"));
-		user.setUser_pwd(request.getParameter("user_pwd"));
-		user.setUser_sex(Integer.valueOf(request.getParameter("user_sex")));
-		user.setUser_tel(request.getParameter("user_tel"));
-		user.setUser_email(request.getParameter("user_email"));
+		user.setUser_num(jsonObject.getString("user_num"));
+		user.setUser_name(jsonObject.getString("user_name"));
+		user.setUser_pwd(jsonObject.getString("user_pwd"));
+		user.setUser_sex(Integer.parseInt(jsonObject.getString("user_sex")));
+		user.setUser_tel(jsonObject.getString("user_tel"));
+		user.setUser_email(jsonObject.getString("user_email"));
 		Role role=new Role();
-		role.setRole_id(Integer.valueOf(request.getParameter("role_id")));
+		role.setRole_id(Integer.parseInt(jsonObject.getString("roleId")));
 		user.setRole(role);
 		user.setUser_isdelete(0);
 //		user.setUser_permission(request.getParameter("user_permission"));		
@@ -132,7 +117,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/selectUsersFromDesign.do")
 	public @ResponseBody String getUsersFromDesign(HttpServletRequest request, HttpSession session) {
-		List<User> result = userService.findUserFromDesign();
+		List<UserDeptRelation> result = userService.findUserFromDesign();
 		System.out.println(JSON.toJSONString(result));
 		return JSON.toJSONString(result);
 	}

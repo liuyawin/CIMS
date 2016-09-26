@@ -36,7 +36,7 @@ public class ReceiptDaoImpl implements ReceiptDao {
 		if (null != searchKey) {
 			selectSql += " and (rece_firm like '%" + searchKey + "%' )";
 		}
-		selectSql += " order by receipt_id desc limit :offset, :end";
+		selectSql += " order by rece_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, Receipt.class);
 		query.setParameter("cont_id", cont_id);
 		query.setParameter("offset", offset);
@@ -50,7 +50,7 @@ public class ReceiptDaoImpl implements ReceiptDao {
 	@SuppressWarnings("unchecked")
 	public Integer countByParam(Integer cont_id, String searchKey) {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select count(receipt_id) from receipt where cont_id=:cont_id ";
+		String countSql = " select count(rece_id) from receipt where cont_id=:cont_id ";
 		if (null != searchKey) {
 			countSql += "   and (rece_firm like '%" + searchKey + "%'  )";
 		}
@@ -59,6 +59,18 @@ public class ReceiptDaoImpl implements ReceiptDao {
 		List<Object> result = query.getResultList();
 		em.close();
 		return Integer.parseInt(result.get(0).toString());
+	}
+
+	// 根据合同ID查询收据总金额
+	@SuppressWarnings("unchecked")
+	public Float totalMoneyOfInvoice(Integer contId) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = " select sum(rece_money) from receipt r where cont_id=:cont_id ";
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("cont_id", contId);
+		List<Object> result = query.getResultList();
+		em.close();
+		return Float.valueOf(result.get(0).toString());
 	}
 
 }

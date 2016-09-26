@@ -9,8 +9,8 @@
 <section class="main" ng-app="taskSendMgmt">
 	<div ng-view></div>
 </section>
-<jsp:include page="/jsp/left.jsp" />
+<jsp:include page="/jsp/left2.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
-<script src="${ctx}/js/app/assistant2/taskSendMgmt.js"></script>
+<script src="${ctx}/js/app/manager/taskSendMgmt.js"></script>
 </body>
 </html>

@@ -38,7 +38,7 @@
 		<tbody>
 			<tr ng-repeat="t in tasks" id={{t.task_id}} >
 				<td >{{$index + 1}}</td>
-				<td>{{t.task_content}}</td>
+				<td>{{t.task_content | cutString}}</td>
 				<td><div ng-switch={{t.task_type}}>
 						<div ng-switch-when="0">普通任务</div>
 						<div ng-switch-when="1">文书任务</div>

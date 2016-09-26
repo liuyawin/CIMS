@@ -1,4 +1,8 @@
-package com.mvc.dao;
+﻿package com.mvc.dao;
+
+import java.util.List;
+
+import com.mvc.entity.Role;
 
 /**
  * 角色职位
@@ -8,7 +12,10 @@ package com.mvc.dao;
  */
 public interface RoleDao {
 
-	// 删除
-	public boolean updateState(Integer id, Integer state);
+	// 删除，修改角色状态列表
+	boolean updateState(Integer role_id);
+
+	// 根据页数筛选角色列表
+	List<Role> findRoleAllByPage(Integer offset, Integer end);
 
 }

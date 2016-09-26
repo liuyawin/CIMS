@@ -104,7 +104,7 @@ app
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	//zq获取任务列表
+	// zq获取任务列表
 	services.getTaskList = function(data) {
 		console.log("发送请求获取合同信息data" + data);
 		return $http({
@@ -157,12 +157,12 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data,
 		});
 	};
-	//zq完成任务
-	services.finishTask=function(data){
+	// zq完成任务
+	services.finishTask = function(data) {
 		return $http({
-			method:'post',
-			url:baseUrl +'task/finishTask.do',
-			data:data
+			method : 'post',
+			url : baseUrl + 'task/finishTask.do',
+			data : data
 		});
 	};
 	return services;
@@ -437,6 +437,19 @@ app.directive("dateFormat", function() {
 				}
 			});
 		}
+	}
+});
+
+// 截取任务内容
+app.filter('cutString', function() {
+	return function(input) {
+		var content = "";
+		if (input != "") {
+			var shortInput = input.substr(0, 8);
+			content = shortInput + "……";
+		}
+
+		return content;
 	}
 });
 /*

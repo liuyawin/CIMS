@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 
  */
 package com.mvc.repository;
@@ -35,5 +35,10 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
 	// 查询部门总条数
 	@Query("select count(*) from Department d where dept_state=0")
 	public	Long countTotal();
+
+	//查询设计部id
+	@Query("select dept_id from Department d where dept_name = '设计部'")
+	Integer findOnlyUserDesign();
+
 
 }

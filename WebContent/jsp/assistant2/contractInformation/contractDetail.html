@@ -218,13 +218,17 @@
 				<div class="stage_style top_length">
 					<label>工期阶段</label><select class="dfselect middle_input"
 						ng-model="node.projectStage"><option value={{stage.prst_id}} ng-repeat="stage in prst" >{{stage.prst_content}}</option>
-
 						</select>
 				</div>
 				<div class="stage_style top_length left_length">
 					<label>实际应收金额</label><input type="text"
-						class="dfinput" id="nodeMoney" name="nodeMoney"
+						class="dfinput width35" id="nodeMoney" name="nodeMoney"
 						ng-model="node.reno_money" />万元
+				</div>
+				<div class="stage_style top_length left_length">
+					<label>提醒天数设置</label><input type="text"
+						class="dfinput width35" id="nodeWday" name="nodeWday" placeholder="格式：7"
+						ng-model="node.reno_wday" />天
 				</div>
 			</li>
 		</ul>

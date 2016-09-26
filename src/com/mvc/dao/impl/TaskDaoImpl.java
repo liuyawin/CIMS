@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.TaskDao;
+import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
+import com.mvc.repository.SubTaskRepository;
+import com.mvc.repository.TaskRepository;
 
 /**
  * 文书任务
@@ -24,6 +27,10 @@ public class TaskDaoImpl implements TaskDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
+	@Autowired
+	TaskRepository taskRepository;
+	@Autowired
+	SubTaskRepository subTaskRepository;
 
 	// 根据任务id修改状态
 	public boolean delete(Integer id) {
@@ -109,5 +116,6 @@ public class TaskDaoImpl implements TaskDao {
 		em.close();
 		return Integer.parseInt(result.get(0).toString());
 	}
+
 
 }

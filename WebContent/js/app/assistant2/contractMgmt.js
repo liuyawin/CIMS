@@ -105,7 +105,7 @@ app
 									{
 										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractInfo.html',
 										controller : 'ContractController'
-									});
+									})
 				} ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
@@ -213,7 +213,15 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-
+	// zq根据合同ID获取收款节点
+	services.selectRenoByContId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receiveNode/ selectRenoByContId.do',
+			data : data
+		});
+	};
+	
 	return services;
 } ]);
 
@@ -256,8 +264,37 @@ app.controller('ContractController', [
 					console.log("选择合同成功！");
 					contract.contracts = data.list;
 					contract.totalPage = data.totalPage;
+					pageTurnByName(contract.totalPage, 1)
 				});
 			};
+			
+			function getContByName(page){
+				services.selectConByName({
+					contName : $("#cName").val(),
+					page : page
+				}).success(function(data) {
+					console.log("选择合同成功！");
+					contract.contracts = data.list;
+					contract.totalPage = data.totalPage;
+					
+				});
+			}
+			// zq按查询内容获取任务列表的换页
+			function pageTurnByName(totalPage, page) {
+
+				var $pages = $(".tcdPageCode");
+				console.log($pages.length);
+				if ($pages.length != 0) {
+					$(".tcdPageCode").createPage({
+						pageCount : totalPage,
+						current : page,
+						backFn : function(p) {
+							getContByName(p);
+						}
+					});
+				}
+			}
+			
 
 			// 添加文书任务
 			contract.addTask1 = function() {
@@ -278,6 +315,12 @@ app.controller('ContractController', [
 				}).success(function(data) {
 					alert("添加执行管控任务成功！");
 				});
+			};
+			// zq查看合同ID，并记入sessione
+			contract.getContId = function(contId) {
+
+				sessionStorage.setItem('contId', contId);
+
 			};
 			// zq：添加合同
 			contract.repeatAddContract = function() {
@@ -344,11 +387,13 @@ app.controller('ContractController', [
 				}).success(function(data) {
 					alert("添加工期成功！");
 					addNode();
-					 selectPrstByContId(); 
+					selectPrstByContId();
 					$("#addReceiveNode").show();
 				});
 			}
 
+			
+			
 			// zq添加收款节点控件
 			function addNode() {// 动态添加工期阶段
 				$scope.rnchat = new Object();
@@ -430,6 +475,21 @@ app.controller('ContractController', [
 					contract.prst = data.list;
 				});
 			}
+			// zq：根据合同ID查询收款节点的内容
+			function selectRenoByContId() {
+				var cont_id = sessionStorage.getItem('contId');
+				services.selectRenoByContId({
+					cont_id : cont_id
+				}).success(function(data) {
+					contract.reno = data.list;
+				});
+			}
+			// zq：从设计部查找人员
+			function selectUsersFromDesign() {
+				services.selectUsersFromDesign({}).success(function(data) {
+					contract.userDepts = data;
+				});
+			}
 			// zq初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
@@ -459,17 +519,17 @@ app.controller('ContractController', [
 					// contract.getOverdueContract();
 
 				} else if ($location.path().indexOf('/contractDetail') == 0) {
-					// 获取合同查看界面
-					selectContractById();
-					addStage();
+
+					selectContractById(); // 根据ID获取合同信息
+					addStage();// 显示工期阶段录入界面
 					dateformat();// 格式化日期格式
+					selectUsersFromDesign();// 查找设计部人员
+				} else if ($location.path().indexOf('/contractInfo') == 0) {
 
-					// 查找设计部人员
-					services.selectUsersFromDesign({}).success(function(data) {
-						contract.userDepts = data;
-					});
-
-				}
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					/* selectRenoByContId();// 根据合同ID获取该合同的工期阶段 */
+				} 
 			}
 			function dateformat() {
 				var $dateFormat = $(".dateFormat");
@@ -487,6 +547,7 @@ app.controller('ContractController', [
 			}
 			initData();// 初始化
 			dateformat();// 格式化日期格式
+			addNode();
 
 		} ]);
 // 合同状态过滤器
@@ -500,6 +561,42 @@ app.filter('conState', function() {
 		else if (input == "2")
 			state = "停建";
 		return state;
+	}
+});
+// 合同立项判断
+app.filter('conInitiation', function() {
+	return function(input) {
+		var initiation = "";
+		if (input == "0")
+			initiation = "否";
+		else if (input == "1")
+			initiation = "是";
+
+		return initiation;
+	}
+});
+// 合同是否有委托书判断
+app.filter('conHasproxy', function() {
+	return function(input) {
+		var hasproxy = "";
+		if (input == "0")
+			hasproxy = "否";
+		else if (input == "1")
+			hasproxy = "是";
+
+		return hasproxy;
+	}
+});
+// 合同一般纳税人判断
+app.filter('conAvetaxpayer', function() {
+	return function(input) {
+		var avetaxpayer = "";
+		if (input == "0")
+			avetaxpayer = "否";
+		else if (input == "1")
+			avetaxpayer = "是";
+
+		return avetaxpayer;
 	}
 });
 // 合同类型的判断
@@ -516,6 +613,29 @@ app.filter('conType', function() {
 			type = "评估";
 		else if (input == "4")
 			type = "其他";
+		return type;
+	}
+});
+// 工期阶段的判断
+app.filter('prstType', function() {
+	return function(input) {
+		var type = "";
+		if (input == "0")
+			type = "未完成";
+		else if (input == "1")
+			type = "已完成";
+
+		return type;
+	}
+});
+// 时间的格式化的判断
+app.filter('dateType', function() {
+	return function(input) {
+		var type = "";
+		if (input != null) {
+			type = new Date(input).toLocaleDateString().replace(/\//g, '-');
+		}
+
 		return type;
 	}
 });

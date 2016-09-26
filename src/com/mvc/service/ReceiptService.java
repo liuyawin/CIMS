@@ -32,4 +32,7 @@ public interface ReceiptService {
 
 	// 保存
 	boolean save(Receipt receipt);
+
+	// 根据合同ID查询收据总金额
+	Float totalMoneyOfInvoice(Integer contId);
 }

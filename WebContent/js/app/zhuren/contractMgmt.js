@@ -99,6 +99,12 @@ app
 									{
 										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractDetail.html',
 										controller : 'ContractController'
+									})
+							.when(
+									'/contractDetail',
+									{
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractDetail.html',
+										controller : 'ContractController'
 									});
 				} ]);
 app.constant('baseUrl', '/CIMS/');
@@ -148,7 +154,15 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-
+	
+	//获取所有用户 
+	services.getAllUsers = function() {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'user/getAllUserList.do',
+		});
+	};
+	
 	services.addContract = function(data) {
 		return $http({
 			method : 'post',
@@ -239,7 +253,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					});
 				} else {
 					return false;
-				}		
+				}
 			}
 			// 添加文书任务
 			contract.addTask1 = function() {
@@ -253,7 +267,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				console.log(task1);
 				services.addTask({
 					task : task1,
-					taskType : "task1",
+					taskType : "1",//1代表文书任务
 					conId : conId
 				}).success(function(data) {
 					alert("添加文书任务成功！");
@@ -268,9 +282,10 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					return false;
 				}
 				var task2 = JSON.stringify(contract.task2);
+				console.log(task2);
 				services.addTask({
 					task : task2,
-					taskType : "task2",
+					taskType : "2",//2代表执行管控任务
 					conId : conId
 				}).success(function(data) {
 					alert("添加执行管控任务成功！");
@@ -336,15 +351,17 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 							});
 						}
 					});
-				} else if ($location.path().indexOf('/addContract') == 0) {
+				} else if ($location.path().indexOf('/contractAdd') == 0) {
 					// 这里先获取人员列表
-					// contract.getOverdueContract();
-					sessionStorage.setItem("contractId", "");
-					var $select = $("select");
+					services.getAllUsers().success(function(data){
+						contract.users = data;
+						sessionStorage.setItem("contractId", "");
+					});					
+					/*var $select = $("select");
 					for (var i = 0; i < $select.length; i++) {
 						$select[i].options[0].selected = true;
 					}
-					$('select').prop('selectedIndex', 1);
+					$('select').prop('selectedIndex', 1);*/
 				}
 			}
 

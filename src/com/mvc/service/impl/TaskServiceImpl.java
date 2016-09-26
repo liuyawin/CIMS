@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mvc.dao.TaskDao;
+import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 import com.mvc.repository.TaskRepository;
 import com.mvc.service.TaskService;
@@ -61,5 +62,6 @@ public class TaskServiceImpl implements TaskService {
 	public boolean delete(Integer taskId) {
 		return taskDao.delete(taskId);
 	}
+
 
 }
