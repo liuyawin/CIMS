@@ -1,0 +1,196 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li>首页</li>
+		<li>任务管理</li>
+		<li>查看合同信息</li>
+	</ul>
+</div>
+
+<div class="formbody">
+	<form ng-submit="repeatAddContract()">
+		<div class="formtitle">
+			<span>合同详情</span>
+		</div>
+		<table class="tbl tablelist">
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">合同名称</td>
+				<td colspan='6'>{{cont.cont_name}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">合同类型</td>
+				<td colspan='2'>{{cont.cont_type | conType}}</td>
+				<td class="width20 text-center">合同等级</td>
+				<td colspan='2'>{{cont.cont_rank | conRank}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">项目名称</td>
+				<td colspan='6'>{{cont.cont_project}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主单位名称</td>
+				<td colspan='6'>{{cont.cont_client}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主单位地址</td>
+				<td colspan='6'>{{cont.cont_caddress}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">项目状态</td>
+				<td colspan='6'>
+					<div class="div-checkbox">
+						<input type="radio" name="pstate" value="在建" />在建
+					</div>
+					<div class="div-checkbox">
+						<input type="radio" name="pstate" value="竣工" />竣工
+					</div>
+					<div class="div-checkbox">
+						<input type="radio" name="pstate" value="停建" />停建（如停建简要说明原因）
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">合同签订时间</td>
+				<td colspan='2'>{{cont.cont_stime}}</td>
+				<td class="width20 text-center">是否有委托书</td>
+				<td colspan='2'><div class="div-checkbox">
+						<input name="cont_hasproxy" type="radio" name="hasproxy"
+							ng-model="contract.cont_hasproxy" value="1" />有
+					</div>
+					<div class="div-checkbox">
+						<input name="cont_hasproxy" type="radio" name="hasproxy"
+							ng-model="contract.cont_hasproxy" value="0" />无
+					</div></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主传真</td>
+				<td colspan='2'>{{cont.cont_cfax}}</td>
+				<td class="width20 text-center">业主邮编</td>
+				<td colspan='2'>{{cont.cont_czipcode}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主联系人</td>
+				<td colspan='2'>{{cont.cont_cheader}}</td>
+				<td class="width20 text-center">业主联系方式</td>
+				<td colspan='2'>{{cont.cont_ctel}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主联系部门</td>
+				<td colspan='2'>{{cont.cont_cdept}}</td>
+				<td class="width20 text-center">业主邮箱</td>
+				<td colspan='2'>{{cont.cont_cemail}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">合同金额（万元）</td>
+				<td colspan='2'>{{cont.cont_money}}</td>
+				<td class="width20 text-center">项目编码</td>
+				<td colspan='2'>{{cont.cont_pnum}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">公司合同编号</td>
+				<td colspan='2'>{{cont.cont_onum}}</td>
+				<td class="width20 text-center">业主方合同编号</td>
+				<td colspan='2'>{{cont.cont_cnum}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">项目负责人</td>
+				<td colspan='1'>{{cont.manager.user_name}}</td>
+				<td colspan='1' class="width20 text-center">是否立项</td>
+				<td colspan='1'><div class="div-checkbox">
+						<input name="cont_initiation" type="radio" name="initiation"
+							ng-model="contract.cont_initiation" value="1" />是
+					</div>
+					<div class="div-checkbox">
+						<input name="cont_initiation" type="radio" name="initiation"
+							ng-model="contract.cont_initiation" value="0" />否
+					</div></td>
+				<td colspan='1' class="width20 text-center">组织机构代码证号</td>
+				<td colspan='1'>{{cont.cont_orgcodenum}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">纳税人识别号</td>
+				<td colspan='2'>{{cont.cont_taxidennum}}</td>
+				<td class="width20 text-center">增值税：一般纳税人</td>
+				<td colspan='2'><div class="div-checkbox">
+						<input name="cont_avetaxpayer" type="radio" name="avetaxpayer"
+							ng-model="contract.cont_avetaxpayer" value="1" />是
+					</div>
+					<div class="div-checkbox">
+						<input name="cont_avetaxpayer" type="radio" name="avetaxpayer"
+							ng-model="contract.cont_avetaxpayer" value="0" />否
+					</div></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">开户行</td>
+				<td colspan='2'>{{cont.cont_cont_bank}}</td>
+				<td class="width20 text-center">银行帐号</td>
+				<td colspan='2'>{{cont.cont_account}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">其他需要说明的情况</td>
+				<td colspan='6'>{{cont.cont_remark}}</td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<div class="formbody">
+	<form ng-submit="addProjectStage()">
+		<div class="formtitle">
+			<span>工期阶段详情</span>
+		</div>
+		<table class="tbl tablelist">
+			<tr>
+				<td colspan='1' class="width20 text-center table_title_width">工期阶段</td>
+				<td colspan='3' class="text-center">内    容</td>
+				<td colspan='1'>应完工时间</td>
+				<td colspan='1'>实完工时间</td>
+				<td colspan='1'>工期进度</td>
+				<td colspan='1'>项目经理</td>
+			</tr>
+			<tr ng-repeat="stage in stages">
+			<td>阶段{{$index+1}}</td>
+			<td>{{stage.prst_content}}</td>
+			<td>{{stage.prst_etime}}</td>
+			<td>{{stage.prst_atime}}</td>
+			<td>{{stage.prst_state}}</td>
+			<td>{{stage.manager.user_name}}</td>
+			</tr>
+
+		</table>
+
+	</form>
+</div>
+<div class="formbody">
+	<form ng-submit="addReceiveNode()">
+		<div class="formtitle">
+			<span>收款节点详情</span>
+		</div>
+		<table class="tbl tablelist">
+			<tr>
+				<td colspan='1' class="width20 text-center table_title_width">收款节点</td>
+				<td colspan='1' class="text-center">内容</td>
+				<td colspan='1' class="text-center">应收款金额</td>
+				<td colspan='1' class="text-center">应收款时间</td>
+				<td colspan='1'>工期状态</td>
+				<!-- <td colspan='1'>实收款金额</td>
+				<td colspan='1'>实收款时间</td> -->
+				<td colspan='1'>收款情况</td>
+				<td colspan='1'>操作</td>
+			</tr>
+			<tr ng-repeat="node in nodes">
+			<td>节点{{$index+1}}</td>
+			<td>{{node.reno_content}}</td>
+			<td>{{node.reno_money}}</td>
+			<td>{{node.reno_time}}</td>
+			<td>{{node.projectStage.prst_state}}</td>
+			<td>{{node.reno_state}}</td>
+			<td><a>开收据</a><a>收据详情</a></td>
+			</tr>
+
+		</table>
+
+		<input type="submit" id="addReceiveNode" class="btn"
+			style="display: none" value="添加收款节点" />
+	</form>
+</div>
