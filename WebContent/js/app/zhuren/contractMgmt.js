@@ -298,6 +298,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					services.getContractList({
 						page : 1
 					}).success(function(data) {
+						//合同列表分页
 						contract.contracts = data.list;
 						contract.totalPage = data.totalPage;
 						var $pages = $(".tcdPageCode");
@@ -311,6 +312,67 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 								}
 							});
 						}
+						//点击创建任务时弹出模态框
+						contract.newTask = function(obj) {
+							var conId = this.con.cont_id;
+							services.getAllUsers().success(function(data){
+								contract.users = data;								
+								console.log(conId);
+								sessionStorage.setItem("contractId", conId);
+							});	
+							$(".overlayer").fadeIn(200);
+							$(".tip").fadeIn(200);
+							return false;
+						};
+
+						$(".tiptop a").click(function() {
+							sessionStorage.setItem("contractId", "");
+							$(".overlayer").fadeOut(200);
+							$(".tip").fadeOut(200);
+						});
+
+						$(".sure").click(function() {
+							var conId = sessionStorage.getItem("contractId");
+							if(contract.task.task_type=="1"){
+								var task1 = JSON.stringify(contract.task1);
+								console.log(task1);
+								services.addTask({
+									task : task1,
+									taskType : "1",//1代表文书任务
+									conId : conId
+								}).success(function(data) {
+									alert("添加文书任务成功！");
+								});
+							}else if(contract.task.task_type=="0"){
+								var task2 = JSON.stringify(contract.task2);
+								console.log(task2);
+								services.addTask({
+									task : task2,
+									taskType : "2",//2代表执行管控任务
+									conId : conId
+								}).success(function(data) {
+									alert("添加执行管控任务成功！");
+								});
+							}
+							$(".overlayer").fadeOut(100);
+							$(".tip").fadeOut(100);
+						});
+
+						$(".cancel").click(function() {
+							sessionStorage.setItem("contractId", "");
+							$(".overlayer").fadeOut(100);
+							$(".tip").fadeOut(100);
+						});
+						
+						$(".taskType").change(function(){
+							if(contract.task.task_type=="1"){
+								$("#addTask1-form").slideDown(200);
+								$("#addTask2-form").hide();
+							}else if(contract.task.task_type=="0"){
+								$("#addTask1-form").hide();
+								$("#addTask2-form").slideDown(200);
+							}
+						});
 					});
 
 				} else if ($location.path().indexOf('/debtContract') == 0) {

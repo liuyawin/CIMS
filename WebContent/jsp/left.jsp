@@ -68,6 +68,22 @@
 
 		</dd>
 	</dl>
+	
+	<!-- 文书1导航 -->
+	<dl class="leftmenu">
+		<dd>
+			<div class="title">
+				<span><img src="${ctx}/images/leftico04.png" /></span>李文书的边栏
+			</div>
+			<ul class="menuson">
+				<li><cite></cite> <a href="${ctx}/task/toAssistant1TaskList.do#/newTaskList">新消息</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/task/toAssistant1TaskList.do#/unfinishTaskList">处理中</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/task/toAssistant1TaskList.do#/finishTaskList">已处理</a><i></i></li>
+			</ul>
+		</dd>
+	</dl>
+	
+	<!-- 文书1导航完 -->
 
 	<!-- 文书2的左侧列表始 -->
 	<dl class="leftmenu">

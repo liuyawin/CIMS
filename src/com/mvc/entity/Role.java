@@ -10,10 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * 用户角色
- * 
- * @author zjn
- * @date 2016年9月8日
+ * 角色
+ * @author wanghuimin
+ * @date 2016年9月22日
  */
 @Entity
 @Table(name = "role")
