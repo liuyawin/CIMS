@@ -101,6 +101,7 @@ public class UserController {
 		user.setUser_sex(Integer.parseInt(jsonObject.getString("user_sex")));
 		user.setUser_tel(jsonObject.getString("user_tel"));
 		user.setUser_email(jsonObject.getString("user_email"));
+
 		Role role = new Role();
 		role.setRole_id(Integer.parseInt(jsonObject.getString("roleId")));
 		user.setRole(role);

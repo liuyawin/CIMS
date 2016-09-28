@@ -22,10 +22,11 @@ public interface RoleService {
 	// 根据页数筛选用户列表
 	List<Role> findUserAllByPage(Integer offset, Integer end);
 
-	// 添加角色
-	boolean save(Role role);
-
 	// 根据ID查看角色详情
 	Role findRoleContentById(Integer role_id);
+
+	
+	//添加角色
+	boolean save(Role role);
 
 }

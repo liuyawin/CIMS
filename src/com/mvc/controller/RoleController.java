@@ -122,7 +122,6 @@ public class RoleController {
 		Role role=roleService.findRoleContentById(roleid);
 		jsonObject.put("role", role);
 		return jsonObject.toString();
-		
-	}
+		}
 
 }
