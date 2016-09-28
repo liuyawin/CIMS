@@ -27,6 +27,8 @@ public class ReceiveNode implements Serializable {
 	private String reno_content;// 节点内容
 	private Float reno_money;// 应收款金额
 	private Date reno_time;// 节点截止时间
+	private Date reno_wtime; // 收款提醒时间
+	private Integer reno_wday; // 收款提醒天数
 	private Integer reno_state;// 是否已收款，0：未收款，1已收款，2未付全款，3提前到款
 	private Float reno_amoney;// 实际收款金额
 	private Date reno_ctime;// 节点录入时间
@@ -44,6 +46,7 @@ public class ReceiveNode implements Serializable {
 	public void setReno_id(Integer reno_id) {
 		this.reno_id = reno_id;
 	}
+
 	@Column(length = 64)
 	public String getReno_content() {
 		return reno_content;
@@ -53,6 +56,7 @@ public class ReceiveNode implements Serializable {
 		this.reno_content = reno_content;
 	}
 
+	@Column(columnDefinition = "float(10,2) default '0.00'")
 	public Float getReno_money() {
 		return reno_money;
 	}
@@ -129,6 +133,22 @@ public class ReceiveNode implements Serializable {
 
 	public void setProjectStage(ProjectStage projectStage) {
 		this.projectStage = projectStage;
+	}
+
+	public Date getReno_wtime() {
+		return reno_wtime;
+	}
+
+	public void setReno_wtime(Date reno_wtime) {
+		this.reno_wtime = reno_wtime;
+	}
+
+	public Integer getReno_wday() {
+		return reno_wday;
+	}
+
+	public void setReno_wday(Integer reno_wday) {
+		this.reno_wday = reno_wday;
 	}
 
 }

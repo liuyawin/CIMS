@@ -94,9 +94,9 @@
 				<span><img src="${ctx}/images/leftico01.png" /></span>接收的任务
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a href="${ctx}/task/toTaskReceivePage.do#/newTask">新消息</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/task/toTaskReceivePage.do#/unfinishTask">处理中</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/task/toTaskReceivePage.do#/finishTask">已处理</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/newTask">新消息</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/unfinishTask">处理中</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/finishTask">已处理</a><i></i></li>
 			</ul>
 		</dd>
 		<dd>
@@ -105,9 +105,9 @@
 				<a class="noColor" ><span><img src="${ctx}/images/leftico02.png" /></span>发出的任务</a>
 			</div>
 			<ul class="menuson">
-			<li><cite></cite> <a href="${ctx}/task/toTaskSendPage.do#/newTask2">未处理</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/task/toTaskSendPage.do#/unfinishTask2">处理中</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/task/toTaskSendPage.do#/finishTask2">已处理</a><i></i></li>
+			<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/newSendTask">未处理</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/unfinishSendTask">处理中</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/finishSendTask">已处理</a><i></i></li>
 			</ul>
 		</dd>
 		<dd>
@@ -116,8 +116,8 @@
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a href="#/test">待处理</a><i></i></li>
-				<li><cite></cite> <a href="#/another">已处理</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/alarm/toAssistant2AlarmPage.do#/newAlarmList">待处理</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/alarm/toAssistant2AlarmPage.do#/doneAlarmList">已处理</a><i></i></li>
 			</ul>
 		</dd>
 		<dd>
@@ -130,7 +130,7 @@
 				<li><cite></cite> <a href="${ctx}/contract/toAssistant2ContractPage.do#/debtContract">欠款合同信息</a><i></i></li>
 				<li><cite></cite> <a href="${ctx}/contract/toAssistant2ContractPage.do#/overdueContract">工程逾期合同</a><i></i></li>
 				<li><cite></cite> <a href="${ctx}/contract/toAssistant2ContractPage.do#/test">合同处理记录</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/contract/toAssistant2ContractPage.do#/test">终结合同信息</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/contract/toAssistant2ContractPage.do#/doneContract">终结合同信息</a><i></i></li>
 				<li>
 			</ul>
 		</dd>

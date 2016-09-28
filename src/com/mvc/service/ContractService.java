@@ -4,6 +4,12 @@ import java.util.List;
 
 import com.mvc.entity.Contract;
 
+/**
+ * 合同业务层
+ * 
+ * @author wangrui
+ * @date 2016-09-10
+ */
 public interface ContractService {
 
 	// 查询所有欠款合同列表
@@ -13,7 +19,7 @@ public interface ContractService {
 	List<Contract> findAllOverdueCont(String contName, Integer offset, Integer end);
 
 	// 查询合同总条数
-	Long countTotal(String contName, String methodType);
+	Long countTotal(String contName, Integer methodType);
 
 	// 根据合同名获取合同信息
 	List<Contract> findConByName(String contName, Integer offset, Integer end);
@@ -26,4 +32,7 @@ public interface ContractService {
 
 	// 根据合同ID删除合同
 	Boolean deleteContract(Integer cont_id);
+
+	// 查询所有终结合同列表
+	List<Contract> findAllEndCont(String contName, Integer offset, Integer end);
 }

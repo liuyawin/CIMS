@@ -60,7 +60,7 @@ var app = angular
 app.run([ '$rootScope', '$location', function($rootScope, $location) {
 	$rootScope.$on('$routeChangeSuccess', function(evt, next, previous) {
 		console.log('路由跳转成功');
-		$rootScope.$broadcast('reGetData');
+		/* $rootScope.$broadcast('reGetData'); */
 	});
 } ]);
 
@@ -71,9 +71,9 @@ app
 				function($routeProvider) {
 					$routeProvider
 							.when(
-									'/receiptInfo',
+									'/invoiceDetail',
 									{
-										templateUrl : '/CIMS/jsp/assistant2/receiptInformation/receiptInfo.html',
+										templateUrl : '/CIMS/jsp/assistant2/invoiceInformation/invoiceDetail.html',
 										controller : 'InvoiceController'
 									})
 							.when(
@@ -103,7 +103,29 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-
+	// zq根据ID查找合同信息
+	services.selectContractById = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/selectContractById.do',
+			data : data
+		});
+	};
+	// zq根据合同ID获取发票已经开了多少钱的
+	services.countInvoiceMoneyByContId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'invoice/countInvoiceMoneyByContId.do',
+			data : data
+		});
+	};
+	services.selectInvoiceById = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'invoice/selectInvoiceById.do',
+			data : data
+		})
+	};
 	return services;
 } ]);
 
@@ -119,6 +141,9 @@ app.controller('InvoiceController', [
 			invoice.getContId = function(contId) {
 				sessionStorage.setItem('contId', contId);
 			};
+			invoice.getInvoId = function(invoId) {
+				sessionStorage.setItem('invoId', invoId);
+			};
 			// zq：根据合同ID查找所有的发票信息
 			function selectInvoiceByContId() {
 				var contId = sessionStorage.getItem('contId');
@@ -127,17 +152,50 @@ app.controller('InvoiceController', [
 					contId : contId
 				}).success(function(data) {
 					invoice.invoices = data.list;
+					invoice.totalRow = data.totalRow;
 				});
 			}
-			
+			// zq：读取合同的信息
+			function selectContractById() {
+				var cont_id = sessionStorage.getItem('contId');
+				services.selectContractById({
+					cont_id : cont_id
+				}).success(function(data) {
+					invoice.cont = data;
+				});
+			}
+
+			// zq：根据合同ID计算该合同目前开了多少钱的发票
+			function countInvoiceMoneyByContId() {
+				var contId = sessionStorage.getItem('contId');
+				services.countInvoiceMoneyByContId({
+					contId : contId
+				}).success(function(data) {
+					invoice.totalMoney = data.totalMoney;
+				});
+			}
+			// 根据发票ID查找发票
+			function selectInvoiceById() {
+				var invoId = sessionStorage.getItem('invoId');
+				services.selectInvoiceById({
+					invoiceId : invoId
+				}).success(function(data) {
+					invoice.invoice = data.invoice;
+				});
+			}
+
 			// zq初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/invoiceList') == 0) {// 如果是合同列表页
-					alert("成功了！");
 
-				} else if ($location.path().indexOf('/receiptList') == 0) {
-					
+					selectContractById();
+					countInvoiceMoneyByContId();
+					selectInvoiceByContId();
+
+				} else if ($location.path().indexOf('/invoiceDetail') == 0) {
+
+					selectInvoiceById();
 				}
 			}
 			function dateformat() {
@@ -159,6 +217,14 @@ app.controller('InvoiceController', [
 
 		} ]);
 
+// 小数过滤器
+app.filter('invoFloat', function() {
+	return function(input) {
+		var money = parseFloat(input).toFixed(2);
+		return money;
+	}
+});
+
 // 时间的格式化的判断
 app.filter('dateType', function() {
 	return function(input) {
@@ -171,6 +237,13 @@ app.filter('dateType', function() {
 	}
 });
 
+// 小数过滤器
+app.filter('receFloat', function() {
+	return function(input) {
+		var money = parseFloat(input).toFixed(2);
+		return money;
+	}
+});
 // 自定义表单验证日期格式
 app.directive("dateFormat", function() {
 	return {
@@ -192,6 +265,34 @@ app.directive("dateFormat", function() {
 				}
 			});
 		}
+	}
+});
+// 截取任务内容
+app.filter('cutString', function() {
+	return function(input) {
+		var content = "";
+		if (input != "") {
+			var shortInput = input.substr(0, 6);
+			content = shortInput + "……";
+		}
+
+		return content;
+	}
+});
+// 判断发票状态
+app.filter('invoState', function() {
+	return function(input) {
+		var state = "";
+		if (input == "0") {
+			state="待审核";
+		}
+		if (input == "1") {
+			state="待处理";
+		}
+		if (input == "2") {
+			state="已完成";
+		}
+		return state;
 	}
 });
 

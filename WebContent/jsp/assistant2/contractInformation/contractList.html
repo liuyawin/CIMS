@@ -22,7 +22,7 @@
 
 	</div>
 
-	<table class="tablelist">
+	<table class="tablelist" on-finish-render-filters>
 		<thead>
 			<tr>
 				<th>合同名称</th>
@@ -30,6 +30,8 @@
 				<th>合同状态</th>
 				<th>工程阶段报警次数</th>
 				<th>收款节点报警次数</th>
+				<th>工程阶段</th>
+				<th>收款节点</th>
 				<th>发票</th>
 				<th>收据</th>
 				<th>操作</th>
@@ -42,17 +44,27 @@
 				<td>{{con.cont_state | conState}}</td>
 				<td>{{con.cont_proalanum}}</td>
 				<td>{{con.cont_payalanum}}</td>
-				<td><a href="#"
-					class="tablelink">录发票</a><a href="/CIMS/invoice/toAssistant2InvoicePage.do#invoicetList" class="tablelink" ng-click="getContId(con.cont_id)">详情</a></td>
-				<td><a href="/CIMS/receipt/toAssistant2ReceiptPage.do#receiptInfo" class="tablelink" ng-click="getContId(con.cont_id)">录收据</a><a href="/CIMS/receipt/toAssistant2ReceiptPage.do#receiptList" class="tablelink" ng-click="getContId(con.cont_id)">详情</a></td>
-				<td><a href="#" class="tablelink">修改</a></td>
+				<td><a class="tablelink" href="#prstInfo">详情</a></td>
+				<td><a href="#renoInfo"
+					class="tablelink" ng-click="getContId(con.cont_id)">详情</a></td>
+				<td>
+					<!-- <a href="#"
+					class="tablelink">录发票</a> --> <a
+					href="/CIMS/invoice/toAssistant2InvoicePage.do#invoiceList"
+					class="tablelink" ng-click="getContId(con.cont_id)">详情</a>
+				</td>
+				<td><a
+					href="/CIMS/receipt/toAssistant2ReceiptPage.do#receiptInfo"
+					class="tablelink" ng-click="getContId(con.cont_id)">录收据</a><a
+					href="/CIMS/receipt/toAssistant2ReceiptPage.do#receiptList"
+					class="tablelink" ng-click="getContId(con.cont_id)">详情</a></td>
+				<td><a href="#contractModify" ng-click="getContId(con.cont_id)"
+					class="tablelink">修改</a></td>
 			</tr>
 		</tbody>
 	</table>
 
-	<div class="tcdPageCode">
-	页码容器
-	</div>
+	<div class="tcdPageCode">页码容器</div>
 
 </div>
 

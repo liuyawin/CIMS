@@ -61,4 +61,16 @@ public class ReceiptDaoImpl implements ReceiptDao {
 		return Integer.parseInt(result.get(0).toString());
 	}
 
+	// 根据合同ID查询收据总金额
+	@SuppressWarnings("unchecked")
+	public Float totalMoneyOfInvoice(Integer contId) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = " select sum(rece_money) from receipt r where cont_id=:cont_id ";
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("cont_id", contId);
+		List<Object> result = query.getResultList();
+		em.close();
+		return Float.valueOf(result.get(0).toString());
+	}
+
 }

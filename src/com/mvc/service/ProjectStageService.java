@@ -20,4 +20,7 @@ public interface ProjectStageService {
 
 	// 根据ID查询工期阶段
 	ProjectStage selectPrstById(Integer prst_id);
+
+	// 修改成完成工期
+	Boolean updatePrstState(Integer prst_id);
 }

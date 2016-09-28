@@ -63,10 +63,5 @@ public class TaskServiceImpl implements TaskService {
 		return taskDao.delete(taskId);
 	}
 
-	// 创建文书任务
-	public boolean addAssitantTask(Task task, List<SubTask> subTasks) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }
