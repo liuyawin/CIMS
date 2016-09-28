@@ -46,24 +46,28 @@ public class TaskController {
 	SubTaskService subTaskService;
 
 	/**
+	 * zq设置设总入接收任务起始页
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toManagerTaskPage.do")
+	public String managerReceivePage() {
+		return "manager/taskInformation/index";
+	}
+
+
+
+	/**
 	 * 设置进入接收任务起始页
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/toTaskReceivePage.do")
+	@RequestMapping("/toTaskPage.do")
 	public String taskReceivePage() {
-		return "assistant2/taskReceiveInformation/index";
+		return "assistant2/taskInformation/index";
 	}
 
-	/**
-	 * 设置进入发送任务起始页
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toTaskSendPage.do")
-	public String taskInSendPage() {
-		return "assistant2/taskSendInformation/index";
-	}
+	
 
 	/**
 	 * 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
@@ -128,10 +132,12 @@ public class TaskController {
 	@RequestMapping(value = "/selectTaskById.do")
 	public @ResponseBody String findByTaskId(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		boolean result = false;
 		Integer taskId = Integer.valueOf(request.getParameter("ID"));
 		Task task = taskService.findById(taskId);
-		if (task.getTask_state() == TaskStatus.waitingReceipt.value)
+		if (task.getTask_state() == TaskStatus.waitingReceipt.value
+				&& task.getReceiver().getUser_id() == user.getUser_id())
 			result = taskService.updateState(taskId, TaskStatus.dealing.value);
 		jsonObject.put("task", task);
 		System.out.println("返回列表:" + jsonObject.toString());
@@ -139,49 +145,7 @@ public class TaskController {
 	}
 
 	/**
-	 * 创建普通任务
-	 * 
-	 * @param request
-	 * @param session
-	 * @return
-	 * @throws ParseException
-	 */
-	@RequestMapping(value = "/createNormalTask.do")
-	public @ResponseBody String createNormalTask(HttpServletRequest request, HttpSession session)
-			throws ParseException {
-		JSONObject result = new JSONObject();
-		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("task"));
-		long time = System.currentTimeMillis();
-		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		Task task = new Task();
-		task.setCreator(user);
-		User receiver = new User();
-		receiver.setUser_id(Integer.valueOf(jsonObject.getString("receiver_id")));
-		task.setReceiver(receiver);
-		task.setTask_content(jsonObject.getString("task_content"));
-		task.setTask_type(Integer.valueOf(jsonObject.getString("task_type")));
-		task.setTask_ctime(new Date(time));
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date sdate = format.parse(jsonObject.getString("task_stime"));
-		Date edate = format.parse(jsonObject.getString("task_etime"));
-		task.setTask_stime(sdate);
-		task.setTask_etime(edate);
-		task.setTask_isdelete(0);
-		task.setTask_state(0);
-		task.setTask_alarmnum(0);
-		Task taskResult = taskService.save(task);
-		if (taskResult.getTask_id() != null) {
-			result.put("result", "true");
-			System.out.println("普通任务创建成功");
-		} else {
-			result.put("result", "false");
-			System.out.println("普通任务创建失败");
-		}
-		return result.toString();
-	}
-
-	/**
-	 * 创建文书任务
+	 * 创建任务
 	 * 
 	 * @param request
 	 * @param session
@@ -199,14 +163,14 @@ public class TaskController {
 
 		Contract contract = new Contract();
 		System.out.println("conId:" + request.getParameter("conId"));
-		if (request.getParameter("conId") != null) {
+		if (request.getParameter("conId") != "") {
 			contract.setCont_id(Integer.valueOf(request.getParameter("conId")));
+			task.setContract(contract);
 		}
-
 		System.out.println("taskType:" + request.getParameter("taskType"));
 		Integer taskType = Integer.valueOf(request.getParameter("taskType"));
 		task.setTask_type(taskType);
-		task.setContract(contract);
+
 		task.setCreator(user);
 		jsonObject = JSONObject.fromObject(request.getParameter("task"));
 		System.out.println("task" + request.getParameter("task"));
@@ -260,7 +224,6 @@ public class TaskController {
 				result.put("result", "true");
 			} else
 				result.put("result", "false");
-
 		}
 		return result.toString();
 	}

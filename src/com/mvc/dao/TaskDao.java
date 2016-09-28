@@ -26,7 +26,4 @@ public interface TaskDao {
 	// 根据状态，关键字查询任务总条数
 	Integer countByParam(Integer user_id, Integer task_state, String searchKey, Integer sendOrReceive);
 
-	// 创建文书任务
-	boolean addAssitantTask(Task task, List<SubTask> subTasks);
-
 }

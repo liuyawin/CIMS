@@ -1,6 +1,5 @@
 package com.mvc.entity;
 
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -25,9 +24,9 @@ public class Receipt {
 	private String rece_firm;// 交款业主公司
 	private Float rece_money;// 收款金额
 	private Date rece_time;// 应收款时间
-	private Date Rece_atime;// 实际收款时间
+	private Date rece_atime;// 实际收款时间
 	private String rece_remark;// 备注
-	private User user;// 收款人
+	private User user;// 开收据者
 	private Contract contract;// 所属合同
 	private ReceiveNode receiveNode;// 收款节点
 
@@ -50,6 +49,7 @@ public class Receipt {
 		this.rece_firm = rece_firm;
 	}
 
+	@Column(columnDefinition = "float(10,2) default '0.00'")
 	public Float getRece_money() {
 		return rece_money;
 	}
@@ -64,14 +64,6 @@ public class Receipt {
 
 	public void setRece_time(Date rece_time) {
 		this.rece_time = rece_time;
-	}
-
-	public Date getRece_atime() {
-		return Rece_atime;
-	}
-
-	public void setRece_atime(Date rece_atime) {
-		Rece_atime = rece_atime;
 	}
 
 	public String getRece_remark() {
@@ -110,6 +102,14 @@ public class Receipt {
 
 	public void setReceiveNode(ReceiveNode receiveNode) {
 		this.receiveNode = receiveNode;
+	}
+
+	public Date getRece_atime() {
+		return rece_atime;
+	}
+
+	public void setRece_atime(Date rece_atime) {
+		this.rece_atime = rece_atime;
 	}
 
 }

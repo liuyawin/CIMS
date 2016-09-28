@@ -82,6 +82,18 @@ app
 										templateUrl : '/CIMS/jsp/assistant2/receiptInformation/receiptList.html',
 										controller : 'ReceiptController'
 									})
+							.when(
+									'/receiptAdd',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/receiptInformation/receiptAdd.html',
+										controller : 'ReceiptController'
+									})
+							.when(
+									'/receiptDetail',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/receiptInformation/receiptDetail.html',
+										controller : 'ReceiptController'
+									})
 				} ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
@@ -94,7 +106,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-
 
 	// zq根据合同ID获取工期阶段
 	services.selectPrstByContId = function(data) {
@@ -128,6 +139,22 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// zq根据合同和收款节点添加收据
+	services.addReceipt = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receipt/createReceipt.do',
+			data : data
+		});
+	};
+	// zq根据收据ID查找详情
+	services.selectReceiptByReceId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receipt/findByReceiptId.do',
+			data : data
+		});
+	};
 
 	return services;
 } ]);
@@ -144,18 +171,51 @@ app.controller('ReceiptController', [
 			receipt.getContId = function(contId) {
 				sessionStorage.setItem('contId', contId);
 			};
-			
-			// 显示提示框及开收据的实现
-			receipt.show= function() {
-				$(".tip").fadeIn(200);
-				$(".sure").click(function() {
-					alert("asdsf");
-				});
+			// zq查看合同ID，并记入sessione
+			receipt.getRenoId = function(renoId, contId) {
+				sessionStorage.setItem('renoId', renoId);
+				sessionStorage.setItem('contId', contId);
+			};
+			// zq查看合同ID，并记入sessione
+			receipt.getReceId = function(receId) {
+				sessionStorage.setItem('receId', receId);
 
-				$(".cancel").click(function() {
-					$(".tip").fadeOut(100);
-				});
+			};
 
+			receipt.showContInfo = function() {
+				$('#contInformation').show();
+				$('#contShow').hide();
+				$('#contHide').show();
+			}
+			receipt.hideContInfo = function() {
+
+				$('#contInformation').hide();
+				$('#contShow').show();
+				$('#contHide').hide();
+			}
+			receipt.showPrstInfo = function() {
+				$('#prstInformation').show();
+				$('#prstShow').hide();
+				$('#prstHide').show();
+			}
+			receipt.hidePrstInfo = function() {
+
+				$('#prstInformation').hide();
+				$('#prstShow').show();
+				$('#prstHide').hide();
+			}
+			// zq查看合同ID，并记入sessione
+			receipt.addReceipt = function(renoId, contId) {
+				var renoId = sessionStorage.getItem('renoId');
+				var contId = sessionStorage.getItem('contId');
+				var receFormData = JSON.stringify(receipt.receipt);
+				services.addReceipt({
+					receipt : receFormData,
+					renoId : renoId,
+					contId : contId
+				}).success(function(data) {
+					alert("收据添加成功！");
+				});
 			};
 
 			// zq：读取合同的信息
@@ -185,7 +245,7 @@ app.controller('ReceiptController', [
 					receipt.reno = data.list;
 				});
 			}
-		
+
 			// zq：根据合同ID查找所有的收据
 			function selectReceiptByContId() {
 				var contId = sessionStorage.getItem('contId');
@@ -194,28 +254,46 @@ app.controller('ReceiptController', [
 					contId : contId
 				}).success(function(data) {
 					receipt.receipts = data.list;
+					receipt.totalRow = data.totalRow;
+
+				});
+			}
+			// 根据收据ID查看收据的详情
+			function selectReceiptByReceId() {
+				var receId = sessionStorage.getItem('receId');
+				services.selectReceiptByReceId({
+					receId : receId
+				}).success(function(data) {
+					receipt.receipt = data.receipt
 				});
 			}
 			// zq：根据合同ID计算该合同目前收据共多少钱
 			function countReceiptMoneyByContId() {
 				var contId = sessionStorage.getItem('contId');
+
 				services.countReceiptMoneyByContId({
 					contId : contId
 				}).success(function(data) {
-					receipt.totalMoney = data;
+					
+					receipt.totalMoney = data.totalMoney;
+
 				});
 			}
 			// zq初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/receiptList') == 0) {
-					
-					selectReceiptByContId();
+
+					selectReceiptByContId();// 根据合同ID查找所有收据
+					countReceiptMoneyByContId();// 根据合同ID查找该合同的所有收款金额
+					selectContractById();// 根据ID查找合同详情
 
 				} else if ($location.path().indexOf('/receiptInfo') == 0) {
-					selectContractById();//根据合同ID查看合同信息
-					selectPrstByContId();//根据合同查看工期阶段
-					selectRenoByContId();//根据合同ID查看收款节点
+					selectContractById();// 根据合同ID查看合同信息
+					selectPrstByContId();// 根据合同查看工期阶段
+					selectRenoByContId();// 根据合同ID查看收款节点
+				} else if ($location.path().indexOf('/receiptDetail') == 0) {
+					selectReceiptByReceId();
 				}
 			}
 			function dateformat() {
@@ -237,7 +315,19 @@ app.controller('ReceiptController', [
 
 		} ]);
 
-//合同状态过滤器
+// 小数过滤器
+app.filter('receFloat', function() {
+	return function(input) {
+		if (input == null) {
+			var money=parseFloat('0').toFixed(2);
+		} else{
+			var money = parseFloat(input).toFixed(2);
+		}
+
+		return money;
+	}
+});
+// 合同状态过滤器
 app.filter('conState', function() {
 	return function(input) {
 		var state = "";
@@ -315,9 +405,25 @@ app.filter('prstType', function() {
 		return type;
 	}
 });
+//收款节点的状态的判断
+app.filter('renoType', function() {
+	return function(input) {
+		var type = "";
+		if (input == "0")
+			type = "未收款";
+		else if (input == "1")
+			type = "已收款";
+		else if (input == "2")
+			type = "未付全款";
+		else if (input == "3")
+			type = "提前到款";
+		return type;
+	}
+});
 // 时间的格式化的判断
 app.filter('dateType', function() {
 	return function(input) {
+
 		var type = "";
 		if (input != null) {
 			type = new Date(input).toLocaleDateString().replace(/\//g, '-');
@@ -359,6 +465,19 @@ app.directive("dateFormat", function() {
 				}
 			});
 		}
+	}
+});
+
+// 截取任务内容
+app.filter('cutString', function() {
+	return function(input) {
+		var content = "";
+		if (input != "") {
+			var shortInput = input.substr(0, 8);
+			content = shortInput + "……";
+		}
+
+		return content;
 	}
 });
 

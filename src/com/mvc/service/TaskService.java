@@ -38,7 +38,5 @@ public interface TaskService {
 	// 根据任务Id删除任务
 	boolean delete(Integer taskId);
 
-	// 创建文书任务
-	boolean addAssitantTask(Task task, List<SubTask> subTasks);
 
 }

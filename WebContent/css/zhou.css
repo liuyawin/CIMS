@@ -57,10 +57,47 @@
 .width10 {
 	width: 10%;
 }
+
+.width5 {
+	width: 5%;
+}
+
 .width15 {
 	width: 15%;
 }
+
+.width25 {
+	width: 25%;
+}
+
+.width30 {
+	width: 30%;
+}
+
 .width35 {
 	width: 35%;
 }
+
+.text_style {
+	font-size: 15px;
+	color: #f00;
+}
+
+.hideE {
+	display: none;
+}
+
+.showInfo {
+	width: 10px;
+	height: 10px;
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+.left_length5 {
+	margin-left: 5px;
+}
+
+.little {
+	font-size: 10px;
 }

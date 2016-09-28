@@ -9,6 +9,9 @@ package com.mvc.dao;
 public interface ProjectStageDao {
 
 	// 根据工期阶段id修改状态
-	public boolean updateState(Integer id, Integer state);
+	Boolean updateState(Integer id, Integer state);
 
+	// 修改成完成工期
+	Boolean updatePrstState(Integer prst_id);
+	
 }

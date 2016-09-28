@@ -17,7 +17,7 @@
 		</form>
 
 		<ul class="toolbar1">
-			<li class="click"><a href="#/taskAdd2"><span><img
+			<li class="click"><a href="#/taskAdd"><span><img
 						src="../images/t01.png" /></span>新建</a></li>
 		</ul>
 	</div>
@@ -28,7 +28,7 @@
 				<th>内容</th>
 				<th>类型</th>
 				<th>状态</th>
-				<th>接收者</th>
+				<th>创建者</th>
 				<th>报警次数</th>
 				<th>合同</th>
 				<th>操作</th>
@@ -38,7 +38,7 @@
 		<tbody>
 			<tr ng-repeat="t in tasks" id={{t.task_id}} >
 				<td >{{$index + 1}}</td>
-				<td>{{t.task_content}}</td>
+				<td>{{t.task_content |cutString}}</td>
 				<td><div ng-switch={{t.task_type}}>
 						<div ng-switch-when="0">普通任务</div>
 						<div ng-switch-when="1">文书任务</div>
@@ -49,11 +49,12 @@
 						<div ng-switch-when="1">执行中</div>
 						<div ng-switch-when="2">已完成</div>
 					</div></td>
-				<td>{{t.receiver.user_name}}</td>
+				<td>{{t.creator.user_name}}</td>
 				<td>{{t.task_alarmnum}}</td>
-				<td>{{t.contract.cont_name}}</td>
-				<td><a  href="#/taskCheck2"  ng-click="getTaskId(t.task_id)" class="tablelink">查看</a><a ng-click="show(t.task_id)"
-					class="tablelink"> 删除</a></td>
+				<td><a class="tablelink" href="/CIMS/contract/toAssistant2ContractPage.do#/contractDetail" ng-click="getContId(t.contract.cont_id)">{{t.contract.cont_name}}</a></td>
+				<td><a  href="#/taskCheck"  ng-click="getTaskId(t.task_id)" class="tablelink">查看</a><a ng-click="finishTask(t.task_id)"
+					class="tablelink finishLabel" on-finish-render-filters>完成</a><a ng-click="show(t.task_id)"
+					class="tablelink delLabel">删除</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -78,7 +79,7 @@
 		<input name="" type="button" class="cancel" value="取消"
 			 />
 	</div>
-
+</div>
 
 	<script type="text/javascript">
 		$('.tablelist tbody tr:odd').addClass('odd');

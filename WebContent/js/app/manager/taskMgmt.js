@@ -1,6 +1,6 @@
 var app = angular
 		.module(
-				'taskReceiveMgmt',
+				'taskMgmt',
 				[ 'ngRoute' ],
 				function($httpProvider) {// ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -73,38 +73,56 @@ app
 							.when(
 									'/newTask',
 									{
-										templateUrl : '/CIMS/jsp/assistant2/taskReceiveInformation/taskList.html',
+										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
 										controller : 'TaskController'
 									})
 							.when(
 									'/unfinishTask',
 									{
-										templateUrl : '/CIMS/jsp/assistant2/taskReceiveInformation/taskList.html',
+										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
 										controller : 'TaskController'
 									})
 							.when(
 									'/finishTask',
 									{
-										templateUrl : '/CIMS/jsp/assistant2/taskReceiveInformation/taskList.html',
+										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
+										controller : 'TaskController'
+									})
+							.when(
+									'/newSendTask',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
+										controller : 'TaskController'
+									})
+							.when(
+									'/unfinishSendTask',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
+										controller : 'TaskController'
+									})
+							.when(
+									'/finishSendTask',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
 										controller : 'TaskController'
 									})
 							.when(
 									'/taskAdd',
 									{
-										templateUrl : '/CIMS/jsp/assistant2/taskReceiveInformation/taskAdd.html',
+										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskAdd.html',
 										controller : 'TaskController'
 									})
 							.when(
 									'/taskCheck',
 									{
-										templateUrl : '/CIMS/jsp/assistant2/taskReceiveInformation/taskCheck.html',
+										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskCheck.html',
 										controller : 'TaskController'
 									});
 				} ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	//zq获取任务列表
+	// zq获取任务列表
 	services.getTaskList = function(data) {
 		console.log("发送请求获取合同信息data" + data);
 		return $http({
@@ -157,27 +175,24 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data,
 		});
 	};
-	//zq完成任务
-	services.finishTask=function(data){
+	// zq完成任务
+	services.finishTask = function(data) {
 		return $http({
-			method:'post',
-			url:baseUrl +'task/finishTask.do',
-			data:data
+			method : 'post',
+			url : baseUrl + 'task/finishTask.do',
+			data : data
 		});
 	};
 	return services;
 } ]);
 
-app.controller('TaskController', [
-		'$scope',
-		'services',
-		'$location',
+app.controller('TaskController', [ '$scope', 'services', '$location',
 		function($scope, services, $location) {
 			// zq合同
 			var taskHtml = $scope;
 			var tState;
-			taskHtml.stime = "";
-			taskHtml.etime = "";
+			var sendOrReceive;
+
 			taskHtml.task = {};
 			// zq根据内容查询任务列表
 			taskHtml.getTaskByContext = function() {
@@ -185,7 +200,7 @@ app.controller('TaskController', [
 					context : $("#tContent").val(),
 					page : 1,
 					taskState : tState,
-					sendOrReceive : 1
+					sendOrReceive : sendOrReceive
 				}).success(function(data) {
 					console.log("根据内容获取任务列表成功！");
 					taskHtml.tasks = data.list;
@@ -263,16 +278,9 @@ app.controller('TaskController', [
 			function checkTask() {
 				services.checkTask({
 					ID : sessionStorage.getItem('taskId')
-				}).success(
-						function(data) {
-							taskHtml.task = data.task;
-							taskHtml.stime = new Date(
-									taskHtml.task.task_stime.time)
-									.toLocaleDateString().replace(/\//g, '-');
-							taskHtml.etime = new Date(
-									taskHtml.task.task_etime.time)
-									.toLocaleDateString().replace(/\//g, '-');
-						});
+				}).success(function(data) {
+					taskHtml.task = data.task;
+				});
 			}
 
 			// zq获取所有用户
@@ -289,7 +297,7 @@ app.controller('TaskController', [
 				services.getTaskList({
 					taskState : taskState,
 					page : page,
-					sendOrReceive : 1
+					sendOrReceive : sendOrReceive
 				}).success(function(data) {
 					taskHtml.tasks = data.list;
 				});
@@ -316,7 +324,7 @@ app.controller('TaskController', [
 					context : $("#tContent").val(),
 					page : page,
 					taskState : taskState,
-					sendOrReceive : 1
+					sendOrReceive : sendOrReceive
 				}).success(function(data) {
 					console.log("根据内容获取任务列表成功！");
 					taskHtml.tasks = data.list;
@@ -339,17 +347,26 @@ app.controller('TaskController', [
 					});
 				}
 			}
+			$scope.$on('hideElement', function(hideElement) {
+				if (tState != 1) {
+					$(".finishLabel").hide();
+				}
+				if (sendOrReceive == 1) {
+					$(".delLabel").hide();
+				}
 
+			});
 			// zq初始化
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/newTask') == 0) {
 					// contract.getContractList();
 					tState = 0;
+					sendOrReceive = 1;
 					services.getTaskList({
 						taskState : 0,
 						page : 1,
-						sendOrReceive : 1
+						sendOrReceive : sendOrReceive
 					}).success(function(data) {
 						taskHtml.tasks = data.list;
 						pageTurn(0, data.totalPage, 1)
@@ -358,10 +375,11 @@ app.controller('TaskController', [
 				} else if ($location.path().indexOf('/unfinishTask') == 0) {
 					// contract.getDebtContract();
 					tState = 1;
+					sendOrReceive = 1;
 					services.getTaskList({
 						taskState : 1,
 						page : 1,
-						sendOrReceive : 1
+						sendOrReceive : sendOrReceive
 					}).success(function(data) {
 						taskHtml.tasks = data.list;
 						pageTurn(1, data.totalPage, 1)
@@ -369,13 +387,50 @@ app.controller('TaskController', [
 				} else if ($location.path().indexOf('/finishTask') == 0) {
 					// contract.getOverdueContract();
 					tState = 2;
+					sendOrReceive = 1;
 					services.getTaskList({
 						taskState : 2,
 						page : 1,
-						sendOrReceive : 1
+						sendOrReceive : sendOrReceive
 					}).success(function(data) {
 						taskHtml.tasks = data.list;
 						pageTurn(2, data.totalPage, 1)
+					});
+				} else if ($location.path().indexOf('/newSendTask') == 0) {
+					// contract.getOverdueContract();
+					tState = 0;
+					sendOrReceive = 0;
+					services.getTaskList({
+						taskState : 0,
+						page : 1,
+						sendOrReceive : sendOrReceive
+					}).success(function(data) {
+						taskHtml.tasks = data.list;
+						pageTurn(0, data.totalPage, 1);
+					});
+				} else if ($location.path().indexOf('/unfinishSendTask') == 0) {
+					// contract.getDebtContract();
+					tState = 1;
+					sendOrReceive = 0;
+					services.getTaskList({
+						taskState : 1,
+						page : 1,
+						sendOrReceive : sendOrReceive
+					}).success(function(data) {
+						taskHtml.tasks = data.list;
+						pageTurn(1, data.totalPage, 1)
+					});
+				} else if ($location.path().indexOf('/finishSendTask') == 0) {
+					// contract.getOverdueContract();
+					tState = 2;
+					sendOrReceive = 0;
+					services.getTaskList({
+						taskState : 2,
+						page : 1,
+						sendOrReceive : sendOrReceive
+					}).success(function(data) {
+						taskHtml.tasks = data.list;
+						pageTurn(2, data.totalPage, 1);
 					});
 				} else if ($location.path().indexOf('/taskAdd') == 0) {
 					selectAllUsers();
@@ -437,6 +492,43 @@ app.directive("dateFormat", function() {
 				}
 			});
 		}
+	}
+});
+
+// 截取任务内容
+app.filter('cutString', function() {
+	return function(input) {
+		var content = "";
+		if (input != "") {
+			var shortInput = input.substr(0, 8);
+			content = shortInput + "……";
+		}
+
+		return content;
+	}
+});
+app.directive('onFinishRenderFilters', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			if (scope.$last === true) {
+				$timeout(function() {
+					scope.$emit('hideElement');
+				});
+			}
+		}
+	};
+
+});
+// 时间的格式化的判断
+app.filter('dateType', function() {
+	return function(input) {
+		var type = "";
+		if (input != null) {
+			type = new Date(input).toLocaleDateString().replace(/\//g, '-');
+		}
+
+		return type;
 	}
 });
 /*

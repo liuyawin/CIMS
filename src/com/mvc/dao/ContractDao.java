@@ -19,8 +19,11 @@ public interface ContractDao {
 	List<Contract> findConByName(String contName, Integer offset, Integer end);
 
 	// 根据创建者ID和合同名查询合同总条数
-	Long countTotal(String contName, String methodType);
+	Long countTotal(String contName, Integer methodType);
 
 	// 删除合同
 	Boolean delete(Integer cont_id);
+
+	// 查询所有终结合同列表
+	List<Contract> findAllEndCont(String contName, Integer offset, Integer end);
 }

@@ -38,7 +38,7 @@
 		<tbody>
 			<tr ng-repeat="t in tasks" id={{t.task_id}} >
 				<td >{{$index + 1}}</td>
-				<td>{{t.task_content}}</td>
+				<td>{{t.task_content |cutString}}</td>
 				<td><div ng-switch={{t.task_type}}>
 						<div ng-switch-when="0">普通任务</div>
 						<div ng-switch-when="1">文书任务</div>
@@ -53,8 +53,8 @@
 				<td>{{t.task_alarmnum}}</td>
 				<td><a class="tablelink" href="/CIMS/contract/toAssistant2ContractPage.do#/contractDetail" ng-click="getContId(t.contract.cont_id)">{{t.contract.cont_name}}</a></td>
 				<td><a  href="#/taskCheck"  ng-click="getTaskId(t.task_id)" class="tablelink">查看</a><a ng-click="finishTask(t.task_id)"
-					class="tablelink"> 完成</a><a ng-click="show(t.task_id)"
-					class="tablelink"> 删除</a></td>
+					class="tablelink finishLabel" on-finish-render-filters>完成</a><a ng-click="show(t.task_id)"
+					class="tablelink delLabel">删除</a></td>
 			</tr>
 		</tbody>
 	</table>

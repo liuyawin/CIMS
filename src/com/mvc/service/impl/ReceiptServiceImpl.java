@@ -62,4 +62,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 		return receiptDao.countByParam(cont_id, searchKey);
 	}
 
+	// 根据合同ID查询收据总金额
+	public Float totalMoneyOfInvoice(Integer contId) {
+		return receiptDao.totalMoneyOfInvoice(contId);
+	}
+
 }

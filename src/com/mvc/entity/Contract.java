@@ -146,6 +146,7 @@ public class Contract {
 		this.cont_saddress = cont_saddress;
 	}
 
+	@Column(columnDefinition = "float(10,2) default '0.00'")
 	public Float getCont_money() {
 		return cont_money;
 	}
