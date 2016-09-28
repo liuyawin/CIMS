@@ -1,7 +1,6 @@
 package com.mvc.service;
 
 import java.util.List;
-
 import com.mvc.entity.User;
 import com.mvc.entity.UserDeptRelation;
 
@@ -14,8 +13,8 @@ import com.mvc.entity.UserDeptRelation;
 
 public interface UserService {
 
-	// 添加用户
-	boolean save(User user);
+	// 添加用户,修改用户信息
+	boolean save(User user);	
 
 	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
 	Long isExist(String userNum);
@@ -40,5 +39,9 @@ public interface UserService {
 	
 	// 根据ID查询用户信息
 	User findById(Integer user_id);
+	
+	//根据ID查看报警详情
+	User findUserContentById(Integer user_id);
+	
 
 }

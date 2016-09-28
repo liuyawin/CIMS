@@ -57,8 +57,10 @@ public class UserDaoImpl implements UserDao {
 	public boolean updateState(Integer id) {
 		EntityManager em = emf.createEntityManager();		
 			em.getTransaction().begin();
-			int count=userRepository.countUserByroleid(id);
-			if(count<1){
+//			Long count = userRepository.countRoleTotal(id);
+//			String count1=count.toString();
+//			int count2=Integer.parseInt(count1);
+//			if(count2<1){
 				try {
 					String selectSql = " update user set `user_isdelete` = 1 where user_id =:user_id ";
 					Query query = em.createNativeQuery(selectSql);
@@ -74,9 +76,9 @@ public class UserDaoImpl implements UserDao {
 					em.close();
 				}
 				return true;
-				}
-			else
-				return false;
+//				}
+//			else
+//				return false;
 		
 	}
 	//根据页数筛选全部用户列表

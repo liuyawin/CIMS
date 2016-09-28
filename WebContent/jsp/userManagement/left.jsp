@@ -8,9 +8,12 @@
 				<span><img src="${ctx}/images/leftico01.png" /></span>部门管理
 			</div>
 			<ul class="menuson">
-			    <li><cite></cite> <a href="#/departmentList">部门列表</a><i></i></li>
-				<li><cite></cite> <a href="#/departmentAdd">添加部门</a><i></i></li>
-				<li><cite></cite> <a href="#/bulkImportStaff">批量导入员工</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/department/toDepartmentPage.do#/departmentList">部门列表</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/department/toDepartmentPage.do#/departmentAdd">添加部门</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/department/toDepartmentPage.do#/bulkImportStaff">批量导入员工</a><i></i></li>
 				<li>
 			</ul>
 		</dd>
@@ -20,10 +23,10 @@
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
 			</div>
 			<ul class="menuson">
-			   <li><cite></cite> <a href="#/roleList">权限列表</a><i></i></li>
-			   <li><cite></cite> <a href="#/roleAdd">角色权限</a><i></i></li>
-			   <li><cite></cite> <a href="#/userList">用户列表</a><i></i></li>
-			   <li><cite></cite> <a href="#/userAdd">添加用户</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/user/toUserPage.do#/roleList">角色列表</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/user/toUserPage.do#/roleAdd">角色权限</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/user/toUserPage.do#/userList">用户列表</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/user/toUserPage.do#/userAdd">添加用户</a><i></i></li>
 			</ul>
 		</dd>
 
@@ -32,7 +35,10 @@
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警设置
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a href="#/alarm">自定义</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/alarm/toAlarmPage.do#/newAlarmList">待处理</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/alarm/toAlarmPage.do#/doneAlarmList">已处理</a><i></i></li>
 			</ul>
 		</dd>
 
