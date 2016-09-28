@@ -20,4 +20,7 @@ public interface ReceiptDao {
 
 	// 根据合同ID和搜索的关键字查询该合同对应的所有收据总条数
 	Integer countByParam(Integer cont_id, String searchKey);
+
+	// 根据合同ID查询收据总金额
+	Float totalMoneyOfInvoice(Integer contId);
 }

@@ -45,8 +45,18 @@ public class ContractController {
 	 * 
 	 * @return
 	 */
+	@RequestMapping("/toManagerContractPage.do")
+	public String managerContractPage() {
+		return "manager/contractInformation/index";
+	}
+
+	/**
+	 * 返回合同界面
+	 * 
+	 * @return
+	 */
 	@RequestMapping("/toAssistant2ContractPage.do")
-	public String taskReceivePage() {
+	public String assistant2ContractPage() {
 		return "assistant2/contractInformation/index";
 	}
 
@@ -59,13 +69,13 @@ public class ContractController {
 	@RequestMapping("/getContractList.do")
 	public @ResponseBody String getContList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		int totalRow = Integer
-				.parseInt(contractService.countTotal(request.getParameter("contName"), "name").toString());
+		String contName = request.getParameter("contName");
+		int totalRow = Integer.parseInt(contractService.countTotal(contName, 1).toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 		// 和根据名字查找共用一个方法，contName为null
-		List<Contract> list = contractService.findConByName(null, pager.getOffset(), pager.getPageSize());
+		List<Contract> list = contractService.findConByName(contName, pager.getOffset(), pager.getPageSize());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -80,12 +90,12 @@ public class ContractController {
 	@RequestMapping("/getDebtContract.do")
 	public @ResponseBody String getDebtContList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		int totalRow = Integer
-				.parseInt(contractService.countTotal(request.getParameter("contName"), "Debt").toString());
+		String contName = request.getParameter("contName");
+		int totalRow = Integer.parseInt(contractService.countTotal(contName, 2).toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
-		List<Contract> list = contractService.findAllDebtCont(null, pager.getOffset(), pager.getPageSize());
+		List<Contract> list = contractService.findAllDebtCont(contName, pager.getOffset(), pager.getPageSize());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -100,12 +110,12 @@ public class ContractController {
 	@RequestMapping("/getOverdueContract.do")
 	public @ResponseBody String getOverdueContList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		int totalRow = Integer
-				.parseInt(contractService.countTotal(request.getParameter("contName"), "Overdue").toString());
+		String contName = request.getParameter("contName");
+		int totalRow = Integer.parseInt(contractService.countTotal(contName, 3).toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
-		List<Contract> list = contractService.findAllOverdueCont(null, pager.getOffset(), pager.getPageSize());
+		List<Contract> list = contractService.findAllOverdueCont(contName, pager.getOffset(), pager.getPageSize());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -120,13 +130,12 @@ public class ContractController {
 	@RequestMapping("/selectConByName.do")
 	public @ResponseBody String selectConByName(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		int totalRow = Integer
-				.parseInt(contractService.countTotal(request.getParameter("contName"), "name").toString());
+		String contName = request.getParameter("contName");
+		int totalRow = Integer.parseInt(contractService.countTotal(contName, 1).toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
-		List<Contract> list = contractService.findConByName(request.getParameter("contName"), pager.getOffset(),
-				pager.getPageSize());// 合同名
+		List<Contract> list = contractService.findConByName(contName, pager.getOffset(), pager.getPageSize());// 合同名
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		System.out.println(jsonObject.toString());
@@ -160,14 +169,6 @@ public class ContractController {
 		contract.setCont_ctime(new Date(time));// 合同创建时间
 		contract.setCreator(user);// 合同创建者
 		contractService.addContract(contract);
-		System.out.println("测试事务add");
-		Contract cc = contractService.selectContById(100);
-		if (cc == null) {
-			throw new RuntimeException();
-		}
-
-		contractService.deleteContract(100);
-		System.out.println("测试事务delete");
 		return contract.getCont_id();
 	}
 
@@ -243,17 +244,55 @@ public class ContractController {
 		JSONObject jsonObject = new JSONObject();
 		boolean isdelete = contractService.deleteContract(Integer.parseInt(request.getParameter("conId")));
 		if (isdelete) {// 删除成功
-			int totalRow = Integer
-					.parseInt(contractService.countTotal(request.getParameter("contName"), "name").toString());
+			String contName = request.getParameter("contName");
+			int totalRow = Integer.parseInt(contractService.countTotal(contName, 1).toString());
 			Pager pager = new Pager();
 			pager.setPage(1);// 返回前十条
 			pager.setTotalRow(totalRow);
-			List<Contract> list = contractService.findConByName(null, pager.getOffset(), pager.getPageSize());
+			List<Contract> list = contractService.findConByName(contName, pager.getOffset(), pager.getPageSize());
 			jsonObject.put("list", list);
 			jsonObject.put("totalPage", pager.getTotalPage());
 			System.out.println(list);
 			System.out.println(pager.getTotalPage());
 		}
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 查找合同列表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return list和总页数
+	 */
+	@RequestMapping("/selectContract.do")
+	public @ResponseBody String selectContract(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		int methodType = Integer.parseInt(request.getParameter("findType"));// 合同方法类别：1-合同信息管理，2-欠款合同信息，3-工程逾期合同，4-终结合同信息
+		String contName = request.getParameter("contName");
+		int totalRow = Integer.parseInt(contractService.countTotal(contName, methodType).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+		List<Contract> list = null;
+		switch (methodType) {
+		case 1:
+			list = contractService.findConByName(contName, pager.getOffset(), pager.getPageSize());
+			break;
+		case 2:
+			list = contractService.findAllDebtCont(contName, pager.getOffset(), pager.getPageSize());
+			break;
+		case 3:
+			list = contractService.findAllOverdueCont(contName, pager.getOffset(), pager.getPageSize());
+			break;
+		case 4:
+			list = contractService.findAllEndCont(contName, pager.getOffset(), pager.getPageSize());
+			break;
+		default:
+			break;
+		}
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
 

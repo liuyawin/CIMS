@@ -1,5 +1,7 @@
 package com.mvc.service;
 
+import java.util.List;
+
 import com.mvc.entity.ReceiveNode;
 
 /**
@@ -11,6 +13,11 @@ import com.mvc.entity.ReceiveNode;
 public interface ReceiveNodeService {
 
 	// 添加收款节点
-	boolean addReceiveNode(ReceiveNode receiveNode);
+	Boolean addReceiveNode(ReceiveNode receiveNode);
 
+	// 根据合同ID查找收款节点
+	List<ReceiveNode> selectRenoByContId(Integer cont_id);
+
+	// 根据ID查询收款节点
+	ReceiveNode findByRenoId(Integer reno_id);
 }

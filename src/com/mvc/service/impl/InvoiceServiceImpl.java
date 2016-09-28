@@ -37,14 +37,28 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.delete(invoiceId);
 	}
 
-	// 根据合同id，页数,关键字返回任务列表
-	public List<Invoice> findByPage(Integer cont_id, String searchKey, Integer offset, Integer end) {
-		return invoiceDao.findByPage(cont_id, searchKey, offset, end);
+	// 根据合同id，页数返回任务列表
+	public List<Invoice> findByPage(Integer cont_id, Integer offset, Integer end) {
+		return invoiceDao.findByPage(cont_id, offset, end);
 	}
 
-	// 根据合同ID，关键字查询任务总条数
-	public Integer countByParam(Integer cont_id, String searchKey) {
-		return invoiceDao.countByParam(cont_id, searchKey);
+	// 根据合同ID查询任务总条数
+	public Integer countByParam(Integer cont_id) {
+		return invoiceDao.countByParam(cont_id);
+	}
+
+	// 根据合同ID查询发票总金额
+	public Float totalMoneyOfInvoice(Integer contId) {
+		return invoiceDao.totalMoneyOfInvoice(contId);
+	}
+
+	// 创建发票
+	public boolean save(Invoice invoice) {
+		Invoice invoiceResult = invoiceRepository.saveAndFlush(invoice);
+		if (invoiceResult.getInvo_id() != null) {
+			return true;
+		} else
+			return false;
 	}
 
 }

@@ -123,9 +123,11 @@ public class LoginController {
 				}
 				model.addAttribute("password", password);
 				if (user.getUser_name().equals("zhou"))
-					return "assistant2/taskReceiveInformation/index";// 返回到文书二主页
+					return "assistant2/taskInformation/index";// 返回到文书二主页
 				else if (user.getUser_name().equals("admin"))
 					return "userManagement/userInformation/index";// 返回到管理员主页
+				else if (user.getUser_name().equals("shezong"))
+					return "manager/taskInformation/index";// 返回到管理员主页
 				else
 					return "zhuren/contractInformation/index";// 返回到主任主页
 			} else { // 密码错误

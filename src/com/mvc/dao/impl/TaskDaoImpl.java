@@ -117,23 +117,5 @@ public class TaskDaoImpl implements TaskDao {
 		return Integer.parseInt(result.get(0).toString());
 	}
 
-	// 创建文书任务
-	public boolean addAssitantTask(Task task, List<SubTask> subTasks) {
-		int size = subTasks.size();
-		EntityManager em = emf.createEntityManager();
-		try {
-			em.getTransaction().begin();
-			Task taskResult = taskRepository.saveAndFlush(task);
-			for (int i = 0; i < size; i++) {
-				subTasks.get(i).setTask(taskResult);
-				SubTask subTaskResult = subTaskRepository.saveAndFlush(subTasks.get(i));
-			}
-			em.flush();
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-		return true;
-	}
 
 }

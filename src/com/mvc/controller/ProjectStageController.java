@@ -73,7 +73,8 @@ public class ProjectStageController {
 				projectStage.setPrst_etime(date);// 阶段截止时间
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(date);
-				int days = Integer.parseInt(stage.getString("prst_wtime"));// 完工提醒天数
+				int days = Integer.parseInt(stage.getString("prst_wday"));// 完工提醒天数
+				projectStage.setPrst_wday(days);// 添加完工提醒的天数
 				calendar.add(Calendar.DAY_OF_MONTH, -days);// 工作结束提醒时间=阶段截止时间-完工提醒天数
 				projectStage.setPrst_wtime(calendar.getTime());// 工作结束提醒时间
 				projectStage.setPrst_ctime(new Date(time));// 阶段录入时间
@@ -111,6 +112,18 @@ public class ProjectStageController {
 				.selectPrstByContId(Integer.parseInt(request.getParameter("cont_id")));
 		jsonObject.put("list", list);
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 修改成完成工期
+	 * 
+	 * @param request
+	 * @return true、false
+	 */
+	@RequestMapping("/finishPrst.do")
+	public @ResponseBody String finishPrst(HttpServletRequest request) {
+		boolean flag = projectStageService.updatePrstState(Integer.parseInt(request.getParameter("prstId")));
+		return String.valueOf(flag);
 	}
 
 }

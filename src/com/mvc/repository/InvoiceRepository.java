@@ -18,7 +18,7 @@ import com.mvc.entity.Invoice;
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 
 	// 根据发票ID查询发票详情
-	@Query("select i from Invoice i where invoice_id=:invoice_id")
-	Invoice findById(@Param("invoice_id") Integer invoiceId);
+	@Query("select i from Invoice i where invo_id=:invo_id")
+	Invoice findById(@Param("invo_id") Integer invoiceId);
 
 }

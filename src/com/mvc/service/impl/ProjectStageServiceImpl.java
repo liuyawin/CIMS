@@ -46,4 +46,10 @@ public class ProjectStageServiceImpl implements ProjectStageService {
 		return projectStageRepository.findOne(prst_id);
 	}
 
+	// 修改成完成工期
+	@Override
+	public Boolean updatePrstState(Integer prst_id) {
+		return projectStageDao.updatePrstState(prst_id);
+	}
+
 }

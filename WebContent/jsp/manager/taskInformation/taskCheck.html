@@ -19,9 +19,9 @@
 		<textarea name="" cols="" rows="" class="textinput" readonly
 				ng-model="task.task_content" value={{task.task_name}}></textarea></li>
 		<li><label>开始时间</label><input type="text" name="task_stime"
-			id="task_stime" class="dfinput" readonly value={{stime}}></li>
+			id="task_stime" class="dfinput" readonly value="{{task.task_stime.time | dateType}}"></li>
 		<li><label>截止时间</label><input type="text" name="task_etime"
-			id="task_etime" class="dfinput" readonly value={{etime}}></li>
+			id="task_etime" class="dfinput" readonly value="{{task.task_etime.time | dateType}}"></li>
 	</ul>
 </div>
 <br>

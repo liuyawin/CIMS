@@ -46,6 +46,7 @@ public class ReceiveNode implements Serializable {
 	public void setReno_id(Integer reno_id) {
 		this.reno_id = reno_id;
 	}
+
 	@Column(length = 64)
 	public String getReno_content() {
 		return reno_content;
@@ -55,6 +56,7 @@ public class ReceiveNode implements Serializable {
 		this.reno_content = reno_content;
 	}
 
+	@Column(columnDefinition = "float(10,2) default '0.00'")
 	public Float getReno_money() {
 		return reno_money;
 	}

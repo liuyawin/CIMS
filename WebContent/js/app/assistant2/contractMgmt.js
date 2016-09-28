@@ -79,13 +79,19 @@ app
 							.when(
 									'/debtContract',
 									{
-										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractList.html',
 										controller : 'ContractController'
 									})
 							.when(
 									'/overdueContract',
 									{
-										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractList.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/doneContract',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractList.html',
 										controller : 'ContractController'
 									})
 							.when(
@@ -106,7 +112,26 @@ app
 										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractInfo.html',
 										controller : 'ContractController'
 									})
+							.when(
+									'/contractModify',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractModify.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/prstInfo',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractInfo.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/renoInfo',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractInfo.html',
+										controller : 'ContractController'
+									})
 				} ]);
+
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
@@ -221,7 +246,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	
+
 	return services;
 } ]);
 
@@ -232,40 +257,68 @@ app.controller('ContractController', [
 		function($scope, services, $location) {
 			// 合同
 			var contract = $scope;
+			contract.contract = {};
+			contract.contStime="";
+			var findType;
 			// 获取合同列表
-			contract.getContractList = function(page) {
+			contract.getContractList = function(page, findType) {
 				services.getContractList({
-					page : page
+					page : page,
+					findType : findType
 				}).success(function(data) {
 					contract.contracts = data.list;
 					contract.totalPage = data.totalPage;
 				});
 			};
-			// 获取欠款合同
-			contract.getDebtContract = function() {
-				services.getDebtContract({}).success(function(data) {
-					console.log("获取欠款合同成功！");
-					contract.contracts = data;
-				});
-			};
-			// 获取逾期合同
-			contract.getOverdueContract = function() {
-				services.getOverdueContract({}).success(function(data) {
-					console.log("获取逾期合同成功！");
-					contract.contracts = data.list;
-				});
-			};
+			/*
+			 * // 获取欠款合同 contract.getDebtContract = function() {
+			 * services.getDebtContract({}).success(function(data) {
+			 * console.log("获取欠款合同成功！"); contract.contracts = data; }); }; //
+			 * 获取逾期合同 contract.getOverdueContract = function() {
+			 * services.getOverdueContract({}).success(function(data) {
+			 * console.log("获取逾期合同成功！"); contract.contracts = data.list; }); };
+			 */
 			// 通过合同名获取合同信息
 			contract.selectConByName = function() {
 				services.selectConByName({
 					contName : $("#cName").val(),
-					page : 1
+					page : 1,
+					findType : findType
 				}).success(function(data) {
 					console.log("选择合同成功！");
 					contract.contracts = data.list;
 					contract.totalPage = data.totalPage;
+					pageTurnByName(contract.totalPage, 1, findType)
 				});
 			};
+
+			function getContByName(page, findType) {
+				services.selectConByName({
+					contName : $("#cName").val(),
+					page : page,
+					findType : findType
+				}).success(function(data) {
+					console.log("选择合同成功！");
+					contract.contracts = data.list;
+					contract.totalPage = data.totalPage;
+
+				});
+			}
+			// zq按查询内容获取任务列表的换页
+			function pageTurnByName(totalPage, page, findType) {
+
+				var $pages = $(".tcdPageCode");
+				console.log($pages.length);
+				if ($pages.length != 0) {
+					$(".tcdPageCode").createPage({
+						pageCount : totalPage,
+						current : page,
+						backFn : function(p) {
+							getContByName(p, findType);
+						}
+					});
+				}
+			}
 
 			// 添加文书任务
 			contract.addTask1 = function() {
@@ -429,10 +482,14 @@ app.controller('ContractController', [
 			// zq：读取合同的信息
 			function selectContractById() {
 				var cont_id = sessionStorage.getItem('contId');
+
 				services.selectContractById({
 					cont_id : cont_id
 				}).success(function(data) {
 					contract.cont = data;
+					contract.contract = data;
+					contract.contStime=data.cont_stime;
+					alert(contStime);
 				});
 			}
 			// zq：根据合同ID查询工期阶段的内容
@@ -459,12 +516,54 @@ app.controller('ContractController', [
 					contract.userDepts = data;
 				});
 			}
+			// 合同，收款节点，工期阶段的详情
+			contract.showContInfo = function() {
+				$('#contInformation').show();
+				$('#contShow').hide();
+				$('#contHide').show();
+			}
+			contract.hideContInfo = function() {
+
+				$('#contInformation').hide();
+				$('#contShow').show();
+				$('#contHide').hide();
+			}
+			contract.showPrstInfo = function() {
+				$('#prstInformation').show();
+				$('#prstShow').hide();
+				$('#prstHide').show();
+			}
+			contract.hidePrstInfo = function() {
+
+				$('#prstInformation').hide();
+				$('#prstShow').show();
+				$('#prstHide').hide();
+			}
+			contract.showRenoInfo = function() {
+				$('#renoInformation').show();
+				$('#renoShow').hide();
+				$('#renoHide').show();
+			}
+			contract.hideRenoInfo = function() {
+
+				$('#renoInformation').hide();
+				$('#renoShow').show();
+				$('#renoHide').hide();
+			}
+			// 页面加载后执行的js
+
+			$scope.$on('hideElement', function(hideElement) {
+				$(".test").hide();
+
+			});
 			// zq初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/contractList') == 0) {// 如果是合同列表页
+					findType = 1;
 					services.getContractList({
-						page : 1
+						page : 1,
+						findType : findType
 					}).success(function(data) {
 						contract.contracts = data.list;
 						contract.totalPage = data.totalPage;
@@ -475,7 +574,7 @@ app.controller('ContractController', [
 								pageCount : contract.totalPage,
 								current : 1,
 								backFn : function(p) {
-									contract.getContractList(p);// 点击页码时获取第p页的数据
+									contract.getContractList(p, findType);// 点击页码时获取第p页的数据
 								}
 							});
 						}
@@ -483,22 +582,99 @@ app.controller('ContractController', [
 
 				} else if ($location.path().indexOf('/debtContract') == 0) {
 					// contract.getDebtContract();
+					findType = 2;
+					services.getContractList({
+						page : 1,
+						findType : findType
+					}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if ($pages.length != 0) {
+							$pages.createPage({
+								pageCount : contract.totalPage,
+								current : 1,
+								backFn : function(p) {
+									contract.getContractList(p, findType);// 点击页码时获取第p页的数据
+								}
+							});
+						}
+					});
 
 				} else if ($location.path().indexOf('/overdueContract') == 0) {
 					// contract.getOverdueContract();
+					findType = 3;
+					services.getContractList({
+						page : 1,
+						findType : findType
+					}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if ($pages.length != 0) {
+							$pages.createPage({
+								pageCount : contract.totalPage,
+								current : 1,
+								backFn : function(p) {
+									contract.getContractList(p, findType);// 点击页码时获取第p页的数据
+								}
+							});
+						}
+					});
+
+				} else if ($location.path().indexOf('/doneContract') == 0) {
+					// contract.getOverdueContract();
+					findType = 4;
+					services.getContractList({
+						page : 1,
+						findType : findType
+					}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if ($pages.length != 0) {
+							$pages.createPage({
+								pageCount : contract.totalPage,
+								current : 1,
+								backFn : function(p) {
+									contract.getContractList(p, findType);// 点击页码时获取第p页的数据
+								}
+							});
+						}
+					});
 
 				} else if ($location.path().indexOf('/contractDetail') == 0) {
-
 					selectContractById(); // 根据ID获取合同信息
 					addStage();// 显示工期阶段录入界面
 					dateformat();// 格式化日期格式
 					selectUsersFromDesign();// 查找设计部人员
 				} else if ($location.path().indexOf('/contractInfo') == 0) {
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					$("#renoInformation").hide();
+					$("#prstInformation").hide();
+				}else if ($location.path().indexOf('/prstInfo') == 0) {
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					$("#renoInformation").hide();
+					$("#contInformation").hide();
+				} else if ($location.path().indexOf('/renoInfo') == 0) {
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					$("#contInformation").hide();
+					$("#prstInformation").hide();
+				}  else if ($location.path().indexOf('/contractModify') == 0) {
 
 					selectContractById(); // 根据ID获取合同信息
 					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
-					/* selectRenoByContId();// 根据合同ID获取该合同的工期阶段 */
-				} 
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
+				}
 			}
 			function dateformat() {
 				var $dateFormat = $(".dateFormat");
@@ -518,6 +694,19 @@ app.controller('ContractController', [
 			dateformat();// 格式化日期格式
 
 		} ]);
+
+// 小数过滤器
+app.filter('receFloat', function() {
+	return function(input) {
+		if (input == null) {
+			var money = parseFloat('0').toFixed(2);
+		} else {
+			var money = parseFloat(input).toFixed(2);
+		}
+
+		return money;
+	}
+});
 // 合同状态过滤器
 app.filter('conState', function() {
 	return function(input) {
@@ -596,6 +785,21 @@ app.filter('prstType', function() {
 		return type;
 	}
 });
+// 收款节点的状态的判断
+app.filter('renoType', function() {
+	return function(input) {
+		var type = "";
+		if (input == "0")
+			type = "未收款";
+		else if (input == "1")
+			type = "已收款";
+		else if (input == "2")
+			type = "未付全款";
+		else if (input == "3")
+			type = "提前到款";
+		return type;
+	}
+});
 // 时间的格式化的判断
 app.filter('dateType', function() {
 	return function(input) {
@@ -641,6 +845,20 @@ app.directive("dateFormat", function() {
 			});
 		}
 	}
+});
+// 页面加载后执行的jsjs
+app.directive('onFinishRenderFilters', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			if (scope.$last === true) {
+				$timeout(function() {
+					scope.$emit('hideElement');
+				});
+			}
+		}
+	};
+
 });
 
 /*
