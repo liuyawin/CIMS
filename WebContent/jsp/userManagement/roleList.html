@@ -27,7 +27,6 @@
 			<tr>
 				<th>编号</th>
 				<th>角色</th>
-				<th>权限</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -35,9 +34,8 @@
 			<tr ng-repeat="role in roles">
 				<td>{{role.role_id}}</td>
 				<td>{{role.role_name}}</td>
-				<td>{{role.role_permission}}</td>
 				<td><a href="#" class="tablelink">查看</a><a href="#"
-					class="tablelink"> 修改</a><a href="#" class="tablelink" ng-click="deleteUser(role.role_id)"> 删除</a></td>
+					class="tablelink"> 修改</a><a href="#" class="tablelink" ng-click="deleteRole(role.role_id)"> 删除</a></td>
 			</tr>
 		</tbody>
 	</table>

@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
-import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.Department;
-import com.mvc.entity.Task;
-import com.mvc.entity.User;
 import com.mvc.service.DepartmentService;
 import com.utils.Pager;
 
@@ -31,9 +28,19 @@ import net.sf.json.JSONObject;
 public class DepartmentController {
 	@Autowired
 	DepartmentService departmentService;
-
+	
+	
 	/**
-	 * 根据页数筛选任务列表
+	 * 设置进入部门起始页
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toDepartmentPage.do")
+	public String departmentReceivePage() {
+		return "userManagement/departInformation/index";
+	}
+	/**
+	 * 根据页数筛选部门列表
 	 * 
 	 * @param request
 	 * @param session
@@ -56,7 +63,7 @@ public class DepartmentController {
 	}
 
 	/**
-	 * 所有任务列表
+	 * 所有部门列表
 	 * 
 	 * @param request
 	 * @param session
@@ -70,7 +77,7 @@ public class DepartmentController {
 	}
 
 	/**
-	 * 删除任务
+	 * 删除部门
 	 * 
 	 * @param request
 	 * @param session
@@ -83,9 +90,9 @@ public class DepartmentController {
 		boolean result = departmentService.deleteState(deptId);
 		return JSON.toJSONString(result);
 	}
-	
+
 	/**
-	 * 添加任务
+	 * 添加，修改部门
 	 * 
 	 * @param request
 	 * @param session
@@ -93,16 +100,40 @@ public class DepartmentController {
 	 */
 	@RequestMapping(value = "/addDepart.do")
 	public @ResponseBody String addDepart(HttpServletRequest request, HttpSession session) {
-		System.out.println("pid:"+request.getParameter("dept_name")+request.getParameter("dept_pid")+request.getParameter("dept_remark"));
-		Department department=new Department();
+		System.out.println("pid:" + request.getParameter("dept_name") + request.getParameter("dept_pid")
+				+ request.getParameter("dept_remark"));
+		Department department = new Department();
 		department.setDept_name(request.getParameter("dept_name"));
-		Department pId=new Department();
+		Department pId = new Department();
 		pId.setDept_id(Integer.valueOf(request.getParameter("dept_pid")));
 		department.setDepartment(pId);
 		department.setDept_remark(request.getParameter("dept_remark"));
 		department.setDept_state(0);
-		boolean result = departmentService.save(department);
+		boolean result;
+		if (request.getParameter("dept_id") != null) {
+			department.setDept_id(Integer.valueOf(request.getParameter("dept_id")));
+			result = departmentService.save(department);// 修改部门信息
+		} else {
+			result = departmentService.save(department);// 添加部门信息
+		}
 		return JSON.toJSONString(result);
+	}
+
+	/**
+	 * 根据ID查看部门详情
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/selectDepartmentById.do")
+	public @ResponseBody String getDepartmentContentById(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		Integer deptid = Integer.valueOf(request.getParameter("deptid"));
+		Department department = departmentService.findDepartmentContentById(deptid);
+		jsonObject.put("department", department);
+		return jsonObject.toString();
+
 	}
 
 }

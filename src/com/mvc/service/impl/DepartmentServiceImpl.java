@@ -20,7 +20,7 @@ import com.mvc.service.DepartmentService;
 public class DepartmentServiceImpl implements DepartmentService {
 	@Autowired
 	DepartmentRepository departmentrepository;
-	
+
 	@Autowired
 	DepartmentDao departmentDao;
 
@@ -44,23 +44,30 @@ public class DepartmentServiceImpl implements DepartmentService {
 	// 增加一条数据
 	@Override
 	public boolean save(Department department) {
-		Department result=departmentrepository.saveAndFlush(department);
-		if(result.getDept_id()!=null)
+		Department result = departmentrepository.saveAndFlush(department);
+		if (result.getDept_id() != null)
 			return true;
-		else 
+		else
 			return false;
-		
+
 	}
 
 	@Override
 	public Long countTotal() {
 		return departmentrepository.countTotal();
 	}
-	//获取所有部门列表
+
+	// 获取所有部门列表
 	@Override
 	public List<Department> findDepartmentAlls() {
-		
+
 		return departmentDao.findDepartmentAll();
+	}
+
+	// 根据ID查看部门详情
+	@Override
+	public Department findDepartmentContentById(Integer dept_id) {
+		return departmentrepository.findDepartmentContentById(dept_id);
 	}
 
 }
