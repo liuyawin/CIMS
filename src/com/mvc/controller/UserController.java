@@ -21,7 +21,7 @@ import net.sf.json.JSONObject;
 import com.alibaba.fastjson.JSON;
 
 /**
- * 用户相关
+ * 用户相关内容
  * 
  * @author wanghuimin
  * @date 2016年9月7日
