@@ -23,14 +23,10 @@
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a href="${ctx}/user/toUserPage.do#/roleList">角色列表</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/user/toUserPage.do#/roleAdd">角色权限</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/user/toUserPage.do#/userList">用户列表</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/user/toUserPage.do#/userAdd">添加用户</a><i></i></li>
-			   <li><cite></cite> <a href="#/roleList">角色列表</a><i></i></li>
-			   <li><cite></cite> <a href="#/roleAdd">角色权限</a><i></i></li>
-			   <li><cite></cite> <a href="#/userList">用户列表</a><i></i></li>
-			   <li><cite></cite> <a href="#/userAdd">添加用户</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/role/toRolePage.do#/roleList">角色列表</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/role/toRolePage.do#/roleAdd">角色权限</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/role/toRolePage.do#/userList">用户列表</a><i></i></li>
+				<li><cite></cite> <a href="${ctx}/role/toRolePage.do#/userAdd">添加用户</a><i></i></li>
 			</ul>
 		</dd>
 

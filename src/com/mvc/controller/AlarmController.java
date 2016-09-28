@@ -29,6 +29,18 @@ import net.sf.json.JSONObject;
 public class AlarmController {
 	@Autowired
 	AlarmService alarmService;
+	
+	
+	/**
+	 * 设置进入报警起始页
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toAlarmPage.do")
+	public String departmentReceivePage() {
+		return "userManagement/alarmInformation/index";
+	}
+	
 
 	/**
 	 * 报警页面跳转

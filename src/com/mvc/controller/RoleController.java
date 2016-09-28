@@ -27,6 +27,17 @@ import net.sf.json.JSONObject;
 public class RoleController {
 	@Autowired
 	RoleService roleService;
+	
+	
+	/**
+	 * 设置进入角色起始页
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toRolePage.do")
+	public String roleReceivePage() {
+		return "userManagement/userInformation/index";
+	}
 
 	/**
 	 * 删除角色列表状态

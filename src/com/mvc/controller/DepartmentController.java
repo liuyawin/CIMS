@@ -28,7 +28,17 @@ import net.sf.json.JSONObject;
 public class DepartmentController {
 	@Autowired
 	DepartmentService departmentService;
-
+	
+	
+	/**
+	 * 设置进入部门起始页
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toDepartmentPage.do")
+	public String departmentReceivePage() {
+		return "userManagement/departInformation/index";
+	}
 	/**
 	 * 根据页数筛选部门列表
 	 * 
