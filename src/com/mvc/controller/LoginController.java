@@ -1,5 +1,7 @@
 package com.mvc.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -13,10 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.CookieKeyConstants;
 import com.base.constants.PageNameConstants;
 import com.base.constants.SessionKeyConstants;
+import com.mvc.entity.Task;
 import com.mvc.entity.User;
 import com.mvc.service.UserService;
 import com.utils.CookieUtil;
 import com.utils.HttpRedirectUtil;
+import com.utils.Pager;
 
 import net.sf.json.JSONObject;
 
@@ -123,11 +127,11 @@ public class LoginController {
 				}
 				model.addAttribute("password", password);
 				if (user.getUser_name().equals("zhou"))
-					return "assistant2/taskInformation/index";// 返回到文书二主页
+					return "assistant2/contractInformation/index";// 返回到文书二主页
 				else if (user.getUser_name().equals("admin"))
 					return "userManagement/userInformation/index";// 返回到管理员主页
 				else if (user.getUser_name().equals("shezong"))
-					return "manager/taskReceiveInformation/index";// 返回到管理员主页
+					return "manager/contractInformation/index";// 返回到管理员主页
 				else if (user.getUser_name().equals("li"))
 					return "assistant1/taskInformation/index";// 返回到文书一主页
 				else
@@ -155,5 +159,16 @@ public class LoginController {
 	public String logout(HttpSession session) {
 		session.removeAttribute(SessionKeyConstants.LOGIN);
 		return HttpRedirectUtil.redirectStr(PageNameConstants.TOLOGIN);
+	}
+	
+	@RequestMapping(value = "/getUserFromSession.do")
+	public @ResponseBody String getUserFromSession(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		
+		jsonObject.put("user", user);
+	
+		System.out.println("返回用户:" + jsonObject.toString());
+		return jsonObject.toString();
 	}
 }

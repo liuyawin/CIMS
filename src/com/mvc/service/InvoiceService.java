@@ -22,14 +22,20 @@ public interface InvoiceService {
 	boolean delete(Integer invoiceId);
 
 	// 根据合同id，页数返回任务列表
-	List<Invoice> findByPage(Integer cont_id, Integer offset, Integer end);
+	List<Invoice> findByContId(Integer cont_id, Integer offset, Integer end);
 
 	// 根据合同ID查询任务总条数
-	Integer countByParam(Integer cont_id);
+	Integer countByContId(Integer cont_id);
 
 	// 根据合同ID查询发票总金额
 	Float totalMoneyOfInvoice(Integer contId);
 
 	// 创建发票
 	boolean save(Invoice invoice);
+
+	// 根据用户id，页数返回任务列表
+	List<Invoice> findByPage(Integer user_id, Integer ifSend, Integer offset, Integer end);
+
+	// 根据用户ID查询任务总条数
+	Integer countByParam(Integer user_id, Integer ifSend);
 }

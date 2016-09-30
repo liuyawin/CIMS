@@ -41,7 +41,7 @@ public class ContractController {
 	UserService userService;
 
 	/**
-	 * 返回合同界面
+	 * 返回设总合同界面
 	 * 
 	 * @return
 	 */
@@ -51,13 +51,23 @@ public class ContractController {
 	}
 
 	/**
-	 * 返回合同界面
+	 * 返回文书2合同界面
 	 * 
 	 * @return
 	 */
 	@RequestMapping("/toAssistant2ContractPage.do")
 	public String assistant2ContractPage() {
 		return "assistant2/contractInformation/index";
+	}
+
+	/**
+	 * 返回主任合同界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toZhurenContractPage.do")
+	public String zhurenContractPage() {
+		return "zhuren/contractInformation/index";
 	}
 
 	/**
@@ -166,6 +176,7 @@ public class ContractController {
 		contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
 		contract.setCont_initiation(1);// 已立项
 		contract.setCont_ishistory(0);// 未删除
+		contract.setCont_state(0);// 合同状态
 		contract.setCont_ctime(new Date(time));// 合同创建时间
 		contract.setCreator(user);// 合同创建者
 		contractService.addContract(contract);
@@ -219,8 +230,8 @@ public class ContractController {
 				contract.setCont_avetaxpayer(jsonObject.getInt("cont_avetaxpayer"));// 增税人一般纳税人
 				contract.setCont_state(0);// 状态,初始默认为在建 0:在建,1:竣工,2:停建
 				contract.setCont_remark(jsonObject.getString("cont_remark"));// 备注
-
-				User manager = userService.findById(jsonObject.getInt("manager_id"));// 项目经理
+				JSONObject json = JSONObject.fromObject(jsonObject.getString("manager"));
+				User manager = userService.findById(Integer.parseInt(json.getString("user_id")));// 项目经理
 				contract.setManager(manager);
 				// 存入数据库
 				contractService.addContract(contract);

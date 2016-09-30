@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 /**
  * 角色
+ * 
  * @author wanghuimin
  * @date 2016年9月22日
  */
@@ -44,6 +45,7 @@ public class Role implements Serializable {
 		this.role_name = role_name;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getRole_state() {
 		return role_state;
 	}

@@ -13,6 +13,12 @@
 <jsp:include page="/jsp/footer.jsp" />
 <script src="${ctx}/js/app/assistant1/assistant1TaskMgmt.js"></script>
 <%-- <script src="${ctx}/js/app/zhuren/addTask.js"></script> --%>
+<script>
+	$(function(){
+		if(window.location.href.indexOf('#')==-1) 
+		document.getElementById("assistant1First").click();
+	})
+</script>
 
 </body>
 </html>

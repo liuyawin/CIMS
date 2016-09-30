@@ -3,7 +3,6 @@ package com.mvc.service;
 import java.util.List;
 
 import com.mvc.entity.Alarm;
-import com.mvc.entity.User;
 
 /**
  * 报警
@@ -26,5 +25,8 @@ public interface AlarmService {
 
 	// 根据用户名查找报警信息
 	List<Alarm> findAlarmByUser(String username, Integer offset, Integer end);
+
+	// 根据ID及其类型解除报警
+	boolean updateByIdType(Integer Id, Integer IdType);
 
 }

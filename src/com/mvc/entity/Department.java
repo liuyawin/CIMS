@@ -26,7 +26,7 @@ public class Department {
 
 	private Integer dept_id; // Id
 	private String dept_name; // 部门名称
-	private Integer dept_state;// 部门状态，1表示存在，0表示不存在
+	private Integer dept_state;// 部门状态，0表示存在，1表示不存在
 	private Department department;
 	private String dept_remark;
 

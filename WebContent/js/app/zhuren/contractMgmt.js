@@ -101,9 +101,21 @@ app
 										controller : 'ContractController'
 									})
 							.when(
-									'/contractDetail',
+									'/contractInfo',
 									{
-										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractDetail.html',
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractInfo.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/prstInfo',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractInfo.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/renoInfo',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractInfo.html',
 										controller : 'ContractController'
 									});
 				} ]);
@@ -154,15 +166,15 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	
-	//获取所有用户 
+
+	// 获取所有用户
 	services.getAllUsers = function() {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'user/getAllUserList.do',
 		});
 	};
-	
+
 	services.addContract = function(data) {
 		return $http({
 			method : 'post',
@@ -183,6 +195,30 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'task/addTask.do',
+			data : data
+		});
+	};
+	// zq根据ID查找合同信息
+	services.selectContractById = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/selectContractById.do',
+			data : data
+		});
+	};
+	// zq根据合同ID获取工期阶段
+	services.selectPrstByContId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectStage/selectPrstByContId.do',
+			data : data
+		});
+	};
+	// zq根据合同ID获取收款节点
+	services.selectRenoByContId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receiveNode/ selectRenoByContId.do',
 			data : data
 		});
 	};
@@ -239,6 +275,10 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					alert("创建合同成功！");
 				});
 			};
+			// zq查看合同ID，并记入sessione
+			contract.getConId = function(conId) {
+				sessionStorage.setItem('conId', conId);
+			};
 			// 删除合同
 			contract.deleteContract = function(obj) {
 				var conId = this.con.cont_id;
@@ -267,7 +307,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				console.log(task1);
 				services.addTask({
 					task : task1,
-					taskType : "1",//1代表文书任务
+					taskType : "1",// 1代表文书任务
 					conId : conId
 				}).success(function(data) {
 					alert("添加文书任务成功！");
@@ -285,12 +325,78 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				console.log(task2);
 				services.addTask({
 					task : task2,
-					taskType : "2",//2代表执行管控任务
+					taskType : "2",// 2代表执行管控任务
 					conId : conId
 				}).success(function(data) {
 					alert("添加执行管控任务成功！");
 				});
 			};
+
+			// zq：读取合同的信息
+			function selectContractById() {
+				var cont_id = sessionStorage.getItem('conId');
+
+				services.selectContractById({
+					cont_id : cont_id
+				}).success(function(data) {
+					contract.cont = data;
+
+				});
+			}
+			// zq：根据合同ID查询工期阶段的内容
+			function selectPrstByContId() {
+				var cont_id = sessionStorage.getItem('conId');
+				services.selectPrstByContId({
+					cont_id : cont_id
+				}).success(function(data) {
+					contract.prst = data.list;
+				});
+			}
+			// zq：根据合同ID查询收款节点的内容
+			function selectRenoByContId() {
+				var cont_id = sessionStorage.getItem('conId');
+				services.selectRenoByContId({
+					cont_id : cont_id
+				}).success(function(data) {
+					contract.reno = data.list;
+				});
+			}
+
+			// 合同，收款节点，工期阶段的详情
+			contract.showContInfo = function() {
+				$('#contInformation').show();
+				$('#contShow').hide();
+				$('#contHide').show();
+			}
+			contract.hideContInfo = function() {
+
+				$('#contInformation').hide();
+				$('#contShow').show();
+				$('#contHide').hide();
+			}
+			contract.showPrstInfo = function() {
+				$('#prstInformation').show();
+				$('#prstShow').hide();
+				$('#prstHide').show();
+			}
+			contract.hidePrstInfo = function() {
+
+				$('#prstInformation').hide();
+				$('#prstShow').show();
+				$('#prstHide').hide();
+			}
+			contract.showRenoInfo = function() {
+				$('#renoInformation').show();
+				$('#renoShow').hide();
+				$('#renoHide').show();
+			}
+			contract.hideRenoInfo = function() {
+
+				$('#renoInformation').hide();
+				$('#renoShow').show();
+				$('#renoHide').hide();
+			}
+
 			// 初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
@@ -298,7 +404,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					services.getContractList({
 						page : 1
 					}).success(function(data) {
-						//合同列表分页
+						// 合同列表分页
 						contract.contracts = data.list;
 						contract.totalPage = data.totalPage;
 						var $pages = $(".tcdPageCode");
@@ -312,14 +418,14 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 								}
 							});
 						}
-						//点击创建任务时弹出模态框
+						// 点击创建任务时弹出模态框
 						contract.newTask = function(obj) {
 							var conId = this.con.cont_id;
-							services.getAllUsers().success(function(data){
-								contract.users = data;								
+							services.getAllUsers().success(function(data) {
+								contract.users = data;
 								console.log(conId);
 								sessionStorage.setItem("contractId", conId);
-							});	
+							});
 							$(".overlayer").fadeIn(200);
 							$(".tip").fadeIn(200);
 							return false;
@@ -333,22 +439,22 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 
 						$(".sure").click(function() {
 							var conId = sessionStorage.getItem("contractId");
-							if(contract.task.task_type=="1"){
+							if (contract.task.task_type == "1") {
 								var task1 = JSON.stringify(contract.task1);
 								console.log(task1);
 								services.addTask({
 									task : task1,
-									taskType : "1",//1代表文书任务
+									taskType : "1",// 1代表文书任务
 									conId : conId
 								}).success(function(data) {
 									alert("添加文书任务成功！");
 								});
-							}else if(contract.task.task_type=="0"){
+							} else if (contract.task.task_type == "0") {
 								var task2 = JSON.stringify(contract.task2);
 								console.log(task2);
 								services.addTask({
 									task : task2,
-									taskType : "2",//2代表执行管控任务
+									taskType : "2",// 2代表执行管控任务
 									conId : conId
 								}).success(function(data) {
 									alert("添加执行管控任务成功！");
@@ -363,12 +469,12 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 							$(".overlayer").fadeOut(100);
 							$(".tip").fadeOut(100);
 						});
-						
-						$(".taskType").change(function(){
-							if(contract.task.task_type=="1"){
+
+						$(".taskType").change(function() {
+							if (contract.task.task_type == "1") {
 								$("#addTask1-form").slideDown(200);
 								$("#addTask2-form").hide();
-							}else if(contract.task.task_type=="0"){
+							} else if (contract.task.task_type == "0") {
 								$("#addTask1-form").hide();
 								$("#addTask2-form").slideDown(200);
 							}
@@ -415,15 +521,34 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					});
 				} else if ($location.path().indexOf('/contractAdd') == 0) {
 					// 这里先获取人员列表
-					services.getAllUsers().success(function(data){
+					services.getAllUsers().success(function(data) {
 						contract.users = data;
 						sessionStorage.setItem("contractId", "");
-					});					
-					/*var $select = $("select");
-					for (var i = 0; i < $select.length; i++) {
-						$select[i].options[0].selected = true;
-					}
-					$('select').prop('selectedIndex', 1);*/
+					});
+					/*
+					 * var $select = $("select"); for (var i = 0; i <
+					 * $select.length; i++) { $select[i].options[0].selected =
+					 * true; } $('select').prop('selectedIndex', 1);
+					 */
+				} else if ($location.path().indexOf('/prstInfo') == 0) {
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					$("#renoInformation").hide();
+					$("#contInformation").hide();
+				} else if ($location.path().indexOf('/renoInfo') == 0) {
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					$("#contInformation").hide();
+					$("#prstInformation").hide();
+				} else if ($location.path().indexOf('/contractInfo') == 0) {
+					// zq添加查找合同详情
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					$("#renoInformation").hide();
+					$("#prstInformation").hide();
 				}
 			}
 
@@ -440,14 +565,22 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				$(this).parent().children("span").css('display', 'none');
 			});
 		} ]);
+// 小数过滤器
+app.filter('receFloat', function() {
+	return function(input) {
+		if (input == null) {
+			var money = parseFloat('0').toFixed(2);
+		} else {
+			var money = parseFloat(input).toFixed(2);
+		}
+
+		return money;
+	}
+});
 // 合同状态过滤器
 app.filter('conState', function() {
 	return function(input) {
 		var state = "";
-		/*
-		 * switch(input){ case "0":state="在建"; break; case "1":state="竣工";
-		 * break; case "2":state="停建"; break; }
-		 */
 		if (input == "0")
 			state = "在建";
 		else if (input == "1")
@@ -455,6 +588,108 @@ app.filter('conState', function() {
 		else if (input == "2")
 			state = "停建";
 		return state;
+	}
+});
+// 合同立项判断
+app.filter('conInitiation', function() {
+	return function(input) {
+		var initiation = "";
+		if (input == "0")
+			initiation = "否";
+		else if (input == "1")
+			initiation = "是";
+
+		return initiation;
+	}
+});
+// 合同是否有委托书判断
+app.filter('conHasproxy', function() {
+	return function(input) {
+		var hasproxy = "";
+		if (input == "0")
+			hasproxy = "否";
+		else if (input == "1")
+			hasproxy = "是";
+
+		return hasproxy;
+	}
+});
+// 合同一般纳税人判断
+app.filter('conAvetaxpayer', function() {
+	return function(input) {
+		var avetaxpayer = "";
+		if (input == "0")
+			avetaxpayer = "否";
+		else if (input == "1")
+			avetaxpayer = "是";
+
+		return avetaxpayer;
+	}
+});
+// 合同类型的判断
+app.filter('conType', function() {
+	return function(input) {
+		var type = "";
+		if (input == "0")
+			type = "规划";
+		else if (input == "1")
+			type = "可行性";
+		else if (input == "2")
+			type = "施工图";
+		else if (input == "3")
+			type = "评估";
+		else if (input == "4")
+			type = "其他";
+		return type;
+	}
+});
+// 工期阶段的判断
+app.filter('prstType', function() {
+	return function(input) {
+		var type = "";
+		if (input == "0")
+			type = "未完成";
+		else if (input == "1")
+			type = "已完成";
+
+		return type;
+	}
+});
+// 收款节点的状态的判断
+app.filter('renoType', function() {
+	return function(input) {
+		var type = "";
+		if (input == "0")
+			type = "未收款";
+		else if (input == "1")
+			type = "未付全款";
+		else if (input == "2")
+			type = "已付全款";
+		else if (input == "3")
+			type = "提前到款";
+		return type;
+	}
+});
+// 时间的格式化的判断
+app.filter('dateType', function() {
+	return function(input) {
+		var type = "";
+		if (input != null) {
+			type = new Date(input).toLocaleDateString().replace(/\//g, '-');
+		}
+
+		return type;
+	}
+});
+// 等级的判断
+app.filter('conRank', function() {
+	return function(input) {
+		var rank = "";
+		if (input == "0")
+			rank = "重要";
+		else if (input == "1")
+			rank = "一般";
+		return rank;
 	}
 });
 // 自定义表单验证日期格式

@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.SessionKeyConstants;
+import com.base.enums.RemoveType;
 import com.mvc.entity.Contract;
 import com.mvc.entity.ProjectStage;
 import com.mvc.entity.User;
+import com.mvc.service.AlarmService;
 import com.mvc.service.ContractService;
 import com.mvc.service.ProjectStageService;
 import com.mvc.service.UserService;
@@ -43,6 +45,8 @@ public class ProjectStageController {
 	ContractService contractService;
 	@Autowired
 	ProjectStageService projectStageService;
+	@Autowired
+	AlarmService alarmService;
 
 	/**
 	 * 添加工期阶段
@@ -122,7 +126,9 @@ public class ProjectStageController {
 	 */
 	@RequestMapping("/finishPrst.do")
 	public @ResponseBody String finishPrst(HttpServletRequest request) {
-		boolean flag = projectStageService.updatePrstState(Integer.parseInt(request.getParameter("prstId")));
+		Integer prstId = Integer.parseInt(request.getParameter("prstId"));
+		boolean flag = projectStageService.updatePrstState(prstId);
+		alarmService.updateByIdType(prstId, RemoveType.PrstAlarm.value);
 		return String.valueOf(flag);
 	}
 

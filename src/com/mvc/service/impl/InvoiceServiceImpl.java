@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mvc.service.impl;
 
 import java.util.List;
@@ -38,13 +35,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 	}
 
 	// 根据合同id，页数返回任务列表
-	public List<Invoice> findByPage(Integer cont_id, Integer offset, Integer end) {
-		return invoiceDao.findByPage(cont_id, offset, end);
+	public List<Invoice> findByContId(Integer cont_id, Integer offset, Integer end) {
+		return invoiceDao.findByContId(cont_id, offset, end);
 	}
 
 	// 根据合同ID查询任务总条数
-	public Integer countByParam(Integer cont_id) {
-		return invoiceDao.countByParam(cont_id);
+	public Integer countByContId(Integer cont_id) {
+		return invoiceDao.countByContId(cont_id);
 	}
 
 	// 根据合同ID查询发票总金额
@@ -59,6 +56,16 @@ public class InvoiceServiceImpl implements InvoiceService {
 			return true;
 		} else
 			return false;
+	}
+
+	// 根据用户id，页数返回任务列表
+	public List<Invoice> findByPage(Integer user_id, Integer ifSend, Integer offset, Integer end) {
+		return invoiceDao.findByPage(user_id, ifSend, offset, end);
+	}
+
+	// 根据用户ID查询任务总条数
+	public Integer countByParam(Integer user_id, Integer ifSend) {
+		return invoiceDao.countByParam(user_id, ifSend);
 	}
 
 }

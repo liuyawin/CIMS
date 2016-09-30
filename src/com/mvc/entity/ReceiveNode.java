@@ -29,7 +29,7 @@ public class ReceiveNode implements Serializable {
 	private Date reno_time;// 节点截止时间
 	private Date reno_wtime; // 收款提醒时间
 	private Integer reno_wday; // 收款提醒天数
-	private Integer reno_state;// 是否已收款，0：未收款，1已收款，2未付全款，3提前到款
+	private Integer reno_state;// 是否已收款，0：未收款，1未付全款，2已付全款，3提前到款
 	private Float reno_amoney;// 实际收款金额
 	private Date reno_ctime;// 节点录入时间
 	private String reno_remark;// 备注
@@ -73,6 +73,7 @@ public class ReceiveNode implements Serializable {
 		this.reno_time = reno_time;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getReno_state() {
 		return reno_state;
 	}
@@ -81,6 +82,7 @@ public class ReceiveNode implements Serializable {
 		this.reno_state = reno_state;
 	}
 
+	@Column(columnDefinition = "float(10,2) default '0.00'")
 	public Float getReno_amoney() {
 		return reno_amoney;
 	}
@@ -143,6 +145,7 @@ public class ReceiveNode implements Serializable {
 		this.reno_wtime = reno_wtime;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getReno_wday() {
 		return reno_wday;
 	}

@@ -1,0 +1,30 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="#">首页</a></li>
+		<li><a href="#">任务管理</a></li>
+		<li><a href="#">收据信息管理</a></li>
+		<li><a href="#">添加收据</a></li>
+	</ul>
+</div>
+
+<div class="formbody">
+	<form ng-submit="addReceipt()">
+		<ul class="forminfo">
+			<li><label>金额</label><input type="text"
+				ng-model="receipt.receMoney" class="dfinput" required />万元</li>
+			<li><label>业主公司</label><input type="text"
+				ng-model="receipt.receFirm" class="dfinput" required  /></li>
+			<li><label>收款时间</label><input type="text"
+				class="dfinput dateFormat" placeholder="格式：2016-09-07"
+				id="stageEtime" name="stageEtime" ng-model="receipt.receAtime" required  /><span
+				class="error-span">日期格式：2016-09-07</span></li>
+			<li><label>备注</label> <textarea name="" cols="" rows=""
+					class="textinput" ng-model="receipt.receRemark"></textarea></li>
+			
+		</ul>
+		<input type="submit" id="addReceipt" class="btn top_length" value="添加收据" />
+	</form>
+
+</div>
+<br>

@@ -13,4 +13,6 @@
 <jsp:include page="/jsp/footer.jsp" />
 
 <script src="${ctx}/js/app/userManagement/user.js"></script>
+</body>
+</html>
 

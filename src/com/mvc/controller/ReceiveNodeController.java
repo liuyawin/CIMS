@@ -72,21 +72,26 @@ public class ReceiveNodeController {
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(date);
 				int days = Integer.parseInt(node.getString("reno_wday"));// 收款提醒天数
-				receiveNode.setReno_wday(days);;//添加收款提醒的天数
+				receiveNode.setReno_wday(days);
+				;// 添加收款提醒的天数
 				calendar.add(Calendar.DAY_OF_MONTH, -days);// 收款结束提醒时间=收款截止时间-收款提醒天数
 				receiveNode.setReno_wtime(calendar.getTime());// 收款结束提醒时间
 				receiveNode.setReno_content(node.getString("reno_content"));// 节点内容
 				receiveNode.setReno_money(Float.parseFloat(node.getString("reno_money")));// 应收款金额
 				receiveNode.setReno_time(date);// 节点截止时间
 				receiveNode.setReno_state(0);// 是否已收款，默认未收款；0未收款，1已收款，2未付全款，3提前收到款
+				receiveNode.setReno_amoney((float) 0.00);// 实际收款金额
 				receiveNode.setReno_ctime(new Date(time));// 节点录入时间
 				User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 录入人
 				receiveNode.setUser(user);
 				Contract contract = contractService.selectContById(Integer.parseInt(request.getParameter("cont_id")));// 所属合同
 				receiveNode.setContract(contract);
-				ProjectStage projectStage = projectStageService
-						.selectPrstById(Integer.parseInt(node.getString("projectStage")));
-				receiveNode.setProjectStage(projectStage);// 所属阶段
+
+				if (node.has("projectStage")) {
+					ProjectStage projectStage = projectStageService
+							.selectPrstById(Integer.parseInt(node.getString("projectStage")));
+					receiveNode.setProjectStage(projectStage);// 所属阶段
+				}
 				// 写入数据库
 				flag = receiveNodeService.addReceiveNode(receiveNode);
 				if (flag == false) {

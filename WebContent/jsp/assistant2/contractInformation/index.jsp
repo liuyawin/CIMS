@@ -12,5 +12,12 @@
 <jsp:include page="/jsp/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
 <script src="${ctx}/js/app/assistant2/contractMgmt.js"></script>
+<script>
+	$(function(){
+		/* alert(window.location.href.indexOf('#')); */
+		if(window.location.href.indexOf('#')==-1) 
+		document.getElementById("contractFirst").click();
+	})
+</script>
 </body>
 </html>

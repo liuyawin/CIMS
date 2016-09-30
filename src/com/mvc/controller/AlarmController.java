@@ -29,8 +29,7 @@ import net.sf.json.JSONObject;
 public class AlarmController {
 	@Autowired
 	AlarmService alarmService;
-	
-	
+
 	/**
 	 * 设置进入报警起始页
 	 * 
@@ -40,7 +39,15 @@ public class AlarmController {
 	public String departmentReceivePage() {
 		return "userManagement/alarmInformation/index";
 	}
-	
+	/**
+	 * 设置进入报警起始页
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toManagerAlarmPage.do")
+	public String managerReceivePage() {
+		return "manager/alarmInformation/index";
+	}
 
 	/**
 	 * 报警页面跳转
@@ -51,14 +58,15 @@ public class AlarmController {
 	public String alarmJumpPage() {
 		return "assistant2/alarmInformation/index";
 	}
+
 	/**
-	 * 页面跳转
+	 * 报警页面跳转
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/alarm/toalarmPage.do")
-	public String  alarmJumpToPage(){
-		return "userManagement/alarmInfo/index";
+	@RequestMapping("/toZhurenAlarmPage.do")
+	public String zhurenAlarmPage() {
+		return "zhuren/alarmInformation/index";
 	}
 
 	/**
@@ -71,13 +79,13 @@ public class AlarmController {
 	@RequestMapping(value = "/selectAlarmByState.do")
 	public @ResponseBody String getAlarmInformationList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		Integer isremove=Integer.valueOf(request.getParameter("isRemove"));
+		Integer isremove = Integer.valueOf(request.getParameter("isRemove"));
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Long totalPage = alarmService.countTotal(user.getUser_id());
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(Integer.valueOf(totalPage.toString()));
-		List<Alarm> list = alarmService.findAlarmInformationList(user.getUser_id(), isremove,pager.getOffset(),
+		List<Alarm> list = alarmService.findAlarmInformationList(user.getUser_id(), isremove, pager.getOffset(),
 				pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
@@ -99,7 +107,7 @@ public class AlarmController {
 		jsonObject.put("alarm", alarm);
 		return jsonObject.toString();
 	}
-	
+
 	/**
 	 * 根据用户名查找报警信息
 	 * 
@@ -107,15 +115,15 @@ public class AlarmController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value="/getAlarmByUser.do")
-	public @ResponseBody String getAlarmByUser(HttpServletRequest request,HttpSession session){
-		JSONObject jsonObject=new JSONObject();
-		String username=request.getParameter("userName");
-		Integer totalPage=alarmService.countTotalNum(username);
-		Pager pager=new Pager();
+	@RequestMapping(value = "/getAlarmByUser.do")
+	public @ResponseBody String getAlarmByUser(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		String username = request.getParameter("userName");
+		Integer totalPage = alarmService.countTotalNum(username);
+		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(Integer.valueOf(totalPage.toString()));
-		List<Alarm> list=alarmService.findAlarmByUser(username,pager.getOffset(),pager.getLimit());
+		List<Alarm> list = alarmService.findAlarmByUser(username, pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();

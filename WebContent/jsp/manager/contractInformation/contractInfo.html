@@ -80,13 +80,10 @@
 			<tr>
 				<td colspan='2' class="width15 text-center">项目负责人</td>
 				<td colspan='1'>{{cont.manager.user_name}}</td>
-				
-				<td colspan='1' class="width15 text-center">组织机构代码证号</td>
-				<td colspan='1'>{{cont.cont_orgcodenum}}</td>
 				<td colspan='1' class="width15 text-center">是否立项</td>
-				<td colspan='1'>{{cont.cont_initiation | conInitiation}}
-						
-					</td>
+				<td colspan='1'>{{cont.cont_initiation | conInitiation}}</td>
+				<td colspan='1' class="width15 text-center">组织机构代码证号</td>
+				<td colspan='1'>{{cont.cont_orgcodenum}}</td>		
 			</tr>
 			<tr>
 				<td colspan='2' class="width15 text-center">纳税人识别号</td>
@@ -146,7 +143,8 @@
 			<tr>
 				<td class="width10 text-center">收款节点</td>
 				<td colspan='1' class="text-center">内容</td>
-				<td colspan='1' class="text-center">应收款金额（万元）</td>
+				<td colspan='1' class="text-center">实收金额（万元）</td>
+				<td colspan='1' class="text-center">应收金额（万元）</td>
 				<td colspan='1' class="text-center">应收款时间</td>
 				<td colspan='1'>工期状态</td>
 				<!-- <td colspan='1'>实收款金额</td>
@@ -156,6 +154,7 @@
 			<tr ng-repeat="node in reno">
 			<td class="width10 text-center">节点{{$index+1}}</td>
 			<td>{{node.reno_content}}</td>
+			<td>{{node.reno_amoney | receFloat}}</td>
 			<td>{{node.reno_money | receFloat}}</td>
 			<td>{{node.reno_time.time | dateType}}</td>
 			<td>{{node.projectStage.prst_state | prstType}}</td>
