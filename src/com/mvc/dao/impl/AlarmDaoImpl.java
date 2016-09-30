@@ -83,4 +83,33 @@ public class AlarmDaoImpl implements AlarmDao {
 		return Integer.parseInt(result.get(0).toString());
 	}
 
+	// 根据ID及其类型解除报警
+	public Boolean updateByIdType(Integer Id, Integer IdType) {
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			String selectSql = "";
+			Query query = null;
+			if (IdType == 0) {
+				selectSql = "update alarm set  `alar_isremove` = 1  where alar_id in (select alar_id from (select * from alarm where prst_id =:prst_id) a)";
+				query = em.createNativeQuery(selectSql);
+				query.setParameter("prst_id", Id);
+			} else if (IdType == 1) {
+				selectSql = "update alarm set  `alar_isremove` = 1  where alar_id in (select alar_id from (select * from alarm where task_id =:task_id) a)";
+				query = em.createNativeQuery(selectSql);
+				query.setParameter("task_id", Id);
+			} else if (IdType == 2) {
+				selectSql = "update alarm set  `alar_isremove` = 1  where alar_id in (select alar_id from (select * from alarm where reno_id =:reno_id) a)";
+				query = em.createNativeQuery(selectSql);
+				query.setParameter("reno_id", Id);
+			}
+			query.executeUpdate();
+			em.flush();
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+		return true;
+	}
+
 }

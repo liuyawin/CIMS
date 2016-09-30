@@ -38,13 +38,47 @@ public class InvoiceController {
 	InvoiceService invoiceService;
 
 	/**
-	 * 返回收据界面
+	 * 文书二返回收据界面
 	 * 
 	 * @return
 	 */
 	@RequestMapping("/toAssistant2InvoicePage.do")
-	public String taskReceivePage() {
+	public String invoiceReceivePage() {
 		return "assistant2/invoiceInformation/index";
+	}
+
+	/**
+	 * 主任返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toZhurenInvoicePage.do")
+	public String zhurenInvoiceReceivePage() {
+		return "zhuren/invoiceInformation/index";
+	}
+
+	/**
+	 * 主任获取发票任务列表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/getZRInvoice.do")
+	public @ResponseBody String getAllInvoiceList(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Integer ifSend = Integer.valueOf(request.getParameter("ifSend"));// 0:未派发；1：已派发
+		Integer totalRow = invoiceService.countByParam(user.getUser_id(), ifSend);
+		System.out.println("总数" + totalRow);
+		Pager pager = new Pager();
+		pager.setPage(Integer.valueOf(request.getParameter("page")));
+		pager.setTotalRow(totalRow);
+		List<Invoice> list = invoiceService.findByPage(user.getUser_id(), ifSend, pager.getOffset(), pager.getLimit());
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		System.out.println("返回列表:" + jsonObject.toString());
+		return jsonObject.toString();
 	}
 
 	/**
@@ -55,15 +89,15 @@ public class InvoiceController {
 	 * @return
 	 */
 	@RequestMapping(value = "/selectInvoiceByContId.do")
-	public @ResponseBody String getAllInvoice(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String getAllInvoiceByContId(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
-		Integer totalRow = invoiceService.countByParam(contId);
+		Integer totalRow = invoiceService.countByContId(contId);
 		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
-		List<Invoice> list = invoiceService.findByPage(contId, pager.getOffset(), pager.getLimit());
+		List<Invoice> list = invoiceService.findByContId(contId, pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalRow", totalRow);
 		System.out.println("返回列表:" + jsonObject.toString());

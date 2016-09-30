@@ -30,6 +30,10 @@
 				<th>合同状态</th>
 				<th>工程阶段报警次数</th>
 				<th>收款节点报警次数</th>
+				<th>工程阶段</th>
+				<th>收款节点</th>
+				<th>发票</th>
+				<th>收据</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -40,7 +44,21 @@
 				<td>{{con.cont_state | conState}}</td>
 				<td>{{con.cont_proalanum}}</td>
 				<td>{{con.cont_payalanum}}</td>
-				<td><a href="#" class="tablelink underline">查看</a><a href="#"
+				<td><a class="tablelink" href="#prstInfo"
+					ng-click="getConId(con.cont_id)">详情</a></td>
+				<td><a href="#renoInfo" class="tablelink"
+					ng-click="getConId(con.cont_id)">详情</a></td>
+				<td>
+					<!-- <a href="#"
+					class="tablelink">录发票</a> --> <a
+					href="/CIMS/invoice/toZhurenInvoicePage.do#invoiceList"
+					class="tablelink" ng-click="getConId(con.cont_id)">详情</a>
+				</td>
+				<td><a
+					href="/CIMS/receipt/toZhurenReceiptPage.do#receiptList"
+					class="tablelink" ng-click="getConId(con.cont_id)">详情</a></td>
+				<td><a href="#contractInfo" class="tablelink underline"
+					ng-click="getConId(con.cont_id)">查看</a><a href="#"
 					class="tablelink underline"> 修改</a><a
 					ng-click="deleteContract(this)" href="#contractList"
 					class="tablelink underline"> 删除</a>

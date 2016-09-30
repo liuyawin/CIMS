@@ -215,6 +215,7 @@ app.controller('ReceiptController', [
 					contId : contId
 				}).success(function(data) {
 					alert("收据添加成功！");
+					window.history.back();
 				});
 			};
 
@@ -412,9 +413,9 @@ app.filter('renoType', function() {
 		if (input == "0")
 			type = "未收款";
 		else if (input == "1")
-			type = "已收款";
-		else if (input == "2")
 			type = "未付全款";
+		else if (input == "2")
+			type = "已付全款";
 		else if (input == "3")
 			type = "提前到款";
 		return type;

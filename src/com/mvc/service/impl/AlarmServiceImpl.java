@@ -43,14 +43,19 @@ public class AlarmServiceImpl implements AlarmService {
 
 	// 根据用户名查找报警信息
 	@Override
-	public List<Alarm> findAlarmByUser(String username,Integer offset,Integer end) {
-		return alarmDao.findAlarmByUser(username,offset,end);
+	public List<Alarm> findAlarmByUser(String username, Integer offset, Integer end) {
+		return alarmDao.findAlarmByUser(username, offset, end);
 	}
 
-	//统计报警条数
+	// 统计报警条数
 	@Override
 	public Integer countTotalNum(String searchKey) {
 		return alarmDao.countAlarmTotalNum(searchKey);
+	}
+
+	// 根据ID及其类型解除报警
+	public boolean updateByIdType(Integer Id, Integer IdType) {
+		return alarmDao.updateByIdType(Id, IdType);
 	}
 
 }

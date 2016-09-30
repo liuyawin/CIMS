@@ -223,9 +223,11 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 					console.log("根据内容获取任务列表成功！");
 					if (data.result == "true") {
 						alert("添加成功！");
+						window.history.back();
 					} else {
 						alert("添加失败！");
 					}
+					
 
 				});
 			};
@@ -270,6 +272,14 @@ app.controller('TaskController', [ '$scope', 'services', '$location',
 					taskId : taskId
 				}).success(function(data) {
 					alert("任务完成!");
+					services.getTaskList({
+						taskState : tState,
+						page : 1,
+						sendOrReceive : sendOrReceive
+					}).success(function(data) {
+						taskHtml.tasks = data.list;
+						pageTurn(tState, data.totalPage, 1)
+					});
 				});
 
 			};

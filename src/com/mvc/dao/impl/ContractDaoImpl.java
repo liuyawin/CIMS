@@ -137,13 +137,13 @@ public class ContractDaoImpl implements ContractDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		try {
-			// em.getTransaction().begin();
+			em.getTransaction().begin();
 			sql.append("update contract c set c.cont_ishistory=1 where c.cont_id=:cont_id");
 			Query query = em.createNativeQuery(sql.toString());
 			query.setParameter("cont_id", cont_id);
 			query.executeUpdate();
 			em.flush();
-			// em.getTransaction().commit();
+			em.getTransaction().commit();
 		} finally {
 			em.close();
 		}

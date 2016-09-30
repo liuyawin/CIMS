@@ -139,7 +139,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		console.log("发送请求获取合同信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'contract/getContractList.do',
+			url : baseUrl + 'contract/selectContract.do',
 			data : data
 		});
 	};
@@ -258,7 +258,7 @@ app.controller('ContractController', [
 			// 合同
 			var contract = $scope;
 			contract.contract = {};
-			contract.contStime="";
+			contract.contStime = "";
 			var findType;
 			// 获取合同列表
 			contract.getContractList = function(page, findType) {
@@ -482,14 +482,11 @@ app.controller('ContractController', [
 			// zq：读取合同的信息
 			function selectContractById() {
 				var cont_id = sessionStorage.getItem('contId');
-
 				services.selectContractById({
 					cont_id : cont_id
 				}).success(function(data) {
 					contract.cont = data;
 					contract.contract = data;
-					contract.contStime=data.cont_stime;
-					alert(contStime);
 				});
 			}
 			// zq：根据合同ID查询工期阶段的内容
@@ -647,17 +644,18 @@ app.controller('ContractController', [
 					});
 
 				} else if ($location.path().indexOf('/contractDetail') == 0) {
+					selectUsersFromDesign();// 查找设计部人员
+
 					selectContractById(); // 根据ID获取合同信息
 					addStage();// 显示工期阶段录入界面
 					dateformat();// 格式化日期格式
-					selectUsersFromDesign();// 查找设计部人员
 				} else if ($location.path().indexOf('/contractInfo') == 0) {
 					selectContractById(); // 根据ID获取合同信息
 					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
 					selectRenoByContId();// 根据合同ID获取该合同的收款节点
 					$("#renoInformation").hide();
 					$("#prstInformation").hide();
-				}else if ($location.path().indexOf('/prstInfo') == 0) {
+				} else if ($location.path().indexOf('/prstInfo') == 0) {
 					selectContractById(); // 根据ID获取合同信息
 					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
 					selectRenoByContId();// 根据合同ID获取该合同的收款节点
@@ -669,7 +667,7 @@ app.controller('ContractController', [
 					selectRenoByContId();// 根据合同ID获取该合同的收款节点
 					$("#contInformation").hide();
 					$("#prstInformation").hide();
-				}  else if ($location.path().indexOf('/contractModify') == 0) {
+				} else if ($location.path().indexOf('/contractModify') == 0) {
 
 					selectContractById(); // 根据ID获取合同信息
 					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
@@ -792,9 +790,9 @@ app.filter('renoType', function() {
 		if (input == "0")
 			type = "未收款";
 		else if (input == "1")
-			type = "已收款";
-		else if (input == "2")
 			type = "未付全款";
+		else if (input == "2")
+			type = "已付全款";
 		else if (input == "3")
 			type = "提前到款";
 		return type;

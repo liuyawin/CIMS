@@ -126,7 +126,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		console.log("发送请求获取合同信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'contract/getContractList.do',
+			url : baseUrl + 'contract/selectContract.do',
 			data : data
 		});
 	};
@@ -370,6 +370,9 @@ app.controller('ContractController', [
 					prstId : prstId
 				}).success(function(data) {
 					alert("确认完工成功！");
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同查看工期阶段
+					selectRenoByContId();// 根据合同ID查看收款节点
 				});
 			}
 			// zq添加任务
@@ -383,6 +386,7 @@ app.controller('ContractController', [
 					console.log("根据内容获取任务列表成功！");
 					if (data.result == "true") {
 						alert("添加成功！");
+						window.history.back();
 					} else {
 						alert("添加失败！");
 					}
@@ -654,9 +658,9 @@ app.filter('renoType', function() {
 		if (input == "0")
 			type = "未收款";
 		else if (input == "1")
-			type = "已收款";
-		else if (input == "2")
 			type = "未付全款";
+		else if (input == "2")
+			type = "已付全款";
 		else if (input == "3")
 			type = "提前到款";
 		return type;

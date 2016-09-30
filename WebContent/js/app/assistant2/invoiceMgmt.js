@@ -220,7 +220,11 @@ app.controller('InvoiceController', [
 // 小数过滤器
 app.filter('invoFloat', function() {
 	return function(input) {
-		var money = parseFloat(input).toFixed(2);
+		if (input == null) {
+			var money=parseFloat('0').toFixed(2);
+		} else{
+			var money = parseFloat(input).toFixed(2);
+		}
 		return money;
 	}
 });

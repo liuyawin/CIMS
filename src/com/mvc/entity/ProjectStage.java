@@ -67,6 +67,7 @@ public class ProjectStage implements Serializable {
 		this.prst_etime = prst_etime;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getPrst_state() {
 		return prst_state;
 	}

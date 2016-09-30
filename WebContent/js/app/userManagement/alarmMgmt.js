@@ -65,19 +65,37 @@ app.run([ '$rootScope', '$location', function($rootScope, $location) {
 } ]);
 
 // 路由配置
-app.config([ '$routeProvider', function($routeProvider) {
-	$routeProvider.when('/alarmDetail', {
-		templateUrl : '/CIMS/jsp/userManagement/alarmInformation/alarmDetail.html',
-		controller : 'AlarmController'
-	}).when('/newAlarmList', {
-		templateUrl : '/CIMS/jsp/userManagement/alarmInformation/alarmList.html',
-		controller : 'AlarmController'
-	}).when('/doneAlarmList', {
-		templateUrl : '/CIMS/jsp/userManagement/alarmInformation/alarmList.html',
-		controller : 'AlarmController'
-	})
+app
+		.config([
+				'$routeProvider',
+				function($routeProvider) {
+					$routeProvider
+							.when(
+									'/alarmDetail',
+									{
+										templateUrl : '/CIMS/jsp/userManagement/alarmInformation/alarmDetail.html',
+										controller : 'AlarmController'
+									})
+							.when(
+									'/newAlarmList',
+									{
+										templateUrl : '/CIMS/jsp/userManagement/alarmInformation/alarmList.html',
+										controller : 'AlarmController'
+									})
+							.when(
+									'/doneAlarmList',
+									{
+										templateUrl : '/CIMS/jsp/userManagement/alarmInformation/alarmList.html',
+										controller : 'AlarmController'
+									})
+							.when(
+									'/alarmSet',
+									{
+										templateUrl : '/CIMS/jsp/userManagement/alarmInformation/alarmSet.html',
+										controller : 'AlarmController'
+									})
 
-} ]);
+				} ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
@@ -96,7 +114,44 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			url : baseUrl + 'alarm/selectAlarmById.do',
 			data : data
 		});
+	};
+
+	services.selectAllAlarmLevel = function() {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'alarmLevel/selectAllAlarmLevel.do',
+		});
+	};
+	services.getAlarmLevelByID = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'alarmLevel/getAlarmLevelByID.do',
+			data : data
+		});
 	}
+
+	services.alarmLevelAdd = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'alarmLevel/alarmLevelAdd.do',
+			data : data
+		});
+	};
+
+	services.deleteAlarmLevel = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'alarmLevel/deleteAlarmLevel.do',
+			data : data
+		});
+	};
+	// 获取所有角色
+	services.getAllRoles = function() {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'role/getAllRoleList.do',
+		});
+	};
 	return services;
 } ]);
 
@@ -117,7 +172,7 @@ app.controller('AlarmController', [
 				sessionStorage.setItem('alarId', alarId);
 			};
 			// zq根据状态查找报警列表
-			function selectAlarmByState(page,isRemove) {
+			function selectAlarmByState(page, isRemove) {
 				services.selectAlarmByState({
 					isRemove : isRemove,
 					page : page
@@ -136,6 +191,14 @@ app.controller('AlarmController', [
 
 				});
 			}
+
+			// bao根据状态查找报警列表
+			function selectAllAlarmLevel() {
+				services.selectAllAlarmLevel({}).success(function(data) {
+					alarm.alarmLevels = data;
+				});
+			}
+
 			// zq按查询内容获取任务列表的换页
 			function pageTurnByContent(isRemove, totalPage, page) {
 
@@ -146,13 +209,117 @@ app.controller('AlarmController', [
 						pageCount : totalPage,
 						current : page,
 						backFn : function(p) {
-							selectAlarmByState(p,isRemove);
+							selectAlarmByState(p, isRemove);
 						}
 					});
 				}
 			}
 
+			// 添加alarmLevel
+			alarm.addAlarm = function() {
+				var alarmLevelFormData = JSON.stringify(alarm.alarmLevel);
 
+				services.alarmLevelAdd({
+					alarmLevel : alarmLevelFormData
+				}).success(function(data) {
+					sessionStorage.setItem("alle_id", data);
+					alert("报警设置成功！");
+				});
+			};
+			// 删除alarmLevel
+			alarm.deleteAlarmLevel = function(obj) {
+				var alleID = this.level.alle_id;
+				var msg = "确认删除该设置？";
+				if (confirm(msg) == true) {
+					services.deleteAlarmLevel({
+						alle_id : alleID
+					}).success(function(data) {
+						alert("删除成功！");
+						selectAllAlarmLevel();
+					});
+				} else {
+					return false;
+				}
+			}
+			// 点击新建按钮事件
+			alarm.addNewAlarmLevel = function() {
+				services.getAllRoles().success(function(data) {
+					alarm.roles = data;
+					console.log(data);
+				});
+				$(".overlayer").fadeIn(200);
+				$(".tip").fadeIn(200);
+				$("#addAlarm-form").slideDown(200);
+				$("#editAlarm-form").hide();
+			};
+			// 点击修改时弹出模态框
+			alarm.edit = function(obj) {
+				var alleId = this.level.alle_id;
+				services.getAllRoles().success(function(data) {
+					alarm.roles2 = data;
+					console.log(data);
+					services.getAlarmLevelByID({
+						alle_id : alleId
+					}).success(function(data) {
+						alarm.editLevel = data.alarmLevel;
+						console.log(alleId);
+						sessionStorage.setItem("alleId", alleId);
+					});
+				});
+
+				$(".overlayer").fadeIn(200);
+				$(".tip").fadeIn(200);
+				$("#addAlarm-form").hide();
+				$("#editAlarm-form").slideDown(200);
+				return false;
+			};
+			// 修改报警设置
+			$(".sure2").click(function() {
+				var alarmLl = JSON.stringify(alarm.editLevel);
+				console.log(alarmLl);
+				services.alarmLevelAdd({
+					alle_rank : alarm.editLevel.alle_rank,
+					alle_days : alarm.editLevel.alle_days,
+					role_id : alarm.editLevel.role.role_id,
+					alle_id : alarm.editLevel.alle_id
+				}).success(function(data) {
+					alert("修改成功！");
+					selectAllAlarmLevel();
+				});
+
+				$(".overlayer").fadeOut(100);
+				$(".tip").fadeOut(100);
+			});
+			// 隐藏模态框
+			$(".tiptop a").click(function() {
+				$(".overlayer").fadeOut(200);
+				$(".tip").fadeOut(200);
+			});
+
+			$(".cancel").click(function() {
+				// sessionStorage.setItem("contractId", "");
+
+				$(".overlayer").fadeOut(100);
+				$(".tip").fadeOut(100);
+			});
+			// 添加报警设置
+			$(".sure1").click(function() {
+				var conId = sessionStorage.getItem("contractId");
+
+				var alarmLl = JSON.stringify(alarm.alarmLevel);
+				console.log(alarmLl);
+				services.alarmLevelAdd({
+					alle_rank : alarm.alarmLevel.alle_rank,
+					alle_days : alarm.alarmLevel.alle_days,
+					role_id : alarm.alarmLevel.role_id
+				}).success(function(data) {
+					alert("新建成功！");
+					selectAllAlarmLevel();
+				});
+
+				$(".overlayer").fadeOut(100);
+				$(".tip").fadeOut(100);
+			});
 			// zq初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
@@ -163,7 +330,7 @@ app.controller('AlarmController', [
 						page : 1
 					}).success(function(data) {
 						alarm.alarms = data.list;
-						pageTurnByContent(isRemove,data.totalPage, 1);
+						pageTurnByContent(isRemove, data.totalPage, 1);
 
 					});
 				} else if ($location.path().indexOf('/doneAlarmList') == 0) {
@@ -173,11 +340,15 @@ app.controller('AlarmController', [
 						page : 1
 					}).success(function(data) {
 						alarm.alarms = data.list;
-						pageTurnByContent(isRemove,data.totalPage, 1);
+						pageTurnByContent(isRemove, data.totalPage, 1);
 					});
 				} else if ($location.path().indexOf('/alarmDetail') == 0) {
 
 					selectAlarmById();
+				} else if ($location.path().indexOf('/alarmSet') == 0) {
+
+					selectAllAlarmLevel();
+
 				}
 			}
 			function dateformat() {
@@ -198,7 +369,17 @@ app.controller('AlarmController', [
 			dateformat();// 格式化日期格式
 
 		} ]);
-
+// 合同重要等级过滤器
+app.filter('alleRank', function() {
+	return function(input) {
+		var state = "";
+		if (input == "0")
+			state = "重要";
+		else if (input == "1")
+			state = "一般";
+		return state;
+	}
+});
 // 小数过滤器
 app.filter('receFloat', function() {
 	return function(input) {
@@ -263,7 +444,7 @@ app.filter('alarmState', function() {
 		if (input == '0') {
 			state = "待解除";
 		}
-		if (input =='1') {
+		if (input == '1') {
 			state = "已解除";
 		}
 

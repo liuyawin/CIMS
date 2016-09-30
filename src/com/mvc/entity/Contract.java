@@ -95,6 +95,7 @@ public class Contract {
 		this.cont_name = cont_name;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getCont_initiation() {
 		return cont_initiation;
 	}
@@ -302,7 +303,7 @@ public class Contract {
 	public void setCont_payalanum(Integer cont_payalanum) {
 		this.cont_payalanum = cont_payalanum;
 	}
-
+	@Column(columnDefinition = "INT default 0")
 	public Integer getCont_state() {
 		return cont_state;
 	}
