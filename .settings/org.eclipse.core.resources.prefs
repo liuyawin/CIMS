@@ -1,9 +1,7 @@
 eclipse.preferences.version=1
 encoding//WebContent/jsp/assistant2/contractInformation/contractList.html=UTF-8
 encoding//WebContent/jsp/assistant2/invoiceInformation/invoiceList.html=UTF-8
-encoding//WebContent/jsp/assistant2/taskInformation/taskAdd.html=UTF-8
 encoding//WebContent/jsp/left.jsp=UTF-8
 encoding//WebContent/jsp/manager/contractInformation/projectStageInfo.html=UTF-8
-encoding//WebContent/jsp/manager/taskInformation/taskAdd.html=UTF-8
 encoding//WebContent/jsp/zhuren/invoiceInformation/invoiceList.html=UTF-8
 encoding/<project>=UTF-8

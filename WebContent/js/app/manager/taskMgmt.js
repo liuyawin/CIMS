@@ -65,60 +65,27 @@ app.run([ '$rootScope', '$location', function($rootScope, $location) {
 } ]);
 
 // 路由配置
-app
-		.config([
-				'$routeProvider',
-				function($routeProvider) {
-					$routeProvider
-							.when(
-									'/newTask',
-									{
-										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
-										controller : 'TaskController'
-									})
-							.when(
-									'/unfinishTask',
-									{
-										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
-										controller : 'TaskController'
-									})
-							.when(
-									'/finishTask',
-									{
-										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
-										controller : 'TaskController'
-									})
-							.when(
-									'/newSendTask',
-									{
-										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
-										controller : 'TaskController'
-									})
-							.when(
-									'/unfinishSendTask',
-									{
-										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
-										controller : 'TaskController'
-									})
-							.when(
-									'/finishSendTask',
-									{
-										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskList.html',
-										controller : 'TaskController'
-									})
-							.when(
-									'/taskAdd',
-									{
-										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskAdd.html',
-										controller : 'TaskController'
-									})
-							.when(
-									'/taskCheck',
-									{
-										templateUrl : '/CIMS/jsp/assistant2/taskInformation/taskCheck.html',
-										controller : 'TaskController'
-									});
-				} ]);
+app.config([ '$routeProvider', function($routeProvider) {
+	$routeProvider.when('/newTask', {
+		templateUrl : '/CIMS/jsp/manager/taskInformation/taskList.html',
+		controller : 'TaskController'
+	}).when('/unfinishTask', {
+		templateUrl : '/CIMS/jsp/manager/taskInformation/taskList.html',
+		controller : 'TaskController'
+	}).when('/finishTask', {
+		templateUrl : '/CIMS/jsp/manager/taskInformation/taskList.html',
+		controller : 'TaskController'
+	}).when('/newSendTask', {
+		templateUrl : '/CIMS/jsp/manager/taskInformation/taskList.html',
+		controller : 'TaskController'
+	}).when('/unfinishSendTask', {
+		templateUrl : '/CIMS/jsp/manager/taskInformation/taskList.html',
+		controller : 'TaskController'
+	}).when('/finishSendTask', {
+		templateUrl : '/CIMS/jsp/manager/taskInformation/taskList.html',
+		controller : 'TaskController'
+	});
+} ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
@@ -131,6 +98,16 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+
+	// zq获取任务列表
+	services.redirectUrl = function() {
+		console.log("发送请求获取合同信息data" + data);
+		return $http({
+			method : 'post',
+			url : baseUrl + 'task/toZhurenContractPage.do',
+		});
+	};
+
 	// zq通过内容查找任务
 	services.getTaskByContext = function(data) {
 		console.log("发送请求获取合同信息");
@@ -186,281 +163,345 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	return services;
 } ]);
 
-app.controller('TaskController', [ '$scope', 'services', '$location',
-		function($scope, services, $location) {
-			// zq合同
-			var taskHtml = $scope;
-			var tState;
-			var sendOrReceive;
+app
+		.controller(
+				'TaskController',
+				[
+						'$scope',
+						'services',
+						'$location',
+						function($scope, services, $location) {
+							// zq合同
+							var taskHtml = $scope;
+							var tState;
+							var sendOrReceive;
+							// zq跳转合同页面，将合同ID存入sessionStorage中
+							taskHtml.getContId = function(cont_id) {
+								sessionStorage.setItem('contId', cont_id); // 存入合同ID
 
-			taskHtml.task = {};
-			// zq根据内容查询任务列表
-			taskHtml.getTaskByContext = function() {
-				services.getTaskByContext({
-					context : $("#tContent").val(),
-					page : 1,
-					taskState : tState,
-					sendOrReceive : sendOrReceive
-				}).success(function(data) {
-					console.log("根据内容获取任务列表成功！");
-					taskHtml.tasks = data.list;
-					pageTurnByContent(tState, data.totalPage, 1)
-				});
-			};
+							};
 
-			// zq添加任务
-			taskHtml.addTask = function() {
+							// zq将任务ID放到sessionStorage中
+							taskHtml.getTaskId = function(task_id) {
+								sessionStorage.setItem('taskId', task_id); // 存入一个值
+							};
+							taskHtml.task = {};
+							// zq根据内容查询任务列表
+							taskHtml.getTaskByContext = function() {
+								services.getTaskByContext({
+									context : $("#tContent").val(),
+									page : 1,
+									taskState : tState,
+									sendOrReceive : sendOrReceive
+								}).success(
+										function(data) {
+											console.log("根据内容获取任务列表成功！");
+											taskHtml.tasks = data.list;
+											pageTurnByContent(tState,
+													data.totalPage, 1)
+										});
+							};
 
-				var taskFormData = JSON.stringify(taskHtml.task);
-				var taskType = taskHtml.task.task_type;
-				console.log(taskFormData.task_type);
-				services.addTask({
-					task : taskFormData,
-					conId : "",
-					taskType : taskType
+							// zq添加任务
+							taskHtml.addTask = function() {
+								selectAllUsers();
+								$("#tipAdd").fadeIn(200);
+								$(".overlayer").fadeIn(200);
+								$("#sureAdd")
+										.click(
+												function() {
+													var taskFormData = JSON
+															.stringify(taskHtml.task);
+													var taskType = taskHtml.task.task_type;
+													console
+															.log(taskFormData.task_type);
+													services
+															.addTask(
+																	{
+																		task : taskFormData,
+																		conId : "",
+																		taskType : taskType
+																	})
+															.success(
+																	function(
+																			data) {
 
-				}).success(function(data) {
-					console.log("根据内容获取任务列表成功！");
-					if (data.result == "true") {
-						alert("添加成功！");
-						window.history.back();
-					} else {
-						alert("添加失败！");
-					}
-					
+																		alert("添加成功！");
+																		$(
+																				"#tipAdd")
+																				.fadeOut(
+																						100);
+																		$(
+																				".overlayer")
+																				.fadeOut(
+																						200);
 
-				});
-			};
-			// zq跳转合同页面，将合同ID存入sessionStorage中
-			taskHtml.getContId = function(cont_id) {
-				sessionStorage.setItem('contId', cont_id); // 存入合同ID
+																	});
+												});
 
-			};
+								$("#cancelAdd").click(function() {
+									$("#tipAdd").fadeOut(100);
+									$(".overlayer").fadeOut(200);
 
-			// zq将任务ID放到sessionStorage中
-			taskHtml.getTaskId = function(task_id) {
-				sessionStorage.setItem('taskId', task_id); // 存入一个值
-			};
+								});
+							};
 
-			// 显示提示框及删除功能的实现
-			taskHtml.show = function(task_id) {
+							// 查看任务
+							taskHtml.checkTask = function() {
+								
+								var taskId = this.t.task_id;
+								services
+										.checkTask({
+											ID : taskId
+										})
+										.success(
+												function(data) {
 
-				$(".tip").fadeIn(200);
+													taskHtml.task = data.task;
+													console.log(data.task);
+													if(data.task.task_stime !=null){taskHtml.task.task_stime = changeDateType(data.task.task_stime.time);}
+													if(data.task.task_etime !=null){taskHtml.task.task_etime = changeDateType(data.task.task_etime.time);}
+													$("#tipCheck").fadeIn(200);
 
-				$(".sure").click(function() {
-					services.deleteTask({
-						taskId : task_id
-					}).success(function(data) {
-						console.log("根据内容获取任务列表成功！");
-						/*
-						 * if (data == "true") { alert("删除成功！"); $("#" + task_id +
-						 * "").hide(); } else { alert("删除失败！"); }
-						 */
-						$("#" + task_id + "").hide();
-						$(".tip").fadeOut(100);
-					});
-				});
+												});
+								$("#cancelCheck").click(function() {
+									$("#tipCheck").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									taskHtml.task = "";
+								});
+							};
+							// 显示提示框及删除功能的实现 删除任务
+							taskHtml.delTask = function() {
+								var taskId = this.t.task_id;
+								$("#tipDel").fadeIn(200);
+								$(".overlayer").fadeIn(200);
+								$("#sureDel").click(function() {
+									services.deleteTask({
+										taskId : taskId
+									}).success(function(data) {
+										console.log("根据内容获取任务列表成功！");
+										alert("删除成功！");
+										/* $("#" + taskId + "").hide(); */
+										services.getTaskList({
+											taskState : tState,
+											page : 1,
+											sendOrReceive : sendOrReceive
+										}).success(function(data) {
+											taskHtml.tasks = data.list;
+											pageTurn(tState, data.totalPage, 1)
+										});
+										$("#tipDel").fadeOut(100);
+										$(".overlayer").fadeOut(200);
+									});
+								});
 
-				$(".cancel").click(function() {
-					$(".tip").fadeOut(100);
-				});
+								$("#cancelDel").click(function() {
+									$("#tipDel").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+								});
 
-			};
-			// zq完成任务确认
-			taskHtml.finishTask = function(taskId) {
-				services.finishTask({
-					taskId : taskId
-				}).success(function(data) {
-					alert("任务完成!");
-					services.getTaskList({
-						taskState : tState,
-						page : 1,
-						sendOrReceive : sendOrReceive
-					}).success(function(data) {
-						taskHtml.tasks = data.list;
-						pageTurn(tState, data.totalPage, 1)
-					});
-				});
+							};
+							// zq完成任务确认
+							taskHtml.finishTask = function() {
+								var taskId = this.t.task_id;
+								services.finishTask({
+									taskId : taskId
+								}).success(function(data) {
+									alert("任务完成!");
+									services.getTaskList({
+										taskState : tState,
+										page : 1,
+										sendOrReceive : sendOrReceive
+									}).success(function(data) {
+										taskHtml.tasks = data.list;
+										pageTurn(tState, data.totalPage, 1)
+									});
+								});
 
-			};
+							};
+							// 更改任务时间的格式
+							function changeDateType(time) {
+								newDate = new Date(time).toLocaleDateString()
+										.replace(/\//g, '-');
+								return newDate;
+							}
+							// zq获取所有用户
+							function selectAllUsers() {
 
-			// 查看任务
-			function checkTask() {
-				services.checkTask({
-					ID : sessionStorage.getItem('taskId')
-				}).success(function(data) {
-					taskHtml.task = data.task;
-				});
-			}
+								services.selectAllUsers({}).success(
+										function(data) {
+											console.log("获取用户列表成功！");
+											taskHtml.users = data;
+										});
+							}
 
-			// zq获取所有用户
-			function selectAllUsers() {
-				services.selectAllUsers({}).success(function(data) {
-					console.log("获取用户列表成功！");
-					taskHtml.users = data;
+							// zq获取所有任务列表
+							function getTaskList(taskState, page) {
+								services.getTaskList({
+									taskState : taskState,
+									page : page,
+									sendOrReceive : sendOrReceive
+								}).success(function(data) {
+									taskHtml.tasks = data.list;
 
-				});
-			}
+								});
+							}
+							// zq所有任务换页
+							function pageTurn(taskState, totalPage, page) {
 
-			// zq获取所有任务列表
-			function getTaskList(taskState, page) {
-				services.getTaskList({
-					taskState : taskState,
-					page : page,
-					sendOrReceive : sendOrReceive
-				}).success(function(data) {
-					taskHtml.tasks = data.list;
-				});
-			}
-			// zq所有任务换页
-			function pageTurn(taskState, totalPage, page) {
+								var $pages = $(".tcdPageCode");
+								console.log($pages.length);
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											getTaskList(taskState, p)
+										}
+									});
+								}
+							}
 
-				var $pages = $(".tcdPageCode");
-				console.log($pages.length);
-				if ($pages.length != 0) {
-					$(".tcdPageCode").createPage({
-						pageCount : totalPage,
-						current : page,
-						backFn : function(p) {
-							getTaskList(taskState, p)
-						}
-					});
-				}
-			}
+							// zq 获取任务列表按照内容翻页查找函数
+							function getTaskListByContent(taskState, page) {
+								services.getTaskByContext({
+									context : $("#tContent").val(),
+									page : page,
+									taskState : taskState,
+									sendOrReceive : sendOrReceive
+								}).success(function(data) {
+									console.log("根据内容获取任务列表成功！");
+									taskHtml.tasks = data.list;
 
-			// zq 获取任务列表按照内容翻页查找函数
-			function getTaskListByContent(taskState, page) {
-				services.getTaskByContext({
-					context : $("#tContent").val(),
-					page : page,
-					taskState : taskState,
-					sendOrReceive : sendOrReceive
-				}).success(function(data) {
-					console.log("根据内容获取任务列表成功！");
-					taskHtml.tasks = data.list;
+								});
+							}
 
-				});
-			}
+							// zq按查询内容获取任务列表的换页
+							function pageTurnByContent(taskState, totalPage,
+									page) {
 
-			// zq按查询内容获取任务列表的换页
-			function pageTurnByContent(taskState, totalPage, page) {
+								var $pages = $(".tcdPageCode");
+								console.log($pages.length);
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											getTaskListByContent(taskState, p);
+										}
+									});
+								}
+							}
+							$scope.$on('hideElement', function(hideElement) {
+								if (tState != 1) {
+									$(".finishLabel").hide();
+								}
+								if (sendOrReceive == 1) {
+									$(".delLabel").hide();
+								}
 
-				var $pages = $(".tcdPageCode");
-				console.log($pages.length);
-				if ($pages.length != 0) {
-					$(".tcdPageCode").createPage({
-						pageCount : totalPage,
-						current : page,
-						backFn : function(p) {
-							getTaskListByContent(taskState, p);
-						}
-					});
-				}
-			}
-			$scope.$on('hideElement', function(hideElement) {
-				if (tState != 1) {
-					$(".finishLabel").hide();
-				}
-				if (sendOrReceive == 1) {
-					$(".delLabel").hide();
-				}
+							});
+							// zq初始化
+							function initData() {
 
-			});
-			// zq初始化
-			function initData() {
-				console.log("初始化页面信息");
-				if ($location.path().indexOf('/newTask') == 0) {
-					// contract.getContractList();
-					tState = 0;
-					sendOrReceive = 1;
-					services.getTaskList({
-						taskState : 0,
-						page : 1,
-						sendOrReceive : sendOrReceive
-					}).success(function(data) {
-						taskHtml.tasks = data.list;
-						pageTurn(0, data.totalPage, 1)
-					});
+								console.log("初始化页面信息");
+								if ($location.path().indexOf('/newTask') == 0) {
+									// contract.getContractList();
+									tState = 0;
+									sendOrReceive = 1;
+									services.getTaskList({
+										taskState : 0,
+										page : 1,
+										sendOrReceive : sendOrReceive
+									}).success(function(data) {
+										taskHtml.tasks = data.list;
+										pageTurn(0, data.totalPage, 1)
+									});
 
-				} else if ($location.path().indexOf('/unfinishTask') == 0) {
-					// contract.getDebtContract();
-					tState = 1;
-					sendOrReceive = 1;
-					services.getTaskList({
-						taskState : 1,
-						page : 1,
-						sendOrReceive : sendOrReceive
-					}).success(function(data) {
-						taskHtml.tasks = data.list;
-						pageTurn(1, data.totalPage, 1)
-					});
-				} else if ($location.path().indexOf('/finishTask') == 0) {
-					// contract.getOverdueContract();
-					tState = 2;
-					sendOrReceive = 1;
-					services.getTaskList({
-						taskState : 2,
-						page : 1,
-						sendOrReceive : sendOrReceive
-					}).success(function(data) {
-						taskHtml.tasks = data.list;
-						pageTurn(2, data.totalPage, 1)
-					});
-				} else if ($location.path().indexOf('/newSendTask') == 0) {
-					// contract.getOverdueContract();
-					tState = 0;
-					sendOrReceive = 0;
-					services.getTaskList({
-						taskState : 0,
-						page : 1,
-						sendOrReceive : sendOrReceive
-					}).success(function(data) {
-						taskHtml.tasks = data.list;
-						pageTurn(0, data.totalPage, 1);
-					});
-				} else if ($location.path().indexOf('/unfinishSendTask') == 0) {
-					// contract.getDebtContract();
-					tState = 1;
-					sendOrReceive = 0;
-					services.getTaskList({
-						taskState : 1,
-						page : 1,
-						sendOrReceive : sendOrReceive
-					}).success(function(data) {
-						taskHtml.tasks = data.list;
-						pageTurn(1, data.totalPage, 1)
-					});
-				} else if ($location.path().indexOf('/finishSendTask') == 0) {
-					// contract.getOverdueContract();
-					tState = 2;
-					sendOrReceive = 0;
-					services.getTaskList({
-						taskState : 2,
-						page : 1,
-						sendOrReceive : sendOrReceive
-					}).success(function(data) {
-						taskHtml.tasks = data.list;
-						pageTurn(2, data.totalPage, 1);
-					});
-				} else if ($location.path().indexOf('/taskAdd') == 0) {
-					selectAllUsers();
-				} else if ($location.path().indexOf('/taskCheck') == 0) {
-					checkTask();
-				}
-			}
-			initData();
-			var $dateFormat = $(".dateFormat");
-			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
-			$(".dateFormat").blur(function() {
-				if (!dateRegexp.test(this.value)) {
-					$(this).parent().children("span").css('display', 'inline');
-				}
-			});
-			$(".dateFormat").click(function() {
-				$(this).parent().children("span").css('display', 'none');
-			});
+								} else if ($location.path().indexOf(
+										'/unfinishTask') == 0) {
+									// contract.getDebtContract();
+									tState = 1;
+									sendOrReceive = 1;
+									services.getTaskList({
+										taskState : 1,
+										page : 1,
+										sendOrReceive : sendOrReceive
+									}).success(function(data) {
+										taskHtml.tasks = data.list;
+										pageTurn(1, data.totalPage, 1)
+									});
+								} else if ($location.path().indexOf(
+										'/finishTask') == 0) {
+									// contract.getOverdueContract();
+									tState = 2;
+									sendOrReceive = 1;
+									services.getTaskList({
+										taskState : 2,
+										page : 1,
+										sendOrReceive : sendOrReceive
+									}).success(function(data) {
+										taskHtml.tasks = data.list;
+										pageTurn(2, data.totalPage, 1)
+									});
+								} else if ($location.path().indexOf(
+										'/newSendTask') == 0) {
+									// contract.getOverdueContract();
+									tState = 0;
+									sendOrReceive = 0;
+									services.getTaskList({
+										taskState : 0,
+										page : 1,
+										sendOrReceive : sendOrReceive
+									}).success(function(data) {
+										taskHtml.tasks = data.list;
+										pageTurn(0, data.totalPage, 1);
+									});
+								} else if ($location.path().indexOf(
+										'/unfinishSendTask') == 0) {
+									// contract.getDebtContract();
+									tState = 1;
+									sendOrReceive = 0;
+									services.getTaskList({
+										taskState : 1,
+										page : 1,
+										sendOrReceive : sendOrReceive
+									}).success(function(data) {
+										taskHtml.tasks = data.list;
+										pageTurn(1, data.totalPage, 1)
+									});
+								} else if ($location.path().indexOf(
+										'/finishSendTask') == 0) {
+									// contract.getOverdueContract();
+									tState = 2;
+									sendOrReceive = 0;
+									services.getTaskList({
+										taskState : 2,
+										page : 1,
+										sendOrReceive : sendOrReceive
+									}).success(function(data) {
+										taskHtml.tasks = data.list;
+										pageTurn(2, data.totalPage, 1);
+									});
+								}
+							}
+							initData();
+							var $dateFormat = $(".dateFormat");
+							var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+							$(".dateFormat").blur(
+									function() {
+										if (!dateRegexp.test(this.value)) {
+											$(this).parent().children("span")
+													.css('display', 'inline');
+										}
+									});
+							$(".dateFormat").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
 
-		} ]);
+						} ]);
 
 // zq合同状态过滤器
 app.filter('taskType', function() {

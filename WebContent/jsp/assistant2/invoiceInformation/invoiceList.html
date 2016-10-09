@@ -12,7 +12,8 @@
 		<span>收据详情</span>
 	</div>
 	<div>
-		 <label class="text_style">合同总金额 {{cont.cont_money | invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
+		<label class="text_style">合同总金额 {{cont.cont_money |
+			invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
 			| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
 			次发票！</label>
 	</div>
@@ -40,9 +41,10 @@
 				<td class="width10">{{invo.creator.user_name}}</td>
 				<td class="width10">{{invo.audit.user_name}}</td>
 				<td class="width10">{{invo.receiver.user_name}}</td>
-					<td class="width10">{{invo.invo_state | invoState}}</td>
+				<td class="width10">{{invo.invo_state | invoState}}</td>
 				<td class="width10">{{invo.invo_remark | cutString}}</td>
-				<td class="width10"><a href="#invoiceDetail" class="tablelink" ng-click="getInvoId(invo.invo_id)">详情</a></td>
+				<td class="width10"><a class="tablelink"
+					ng-click="selectInvoiceById()">详情</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -50,6 +52,34 @@
 	<div class="tcdPageCode">页码容器</div>
 
 </div>
+
+<!-- 查看任务模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipCheck" style="height: 520px">
+	<div class="tiptop text_right">
+		<span>查看发票</span><img alt="" class="exit_image" id="cancelCheck"
+			src="../images/exit.png">
+	</div>
+	<div class="formbody">
+	<ul class="forminfo">
+		<li><label>发票金额</label> <input name="" type="text"
+			class="dfinput" ng-model="invoice.invo_money" />万元</li>
+		<li><label>开发票时间</label><input name="" type="text"
+			class="dfinput" ng-model="invoice.invo_time" /></li>
+		<li><label>业主公司</label><input name="" type="text" class="dfinput"
+			ng-model="invoice.invo_firm" readonly /></li>
+		<li><label>发起者</label> <input name="" type="text" class="dfinput"
+			ng-model="invoice.creator.user_name" /></li>
+		<li><label>审核者</label><input type="text" class="dfinput" readonly
+			ng-model="invoice.audit.user_name"></li>
+		<li><label>所属合同</label><input type="text" class="dfinput"
+			readonly ng-model="invoice.contract.cont_name"></li>
+		<li><label>备注</label> <textarea name="" cols="" rows=""
+				class="textinput area_style" ng-model="invoice.invo_remark"></textarea></li>
+	</ul>
+	</div>
+</div>
+<!-- 查看任务模态框完 -->
 
 <script type="text/javascript">
 	$('.tablelist tbody tr:odd').addClass('odd');
