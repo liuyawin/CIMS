@@ -23,8 +23,7 @@
 				break;
 			}
 		});
-	}) 
-	
+	}) 	
 </script>
 <section class="leftbar">
 	<dl class="leftmenu hideE" id="zhuren">
@@ -43,12 +42,12 @@
 				<li><cite></cite> <a
 					href="${ctx}/contract/toZhurenContractPage.do#/test">合同处理记录</a><i></i></li>
 				<li><cite></cite> <a
-					href="${ctx}/contract/toZhurenContractPage.do#/test">终结合同信息</a><i></i></li>
+					href="${ctx}/contract/toZhurenContractPage.do#/finishedContract">终结合同信息</a><i></i></li>
 				<li>
 			</ul>
 		</dd>
 		<dd>
-			<div class="title hideE">
+			<div class="title">
 				<!-- <a href="#/test"><span><img src="../../images/leftico01.png" /></span>合同信息管理</a> -->
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
 			</div>

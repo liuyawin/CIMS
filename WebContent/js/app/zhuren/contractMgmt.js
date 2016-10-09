@@ -89,6 +89,12 @@ app
 										controller : 'ContractController'
 									})
 							.when(
+									'/finishedContract',
+									{
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
+										controller : 'ContractController'
+									})
+							.when(
 									'/contractAdd',
 									{
 										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractAdd.html',
@@ -148,7 +154,16 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-
+	
+	services.getFinishedContract = function(data) {
+		console.log("发送请求获取合同信息");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/selectContract.do',
+			data : data
+		});
+	};
+	
 	services.selectConByName = function(data) {
 		console.log("按名字查找合同");
 		return $http({
@@ -249,6 +264,16 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 			// 获取逾期合同
 			contract.getOverdueContract = function() {
 				services.getOverdueContract({}).success(function(data) {
+					console.log("获取逾期合同成功！");
+					contract.contracts = data.list;
+				});
+			};
+			// 获取终结合同
+			contract.getFinishedContract = function() {
+				services.getFinishedContract({
+					findType:"4",
+					contName:""
+				}).success(function(data) {
 					console.log("获取逾期合同成功！");
 					contract.contracts = data.list;
 				});
@@ -515,6 +540,26 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 								current : 1,
 								backFn : function(p) {
 									contract.getOverdueContract(p);// 点击页码时获取第p页的数据
+								}
+							});
+						}
+					});
+				}else if ($location.path().indexOf('/finishedContract') == 0) {//获取终结合同信息
+					services.getFinishedContract({
+						page : 1,
+						findType:"4",
+						contName:""
+					}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if ($pages.length != 0) {
+							$pages.createPage({
+								pageCount : contract.totalPage,
+								current : 1,
+								backFn : function(p) {
+									contract.getFinishedContract(p);// 点击页码时获取第p页的数据
 								}
 							});
 						}

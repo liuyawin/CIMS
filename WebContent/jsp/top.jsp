@@ -21,7 +21,7 @@
     <ul>
     <%-- <li><span><img src="${ctx}/images/help.png" title="帮助"  class="helpimg"/></span><a href="#">帮助</a></li> --%>
     <!-- <li><a href="#">关于</a></li> -->
-    <li><a href="logout.do">安全退出</a></li>
+    <li><a href="/CIMS/login/logout.do">安全退出</a></li>
     </ul>
      
     <div class="user">
