@@ -1,7 +1,9 @@
 package com.mvc.controller;
 
+import java.net.HttpCookie;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -134,9 +136,14 @@ public class LoginController {
 					return "manager/contractInformation/index";// 返回到管理员主页
 				else if (user.getUser_name().equals("li"))
 					return "assistant1/taskInformation/index";// 返回到文书一主页
-				else
+				else{
+					Cookie cookie = new Cookie("identify", "chairman");
+					cookie.setMaxAge(30*60);
+					cookie.setPath("/");
+					res.addCookie(cookie);
 					return "zhuren/contractInformation/index";// 返回到主任主页
-			} else { // 密码错误
+				}
+				} else { // 密码错误
 				error_msg = "err_password";
 				cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);
 				model.addAttribute("error", error_msg);
