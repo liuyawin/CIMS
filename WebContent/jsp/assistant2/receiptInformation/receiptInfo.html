@@ -157,16 +157,6 @@
 				<td class="width10 text-center">收款情况</td>
 				<td class="width10 text-center">操作</td>
 			</tr>
-			<!-- <tr>
-			<td class="width10 text-center">节点1</td>
-			<td>发的沙发上地方</td>
-			<td>12</td>
-			<td>2016-12-9-09}</td>
-			<td>已完成</td>
-			<td>待收款</td>
-			<td><a href="#receiptAdd" ng-click="getRenoId(1,1)" class="tablelink">开收据</a></td>
-			</tr> -->
-
 			<tr ng-repeat="node in reno">
 				<td class="width5 text-center">节点{{$index+1}}</td>
 				<td>{{node.reno_content}}</td>
@@ -175,8 +165,8 @@
 				<td>{{node.reno_time.time | dateType}}</td>
 				<td>{{node.projectStage.prst_content}}</td>
 				<td>{{node.reno_state| renoType}}</td>
-				<td><a href="#receiptAdd"
-					ng-click="getRenoId(node.reno_id,node.contract.cont_id)"
+				<td><a 
+					ng-click="addReceipt()"
 					class="tablelink">开收据</a></td>
 			</tr>
 
@@ -186,4 +176,34 @@
 			style="display: none" value="添加收款节点" />
 	</form>
 </div>
+<!-- 派发任务模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipAdd" style="height: 400px">
+	<div class="tiptop">
+		<span>查看收据</span>
+	</div>
+	<div class="formbody">
+		<form ng-submit="addReceipt()">
+			<ul class="forminfo">
+				<li><label>金额</label><input type="text"
+					ng-model="receipt.receMoney" class="dfinput" required />万元</li>
+				<li><label>业主公司</label><input type="text"
+					ng-model="receipt.receFirm" class="dfinput" required /></li>
+				<li><label>收款时间</label><input type="text"
+					class="dfinput dateFormat" placeholder="格式：2016-09-07"
+					id="stageEtime" name="stageEtime" ng-model="receipt.receAtime"
+					required /><span class="error-span">日期格式：2016-09-07</span></li>
+				<li><label>备注</label> <textarea name="" cols="" rows=""
+						class="textinput area_style" ng-model="receipt.receRemark"></textarea></li>
+
+			</ul>
+			<div class="tipbtn">
+				<input name="" type="submit" class="sure" id="sureAdd" value="派发"
+					/>&nbsp; <input name="" type="button"
+					class="cancel" id="cancelAdd" value="取消" />
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 派发任务模态框完 -->
 

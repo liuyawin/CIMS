@@ -82,6 +82,7 @@ public class ReceiptController {
 		List<Receipt> list = receiptService.findByPage(cont_id, null, pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalRow", totalRow);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}

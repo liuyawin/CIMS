@@ -377,21 +377,33 @@ app.controller('ContractController', [
 			}
 			// zq添加任务
 			contract.addInvoiceTask = function() {
-				var contId = sessionStorage.getItem('contId');
-				var taskFormData = JSON.stringify(contract.invoice);
-				services.addInvoiceTask({
-					invoice : taskFormData,
-					contId : contId
-				}).success(function(data) {
-					console.log("根据内容获取任务列表成功！");
-					if (data.result == "true") {
+				selectAllUsers();
+				var contId = this.con.cont_id;
+				$("#tipAdd").fadeIn(200);
+				$(".overlayer").fadeIn(200);
+				$("#sureAdd").click(function() {
+
+					var taskFormData = JSON.stringify(contract.invoice);
+					services.addInvoiceTask({
+						invoice : taskFormData,
+						contId : contId
+					}).success(function(data) {
+
+						$("#tipAdd").fadeOut(100);
+						$(".overlayer").fadeOut(200);
+						contract.invoice="";
 						alert("添加成功！");
-						window.history.back();
-					} else {
-						alert("添加失败！");
-					}
+
+					});
+				});
+
+				$("#cancelAdd").click(function() {
+					$("#tipAdd").fadeOut(100);
+					$(".overlayer").fadeOut(200);
+					contract.invoice="";
 
 				});
+
 			};
 			// zq：读取合同的信息
 			function selectContractById() {
@@ -535,7 +547,7 @@ app.controller('ContractController', [
 				} else if ($location.path().indexOf('/contractInfo') == 0) {
 					selectContractById(); // 根据ID获取合同信息
 					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
-				 selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
 				} else if ($location.path().indexOf('/invoiceTask') == 0) {
 					selectAllUsers();
 					selectContractById();
@@ -561,12 +573,12 @@ app.controller('ContractController', [
 
 		} ]);
 
-//小数过滤器
+// 小数过滤器
 app.filter('receFloat', function() {
 	return function(input) {
 		if (input == null) {
-			var money=parseFloat('0').toFixed(2);
-		} else{
+			var money = parseFloat('0').toFixed(2);
+		} else {
 			var money = parseFloat(input).toFixed(2);
 		}
 
@@ -651,7 +663,7 @@ app.filter('prstType', function() {
 		return type;
 	}
 });
-//收款节点的状态的判断
+// 收款节点的状态的判断
 app.filter('renoType', function() {
 	return function(input) {
 		var type = "";
@@ -739,8 +751,7 @@ app.directive('onFinishRenderFilters', function($timeout) {
 	};
 });
 
-
-//收款节点的状态的判断
+// 收款节点的状态的判断
 app.filter('renoType', function() {
 	return function(input) {
 		var type = "";
