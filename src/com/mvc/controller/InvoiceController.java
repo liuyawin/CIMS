@@ -82,6 +82,30 @@ public class InvoiceController {
 	}
 
 	/**
+	 * 待处理发票列表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/getWaitingDealInvoice.do")
+	public @ResponseBody String waitingDealInvoiceList(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Integer totalRow = invoiceService.WaitingDealCountByParam(user.getUser_id());
+		System.out.println("总数" + totalRow);
+		Pager pager = new Pager();
+		pager.setPage(Integer.valueOf(request.getParameter("page")));
+		pager.setTotalRow(totalRow);
+		List<Invoice> list = invoiceService.WaitingDealFindByPage(user.getUser_id(), pager.getOffset(),
+				pager.getLimit());
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		System.out.println("返回列表:" + jsonObject.toString());
+		return jsonObject.toString();
+	}
+
+	/**
 	 * 根据合同ID查询发票记录
 	 * 
 	 * @param request
@@ -197,4 +221,35 @@ public class InvoiceController {
 		return JSON.toJSONString(result);
 	}
 
+	/**
+	 * 点击更新发票状态
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/updateInvoiceState.do")
+	public @ResponseBody String updateInvoiceState(HttpServletRequest request, HttpSession session) {
+		Integer invoiceId = Integer.valueOf(request.getParameter("invoiceId"));
+		boolean result = invoiceService.updateInvoiceState(invoiceId, InvoiceStatus.finish.value);
+		return JSON.toJSONString(result);
+	}
+
+	/**
+	 * 主任转发发票
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/updateInvoice.do")
+	public @ResponseBody String transmitInvoice(HttpServletRequest request, HttpSession session) throws ParseException {
+		Integer invoiceId = Integer.valueOf(request.getParameter("invoId"));
+		Integer receiverId = Integer.valueOf(request.getParameter("receiverId"));
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date invoEtime = format.parse(request.getParameter("invoEtime"));
+		boolean result = invoiceService.transmitInvoice(invoiceId, invoEtime, receiverId);
+		return JSON.toJSONString(result);
+	}
 }
