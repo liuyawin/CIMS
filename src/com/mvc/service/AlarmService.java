@@ -15,7 +15,7 @@ public interface AlarmService {
 	List<Alarm> findAlarmInformationList(Integer user_id, Integer isremove, Integer offset, Integer end);
 
 	// 统计报警列表条数
-	Long countTotal(Integer user_id);
+	Long countTotal(Integer user_id,Integer isremove);
 
 	// 统计报警条数
 	Integer countTotalNum(String searchKey);

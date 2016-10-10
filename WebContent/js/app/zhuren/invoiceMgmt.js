@@ -117,13 +117,20 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		})
 	};
-	//获取所有用户 
+	// 获取所有用户
 	services.getAllUsers = function() {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'user/getAllUserList.do',
 		});
 	};
+	services.updateInvoice=function(data){
+		return $http({
+			method : 'post',
+			url : baseUrl + 'invoice/updateInvoice.do',
+			data : data
+		});
+	}
 	return services;
 } ]);
 
@@ -173,8 +180,8 @@ app.controller('InvoiceController', [
 				});
 			}
 			// 根据发票ID查找发票
-			function selectInvoiceById() {
-				var invoId = sessionStorage.getItem('invoId');
+			function selectInvoiceById(invoId) {
+				/* var invoId = sessionStorage.getItem('invoId'); */
 				services.selectInvoiceById({
 					invoiceId : invoId
 				}).success(function(data) {
@@ -214,10 +221,12 @@ app.controller('InvoiceController', [
 			dateformat();// 格式化日期格式
 			// 点击创建任务时弹出模态框
 			invoice.invoiceInfo = function() {
+				var invoId=this.invo.invo_id;
 				services.getAllUsers().success(function(data) {
 					invoice.users = data;
 				});
-				selectInvoiceById();
+				selectInvoiceById(invoId);
+				invoice.invoiceId=invoId;
 				$(".overlayer").fadeIn(200);
 				$(".tip").fadeIn(200);
 				return false;
@@ -229,7 +238,14 @@ app.controller('InvoiceController', [
 			});
 
 			$(".sure").click(function() {
-
+				alert(invoice.invoiceId);
+				services.updateInvoice({
+					invoId : invoice.invoiceId,
+					invoEtime:invoice.invoEtime,
+					receiverId:invoice.receiverId
+				}).success(function(data) {
+					alert("操作成功！");
+				});
 				$(".overlayer").fadeOut(100);
 				$(".tip").fadeOut(100);
 			});

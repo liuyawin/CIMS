@@ -3,20 +3,15 @@
 	<ul class="placeul">
 		<li>首页</li>
 		<li>合同列表</li>
-		<li>发票列表</li>
+		<li>发票任务列表</li>
 	</ul>
 </div>
 
 <div class="rightinfo">
 	<div class="formtitle">
-		<span>发票详情</span>
+		<span>发票任务详情</span>
 	</div>
-	<div>
-		<label class="text_style">合同总金额 {{cont.cont_money |
-			invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
-			| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
-			次发票！</label>
-	</div>
+	
 	<table class="tablelist">
 		<thead>
 			<tr>
@@ -27,7 +22,7 @@
 				<th>发起者</th>
 				<th>审核者</th>
 				<th>执行者</th>
-				<th>状态</th>
+				<th>执行者</th>
 				<th>备注</th>
 				<th>操作</th>
 			</tr>
@@ -38,13 +33,14 @@
 				<td class="width10">{{invo.invo_money | invoFloat}}</td>
 				<td class="width10">{{invo.invo_time.time | dateType}}</td>
 				<td class="width15">{{invo.invo_firm}}</td>
-				<td class="width10">{{invo.creator.user_name}}</td>
-				<td class="width10">{{invo.audit.user_name}}</td>
-				<td class="width10">{{invo.receiver.user_name}}</td>
+				<td class="width5">{{invo.creator.user_name}}</td>
+				<td class="width5">{{invo.audit.user_name}}</td>
+				<td class="width5">{{invo.receiver.user_name}}</td>
 				<td class="width10">{{invo.invo_state | invoState}}</td>
 				<td class="width10">{{invo.invo_remark | cutString}}</td>
 				<td class="width10"><a class="tablelink"
-					ng-click="selectInvoiceById()">详情</a></td>
+					ng-click="selectInvoiceById()">详情</a><a class="tablelink"
+					ng-click="updateInvoiceState()">完成</a></td>
 			</tr>
 		</tbody>
 	</table>
