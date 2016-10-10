@@ -8,7 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 
 /**
  * 部门
@@ -23,8 +26,10 @@ public class Department {
 
 	private Integer dept_id; // Id
 	private String dept_name; // 部门名称
-	private Integer dept_state;// 部门状态，1表示存在，0表示不存在
-	private Integer dept_pid;// 父ID
+	private Integer dept_state;// 部门状态，0表示存在，1表示不存在
+	private Department department;
+	private String dept_remark;
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -54,12 +59,22 @@ public class Department {
 		this.dept_state = dept_state;
 	}
 
-	public Integer getDept_pid() {
-		return dept_pid;
+	@ManyToOne
+	@JoinColumn(name="dept_pid")
+	public Department getDepartment() {
+		return department;
 	}
 
-	public void setDept_pid(Integer dept_pid) {
-		this.dept_pid = dept_pid;
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public String getDept_remark() {
+		return dept_remark;
+	}
+
+	public void setDept_remark(String dept_remark) {
+		this.dept_remark = dept_remark;
 	}
 
 }

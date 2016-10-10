@@ -1,0 +1,243 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li>首页</li>
+		<li>任务管理</li>
+		<li>合同信息补录</li>
+	</ul>
+</div>
+
+<div class="formbody">
+
+	<form ng-submit="repeatAddContract()" name="staff">
+		<div class="formtitle">
+			<span>合同详情</span>
+		</div>
+		<table class="tbl tablelist">
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">合同名称</td>
+				<td colspan='6'>{{cont.cont_name}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">合同类型</td>
+				<td colspan='2'>{{cont.cont_type | conType}}</td>
+				<td class="width20 text-center">合同等级</td>
+				<td colspan='2'>{{cont.cont_rank | conRank}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">项目名称</td>
+				<td colspan='6'>{{cont.cont_project}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主单位名称<label class="left_length5 text_style">*</label></td>
+				<td colspan='6'><input type="text" name="contClient"
+					ng-model="contract.cont_client" class="dfinput input_border" required /></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主单位地址<label class="left_length5 text_style">*</label></td>
+				<td colspan='6'><input type="text"
+					ng-model="contract.cont_caddress" class="dfinput input_border"  required /></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">项目状态</td>
+				<td colspan='6'>
+					<div class="div-checkbox">
+						<input type="radio" name="pstate" value="在建" />在建
+					</div>
+					<div class="div-checkbox">
+						<input type="radio" name="pstate" value="竣工" />竣工
+					</div>
+					<div class="div-checkbox">
+						<input type="radio" name="pstate" value="停建" />停建（如停建简要说明原因）
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">合同签订时间<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text" class="dfinput dateFormat input_border"
+						placeholder="格式：2016-09-07" id="contCtime" name="contCtime"
+						ng-model="contract.cont_stime" /><span class="error-span little">格式:2016-09-07</span></td>
+				<td class="width20 text-center">是否有委托书<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><div class="div-checkbox">
+						<input name="cont_hasproxy" type="radio" name="hasproxy"
+							ng-model="contract.cont_hasproxy" value="1" />有
+					</div>
+					<div class="div-checkbox">
+						<input name="cont_hasproxy" type="radio" name="hasproxy"
+							ng-model="contract.cont_hasproxy" value="0" />无
+					</div></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主传真<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text"
+					ng-model="contract.cont_cfax" class="dfinput input_border"  required /></td>
+				<td class="width20 text-center">业主邮编<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text"
+					ng-model="contract.cont_czipcode" class="dfinput input_border" required /></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主联系人</td>
+				<td colspan='2'>{{cont.cont_cheader}}</td>
+				<td class="width20 text-center">业主联系方式</td>
+				<td colspan='2'>{{cont.cont_ctel}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">业主联系部门</td>
+				<td colspan='2'>{{cont.cont_cdept}}</td>
+				<td class="width20 text-center">业主邮箱<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="email"
+					ng-model="contract.cont_cemail" class="dfinput input_border"  required /></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">合同金额（万元）<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text"
+					ng-model="contract.cont_money" class="dfinput input_border"  required /></td>
+				<td class="width20 text-center">项目编码<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text"
+					ng-model="contract.cont_pnum" class="dfinput input_border"  required /></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">公司合同编号<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text"
+					ng-model="contract.cont_onum" class="dfinput input_border"   required/></td>
+				<td class="width20 text-center">业主方合同编号<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text"
+					ng-model="contract.cont_cnum" class="dfinput input_border"  required /></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">项目负责人<label class="left_length5 text_style">*</label></td>
+				<td colspan='1'><select class="dfselect input_border"
+					ng-model="contract.manager.user_id"  required>
+						<option value={{userDept.user.user_id}}
+							ng-repeat="userDept in userDepts">{{userDept.user.user_name}}</option>
+
+				</select></td>
+				<td colspan='1' class="width20 text-center">是否立项<label class="left_length5 text_style">*</label></td>
+				<td ><div class="div-checkbox">
+						<input name="cont_initiation" type="radio" name="initiation"
+							ng-model="contract.cont_initiation" value="1" />是
+					</div>
+					<div class="div-checkbox">
+						<input name="cont_initiation" type="radio" name="initiation"
+							ng-model="contract.cont_initiation" value="0" />否
+					</div></td>
+				<td  class="width25">机构代码证号<label class="left_length5 text_style">*</label></td>
+				<td colspan='1'><input type="text"
+					ng-model="contract.cont_orgcodenum" class="dfinput input_border"  required />
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">纳税人识别号<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text"
+					ng-model="contract.cont_taxidennum" class="dfinput input_border"  required /></td>
+				<td class="width20 text-center">增值税：一般纳税人<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><div class="div-checkbox">
+						<input name="cont_avetaxpayer" type="radio" name="avetaxpayer"
+							ng-model="contract.cont_avetaxpayer" value="1" />是
+					</div>
+					<div class="div-checkbox">
+						<input name="cont_avetaxpayer" type="radio" name="avetaxpayer"
+							ng-model="contract.cont_avetaxpayer" value="0" />否
+					</div></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">开户行<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text"
+					ng-model="contract.cont_bank" class="dfinput input_border"  required /></td>
+				<td class="width20 text-center">银行帐号<label class="left_length5 text_style">*</label></td>
+				<td colspan='2'><input type="text"
+					ng-model="contract.cont_account" class="dfinput input_border"  required /></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">其他需要说明的情况</td>
+				<td colspan='6'><textarea name="" cols="" rows=""
+						class="textinput text_border" ng-model="contract.cont_remark"></textarea></td>
+			</tr>
+		</table>
+		<input type="submit" id="addContract" class="btn" value="提交合同" />
+
+	</form>
+</div>
+
+<div class="formbody">
+	<form ng-submit="addProjectStage()">
+		<div class="formtitle">
+			<span>工期阶段详情</span>
+		</div>
+		<ul class="forminfo" id="stageList">
+			<li id="ps{{$index + 1}}" ng-repeat="stage in fchat.stages"
+				ng-mouseover="psShowDel($index+1)" ng-mouseout="psHideDel($index+1)"><div
+					class="stage_style">
+					<label>阶段{{$index + 1}}</label><input type="text"
+						class="dfinput long_input" id="stageContent" name="stageContent"
+						ng-model="stage.prst_content" required /> <img class="hand small_image"
+						src='../images/addsel.png' alt='添加'
+						ng-click="fchat.incrStage($index)"><img
+						class="hand small_image" src='../images/delsel.gif' alt='删除'
+						ng-click="fchat.decrStage($index)" ng-show="fchat.canDescStage"><img
+						class="hand small_image" src='../images/delsel.gif' alt='删除'
+						ng-click="fchat.decrStage($index)" ng-show="!fchat.canDescStage">
+				</div>
+				<br>
+				<div class="stage_style top_length">
+					<label>完工时间</label><input type="text" class="dfinput dateFormat"
+						placeholder="格式：2016-09-07" id="stageEtime" name="stageEtime"
+						ng-model="stage.prst_etime" required /><span class="error-span">日期格式：2016-09-07</span>
+				</div>
+				<div class="stage_style top_length left_length">
+					<label>提醒天数设置</label><input type="text" class="dfinput"
+						id="stageWtime" name="stageWtime" placeholder="格式：7"
+						ng-model="stage.prst_wday" required />天
+				</div>
+				<br>
+			<br> <!-- <hr class="line_style" /> --></li>
+		</ul>
+		<input type="submit" id="addprojectStage" class="btn" value="添加工期阶段" />
+	</form>
+</div>
+<div class="formbody">
+	<form ng-submit="addReceiveNode()">
+		<div class="formtitle">
+			<span>收款节点详情</span>
+		</div>
+		<ul class="forminfo" id="node">
+			<li id="rn{{$index + 1}}" ng-repeat="node in rnchat.nodes"
+				ng-mouseover="rnShowDel($index+1)" ng-mouseout="rnHideDel($index+1)"><div
+					class="stage_style">
+					<label>节点{{$index + 1}}</label><input type="text"
+						class="dfinput middle_input" id="nodeContent" name="nodeContent"
+						ng-model="node.reno_content" required />
+				</div>
+
+				<div class="stage_style left_length">
+					<label>收款时间</label><input type="text" class="dfinput dateFormat"
+						placeholder="格式：2016-09-07" id="nodeEtime" name="nodeEtime"
+						ng-model="node.reno_time" required /><span class="error-span">日期格式：2016-09-07</span>
+					<img class="hand small_image" src='../images/addsel.png' alt='添加'
+						ng-click="rnchat.incrNode($index)"><img
+						class="hand small_image" src='../images/delsel.gif' alt='删除'
+						ng-click="rnchat.decrNode($index)" ng-show="rnchat.canDescNode"><img
+						class="hand small_image" src='../images/delsel.gif' alt='删除'
+						ng-click="rnchat.decrNode($index)" ng-show="!rnchat.canDescNode">
+				</div> <br>
+				<div class="stage_style top_length">
+					<label>工期阶段</label><select class="dfselect middle_input"
+						ng-model="node.projectStage"><option
+							value={{stage.prst_id}} ng-repeat="stage in prst">{{stage.prst_content}}</option>
+					</select>
+				</div>
+				<div class="stage_style top_length left_length">
+					<label>实际应收金额</label><input type="text" class="dfinput width35"
+						id="nodeMoney" name="nodeMoney" ng-model="node.reno_money" required />万元
+				</div>
+				<div class="stage_style top_length left_length">
+					<label>提醒天数设置</label><input type="text" class="dfinput width35"
+						id="nodeWday" name="nodeWday" placeholder="格式：7"
+						ng-model="node.reno_wday" required />天
+				</div></li>
+		</ul>
+
+		<input type="submit" id="addReceiveNode" class="btn"
+			style="display: none" value="添加收款节点" />
+	</form>
+</div>

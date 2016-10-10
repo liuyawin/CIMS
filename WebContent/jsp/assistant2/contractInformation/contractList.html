@@ -1,0 +1,76 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li>首页</li>
+		<li>合同列表</li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div class="tools">
+
+		<form class="toolbar">
+			<input name="" type="text" class="dfinput" id="cName" /> <input
+				class="btn" type="submit" value="查询" ng-click="selectConByName()">
+		</form>
+
+		<!-- <ul class="toolbar1">
+			<li class="click"><a href="#/contractAdd"><span><img
+						src="../images/t01.png" /></span>新建</a></li>
+		</ul> -->
+
+	</div>
+
+	<table class="tablelist" on-finish-render-filters>
+		<thead>
+			<tr>
+				<th>合同名称</th>
+				<th>本公司编号</th>
+				<th>合同状态</th>
+				<th>工程阶段报警次数</th>
+				<th>收款节点报警次数</th>
+				<th>工程阶段</th>
+				<th>收款节点</th>
+				<th>发票</th>
+				<th>收据</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="con in contracts">
+				<td><a href="#contractInfo" ng-click="getContId(con.cont_id)">{{con.cont_name}}</a></td>
+				<td>{{con.cont_onum}}</td>
+				<td>{{con.cont_state | conState}}</td>
+				<td>{{con.cont_proalanum}}</td>
+				<td>{{con.cont_payalanum}}</td>
+				<td><a class="tablelink" href="#prstInfo" ng-click="getContId(con.cont_id)">详情</a></td>
+				<td><a href="#renoInfo"
+					class="tablelink" ng-click="getContId(con.cont_id)">详情</a></td>
+				<td>
+					<!-- <a href="#"
+					class="tablelink">录发票</a> --> <a
+					href="/CIMS/invoice/toAssistant2InvoicePage.do#invoiceList"
+					class="tablelink" ng-click="getContId(con.cont_id)">详情</a>
+				</td>
+				<td><a
+					href="/CIMS/receipt/toAssistant2ReceiptPage.do#receiptInfo"
+					class="tablelink" ng-click="getContId(con.cont_id)">录收据</a><a
+					href="/CIMS/receipt/toAssistant2ReceiptPage.do#receiptList"
+					class="tablelink" ng-click="getContId(con.cont_id)">详情</a></td>
+				<td><a href="#contractModify" ng-click="getContId(con.cont_id)"
+					class="tablelink">修改</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="tcdPageCode">页码容器</div>
+
+</div>
+
+<script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+</script>
+
+
+

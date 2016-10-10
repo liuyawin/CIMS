@@ -22,7 +22,7 @@ import javax.persistence.Table;
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Integer uesr_id; // id
+	private Integer user_id; // id
 	private String user_num; // 账号
 	private String user_pwd; // 密码
 	private String user_name;// 姓名
@@ -31,15 +31,17 @@ public class User implements Serializable {
 	private String user_email;// 邮箱
 	private Role role;// 职位
 	private Integer user_isdelete;// 员工状态，1：已删除，0：未删除
+	private String user_permission;// 用户所对应的角色权限
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer getUesr_id() {
-		return uesr_id;
+
+	public Integer getUser_id() {
+		return user_id;
 	}
 
-	public void setUesr_id(Integer uesr_id) {
-		this.uesr_id = uesr_id;
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
 	}
 
 	@Column(length = 16)
@@ -113,6 +115,14 @@ public class User implements Serializable {
 
 	public void setUser_isdelete(Integer user_isdelete) {
 		this.user_isdelete = user_isdelete;
+	}
+
+	public String getUser_permission() {
+		return user_permission;
+	}
+
+	public void setUser_permission(String user_permission) {
+		this.user_permission = user_permission;
 	}
 
 }

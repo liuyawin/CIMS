@@ -168,6 +168,7 @@ h2 {
 
 .topright ul li a:hover {
 	color: #fff;
+	text-decoration: underline;
 }
 
 .topright ul li span {
@@ -231,8 +232,8 @@ h2 {
 	position: absolute;
 	top: 88px;
 	bottom: 0px;
-	left:0;
-	right:0;
+	left: 0;
+	right: 0;
 	/* width: 100%; */
 	/* min-height:100%; */
 }
@@ -354,7 +355,7 @@ h2 {
 .main {
 	float: left;
 	width: 100%;
-	min-height: 40px;/* 加这一句撑开右部分页面，否则刚进入页面时leftbar隐入左侧不显示 */
+	min-height: 40px; /* 加这一句撑开右部分页面，否则刚进入页面时leftbar隐入左侧不显示 */
 }
 
 /*right.html*/
@@ -463,6 +464,7 @@ h2 {
 .tablelink {
 	margin-right: 8px;
 	color: #056dae;
+	cursor: pointer;
 }
 
 .tablelist tbody tr.odd {
@@ -831,6 +833,7 @@ h2 {
 .forminfo li {
 	margin-bottom: 13px;
 	clear: both;
+	overflow: auto;
 }
 
 .forminfo li label {
@@ -888,18 +891,36 @@ h2 {
 }
 
 /*tip*/
-.tip {
-	width: 485px;
-	height: 260px;
+.overlayer {
+	/* width:100%;
+	height:100%; */
+	display: none;
 	position: absolute;
-	top: 10%;
-	left: 30%;
-	background: #fcfdfd;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #000;
+	opacity: 0.4;
+	filter: alpha(opacity = 40);
+	z-index: 1;
+}
+
+.tip {
+	width: 520px;
+	height: 500px;
+	position: absolute;
+	top: 5%;
+	left: 50%;
+	margin-left: -270px;
+	background: #fff;
 	box-shadow: 1px 8px 10px 1px #9b9b9b;
 	border-radius: 1px;
 	behavior: url(js/pie.htc);
 	display: none;
 	z-index: 111111;
+	opacity: 1;
+	filter: alpha(opacity = 100);
 }
 
 .tiptop {
@@ -907,6 +928,12 @@ h2 {
 	line-height: 40px;
 	background: url(../images/tcbg.gif) repeat-x;
 	cursor: pointer;
+}
+
+.taskType-div label {
+	float: left;
+	margin-top: 10px;
+	margin-right: 42px;
 }
 
 .tiptop span {
@@ -933,14 +960,14 @@ h2 {
 }
 
 .tipinfo {
-	padding-top: 30px;
-	margin-left: 65px;
-	height: 95px;
+	padding-top: 35px;
+	margin-left: 36px;
+	height: 35px;
 }
 
 .tipinfo span {
 	width: 95px;
-	height: 95px;
+	height: 35px;
 	float: left;
 }
 
@@ -961,7 +988,7 @@ h2 {
 }
 
 .tipbtn {
-	margin-top: 25px;
+	/* margin-top: 25px; */
 	margin-left: 125px;
 }
 
@@ -1456,6 +1483,15 @@ h2 {
 }
 
 /*new lyy*/
+.noColor {
+	width: 186px;
+	height: 35px;
+}
+
+.noColor:hover {
+	color: #000000;
+}
+
 .img-logo {
 	height: 68px;
 }
@@ -1472,8 +1508,127 @@ h2 {
 	display: inline-block;
 	float: left;
 	margin-left: 16px;
+	height: 30px;
+	padding-top: 6px;
 }
 
 .div-checkbox input {
 	margin-right: 4px;
+	margin-top: 2px;
+}
+
+.tcdPageCode {
+	padding: 15px 20px;
+	text-align: right;
+	color: #ccc;
+}
+
+.tcdPageCode a {
+	display: inline-block;
+	color: #428bca;
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	border: 1px solid #ddd;
+	margin: 0 2px;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+.tcdPageCode a:hover {
+	text-decoration: none;
+	border: 1px solid #428bca;
+}
+
+.tcdPageCode span {
+	display: inline-block;
+	margin: 0 4px;
+}
+
+.tcdPageCode span.current {
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	margin: 0 2px;
+	color: #fff;
+	background-color: #428bca;
+	border: 1px solid #428bca;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+.tcdPageCode span.disabled {
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	margin: 0 2px;
+	color: #bfbfbf;
+	background: #f2f2f2;
+	border: 1px solid #bfbfbf;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+/* 下拉框 */
+.dfselect {
+	width: 300px;
+	height: 36px;
+	margin-right: 12px;
+	line-height: 32px;
+	border-top: solid 1px #a7b5bc;
+	border-left: solid 1px #a7b5bc;
+	border-right: solid 1px #ced9df;
+	border-bottom: solid 1px #ced9df;
+	background: url(../images/inputbg.gif) repeat-x;
+	text-indent: 4px;
+}
+
+.dfselect option {
+	word-space: 2px;
+	margin: 8px 12px;
+}
+
+.textarea {
+	width: 280px;
+	height: 80px;
+	padding: 8px;
+	line-height: 16px;
+	border-top: solid 1px #a7b5bc;
+	border-left: solid 1px #a7b5bc;
+	border-right: solid 1px #ced9df;
+	border-bottom: solid 1px #ced9df;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.width20 {
+	width: 20%;
+}
+
+.underline:hover {
+	text-decoration: underline;
+}
+
+.hidden {
+	display: none;
+}
+
+.radio-div {
+	float: left;
+	margin-top: 12px;
+	margin-right: 16px;
+}
+
+.radio-div input {
+	margin-right: 8px;
+}
+
+.error-span {
+	display: none;
+	color: red;
 }

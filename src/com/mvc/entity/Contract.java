@@ -36,7 +36,7 @@ public class Contract {
 	private Float cont_money;// 合同金额
 	private Integer cont_hasproxy;// 是否有委托书，0表示没有，1表示有
 	private String cont_client;// 业主公司名称
-	private String cont_cadress;// 业主地址
+	private String cont_caddress;// 业主地址
 	private String cont_cheader;// 业主联系人
 	private String cont_cdept;// 业主联系部门
 	private String cont_ctel;// 业主联系方式
@@ -95,6 +95,7 @@ public class Contract {
 		this.cont_name = cont_name;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getCont_initiation() {
 		return cont_initiation;
 	}
@@ -146,6 +147,7 @@ public class Contract {
 		this.cont_saddress = cont_saddress;
 	}
 
+	@Column(columnDefinition = "float(10,2) default '0.00'")
 	public Float getCont_money() {
 		return cont_money;
 	}
@@ -172,12 +174,12 @@ public class Contract {
 	}
 
 	@Column(length = 64)
-	public String getCont_cadress() {
-		return cont_cadress;
+	public String getCont_caddress() {
+		return cont_caddress;
 	}
 
-	public void setCont_cadress(String cont_cadress) {
-		this.cont_cadress = cont_cadress;
+	public void setCont_caddress(String cont_caddress) {
+		this.cont_caddress = cont_caddress;
 	}
 
 	@Column(length = 16)
@@ -301,7 +303,7 @@ public class Contract {
 	public void setCont_payalanum(Integer cont_payalanum) {
 		this.cont_payalanum = cont_payalanum;
 	}
-
+	@Column(columnDefinition = "INT default 0")
 	public Integer getCont_state() {
 		return cont_state;
 	}
@@ -327,7 +329,7 @@ public class Contract {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "creator_id")
 	public User getCreator() {
 		return creator;
 	}

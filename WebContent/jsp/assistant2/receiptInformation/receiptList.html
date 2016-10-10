@@ -1,0 +1,89 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li>首页</li>
+		<li>合同列表</li>
+		<li>收据列表</li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+	<div class="formtitle">
+		<span>收据详情</span>
+	</div>
+	<div>
+		<label class="text_style">应收款 {{cont.cont_money | receFloat}}
+			万元！</label><label class="text_style">实收款 {{totalMoney | receFloat}}
+			万元！</label><label class="text_style">共开了 {{totalRow}} 张收据！</label>
+	</div>
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th class="width10">收据编号</th>
+				<th class="width10">金额（万元）</th>
+				<th class="width10">实际收款时间</th>
+				<th class="width10">应收款时间</th>
+				<th>收款节点</th>
+				<th>交款业主公司</th>
+				<th class="width10">录入人员</th>
+				<th>备注</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="rece in receipts">
+				<td class="width10">收据{{$index + 1}}</td>
+				<td class="width5">{{rece.rece_money | receFloat}}</td>
+				<td class="width10">{{rece.rece_atime.time | dateType}}</td>
+				<td class="width10">{{rece.receiveNode.reno_time.time |
+					dateType}}</td>
+				<td class="width10">{{rece.receiveNode.reno_content |
+					cutString}}</td>
+				<td class="width15">{{rece.rece_firm}}</td>
+				<td class="width10">{{rece.user.user_name}}</td>
+				<td class="width15">{{rece.rece_remark | cutString}}</td>
+				<td class="width10"><a class="tablelink"
+					ng-click="selectReceiptByReceId()">详情</a></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="tcdPageCode">页码容器</div>
+
+</div>
+<!-- 查看任务模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipCheck" style="height: 500px">
+	<div class="tiptop text_right">
+		<span>添加收据</span><img alt="" class="exit_image" id="cancelCheck"
+			src="../images/exit.png">
+	</div>
+	<div class="formbody">
+
+		<ul class="forminfo">
+			<li><label>金额</label><input type="text"
+				ng-model="receipt.rece_money" class="dfinput" required />万元</li>
+			<li><label>业主公司</label><input type="text"
+				ng-model="receipt.rece_firm" class="dfinput" required /></li>
+			<li><label>收款时间</label><input type="text" class="dfinput"
+				placeholder="格式：2016-09-07" id="stageEtime" name="stageEtime"
+				ng-model="receipt.rece_atime" required /></li>
+			<li><label>收款节点</label><input type="text"
+				ng-model="receipt.receiveNode.reno_content" class="dfinput" required /></li>
+				<li><label>应收款</label><input type="text"
+				ng-model="receipt.receiveNode.reno_money" class="dfinput" required />万元</li>
+			<li><label>所属合同</label><input type="text"
+				ng-model="receipt.contract.cont_name" class="dfinput" required /></li>
+			<li><label>备注</label> <textarea name="" cols="" rows=""
+					class="textinput area_style" ng-model="receipt.rece_remark"></textarea></li>
+		</ul>
+
+	</div>
+</div>
+<!-- 查看任务模态框完 -->
+
+<script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+</script>
+
+
+
