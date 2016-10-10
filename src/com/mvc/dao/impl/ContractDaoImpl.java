@@ -57,7 +57,7 @@ public class ContractDaoImpl implements ContractDao {
 		if (null != contName) {
 			sql.append(" and c.cont_name like '%" + contName + "%'");
 		}
-		sql.append(" order by cont_id limit :offset,:end");
+		sql.append(" order by cont_id desc limit :offset,:end");
 		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		query.setParameter("offset", offset).setParameter("end", end);
 		List<Contract> list = query.getResultList();
@@ -72,12 +72,12 @@ public class ContractDaoImpl implements ContractDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append(
-				"select * from contract c where c.cont_state=0 and c.cont_id in (select distinct(t.cont_id) from task t where t.task_etime<=now()");
-		sql.append(" and t.task_state in (0,1) and t.task_isdelete=0) and c.cont_ishistory=0");
+				"select * from contract c where c.cont_state=0 and c.cont_id in (select distinct(ps.cont_id) from project_stage ps where ps.prst_etime<=now()");
+		sql.append(" and ps.prst_state=0) and c.cont_ishistory=0");
 		if (contName != null) {
 			sql.append(" and c.cont_name like '%" + contName + "%'");
 		}
-		sql.append(" order by cont_id limit :offset,:end");
+		sql.append(" order by cont_id desc limit :offset,:end");
 		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		query.setParameter("offset", offset).setParameter("end", end);
 		List<Contract> list = query.getResultList();
@@ -95,7 +95,7 @@ public class ContractDaoImpl implements ContractDao {
 		if (null != contName) {
 			sql.append(" and c.cont_name like '%" + contName + "%'");
 		}
-		sql.append(" order by cont_id limit :offset,:end");
+		sql.append(" order by cont_id desc limit :offset,:end");
 		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		query.setParameter("offset", offset).setParameter("end", end);
 		List<Contract> list = query.getResultList();
@@ -160,7 +160,7 @@ public class ContractDaoImpl implements ContractDao {
 		if (contName != null) {
 			sql.append(" and c.cont_name like '%" + contName + "%'");
 		}
-		sql.append(" order by cont_id limit :offset,:end");
+		sql.append(" order by cont_id desc limit :offset,:end");
 		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		query.setParameter("offset", offset).setParameter("end", end);
 		List<Contract> list = query.getResultList();

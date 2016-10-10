@@ -59,8 +59,42 @@
 					href="${ctx}/alarm/toZhurenAlarmPage.do#/doneAlarmList">已处理</a><i></i></li>
 			</ul>
 		</dd>
+		<dd>
+			<div class="title">
+				<!-- <a href="#/test"><span><img src="../../images/leftico01.png" /></span>合同信息管理</a> -->
+				<span><img src="${ctx}/images/leftico01.png" /></span>接收的任务
+			</div>
+			<ul class="menuson">
+				<li><cite></cite> <a id="taskFirst"
+					href="${ctx}/task/toZhurenTaskList.do#/newTask">新消息</a><i></i></li>
+				<li><cite></cite> <a id="assistant2First"
+					href="${ctx}/task/toZhurenTaskList.do#/unfinishTask">处理中</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/task/toZhurenTaskList.do#/finishTask">已处理</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/invoice/toZhurenInvoicePage.do#/unInvoiceTaskList">待审核发票任务</a><i></i></li>
 
-		<%-- <dd>
+			</ul>
+		</dd>
+		<dd>
+			<div class="title">
+				<!-- <a href="#/test"><span><img src="../../images/leftico01.png" /></span>合同信息管理</a> -->
+				<a class="noColor"><span><img
+						src="${ctx}/images/leftico02.png" /></span>发出的任务</a>
+			</div>
+			<ul class="menuson">
+				<li><cite></cite> <a
+					href="${ctx}/task/toZhurenTaskList.do#/newSendTask">未处理</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/task/toZhurenTaskList.do#/unfinishSendTask">处理中</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/task/toZhurenTaskList.do#/finishSendTask">已处理</a><i></i></li>
+
+			</ul>
+		</dd>
+		<dd>
+
+			<%-- <dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>执行过程管控
 			</div>
@@ -110,7 +144,7 @@
 			</ul>
 
 		</dd>--%>
-	</dl> 
+	</dl>
 
 	<!-- 文书1导航 -->
 	<dl class="leftmenu hideE" id="assistant1">
@@ -146,8 +180,10 @@
 					href="${ctx}/task/toTaskPage.do#/unfinishTask">处理中</a><i></i></li>
 				<li><cite></cite> <a
 					href="${ctx}/task/toTaskPage.do#/finishTask">已处理</a><i></i></li>
-					<li><cite></cite> <a
-					href="${ctx}/invoice/toAssistant2InvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/invoice/toAssistant2InvoicePage.do#/unInvoiceTaskList">待处理发票任务</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/invoice/toAssistant2InvoicePage.do#/invoiceTaskList">已完成发票任务</a><i></i></li>
 			</ul>
 		</dd>
 		<dd>
@@ -163,7 +199,7 @@
 					href="${ctx}/task/toTaskPage.do#/unfinishSendTask">处理中</a><i></i></li>
 				<li><cite></cite> <a
 					href="${ctx}/task/toTaskPage.do#/finishSendTask">已处理</a><i></i></li>
-				
+
 			</ul>
 		</dd>
 		<dd>

@@ -83,6 +83,12 @@ app
 										controller : 'InvoiceController'
 									})
 							.when(
+									'/unInvoiceTaskList',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/invoiceInformation/invoiceTaskList.html',
+										controller : 'InvoiceController'
+									})
+							.when(
 									'/invoiceTaskList',
 									{
 										templateUrl : '/CIMS/jsp/assistant2/invoiceInformation/invoiceTaskList.html',
@@ -148,8 +154,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	
-	
+
 	return services;
 } ]);
 
@@ -163,7 +168,8 @@ app
 						function($scope, services, $location) {
 							// 合同
 							var invoice = $scope;
-
+							var invoState;
+							invoice.show=0;
 							// zq查看合同ID，并记入sessione
 							invoice.getContId = function(contId) {
 								sessionStorage.setItem('contId', contId);
@@ -196,7 +202,7 @@ app
 									});
 								}
 							}
-							
+
 							// zq：读取合同的信息
 							function selectContractById() {
 								var cont_id = sessionStorage.getItem('contId');
@@ -240,18 +246,15 @@ app
 									taskHtml.task = "";
 								});
 							}
-							
+
 							// 完成发票任务
 							invoice.updateInvoiceState = function() {
 								var invoId = this.invo.invo_id;
-								services
-										.updateInvoiceState({
-											invoiceId : invoId
-										})
-										.success(
-												function(data) {
-													alert("操作成功！");
-													getWaitingDealInvoice(1);
+								services.updateInvoiceState({
+									invoiceId : invoId
+								}).success(function(data) {
+									alert("操作成功！");
+									getWaitingDealInvoice(1,invoState);
 								});
 							}
 							// 更改任务时间的格式
@@ -260,16 +263,17 @@ app
 										.replace(/\//g, '-');
 								return newDate;
 							}
-							//查询发票任务
-							function getWaitingDealInvoice(p){
+							// 查询发票任务
+							function getWaitingDealInvoice(p,invoState) {
 								services.getWaitingDealInvoice({
-									page : p
+									page : p,
+									invoState:invoState
 								}).success(function(data) {
-									invoice.invoices = data.list;	
+									invoice.invoices = data.list;
 								});
-								
+
 							}
-							
+
 							// zq初始化页面信息
 							function initData() {
 								console.log("初始化页面信息");
@@ -289,21 +293,45 @@ app
 									});
 
 								} else if ($location.path().indexOf(
-										'/invoiceTaskList') == 0) {
-									
+										'/unInvoiceTaskList') == 0) {
+									invoState = 1;/*//待处理*/
+									invoice.show=1;
 									services.getWaitingDealInvoice({
-										page : 1
+										page : 1,
+										invoState : invoState
 									}).success(function(data) {
-										
+
 										invoice.invoices = data.list;
-										
+
 										var $pages = $(".tcdPageCode");
 										if ($pages.length != 0) {
 											$(".tcdPageCode").createPage({
 												pageCount : data.totalPage,
 												current : 1,
 												backFn : function(p) {
-													getWaitingDealInvoice(p);
+													getWaitingDealInvoice(p,invoState);
+												}
+											});
+										}
+									});
+
+								} else if ($location.path().indexOf(
+										'/invoiceTaskList') == 0) {
+									invoice.show=0;
+									invoState = 2;/*//已完成*/									services.getWaitingDealInvoice({
+										page : 1,
+										invoState : invoState
+									}).success(function(data) {
+
+										invoice.invoices = data.list;
+
+										var $pages = $(".tcdPageCode");
+										if ($pages.length != 0) {
+											$(".tcdPageCode").createPage({
+												pageCount : data.totalPage,
+												current : 1,
+												backFn : function(p) {
+													getWaitingDealInvoice(p,invoState);
 												}
 											});
 										}

@@ -82,22 +82,23 @@ public class InvoiceController {
 	}
 
 	/**
-	 * 待处理发票列表
+	 * 按发票状态获取列表
 	 * 
 	 * @param request
 	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = "/getWaitingDealInvoice.do")
-	public @ResponseBody String waitingDealInvoiceList(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String getInvoiceListByState(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		Integer totalRow = invoiceService.WaitingDealCountByParam(user.getUser_id());
+		Integer invoiceState = Integer.valueOf(request.getParameter("invoState"));
+		Integer totalRow = invoiceService.WaitingDealCountByParam(user.getUser_id(), invoiceState);
 		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
-		List<Invoice> list = invoiceService.WaitingDealFindByPage(user.getUser_id(), pager.getOffset(),
+		List<Invoice> list = invoiceService.WaitingDealFindByPage(user.getUser_id(), invoiceState, pager.getOffset(),
 				pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());

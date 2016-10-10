@@ -129,13 +129,13 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		return Integer.parseInt(result.get(0).toString());
 	}
 
-	// 待处理发票条数
-	public Integer WaitingDealCountByParam(Integer user_id) {
+	// 按发票状态获取列表
+	public Integer WaitingDealCountByParam(Integer user_id, Integer invoiceState) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select count(invo_id) from invoice where invo_isdelete=0 and receiver_id=:receiver_id and invo_state=:invo_state ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("receiver_id", user_id);
-		query.setParameter("invo_state", InvoiceStatus.waitdealing.value);
+		query.setParameter("invo_state", invoiceState);
 		List<Object> result = query.getResultList();
 		em.close();
 		return Integer.parseInt(result.get(0).toString());
@@ -143,13 +143,13 @@ public class InvoiceDaoImpl implements InvoiceDao {
 
 	// 根据用户id，页数返回发票列表
 	@SuppressWarnings("unchecked")
-	public List<Invoice> WaitingDealFindByPage(Integer user_id, Integer offset, Integer end) {
+	public List<Invoice> WaitingDealFindByPage(Integer user_id, Integer invoiceState, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		String selectSql = "select * from invoice where receiver_id=:receiver_id and invo_isdelete=0 and invo_state=:invo_state";
 		selectSql += " order by invo_id  desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, Invoice.class);
 		query.setParameter("receiver_id", user_id);
-		query.setParameter("invo_state", InvoiceStatus.waitdealing.value);
+		query.setParameter("invo_state", invoiceState);
 		query.setParameter("offset", offset);
 		query.setParameter("end", end);
 		List<Invoice> list = query.getResultList();

@@ -3,6 +3,8 @@ package com.mvc.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder.In;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,14 +71,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.countByParam(user_id, ifSend);
 	}
 
-	// 待处理发票条数
-	public Integer WaitingDealCountByParam(Integer user_id) {
-		return invoiceDao.WaitingDealCountByParam(user_id);
+	// 按发票状态获取列表
+	public Integer WaitingDealCountByParam(Integer user_id, Integer invoiceState) {
+		return invoiceDao.WaitingDealCountByParam(user_id, invoiceState);
 	}
 
 	// 根据用户id，页数返回发票列表
-	public List<Invoice> WaitingDealFindByPage(Integer user_id, Integer offset, Integer end) {
-		return invoiceDao.WaitingDealFindByPage(user_id, offset, end);
+	public List<Invoice> WaitingDealFindByPage(Integer user_id, Integer invoiceState, Integer offset, Integer end) {
+		return invoiceDao.WaitingDealFindByPage(user_id, invoiceState, offset, end);
 	}
 
 	// 点击完成更新发票状态
