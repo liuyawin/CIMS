@@ -245,6 +245,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 		function($scope, services, $location) {
 			// 合同
 			var contract = $scope;
+			contract.flag = 0;//标志位，用于控制按钮是否显示
 			// 获取合同列表
 			contract.getContractList = function(page) {
 				services.getContractList({
@@ -426,6 +427,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/contractList') == 0) {// 如果是合同列表页
+					contract.flag = 1;//标志位，用于控制按钮是否显示
 					services.getContractList({
 						page : 1
 					}).success(function(data) {
@@ -507,6 +509,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					});
 
 				} else if ($location.path().indexOf('/debtContract') == 0) {
+					contract.flag = 1;//标志位，用于控制按钮是否显示
 					// contract.getDebtContract();
 					services.getDebtContract({
 						page : 1
@@ -526,6 +529,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 						}
 					});
 				} else if ($location.path().indexOf('/overdueContract') == 0) {
+					contract.flag = 1;//标志位，用于控制按钮是否显示
 					// contract.getOverdueContract();
 					services.getOverdueContract({
 						page : 1
@@ -545,6 +549,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 						}
 					});
 				}else if ($location.path().indexOf('/finishedContract') == 0) {//获取终结合同信息
+					contract.flag = 0;//标志位，用于控制按钮是否显示
 					services.getFinishedContract({
 						page : 1,
 						findType:"4",

@@ -58,11 +58,11 @@
 					href="/CIMS/receipt/toZhurenReceiptPage.do#receiptList"
 					class="tablelink" ng-click="getConId(con.cont_id)">详情</a></td>
 				<td><a href="#contractInfo" class="tablelink underline"
-					ng-click="getConId(con.cont_id)">查看</a><a href="#"
-					class="tablelink underline"> 修改</a><a
+					ng-click="getConId(con.cont_id)">查看</a><!-- <a href="#"
+					class="tablelink underline"> 修改</a> --><a ng-show="flag==1"
 					ng-click="deleteContract(this)" href="#contractList"
 					class="tablelink underline"> 删除</a>
-					<a ng-click="newTask(this)" class="tablelink underline">新建任务</a>
+					<a ng-show="flag==1" ng-click="newTask(this)" class="tablelink underline">新建任务</a>
 					<label class="hidden">{{con.cont_id}}</label></td>
 			</tr>
 		</tbody>

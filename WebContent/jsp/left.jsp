@@ -39,8 +39,8 @@
 					href="${ctx}/contract/toZhurenContractPage.do#/debtContract">欠款合同信息</a><i></i></li>
 				<li><cite></cite> <a
 					href="${ctx}/contract/toZhurenContractPage.do#/overdueContract">工程逾期合同</a><i></i></li>
-				<li><cite></cite> <a
-					href="${ctx}/contract/toZhurenContractPage.do#/test">合同处理记录</a><i></i></li>
+				<%-- <li><cite></cite> <a
+					href="${ctx}/contract/toZhurenContractPage.do#/test">合同处理记录</a><i></i></li> --%>
 				<li><cite></cite> <a
 					href="${ctx}/contract/toZhurenContractPage.do#/finishedContract">终结合同信息</a><i></i></li>
 				<li>
@@ -59,7 +59,7 @@
 			</ul>
 		</dd>
 
-		<dd>
+		<%-- <dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>执行过程管控
 			</div>
@@ -108,8 +108,8 @@
 				<li><cite></cite> <a href="#">其他</a><i></i></li>
 			</ul>
 
-		</dd>
-	</dl>
+		</dd>--%>
+	</dl> 
 
 	<!-- 文书1导航 -->
 	<dl class="leftmenu hideE" id="assistant1">
