@@ -14,15 +14,15 @@ import com.mvc.entity.Alarm;
  */
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 	// 统计报警列表条数
-	@Query("select count(alar_id) from Alarm a where receiver_id=:receiver_id and alar_isremove=0")
-	Long countAlarmTotal(@Param("receiver_id") Integer user_id);
+	@Query("select count(alar_id) from Alarm a where receiver_id=:receiver_id and alar_isremove=:isremove")
+	Long countAlarmTotal(@Param("receiver_id") Integer user_id,@Param("isremove") Integer isremove);
 	
 	//统计报警条数
 	@Query("select count(alar_id) from Alarm a ")
 	Integer countAlarmTotalNum();
 
 	// 根据ID查看报警详情
-	@Query("select a from Alarm a where alar_id=:alarm_id and alar_isremove=0")
+	@Query("select a from Alarm a where alar_id=:alarm_id ")
 	Alarm findAlarmContentById(@Param("alarm_id") Integer alarmid);
 
 }

@@ -82,6 +82,12 @@ app
 										templateUrl : '/CIMS/jsp/assistant2/invoiceInformation/invoiceList.html',
 										controller : 'InvoiceController'
 									})
+							.when(
+									'/invoiceTaskList',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/invoiceInformation/invoiceTaskList.html',
+										controller : 'InvoiceController'
+									})
 				} ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
@@ -126,6 +132,24 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		})
 	};
+	// zq查询待处理的发票任务
+	services.getWaitingDealInvoice = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'invoice/getWaitingDealInvoice.do',
+			data : data
+		});
+	};
+	// zq完成发票任务
+	services.updateInvoiceState = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'invoice/updateInvoiceState.do',
+			data : data
+		});
+	};
+	
+	
 	return services;
 } ]);
 
@@ -158,9 +182,9 @@ app
 									invoice.totalRow = data.totalRow;
 								});
 							}
-							
+
 							// zq所有换页
-							function pageTurn(totalPage,page) {
+							function pageTurn(totalPage, page) {
 								var $pages = $(".tcdPageCode");
 								if ($pages.length != 0) {
 									$(".tcdPageCode").createPage({
@@ -172,6 +196,7 @@ app
 									});
 								}
 							}
+							
 							// zq：读取合同的信息
 							function selectContractById() {
 								var cont_id = sessionStorage.getItem('contId');
@@ -203,8 +228,8 @@ app
 													invoice.invoice = data.invoice;
 													if (data.invoice.invo_time != null) {
 														invoice.invoice.invo_time = changeDateType(data.invoice.invo_time.time);
-													}else{
-														invoice.invoice.invo_time="";
+													} else {
+														invoice.invoice.invo_time = "";
 													}
 													$(".overlayer").fadeIn(200);
 													$("#tipCheck").fadeIn(200);
@@ -215,12 +240,36 @@ app
 									taskHtml.task = "";
 								});
 							}
+							
+							// 完成发票任务
+							invoice.updateInvoiceState = function() {
+								var invoId = this.invo.invo_id;
+								services
+										.updateInvoiceState({
+											invoiceId : invoId
+										})
+										.success(
+												function(data) {
+													alert("操作成功！");
+													getWaitingDealInvoice(1);
+								});
+							}
 							// 更改任务时间的格式
 							function changeDateType(time) {
 								newDate = new Date(time).toLocaleDateString()
 										.replace(/\//g, '-');
 								return newDate;
 							}
+							//查询发票任务
+							function getWaitingDealInvoice(p){
+								services.getWaitingDealInvoice({
+									page : p
+								}).success(function(data) {
+									invoice.invoices = data.list;	
+								});
+								
+							}
+							
 							// zq初始化页面信息
 							function initData() {
 								console.log("初始化页面信息");
@@ -228,18 +277,39 @@ app
 
 									selectContractById();
 									countInvoiceMoneyByContId();
-									var contId = sessionStorage.getItem('contId');
+									var contId = sessionStorage
+											.getItem('contId');
 									services.selectInvoiceByContId({
 										page : 1,
 										contId : contId
 									}).success(function(data) {
 										invoice.invoices = data.list;
 										invoice.totalRow = data.totalRow;
-										pageTurn(data.totalPage,1);
+										pageTurn(data.totalPage, 1);
 									});
-									
 
 								} else if ($location.path().indexOf(
+										'/invoiceTaskList') == 0) {
+									
+									services.getWaitingDealInvoice({
+										page : 1
+									}).success(function(data) {
+										
+										invoice.invoices = data.list;
+										
+										var $pages = $(".tcdPageCode");
+										if ($pages.length != 0) {
+											$(".tcdPageCode").createPage({
+												pageCount : data.totalPage,
+												current : 1,
+												backFn : function(p) {
+													getWaitingDealInvoice(p);
+												}
+											});
+										}
+									});
+
+								}else if ($location.path().indexOf(
 										'/invoiceDetail') == 0) {
 
 									selectInvoiceById();

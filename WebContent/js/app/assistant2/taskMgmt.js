@@ -421,6 +421,7 @@ app
 								} else if ($location.path().indexOf(
 										'/unfinishTask') == 0) {
 									// contract.getDebtContract();
+									
 									tState = 1;
 									sendOrReceive = 1;
 									services.getTaskList({
@@ -428,6 +429,7 @@ app
 										page : 1,
 										sendOrReceive : sendOrReceive
 									}).success(function(data) {
+										
 										taskHtml.tasks = data.list;
 										pageTurn(1, data.totalPage, 1)
 									});

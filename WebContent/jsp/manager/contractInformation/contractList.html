@@ -64,24 +64,24 @@
 			<ul class="forminfo">
 				<li><label>发票金额</label><input type="text" name="invoMoney"
 					id="invoMoney" class="dfinput invoMoney"
-					ng-model="invoice.invoMoney">万元</li>
+					ng-model="invoice.invoMoney" required>万元</li>
 				<li><label>业主公司</label><input type="text" name="invoFirm"
-					class="dfinput" ng-model="invoice.invoFirm"></li>
+					class="dfinput" ng-model="invoice.invoFirm" required></li>
 				<li><label>审核人</label><select name="tReceiver" class="dfselect"
-					ng-model="invoice.auditId">
+					ng-model="invoice.auditId" >
 						<option ng-repeat="user in users" value={{user.user_id}}>
 							<span>{{user.user_name}}</span>
 						</option>
 				</select></li>
 				<li><label>开始时间</label><input type="text"
 					ng-model="invoice.invoStime" class="dfinput dateFormat"
-					placeholder="格式：2016-09-07" /><span class="error-span">日期格式：2016-09-07</span>
+					placeholder="格式：2016-09-07" required/><span class="error-span">日期格式：2016-09-07</span>
 				</li>
 				<li><label>结束时间</label><input type="text" name="invoEtime"
 					ng-model="invoice.invoEtime" class="dfinput dateFormat"
-					placeholder="格式：2016-09-07" /><span class="error-span">日期格式：2016-09-07</span></li>
+					placeholder="格式：2016-09-07" required/><span class="error-span">日期格式：2016-09-07</span></li>
 				<li id="taskContent"><label>备注</label> <textarea name=""
-						cols="" rows="" class="textinput area_style" ng-model="invoice.invoRemark"></textarea></li>
+						cols="" rows="" class="textinput area_style" ng-model="invoice.invoRemark" required></textarea></li>
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sure" id="sureAdd" value="派发"

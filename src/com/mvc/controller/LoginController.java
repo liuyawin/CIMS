@@ -1,8 +1,5 @@
 package com.mvc.controller;
 
-import java.net.HttpCookie;
-import java.util.List;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,13 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.CookieKeyConstants;
 import com.base.constants.PageNameConstants;
 import com.base.constants.SessionKeyConstants;
-import com.mvc.entity.Task;
 import com.mvc.entity.User;
 import com.mvc.service.UserService;
 import com.utils.CookieUtil;
 import com.utils.HttpRedirectUtil;
-import com.utils.Pager;
-
 import net.sf.json.JSONObject;
 
 /**
@@ -128,6 +122,10 @@ public class LoginController {
 					cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);
 				}
 				model.addAttribute("password", password);
+				Cookie cookie = new Cookie("userNum", userNum);
+				cookie.setMaxAge(30 * 60);
+				cookie.setPath("/");
+				res.addCookie(cookie);
 				if (user.getUser_name().equals("zhou"))
 					return "assistant2/contractInformation/index";// 返回到文书二主页
 				else if (user.getUser_name().equals("admin"))
@@ -136,14 +134,10 @@ public class LoginController {
 					return "manager/contractInformation/index";// 返回到管理员主页
 				else if (user.getUser_name().equals("li"))
 					return "assistant1/taskInformation/index";// 返回到文书一主页
-				else{
-					Cookie cookie = new Cookie("identify", "chairman");
-					cookie.setMaxAge(30*60);
-					cookie.setPath("/");
-					res.addCookie(cookie);
+				else {
 					return "zhuren/contractInformation/index";// 返回到主任主页
 				}
-				} else { // 密码错误
+			} else { // 密码错误
 				error_msg = "err_password";
 				cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);
 				model.addAttribute("error", error_msg);
@@ -163,18 +157,20 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping("/logout.do")
-	public String logout(HttpSession session) {
+	public String logout(HttpSession session, HttpServletResponse response) {
 		session.removeAttribute(SessionKeyConstants.LOGIN);
+		Cookie cookie = new Cookie("userNum", null);
+		cookie.setMaxAge(30 * 60);
+		cookie.setPath("/");
+		response.addCookie(cookie);
 		return HttpRedirectUtil.redirectStr(PageNameConstants.TOLOGIN);
 	}
-	
+
 	@RequestMapping(value = "/getUserFromSession.do")
 	public @ResponseBody String getUserFromSession(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		
 		jsonObject.put("user", user);
-	
 		System.out.println("返回用户:" + jsonObject.toString());
 		return jsonObject.toString();
 	}

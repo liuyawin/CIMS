@@ -31,8 +31,8 @@ public class AlarmServiceImpl implements AlarmService {
 
 	// 统计报警列表条数
 	@Override
-	public Long countTotal(Integer user_id) {
-		return alarmRepository.countAlarmTotal(user_id);
+	public Long countTotal(Integer user_id,Integer isremove) {
+		return alarmRepository.countAlarmTotal(user_id,isremove);
 	}
 
 	// 根据ID查看报警详情

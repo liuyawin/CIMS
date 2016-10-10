@@ -60,6 +60,7 @@ public class AlarmDaoImpl implements AlarmDao {
 		query.setParameter("offset", offset);
 		query.setParameter("end", end);
 		List<Alarm> list = query.getResultList();
+		em.close();
 		return list;
 	}
 
