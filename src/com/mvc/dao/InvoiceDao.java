@@ -31,11 +31,11 @@ public interface InvoiceDao {
 	// 根据用户ID查询发票总条数
 	Integer countByParam(Integer user_id, Integer ifSend);
 
-	// 待处理发票条数
-	Integer WaitingDealCountByParam(Integer user_id);
+	// 按发票状态获取列表
+	Integer WaitingDealCountByParam(Integer user_id, Integer invoiceState);
 
 	// 根据用户id，页数返回发票列表
-	List<Invoice> WaitingDealFindByPage(Integer user_id, Integer offset, Integer end);
+	List<Invoice> WaitingDealFindByPage(Integer user_id, Integer invoiceState, Integer offset, Integer end);
 
 	// 点击完成更新发票状态
 	boolean updateInvoiceState(Integer invoiceId, Integer state);
