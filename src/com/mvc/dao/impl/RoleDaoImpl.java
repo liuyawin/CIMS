@@ -33,8 +33,10 @@ public class RoleDaoImpl implements RoleDao {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 
-		Integer count = userRepository.countRoleTotal(role_id);
-		if (count < 1) {
+		Long count = userRepository.countUserByroleid(role_id);
+		String count1=count.toString();
+		int count2=Integer.parseInt(count1);
+		if (count2 < 1) {
 			String selectSql = " update role set `role_state` = 1  where role_id =:role_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("role_id", role_id);

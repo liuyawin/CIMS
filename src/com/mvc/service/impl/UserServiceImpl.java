@@ -2,7 +2,10 @@
 
 import java.util.List;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.mvc.dao.UserDao;
@@ -26,7 +29,7 @@ public class UserServiceImpl implements UserService {
 	UserDao userDao;
 
 	/**
-	 * 添加用户
+	 * 添加用户, 修改用户信息
 	 */
 	public boolean save(User user) {
 		User result = userRepository.saveAndFlush(user);
@@ -55,34 +58,44 @@ public class UserServiceImpl implements UserService {
 
 	// 查询部门总条数
 	@Override
-	public Long countTotal() {		
+	public Long countTotal() {
 		return userRepository.countTotal();
 	}
+
 	// 根据页数筛选全部用户列表
 	@Override
-	public List<User> findUserAllByPage(Integer offset, Integer end) {			
-		return userDao.findUserAllByPage(offset,end);
+	public List<User> findUserAllByPage(Integer offset, Integer end) {
+		return userDao.findUserAllByPage(offset, end);
 	}
-	//获取用户列表，无翻页功能	
+
+	// 获取用户列表，无翻页功能
 	@Override
 	public List<User> findUserAlls() {
 		return userRepository.findAlls();
 	}
-	//只要设计部人员列表
+
+	// 只要设计部人员列表
 	@Override
 	public List<UserDeptRelation> findUserFromDesign() {
 		return userDao.findUserFromDesign();
 	}
-	//根据id删除
+
+	// 根据id删除
 	@Override
 	public boolean deleteIsdelete(Integer user_id) {
 		return userDao.updateState(user_id);
 	}
-	
+
 	// 根据ID查询用户信息
 	@Override
 	public User findById(Integer user_id) {
 		return userRepository.findById(user_id);
+	}
+
+	// 根据ID查看用户详情
+	@Override
+	public User findUserContentById(Integer user_id) {
+		return userRepository.findUserContentById(user_id);
 	}
 
 }

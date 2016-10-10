@@ -21,7 +21,7 @@ import net.sf.json.JSONObject;
 import com.alibaba.fastjson.JSON;
 
 /**
- * 用户相关
+ * 用户相关内容
  * 
  * @author wanghuimin
  * @date 2016年9月7日
@@ -34,14 +34,14 @@ public class UserController {
 	UserService userService;
 
 	/**
-	 *根据页数筛选用户列表
+	 * 根据页数筛选用户列表
 	 * 
 	 * @param request
 	 * @param session
-	 * @return 
+	 * @return
 	 */
 	@RequestMapping(value = "/getUserListByPage.do")
-	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {	
+	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Long totalRow = userService.countTotal();
 		System.out.println("总数" + totalRow);
@@ -54,12 +54,13 @@ public class UserController {
 		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
+
 	/**
-	 *获取用户列表，无翻页功能
+	 * 获取用户列表，无翻页功能
 	 * 
 	 * @param request
 	 * @param session
-	 * @return 
+	 * @return
 	 */
 	@RequestMapping(value = "/getAllUserList.do")
 	public @ResponseBody String getAllStores(HttpServletRequest request, HttpSession session) {
@@ -67,22 +68,23 @@ public class UserController {
 		System.out.println(JSON.toJSONString(result));
 		return JSON.toJSONString(result);
 	}
+
 	/**
 	 * 删除用户
 	 * 
 	 * @param request
 	 * @param session
-	 * @return 
+	 * @return
 	 */
 	@RequestMapping(value = "/deleteUser.do")
 	public @ResponseBody String deleteUser(HttpServletRequest request, HttpSession session) {
 		Integer userid = Integer.valueOf(request.getParameter("userId"));
 		boolean result = userService.deleteIsdelete(userid);
 		return JSON.toJSONString(result);
-	}		
-	
+	}
+
 	/**
-	 * 添加用户
+	 * 添加,修改用户信息
 	 * 
 	 * @param request
 	 * @param session
@@ -90,24 +92,30 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/addUser.do")
 	public @ResponseBody String addUser(HttpServletRequest request, HttpSession session) {
-		
-		JSONObject jsonObject=new JSONObject();
-		jsonObject=JSONObject.fromObject(request.getParameter("user"));		
-		User user=new User();
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = JSONObject.fromObject(request.getParameter("user"));
+		User user = new User();
 		user.setUser_num(jsonObject.getString("user_num"));
 		user.setUser_name(jsonObject.getString("user_name"));
 		user.setUser_pwd(jsonObject.getString("user_pwd"));
 		user.setUser_sex(Integer.parseInt(jsonObject.getString("user_sex")));
 		user.setUser_tel(jsonObject.getString("user_tel"));
 		user.setUser_email(jsonObject.getString("user_email"));
-		Role role=new Role();
+
+		Role role = new Role();
 		role.setRole_id(Integer.parseInt(jsonObject.getString("roleId")));
 		user.setRole(role);
 		user.setUser_isdelete(0);
-//		user.setUser_permission(request.getParameter("user_permission"));		
-		boolean result = userService.save(user);
+		boolean result;
+		if (jsonObject.containsKey("user_id")) {
+			user.setUser_id(Integer.valueOf(jsonObject.getString("user_id")));
+			result = userService.save(user);// 修改用户信息
+		} else {
+			result = userService.save(user);// 添加用户信息
+		}
 		return JSON.toJSONString(result);
 	}
+
 	/**
 	 * 只要设计部人员列表
 	 * 
@@ -121,5 +129,22 @@ public class UserController {
 		System.out.println(JSON.toJSONString(result));
 		return JSON.toJSONString(result);
 	}
-	
+
+	/**
+	 * 根据ID查看用户详情
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/selectUserById.do")
+	public @ResponseBody String getUserContentById(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		Integer userid = Integer.valueOf(request.getParameter("userid"));
+		User user = userService.findUserContentById(userid);
+		jsonObject.put("user", user);
+		return jsonObject.toString();
+
+	}
+
 }

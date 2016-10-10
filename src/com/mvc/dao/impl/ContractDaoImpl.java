@@ -51,7 +51,8 @@ public class ContractDaoImpl implements ContractDao {
 	public List<Contract> findAllDebtCont(String contName, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select * from contract c where c.cont_id in (select distinct(rn.cont_id) from receive_node rn ");
+		sql.append(
+				"select * from contract c where c.cont_state=0 and c.cont_id in (select distinct(rn.cont_id) from receive_node rn ");
 		sql.append("where rn.reno_time<=now() and rn.reno_state in (0,2)) and c.cont_ishistory=0");
 		if (null != contName) {
 			sql.append(" and c.cont_name like '%" + contName + "%'");
@@ -71,7 +72,7 @@ public class ContractDaoImpl implements ContractDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append(
-				"select * from contract c where c.cont_id in (select distinct(t.cont_id) from task t where t.task_etime<=now()");
+				"select * from contract c where c.cont_state=0 and c.cont_id in (select distinct(t.cont_id) from task t where t.task_etime<=now()");
 		sql.append(" and t.task_state in (0,1) and t.task_isdelete=0) and c.cont_ishistory=0");
 		if (contName != null) {
 			sql.append(" and c.cont_name like '%" + contName + "%'");
@@ -90,7 +91,7 @@ public class ContractDaoImpl implements ContractDao {
 	public List<Contract> findConByName(String contName, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select * from contract c where c.cont_ishistory=0");
+		sql.append("select * from contract c where c.cont_state=0 and c.cont_ishistory=0");// 在建
 		if (null != contName) {
 			sql.append(" and c.cont_name like '%" + contName + "%'");
 		}
@@ -104,18 +105,22 @@ public class ContractDaoImpl implements ContractDao {
 
 	// 根据创建者ID和合同名查询合同总条数
 	@Override
-	public Long countTotal(String contName, String methodType) {
+	public Long countTotal(String contName, Integer methodType) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(cont_id) from contract c where c.cont_ishistory=0 ");
-		if (methodType.equals("name")) {// 根据name查询
-
-		} else if (methodType.equals("Debt")) {// 查询欠款
+		if (methodType == 1) {// 根据name查询
+			sql.append(" and c.cont_state=0");
+		} else if (methodType == 2) {// 查询欠款
 			sql.append(
-					" and c.cont_id in (select distinct(rn.cont_id) from receive_node rn where rn.reno_time<=now() and rn.reno_state in (0,2))");
-		} else if (methodType.equals("Overdue")) {// 查询逾期
+					" and c.cont_state=0 and c.cont_id in (select distinct(rn.cont_id) from receive_node rn where rn.reno_time<=now() and rn.reno_state in (0,2))");
+		} else if (methodType == 3) {// 查询逾期
 			sql.append(
-					" and c.cont_id in (select distinct(t.cont_id) from task t where t.task_etime<=now() and t.task_state in (0,1) and t.task_isdelete=0)");
+					" and c.cont_state=0 and c.cont_id in (select distinct(t.cont_id) from task t where t.task_etime<=now() and t.task_state in (0,1) and t.task_isdelete=0)");
+		} else if (methodType == 4) {// 终结合同
+			sql.append(" and c.cont_state=1");// 竣工
+		} else if (methodType == 5) {// 停建合同
+			sql.append(" and c.cont_state=2");// 停建
 		}
 		if (contName != null) {
 			sql.append(" and c.cont_name like '%" + contName + "%'");
@@ -132,17 +137,35 @@ public class ContractDaoImpl implements ContractDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		try {
-			// em.getTransaction().begin();
+			em.getTransaction().begin();
 			sql.append("update contract c set c.cont_ishistory=1 where c.cont_id=:cont_id");
 			Query query = em.createNativeQuery(sql.toString());
 			query.setParameter("cont_id", cont_id);
 			query.executeUpdate();
 			em.flush();
-			// em.getTransaction().commit();
+			em.getTransaction().commit();
 		} finally {
 			em.close();
 		}
 		return true;
+	}
+
+	// 查询所有终结合同列表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Contract> findAllEndCont(String contName, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from contract c where c.cont_state=1 and c.cont_ishistory=0");
+		if (contName != null) {
+			sql.append(" and c.cont_name like '%" + contName + "%'");
+		}
+		sql.append(" order by cont_id limit :offset,:end");
+		Query query = em.createNativeQuery(sql.toString(), Contract.class);
+		query.setParameter("offset", offset).setParameter("end", end);
+		List<Contract> list = query.getResultList();
+		em.close();
+		return list;
 	}
 
 }

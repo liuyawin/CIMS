@@ -50,41 +50,31 @@ public class TaskController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/toManagerReceivePage.do")
+	@RequestMapping("/toManagerTaskPage.do")
 	public String managerReceivePage() {
-		return "manager/taskReceiveInformation/index";
-	}
-
-	/**
-	 * zq设置设总进入发送任务起始页
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toManagerSendPage.do")
-	public String managerSendPage() {
-		return "manager/taskSendInformation/index";
+		return "manager/taskInformation/index";
 	}
 
 
-	
+
 	/**
 	 * 设置进入接收任务起始页
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/toTaskReceivePage.do")
+	@RequestMapping("/toTaskPage.do")
 	public String taskReceivePage() {
-		return "assistant2/taskReceiveInformation/index";
+		return "assistant2/taskInformation/index";
 	}
-
+	
 	/**
 	 * 设置进入发送任务起始页
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/toTaskSendPage.do")
-	public String taskInSendPage() {
-		return "assistant2/taskSendInformation/index";
+	@RequestMapping("/toAssistant1TaskList.do")
+	public String toAssistant1TaskList() {
+		return "assistant1/taskInformation/index";
 	}
 
 	/**

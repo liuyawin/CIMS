@@ -116,18 +116,20 @@ public class LoginController {
 				session.setAttribute(SessionKeyConstants.LOGIN, user);
 				model.addAttribute("user", user);
 				cookie_u.add_cookie(CookieKeyConstants.USERNAME, userNum, res, 60 * 60 * 24 * 15);
-				if (isRemember!=null) {
+				if (isRemember != null) {
 					cookie_u.add_cookie(CookieKeyConstants.PASSWORD, password, res, 60 * 60 * 24 * 7);
 				} else {
 					cookie_u.del_cookie(CookieKeyConstants.PASSWORD, request, res);
 				}
 				model.addAttribute("password", password);
 				if (user.getUser_name().equals("zhou"))
-					return "assistant2/taskReceiveInformation/index";// 返回到文书二主页
+					return "assistant2/taskInformation/index";// 返回到文书二主页
 				else if (user.getUser_name().equals("admin"))
 					return "userManagement/userInformation/index";// 返回到管理员主页
 				else if (user.getUser_name().equals("shezong"))
-					return "manager/taskReceiveInformation/index";// 返回到管理员主页
+					return "manager/taskInformation/index";// 返回到管理员主页
+				else if (user.getUser_name().equals("li"))
+					return "assistant1/taskInformation/index";// 返回到文书一主页
 				else
 					return "zhuren/contractInformation/index";// 返回到主任主页
 			} else { // 密码错误

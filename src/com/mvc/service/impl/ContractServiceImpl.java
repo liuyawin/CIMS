@@ -40,7 +40,7 @@ public class ContractServiceImpl implements ContractService {
 
 	// 查询合同总条数
 	@Override
-	public Long countTotal(String contName, String methodType) {
+	public Long countTotal(String contName, Integer methodType) {
 		return contractDao.countTotal(contName, methodType);
 	}
 
@@ -70,6 +70,12 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public Boolean deleteContract(Integer cont_id) {
 		return contractDao.delete(cont_id);
+	}
+
+	// 查询所有终结合同列表
+	@Override
+	public List<Contract> findAllEndCont(String contName, Integer offset, Integer end) {
+		return contractDao.findAllEndCont(contName, offset, end);
 	}
 
 }

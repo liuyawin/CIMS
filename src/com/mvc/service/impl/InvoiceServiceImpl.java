@@ -52,4 +52,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.totalMoneyOfInvoice(contId);
 	}
 
+	// 创建发票
+	public boolean save(Invoice invoice) {
+		Invoice invoiceResult = invoiceRepository.saveAndFlush(invoice);
+		if (invoiceResult.getInvo_id() != null) {
+			return true;
+		} else
+			return false;
+	}
+
 }

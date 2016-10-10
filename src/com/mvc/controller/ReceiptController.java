@@ -24,6 +24,7 @@ import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 import com.mvc.entity.User;
 import com.mvc.service.ReceiptService;
+import com.mvc.service.ReceiveNodeService;
 import com.utils.Pager;
 
 import net.sf.json.JSONObject;
@@ -39,6 +40,8 @@ import net.sf.json.JSONObject;
 public class ReceiptController {
 	@Autowired
 	ReceiptService receiptService;
+	@Autowired
+	ReceiveNodeService receiveNodeService;
 
 	/**
 	 * 返回收据界面
@@ -97,7 +100,7 @@ public class ReceiptController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value = "/countInvoiceMoneyByContId.do")
+	@RequestMapping(value = "/countReceiptMoneyByContId.do")
 	public @ResponseBody String totalMoney(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
@@ -115,7 +118,7 @@ public class ReceiptController {
 	 * @return
 	 */
 	@RequestMapping(value = "/createReceipt.do")
-	public @ResponseBody String addTask(HttpServletRequest request, HttpSession session) throws ParseException {
+	public @ResponseBody String addReceipt(HttpServletRequest request, HttpSession session) throws ParseException {
 		JSONObject result = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("receipt"));
@@ -134,6 +137,22 @@ public class ReceiptController {
 		receipt.setRece_money(Float.valueOf(jsonObject.getString("receMoney")));
 		receipt.setRece_remark(jsonObject.getString("receRemark"));
 		boolean receiptResult = receiptService.save(receipt);
+		ReceiveNode receiveNode2 = receiveNodeService.findByRenoId(Integer.valueOf(request.getParameter("renoId")));
+		Float reNoAMoney = receiveNode2.getReno_amoney() + Float.valueOf(jsonObject.getString("receMoney"));
+		Float reNoMoney = receiveNode2.getReno_money();
+		receiveNode2.setReno_amoney(reNoMoney);
+		Integer reNoStatus;
+		if (reNoAMoney == 0)
+			reNoStatus = 0;
+		else if (0 < reNoAMoney && reNoAMoney < reNoMoney) {
+			reNoStatus = 1;
+		} else if (reNoAMoney == reNoMoney) {
+			reNoStatus = 2;
+		} else {
+			reNoStatus = 3;
+		}
+		receiveNode2.setReno_state(reNoStatus);
+		boolean receiveNodeResult = receiveNodeService.addReceiveNode(receiveNode2);
 		if (receiptResult)
 			result.put("result", "true");
 		else {

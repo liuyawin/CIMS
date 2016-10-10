@@ -29,4 +29,7 @@ public interface InvoiceService {
 
 	// 根据合同ID查询发票总金额
 	Float totalMoneyOfInvoice(Integer contId);
+
+	// 创建发票
+	boolean save(Invoice invoice);
 }

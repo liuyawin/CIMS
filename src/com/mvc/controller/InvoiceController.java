@@ -1,8 +1,8 @@
-/**
- * 
- */
 package com.mvc.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.base.constants.SessionKeyConstants;
+import com.base.enums.InvoiceStatus;
+import com.base.enums.IsDelete;
+import com.mvc.entity.Contract;
 import com.mvc.entity.Invoice;
+import com.mvc.entity.User;
 import com.mvc.service.InvoiceService;
 import com.utils.Pager;
 
@@ -97,6 +102,50 @@ public class InvoiceController {
 		jsonObject.put("totalMoney", totalMoney);
 		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 创建发票
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/addInvoiceTask.do")
+	public @ResponseBody String addInvoice(HttpServletRequest request, HttpSession session) throws ParseException {
+		JSONObject result = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("invoice"));
+		Invoice invoice = new Invoice();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		long time = System.currentTimeMillis();
+		Contract contract = new Contract();
+		contract.setCont_id(Integer.valueOf(request.getParameter("contId")));
+		invoice.setContract(contract);
+		invoice.setInvo_money(Float.valueOf(jsonObject.getString("invoMoney")));
+		invoice.setInvo_firm(jsonObject.getString("invoFirm"));
+		User audit = new User();
+		audit.setUser_id(Integer.valueOf(jsonObject.getString("auditId")));
+		invoice.setAudit(audit);
+		Date sTime = format.parse(jsonObject.getString("invoStime"));
+		invoice.setInvo_stime(sTime);
+		Date eTime = format.parse(jsonObject.getString("invoEtime"));
+		invoice.setInvo_etime(eTime);
+		invoice.setInvo_remark(jsonObject.getString("invoRemark"));
+		User creator = new User();
+		creator.setUser_id(user.getUser_id());
+		invoice.setCreator(creator);
+		invoice.setInvo_isdelete(IsDelete.NO.value);
+		invoice.setInvo_ctime(new Date(time));
+		invoice.setInvo_state(InvoiceStatus.waitAudit.value);
+		boolean invoiceResult = invoiceService.save(invoice);
+		if (invoiceResult)
+			result.put("result", "true");
+		else {
+			result.put("result", "false");
+		}
+		return result.toString();
 	}
 
 	/**

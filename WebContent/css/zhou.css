@@ -58,8 +58,20 @@
 	width: 10%;
 }
 
+.width5 {
+	width: 5%;
+}
+
 .width15 {
 	width: 15%;
+}
+
+.width25 {
+	width: 25%;
+}
+
+.width30 {
+	width: 30%;
 }
 
 .width35 {
@@ -81,4 +93,11 @@
 	margin-top: 10px;
 	margin-left: 5px;
 }
+
+.left_length5 {
+	margin-left: 5px;
+}
+
+.little {
+	font-size: 10px;
 }

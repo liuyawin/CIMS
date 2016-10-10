@@ -30,6 +30,9 @@ public class Alarm implements Serializable {
 	private Integer alar_isremove;// 报警解除标志，0-未解除，1-解除
 	private User user;// fk外键，报警接收人
 	private Contract contract;// fk外键，所属合同
+	private Task task;// 任务Id
+	private ReceiveNode receiveNode;// 收款节点
+	private ProjectStage projectStage;// 工期阶段
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -93,5 +96,35 @@ public class Alarm implements Serializable {
 
 	public void setContract(Contract contract) {
 		this.contract = contract;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "task_id")
+	public Task getTask() {
+		return task;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "reno_id")
+	public ReceiveNode getReceiveNode() {
+		return receiveNode;
+	}
+
+	public void setReceiveNode(ReceiveNode receiveNode) {
+		this.receiveNode = receiveNode;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "prst_id")
+	public ProjectStage getProjectStage() {
+		return projectStage;
+	}
+
+	public void setProjectStage(ProjectStage projectStage) {
+		this.projectStage = projectStage;
 	}
 }

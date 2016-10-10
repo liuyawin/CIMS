@@ -28,5 +28,8 @@ public interface DepartmentService {
 	
 	// 查询任务总条数
 	Long countTotal();
+	
+	//根据ID查看部门详情
+	Department findDepartmentContentById(Integer dept_id);
 
 }

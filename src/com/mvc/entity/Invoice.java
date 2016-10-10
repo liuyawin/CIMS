@@ -1,6 +1,6 @@
 package com.mvc.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Table(name = "invoice")
 public class Invoice {
 	private Integer invo_id;// ID
-	private Integer invo_state;// 任务状态,0:待接收，1:主任审核，2:文书处理，3:已完成
+	private Integer invo_state;// 发票状态,0:待审核，1:待处理，2:已完成
 	private Float invo_money;// 金额
 	private String invo_firm;// 业主公司名称
 	private Date invo_stime;// 开始时间
