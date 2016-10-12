@@ -89,11 +89,11 @@
 	<div class="formbody">
 		<form id="" ng-submit="addTask()">
 			<ul class="forminfo">
-				<li><label>任务类型</label> <select name="tType" class="dfselect"
+				<!-- <li><label>任务类型</label> <select name="tType" class="dfselect"
 					ng-model="task.task_type">
 						<option value="0">普通任务</option>
 
-				</select></li>
+				</select></li> -->
 				<li><label>接收人</label><select name="tReceiver" class="dfselect"
 					ng-model="task.receiver_id">
 						<option ng-repeat="user in users" value={{user.user_id}}>
@@ -130,10 +130,10 @@
 	<div class="formbody">
 		<form id="" ng-submit="addTask()">
 			<ul class="forminfo">
-				<li><label>任务类型</label> <select name="tType" class="dfselect"
+				<!-- <li><label>任务类型</label> <select name="tType" class="dfselect"
 					ng-model="task.task_type">
 						<option value="0">普通任务</option>
-				</select></li>
+				</select></li> -->
 				<li><label>接收人</label><input type="text"
 					ng-model="task.receiver.user_name" class="dfinput"
 					/>

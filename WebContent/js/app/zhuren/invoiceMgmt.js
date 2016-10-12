@@ -150,7 +150,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.getWaitingDealInvoice = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'invoice/getWaitingDealInvoice.do',
+			url : baseUrl + 'invoice/getZRInvoice.do',
 			data : data
 		});
 	};
@@ -324,7 +324,7 @@ app
 							});
 
 							$("#sureSend").click(function() {
-								alert(invoice.invoiceId);
+								
 								services.updateInvoice({
 									invoId : invoice.invoiceId,
 									invoEtime : invoice.invoEtime,

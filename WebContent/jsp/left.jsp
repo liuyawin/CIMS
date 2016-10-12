@@ -208,7 +208,7 @@
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a
+				<li><cite></cite> <a id="alarmFirst"
 					href="${ctx}/alarm/toAssistant2AlarmPage.do#/newAlarmList">待处理</a><i></i></li>
 				<li><cite></cite> <a
 					href="${ctx}/alarm/toAssistant2AlarmPage.do#/doneAlarmList">已处理</a><i></i></li>
@@ -274,7 +274,7 @@
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a
+				<li><cite></cite> <a id="alarmFirst"
 					href="${ctx}/alarm/toManagerAlarmPage.do#/newAlarmList">待处理</a><i></i></li>
 				<li><cite></cite> <a
 					href="${ctx}/alarm/toManagerAlarmPage.do#/doneAlarmList">已处理</a><i></i></li>
