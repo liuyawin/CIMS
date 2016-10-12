@@ -68,13 +68,14 @@ public class InvoiceController {
 	public @ResponseBody String getAllInvoiceList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		Integer ifSend = Integer.valueOf(request.getParameter("ifSend"));// 0:未派发；1：已派发
-		Integer totalRow = invoiceService.countByParam(user.getUser_id(), ifSend);
+		Integer invoState = Integer.valueOf(request.getParameter("invoState"));// 0:未审核；1：已审核
+		Integer totalRow = invoiceService.countByParam(user.getUser_id(), invoState);
 		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
-		List<Invoice> list = invoiceService.findByPage(user.getUser_id(), ifSend, pager.getOffset(), pager.getLimit());
+		List<Invoice> list = invoiceService.findByPage(user.getUser_id(), invoState, pager.getOffset(),
+				pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		System.out.println("返回列表:" + jsonObject.toString());

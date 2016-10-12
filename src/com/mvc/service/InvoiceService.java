@@ -35,10 +35,10 @@ public interface InvoiceService {
 	boolean save(Invoice invoice);
 
 	// 根据用户id，页数返回发票列表
-	List<Invoice> findByPage(Integer user_id, Integer ifSend, Integer offset, Integer end);
+	List<Invoice> findByPage(Integer user_id, Integer invoState, Integer offset, Integer end);
 
 	// 根据用户ID查询任务总条数
-	Integer countByParam(Integer user_id, Integer ifSend);
+	Integer countByParam(Integer user_id, Integer invoState);
 
 	// 按发票状态获取列表
 	Integer WaitingDealCountByParam(Integer user_id, Integer invoiceState);
