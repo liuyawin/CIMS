@@ -6,18 +6,19 @@
 			+ path + "/";
 %>
 <jsp:include page="/jsp/top.jsp" />
-<section class="main" ng-app="alarm">
+<section class="main" ng-app="taskMgmt">
 	<div ng-view></div>
 </section>
 <jsp:include page="/jsp/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
-<script src="${ctx}/js/app/zhuren/alarmMgmt.js"></script>
-<script type="text/javascript">
-	$(function() {
+<script src="${ctx}/js/app/zhuren/taskMgmt.js"></script>
+<script>
+	$(function(){
 		/* alert(window.location.href.indexOf('#')); */
-		if (window.location.href.indexOf('#') == -1)
-			document.getElementById("alarmFirst").click();
-	});
+		if(window.location.href.indexOf('#')==-1) 
+		document.getElementById("taskFirst").click();
+	})
 </script>
+
 </body>
 </html>

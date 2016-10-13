@@ -82,6 +82,7 @@ public class ProjectStageController {
 				calendar.add(Calendar.DAY_OF_MONTH, -days);// 工作结束提醒时间=阶段截止时间-完工提醒天数
 				projectStage.setPrst_wtime(calendar.getTime());// 工作结束提醒时间
 				projectStage.setPrst_ctime(new Date(time));// 阶段录入时间
+				projectStage.setPrst_state(0);
 				User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 录入人
 				projectStage.setUser(user);
 				Contract contract = contractService.selectContById(Integer.parseInt(request.getParameter("cont_id")));// 所属合同

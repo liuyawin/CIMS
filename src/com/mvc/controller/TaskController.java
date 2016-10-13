@@ -75,6 +75,17 @@ public class TaskController {
 	public String toAssistant1TaskList() {
 		return "assistant1/taskInformation/index";
 	}
+	
+	/**
+	 * 设置进入发送任务起始页
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toZhurenTaskList.do")
+	public String toZhurenTaskList() {
+		return "zhuren/taskInformation/index";
+	}
+
 
 	/**
 	 * 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
