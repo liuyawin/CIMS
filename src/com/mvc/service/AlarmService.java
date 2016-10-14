@@ -12,10 +12,13 @@ import com.mvc.entity.Alarm;
  */
 public interface AlarmService {
 	// 查找报警信息列表
-	List<Alarm> findAlarmInformationList(Integer user_id, Integer isremove, Integer offset, Integer end);
+	List<Alarm> findAlarmInformationList(Integer user_id, String alarmType, Integer offset, Integer end);
+
+	// 张姣娜添加：统计报警列表条数，alarmType:2,3
+	Integer countTotal(Integer user_id, String alarmType);
 
 	// 统计报警列表条数
-	Long countTotal(Integer user_id,Integer isremove);
+	Long countNumByUserId(Integer user_id);
 
 	// 统计报警条数
 	Integer countTotalNum(String searchKey);
