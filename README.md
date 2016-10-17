@@ -16,12 +16,13 @@ This is a Contract Implementation Management System.
  后台开发规范：
   
   1.所有新建的类都要有注释，格式如下：
+    <pre>
     /**
     * 该类的功能
     * @author 创建人
     * @date 2016年9月8日
     */
-    
+   </pre> 
   2.所有的接口、方法带注释，说明功能。
   
   3.在别人维护的类中新增方法，必须注明操作人。
