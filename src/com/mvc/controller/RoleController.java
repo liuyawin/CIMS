@@ -38,7 +38,15 @@ public class RoleController {
 	public String roleReceivePage() {
 		return "userManagement/userInformation/index";
 	}
-
+	/**
+	 * 设置进入用户管理起始页
+	 * 包 20161014
+	 * @return
+	 */
+	@RequestMapping("/toUserManagePage.do")
+	public String userManagePage() {
+		return "systemManagement/index";
+	}
 	/**
 	 * 删除角色列表状态
 	 * 
