@@ -1,0 +1,38 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="#">首页</a></li>
+		<li><a href="#">合同列表</a></li>
+		<li><a href="#">发票详情</a></li>
+		<li><a href="#">查看发票</a></li>
+	</ul>
+</div>
+
+<div class="formbody">
+	<div class="formtitle">
+		<span>发票内容</span>
+	</div>
+	<ul class="forminfo">
+		<li><label>发票金额</label> <input name="" type="text"
+			class="dfinput" readonly value="{{invoice.invo_money |receFloat}}" />万元</li>
+		<li><label>开发票时间</label><input name="" type="text"
+			class="dfinput" value="{{invoice.invo_time.time | dateType}}"
+			readonly /></li>
+			<li><label>业主公司</label><input name="" type="text"
+			class="dfinput" value="{{invoice.invo_firm}}"
+			readonly /></li>
+		<li><label>发起者</label> <input name="" type="text"
+			class="dfinput" readonly value="{{invoice.creator.user_name}}" /></li>
+		<li><label>审核者</label><input type="text" class="dfinput"
+			readonly value="{{invoice.audit.user_name}}"></li>
+		<li><label>执行者</label><input type="text" class="dfinput"
+			readonly value="{{invoice.receiver.user_name}}"></li>
+			<li><label>所属合同</label><input type="text" class="dfinput"
+			readonly value="{{invoice.contract.cont_name}}"></li>
+		<li><label>备注</label> <textarea name="" cols="" rows=""
+				class="textinput" readonly 
+				>{{invoice.invo_remark}}</textarea></li>
+	</ul>
+</div>
+<br>
+

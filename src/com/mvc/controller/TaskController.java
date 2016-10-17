@@ -47,34 +47,17 @@ public class TaskController {
 	SubTaskService subTaskService;
 
 	/**
-	 * zq设总入接收任务起始页
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toManagerTaskPage.do")
-	public String managerReceivePage() {
-		return "manager/taskInformation/index";
-	}
-
-	/**
-	 * 文书二进入接收任务起始页
+	 * zq接收任务起始页
 	 * 
 	 * @return
 	 */
 	@RequestMapping("/toTaskPage.do")
-	public String taskReceivePage() {
-		return "assistant2/taskInformation/index";
+	public String managerReceivePage() {
+		return "taskInformation/index";
 	}
 
-	/**
-	 * 设置进入发送任务起始页
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toAssistant1TaskList.do")
-	public String toAssistant1TaskList() {
-		return "assistant1/taskInformation/index";
-	}
+	
+
 
 	/**
 	 * 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
