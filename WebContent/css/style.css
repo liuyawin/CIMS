@@ -802,7 +802,7 @@ h2 {
 
 /*form*/
 .formbody {
-	padding: 10px 18px;
+	padding: 10px 18px;	
 }
 
 .formtitle {
@@ -855,7 +855,7 @@ h2 {
 }
 
 .dfinput {
-	width: 300px;
+	width: 280px;
 	height: 32px;
 	margin-right: 12px;
 	line-height: 32px;
@@ -1574,7 +1574,7 @@ h2 {
 
 /* 下拉框 */
 .dfselect {
-	width: 300px;
+	width: 280px;
 	height: 36px;
 	margin-right: 12px;
 	line-height: 32px;
@@ -1592,7 +1592,7 @@ h2 {
 }
 
 .textarea {
-	width: 280px;
+	width: 260px;
 	height: 80px;
 	padding: 8px;
 	line-height: 16px;
@@ -1631,4 +1631,55 @@ h2 {
 .error-span {
 	display: none;
 	color: red;
+}
+
+.float{
+	width:530px;
+	float:left;
+}
+/* 上传文件中的删除按钮 */
+.btn-delete{
+	padding: 2px 12px;
+	font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.table-upload {
+	width:96%;
+	margin: 32px auto;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #333;
+}
+
+.table-upload td {
+	text-align: center;
+}
+
+.table-upload tr {
+    vertical-align: center;
+    line-height: 24px;
+    border-color: inherit;
+    border-bottom:1px solid #d0dee5;
+}
+
+.div-btn {
+	margin-left:2%;
 }

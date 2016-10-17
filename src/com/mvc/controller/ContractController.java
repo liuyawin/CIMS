@@ -65,9 +65,9 @@ public class ContractController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/toZhurenContractPage.do")
-	public String zhurenContractPage() {
-		return "zhuren/contractInformation/index";
+	@RequestMapping("/toContractPage.do")
+	public String contractPage() {
+		return "contractInformation/index";
 	}
 
 	/**

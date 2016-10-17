@@ -25,7 +25,7 @@
 			</ul>
 
 			<div class="user">
-				<span>${cookie.userNum.value}</span> <i>报警</i><a
+				<span id="userNum"></span> <i>报警</i><a
 					href="/CIMS/alarm/toAlarmListPage.do"><b id="newsNum"></b></a>
 			</div>
 		</div>
@@ -36,9 +36,22 @@
 			src="${ctx}/js/lib/jquery.json-2.2.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
+				var cookie = {};
+				var cookies = document.cookie;
+				if(cookies === "") return cookie;
+				var list = cookies.split(";");
+				for(var i = 0; i < list.length; i++) {
+					var cookieString = list[i];
+					var p = cookieString.indexOf("=");
+					var name = cookieString.substring(0, p);
+					var value = cookieString.substring(p+1, cookieString.length);
+					console.log(name);
+					console.log(value);
+					cookie[name.trim()] = value;
+				}
+				$('#userNum').html(cookie.userNum);
 				$.getJSON("/CIMS/alarm/selectAlarms.do", {
-					isRemove : '0'
-					
+					isRemove : '0'					
 				}, function(data) {
 					$("#newsNum").text(data.totalRow);
 				});
