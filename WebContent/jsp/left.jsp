@@ -54,13 +54,7 @@
 			</ul>
 
 		</dd>
-
-	</dl>
-
-	<section class="leftbar">
-
 		<!-- 报警列表信息栏-->
-		<dl class="leftmenu">
 			<dd>
 				<div class="title">
 					<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
