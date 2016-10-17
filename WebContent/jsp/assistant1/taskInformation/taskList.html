@@ -1,0 +1,91 @@
+﻿<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="#">首页</a></li>
+		<li><a href="#">任务列表</a></li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+	<div class="tools">
+		<form class="toolbar">
+			<input name="" type="text" class="dfinput" id="conName" /> <input
+				class="btn" type="submit" value="查询" ng-click="getTaskByConName()">
+		</form>
+	</div>
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>合同名称</th>
+				<th>状态</th>
+				<th>创建者</th>
+				<th>报警次数</th>
+				<!-- <th>任务内容</th> -->
+				<th>操作</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr ng-repeat="t in tasks">
+				<td >{{$index + 1}}</td>
+				<td><a href="#contractInfo" class="tablelink underline" ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name}}</a></td>				
+				<td><div ng-switch={{t.task_state}}>
+						<div ng-switch-when="0">待接收</div>
+						<div ng-switch-when="1">执行中</div>
+						<div ng-switch-when="2">已完成</div>
+					</div></td>
+				<td>{{t.creator.user_name}}</td>
+				<td>{{t.task_alarmnum}}</td>
+				<!-- <td><a class="tablelink" href="/CIMS/contract/toAssistant2ContractPage.do#/contractDetail" ng-click="getContId(t.contract.cont_id)">{{t.contract.cont_name}}</a></td> -->
+				<td><a ng-click="showTask(this)" class="tablelink">查看子任务</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="tcdPageCode">页码容器</div>
+</div>
+
+<!-- 新建任务模态框 -->
+<div class="overlayer"></div>
+<div class="tip1">
+	<div class="tiptop">
+		<span>任务内容</span><a></a><!-- 这个a标签是模态框上的叉叉 -->
+	</div>
+
+	<!-- 任务具体内容 -->
+	<div class="formbody">
+	<form id="assistant1TaskList" ng-submit="finishTask1()">
+		<ul class="forminfo">
+			<li><label>子任务</label>
+				<div class="div-checkbox" ng-show="taskPrint" >
+					<input type="checkbox"  ng-true-value="true" ng-disabled="disPrint" ng-false-value="false"
+						ng-model="fchat.task1.print" />打印印刷
+				</div>
+				<div class="div-checkbox" ng-show="taskSign">
+					<input type="checkbox" ng-true-value="true"  ng-disabled="disSign" ng-false-value="false"
+						ng-model="fchat.task1.sign" />签字
+				</div>
+				<div class="div-checkbox" ng-show="taskSeal" >
+					<input type="checkbox" ng-true-value="true" ng-disabled="disSeal" ng-false-value="false"
+						ng-model="fchat.task1.seal" />盖章
+				</div>
+				<div class="div-checkbox" ng-show="taskPost" >
+					<input type="checkbox" ng-true-value="true" ng-disabled="disPost" ng-false-value="false"
+						ng-model="fchat.task1.post" />邮寄
+				</div>
+				<div class="div-checkbox" ng-show="taskFile" >
+					<input type="checkbox" ng-true-value="true" ng-disabled="disFile" ng-false-value="false"
+						ng-model="fchat.task1.file" />归档
+				</div></li>
+		</ul>
+		<!-- 按钮 -->
+	<div class="tipbtn">
+		<input name="" type="submit" class="sure" value="确定" ng-click="" />&nbsp; <input
+			name="" type="button" class="cancel" value="取消" />
+	</div>
+	</form>
+	
+</div>
+</div>
+<!-- 新建任务模态框完 -->

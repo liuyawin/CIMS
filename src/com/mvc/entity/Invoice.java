@@ -182,6 +182,7 @@ public class Invoice {
 		this.contract = contract;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getInvo_state() {
 		return invo_state;
 	}

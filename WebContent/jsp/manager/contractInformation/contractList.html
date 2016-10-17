@@ -1,0 +1,100 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li>首页</li>
+		<li>合同列表</li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div class="tools">
+
+		<form class="toolbar">
+			<input name="" type="text" class="dfinput" id="cName" /> <input
+				class="btn" type="submit" value="查询" ng-click="selectConByName()">
+		</form>
+
+		<!-- <ul class="toolbar1">
+			<li class="click"><a href="#/contractAdd"><span><img
+						src="../images/t01.png" /></span>新建</a></li>
+		</ul>
+ -->
+	</div>
+
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th>合同名称</th>
+				<th>本公司编号</th>
+				<th>合同状态</th>
+				<th>工程阶段报警次数</th>
+				<th>收款节点报警次数</th>
+				<th>发票</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="con in contracts">
+				<td><a href="#contractInfo" ng-click="getContId(con.cont_id)">{{con.cont_name}}</a></td>
+				<td>{{con.cont_onum}}</td>
+				<td>{{con.cont_state | conState}}</td>
+				<td>{{con.cont_proalanum}}</td>
+				<td>{{con.cont_payalanum}}</td>
+				<td><a class="tablelink"
+					ng-click="addInvoiceTask()">开发票</a> <!-- <a href="#" class="tablelink" ng-click="getContId(con.cont_id)">详情</a> --></td>
+				<td><a href="#projectStageInfo" class="tablelink"
+					ng-click="getContId(con.cont_id)">工期阶段详情</a></td>
+
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="tcdPageCode">页码容器</div>
+
+</div>
+<!-- 派发任务模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipAdd" style="height: 500px">
+	<div class="tiptop">
+		<span>创建任务</span>
+	</div>
+	<div class="formbody">
+		<form ng-submit="addInvoiceTask()">
+			<ul class="forminfo">
+				<li><label>发票金额</label><input type="text" name="invoMoney"
+					id="invoMoney" class="dfinput invoMoney"
+					ng-model="invoice.invoMoney" required>万元</li>
+				<li><label>业主公司</label><input type="text" name="invoFirm"
+					class="dfinput" ng-model="invoice.invoFirm" required></li>
+				<li><label>审核人</label><select name="tReceiver" class="dfselect"
+					ng-model="invoice.auditId" >
+						<option ng-repeat="user in users" value={{user.user_id}}>
+							<span>{{user.user_name}}</span>
+						</option>
+				</select></li>
+				<li><label>开始时间</label><input type="text"
+					ng-model="invoice.invoStime" class="dfinput dateFormat"
+					placeholder="格式：2016-09-07" required/><span class="error-span">日期格式：2016-09-07</span>
+				</li>
+				<li><label>结束时间</label><input type="text" name="invoEtime"
+					ng-model="invoice.invoEtime" class="dfinput dateFormat"
+					placeholder="格式：2016-09-07" required/><span class="error-span">日期格式：2016-09-07</span></li>
+				<li id="taskContent"><label>备注</label> <textarea name=""
+						cols="" rows="" class="textinput area_style" ng-model="invoice.invoRemark" required></textarea></li>
+			</ul>
+			<div class="tipbtn">
+				<input name="" type="submit" class="sure" id="sureAdd" value="派发"
+					ng-click="addTask()" />&nbsp; <input name="" type="button"
+					class="cancel" id="cancelAdd" value="取消" />
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 派发任务模态框完 -->
+<script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+</script>
+
+
+

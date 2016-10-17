@@ -38,13 +38,73 @@ public class InvoiceController {
 	InvoiceService invoiceService;
 
 	/**
-	 * 返回收据界面
+	 * 文书二返回收据界面
 	 * 
 	 * @return
 	 */
 	@RequestMapping("/toAssistant2InvoicePage.do")
-	public String taskReceivePage() {
+	public String invoiceReceivePage() {
 		return "assistant2/invoiceInformation/index";
+	}
+
+	/**
+	 * 主任返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toZhurenInvoicePage.do")
+	public String zhurenInvoiceReceivePage() {
+		return "zhuren/invoiceInformation/index";
+	}
+
+	/**
+	 * 主任获取发票任务列表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/getZRInvoice.do")
+	public @ResponseBody String getAllInvoiceList(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Integer invoState = Integer.valueOf(request.getParameter("invoState"));// 0:未审核；1：已审核
+		Integer totalRow = invoiceService.countByParam(user.getUser_id(), invoState);
+		System.out.println("总数" + totalRow);
+		Pager pager = new Pager();
+		pager.setPage(Integer.valueOf(request.getParameter("page")));
+		pager.setTotalRow(totalRow);
+		List<Invoice> list = invoiceService.findByPage(user.getUser_id(), invoState, pager.getOffset(),
+				pager.getLimit());
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		System.out.println("返回列表:" + jsonObject.toString());
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 按发票状态获取列表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/getWaitingDealInvoice.do")
+	public @ResponseBody String getInvoiceListByState(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Integer invoiceState = Integer.valueOf(request.getParameter("invoState"));
+		Integer totalRow = invoiceService.WaitingDealCountByParam(user.getUser_id(), invoiceState);
+		System.out.println("总数" + totalRow);
+		Pager pager = new Pager();
+		pager.setPage(Integer.valueOf(request.getParameter("page")));
+		pager.setTotalRow(totalRow);
+		List<Invoice> list = invoiceService.WaitingDealFindByPage(user.getUser_id(), invoiceState, pager.getOffset(),
+				pager.getLimit());
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		System.out.println("返回列表:" + jsonObject.toString());
+		return jsonObject.toString();
 	}
 
 	/**
@@ -55,17 +115,18 @@ public class InvoiceController {
 	 * @return
 	 */
 	@RequestMapping(value = "/selectInvoiceByContId.do")
-	public @ResponseBody String getAllInvoice(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String getAllInvoiceByContId(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
-		Integer totalRow = invoiceService.countByParam(contId);
+		Integer totalRow = invoiceService.countByContId(contId);
 		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
-		List<Invoice> list = invoiceService.findByPage(contId, pager.getOffset(), pager.getLimit());
+		List<Invoice> list = invoiceService.findByContId(contId, pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalRow", totalRow);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
@@ -162,4 +223,35 @@ public class InvoiceController {
 		return JSON.toJSONString(result);
 	}
 
+	/**
+	 * 点击更新发票状态
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/updateInvoiceState.do")
+	public @ResponseBody String updateInvoiceState(HttpServletRequest request, HttpSession session) {
+		Integer invoiceId = Integer.valueOf(request.getParameter("invoiceId"));
+		boolean result = invoiceService.updateInvoiceState(invoiceId, InvoiceStatus.finish.value);
+		return JSON.toJSONString(result);
+	}
+
+	/**
+	 * 主任转发发票
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/updateInvoice.do")
+	public @ResponseBody String transmitInvoice(HttpServletRequest request, HttpSession session) throws ParseException {
+		Integer invoiceId = Integer.valueOf(request.getParameter("invoId"));
+		Integer receiverId = Integer.valueOf(request.getParameter("receiverId"));
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date invoEtime = format.parse(request.getParameter("invoEtime"));
+		boolean result = invoiceService.transmitInvoice(invoiceId, invoEtime, receiverId);
+		return JSON.toJSONString(result);
+	}
 }

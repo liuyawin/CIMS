@@ -3,6 +3,7 @@
  */
 package com.mvc.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,7 @@ public class UserDeptRelation {
 	private Integer udre_id;// 关系ID
 	private User user;// 用户
 	private Department department;// 部门
+	private Integer re_state;//
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,6 +55,15 @@ public class UserDeptRelation {
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+
+	@Column(columnDefinition = "INT default 0")
+	public Integer getRe_state() {
+		return re_state;
+	}
+
+	public void setRe_state(Integer re_state) {
+		this.re_state = re_state;
 	}
 
 }

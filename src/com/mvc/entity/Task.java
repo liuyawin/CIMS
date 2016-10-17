@@ -1,6 +1,5 @@
 package com.mvc.entity;
 
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -86,7 +85,7 @@ public class Task {
 		this.task_content = task_content;
 	}
 
-	@Column(length = 1)
+	@Column(columnDefinition = "INT default 0")
 	public Integer getTask_state() {
 		return task_state;
 	}
@@ -142,6 +141,7 @@ public class Task {
 		this.contract = contract;
 	}
 
+	@Column(columnDefinition = "INT default 0")
 	public Integer getTask_alarmnum() {
 		return task_alarmnum;
 	}

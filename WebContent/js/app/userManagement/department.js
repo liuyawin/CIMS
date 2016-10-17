@@ -173,9 +173,11 @@ app.controller('AdminController', [ '$scope', 'services', '$location',
 					admin.result = data;
 					if (data == "true") {
 						console.log("添加部门列表成功！");
+						alert("部门添加成功");
 						
 					} else {
 						console.log("添加部门列表失败！");
+						alert("部门添加失败");
 					}
 				});
 			}

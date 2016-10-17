@@ -28,7 +28,12 @@
 	margin-top: 8px;
 	visibility: hidden;
 }
-
+.exit_image{
+	width: 18px;
+	height: 18px;
+	margin-right: 10px;
+	margin-top: 12px;
+}
 .stage_style {
 	float: left;
 }
@@ -100,4 +105,11 @@
 
 .little {
 	font-size: 10px;
+}
+.area_style{
+	width:300px !important;
+	height:100px !important;
+}
+.text_right{
+	text-align:right
 }

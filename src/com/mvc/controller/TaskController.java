@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.base.constants.SessionKeyConstants;
 import com.base.enums.IsDelete;
 import com.base.enums.TaskStatus;
+import com.base.enums.TaskType;
 import com.mvc.entity.Contract;
 import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
@@ -46,7 +47,7 @@ public class TaskController {
 	SubTaskService subTaskService;
 
 	/**
-	 * zq设置设总入接收任务起始页
+	 * zq设总入接收任务起始页
 	 * 
 	 * @return
 	 */
@@ -55,10 +56,8 @@ public class TaskController {
 		return "manager/taskInformation/index";
 	}
 
-
-
 	/**
-	 * 设置进入接收任务起始页
+	 * 文书二进入接收任务起始页
 	 * 
 	 * @return
 	 */
@@ -66,7 +65,7 @@ public class TaskController {
 	public String taskReceivePage() {
 		return "assistant2/taskInformation/index";
 	}
-	
+
 	/**
 	 * 设置进入发送任务起始页
 	 * 
@@ -76,6 +75,17 @@ public class TaskController {
 	public String toAssistant1TaskList() {
 		return "assistant1/taskInformation/index";
 	}
+	
+	/**
+	 * 设置进入发送任务起始页
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toZhurenTaskList.do")
+	public String toZhurenTaskList() {
+		return "zhuren/taskInformation/index";
+	}
+
 
 	/**
 	 * 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
@@ -90,7 +100,7 @@ public class TaskController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer taskState = Integer.valueOf(request.getParameter("taskState"));
 		Integer sendOrReceive = Integer.valueOf(request.getParameter("sendOrReceive"));
-		Integer totalRow = taskService.countByParam(user.getUser_id(), taskState, null, sendOrReceive);
+		Integer totalRow = taskService.countByParam(user.getUser_id(), taskState, null, sendOrReceive);// 0表示发送，1表示接收
 		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
@@ -141,14 +151,13 @@ public class TaskController {
 	public @ResponseBody String findByTaskId(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		boolean result = false;
 		Integer taskId = Integer.valueOf(request.getParameter("ID"));
 		Task task = taskService.findById(taskId);
 		if (task.getTask_state() == TaskStatus.waitingReceipt.value
-				&& task.getReceiver().getUser_id() == user.getUser_id())
-			result = taskService.updateState(taskId, TaskStatus.dealing.value);
+				&& task.getReceiver().getUser_id() == user.getUser_id()) {
+			taskService.updateState(taskId, TaskStatus.dealing.value);
+		}
 		jsonObject.put("task", task);
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -168,7 +177,6 @@ public class TaskController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		long time = System.currentTimeMillis();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
 		Contract contract = new Contract();
 		System.out.println("conId:" + request.getParameter("conId"));
 		if (request.getParameter("conId") != "") {
@@ -197,7 +205,7 @@ public class TaskController {
 		task.setTask_isdelete(IsDelete.NO.value);
 		task.setTask_state(TaskStatus.waitingReceipt.value);
 		task.setTask_alarmnum(0);
-		if (taskType != 1) {// 0代表普通任务；2代表执行管控任务
+		if (taskType != TaskType.assistants.value) {// 0代表普通任务；2代表执行管控任务
 			Task taskResult = taskService.save(task);
 			if (taskResult.getTask_id() != null) {
 				result.put("result", "true");

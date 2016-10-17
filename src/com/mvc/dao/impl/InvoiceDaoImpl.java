@@ -1,15 +1,16 @@
 package com.mvc.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.base.enums.InvoiceStatus;
 import com.mvc.dao.InvoiceDao;
 import com.mvc.entity.Invoice;
 
@@ -26,7 +27,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	EntityManagerFactory emf;
 
 	// 根据发票id修改状态
-	public boolean updateState(Integer id, Integer state) {
+	public boolean updateInvoiceState(Integer id, Integer state) {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
@@ -61,8 +62,8 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	// 根据合同ID，页数，关键字返回任务列表
-	public List<Invoice> findByPage(Integer cont_id, Integer offset, Integer end) {
+	// 根据合同ID，页数，关键字返回发票列表
+	public List<Invoice> findByContId(Integer cont_id, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		String selectSql = "select * from invoice where contract_id=:contract_id and invo_isdelete=0 ";
 		selectSql += " order by invo_id  desc limit :offset, :end";
@@ -77,7 +78,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 
 	// 根据合同ID，关键字查询发票总条数
 	@SuppressWarnings("unchecked")
-	public Integer countByParam(Integer cont_id) {
+	public Integer countByContId(Integer cont_id) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select count(invo_id) from invoice where invo_isdelete=0 and contract_id=:contract_id ";
 		Query query = em.createNativeQuery(countSql);
@@ -97,6 +98,83 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		List<Object> result = query.getResultList();
 		em.close();
 		return Float.valueOf(result.get(0).toString());
+	}
+
+	// 根据用户id，页数返回发票列表
+	@SuppressWarnings("unchecked")
+	public List<Invoice> findByPage(Integer user_id, Integer ifSend, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		String selectSql = "select * from invoice where audit_id=:audit_id and invo_isdelete=0 and invo_state=:invo_state";
+		selectSql += " order by invo_id  desc limit :offset, :end";
+		Query query = em.createNativeQuery(selectSql, Invoice.class);
+		query.setParameter("audit_id", user_id);
+		query.setParameter("invo_state", ifSend);
+		query.setParameter("offset", offset);
+		query.setParameter("end", end);
+		List<Invoice> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 根据用户ID查询发票总条数
+	@SuppressWarnings("unchecked")
+	public Integer countByParam(Integer user_id, Integer ifSend) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = " select count(invo_id) from invoice where invo_isdelete=0 and audit_id=:audit_id and invo_state=:invo_state ";
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("audit_id", user_id);
+		query.setParameter("invo_state", ifSend);
+		List<Object> result = query.getResultList();
+		em.close();
+		return Integer.parseInt(result.get(0).toString());
+	}
+
+	// 按发票状态获取列表
+	public Integer WaitingDealCountByParam(Integer user_id, Integer invoiceState) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = " select count(invo_id) from invoice where invo_isdelete=0 and receiver_id=:receiver_id and invo_state=:invo_state ";
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("receiver_id", user_id);
+		query.setParameter("invo_state", invoiceState);
+		List<Object> result = query.getResultList();
+		em.close();
+		return Integer.parseInt(result.get(0).toString());
+	}
+
+	// 根据用户id，页数返回发票列表
+	@SuppressWarnings("unchecked")
+	public List<Invoice> WaitingDealFindByPage(Integer user_id, Integer invoiceState, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		String selectSql = "select * from invoice where receiver_id=:receiver_id and invo_isdelete=0 and invo_state=:invo_state";
+		selectSql += " order by invo_id  desc limit :offset, :end";
+		Query query = em.createNativeQuery(selectSql, Invoice.class);
+		query.setParameter("receiver_id", user_id);
+		query.setParameter("invo_state", invoiceState);
+		query.setParameter("offset", offset);
+		query.setParameter("end", end);
+		List<Invoice> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 主任转发发票
+	public boolean transmitInvoice(Integer invoiceId, Date invoEtime, Integer receiverId) {
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			String selectSql = " update invoice set `invo_state` = :invo_state ,`receiver_id` = :receiver_id ,`invo_etime` = :invo_etime where invo_id =:invo_id ";
+			Query query = em.createNativeQuery(selectSql);
+			query.setParameter("invo_state", InvoiceStatus.waitdealing.value);
+			query.setParameter("invo_id", invoiceId);
+			query.setParameter("invo_etime", invoEtime);
+			query.setParameter("receiver_id", receiverId);
+			query.executeUpdate();
+			em.flush();
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+		return true;
 	}
 
 }

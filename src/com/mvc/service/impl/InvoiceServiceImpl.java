@@ -1,9 +1,9 @@
-/**
- * 
- */
 package com.mvc.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,14 +37,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.delete(invoiceId);
 	}
 
-	// 根据合同id，页数返回任务列表
-	public List<Invoice> findByPage(Integer cont_id, Integer offset, Integer end) {
-		return invoiceDao.findByPage(cont_id, offset, end);
+	// 根据合同id，页数返回发票列表
+	public List<Invoice> findByContId(Integer cont_id, Integer offset, Integer end) {
+		return invoiceDao.findByContId(cont_id, offset, end);
 	}
 
-	// 根据合同ID查询任务总条数
-	public Integer countByParam(Integer cont_id) {
-		return invoiceDao.countByParam(cont_id);
+	// 根据合同ID查询发票总条数
+	public Integer countByContId(Integer cont_id) {
+		return invoiceDao.countByContId(cont_id);
 	}
 
 	// 根据合同ID查询发票总金额
@@ -59,6 +59,36 @@ public class InvoiceServiceImpl implements InvoiceService {
 			return true;
 		} else
 			return false;
+	}
+
+	// 根据用户id，页数返回发票列表
+	public List<Invoice> findByPage(Integer user_id, Integer ifSend, Integer offset, Integer end) {
+		return invoiceDao.findByPage(user_id, ifSend, offset, end);
+	}
+
+	// 根据用户ID查询发票总条数
+	public Integer countByParam(Integer user_id, Integer ifSend) {
+		return invoiceDao.countByParam(user_id, ifSend);
+	}
+
+	// 按发票状态获取列表
+	public Integer WaitingDealCountByParam(Integer user_id, Integer invoiceState) {
+		return invoiceDao.WaitingDealCountByParam(user_id, invoiceState);
+	}
+
+	// 根据用户id，页数返回发票列表
+	public List<Invoice> WaitingDealFindByPage(Integer user_id, Integer invoiceState, Integer offset, Integer end) {
+		return invoiceDao.WaitingDealFindByPage(user_id, invoiceState, offset, end);
+	}
+
+	// 点击完成更新发票状态
+	public boolean updateInvoiceState(Integer invoiceId, Integer state) {
+		return invoiceDao.updateInvoiceState(invoiceId, state);
+	}
+
+	// 主任转发发票
+	public boolean transmitInvoice(Integer invoiceId, Date invoEtime, Integer receiverId) {
+		return invoiceDao.transmitInvoice(invoiceId, invoEtime, receiverId);
 	}
 
 }

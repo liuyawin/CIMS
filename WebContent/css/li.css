@@ -1,0 +1,47 @@
+.tip1 {
+	width: 520px;
+	height: 200px;
+	position: absolute;
+	top: 5%;
+	left: 50%;
+	margin-left:-270px;
+	background: #fff;
+	box-shadow: 1px 8px 10px 1px #9b9b9b;
+	border-radius: 1px;
+	behavior: url(js/pie.htc);
+	display: none;
+	z-index: 111111;
+	opacity:1;
+	filter:alpha(opacity=100); 
+}
+
+.formbody{
+	margin-top:12px;
+}
+/* ���ε�ģ̬�� */
+fieldset{
+	border:1px solid #E0E0E0;
+	padding:4px 12px 4px 12px;
+	width:420px
+}
+
+fieldset legend{
+	padding:8px;
+}
+
+.invorkInfo-div{
+	margin-top:24px;
+	margin-left:32px;
+}
+
+fieldset .forminfo li label {
+    width: 86px;
+    line-height: 24px;
+    display: inline;
+    float: none;
+}
+
+.remark-div{
+	height:64px;
+	overflow:auto;
+}

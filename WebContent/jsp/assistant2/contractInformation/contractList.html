@@ -15,10 +15,10 @@
 				class="btn" type="submit" value="查询" ng-click="selectConByName()">
 		</form>
 
-		<ul class="toolbar1">
+		<!-- <ul class="toolbar1">
 			<li class="click"><a href="#/contractAdd"><span><img
 						src="../images/t01.png" /></span>新建</a></li>
-		</ul>
+		</ul> -->
 
 	</div>
 
@@ -44,7 +44,7 @@
 				<td>{{con.cont_state | conState}}</td>
 				<td>{{con.cont_proalanum}}</td>
 				<td>{{con.cont_payalanum}}</td>
-				<td><a class="tablelink" href="#prstInfo">详情</a></td>
+				<td><a class="tablelink" href="#prstInfo" ng-click="getContId(con.cont_id)">详情</a></td>
 				<td><a href="#renoInfo"
 					class="tablelink" ng-click="getContId(con.cont_id)">详情</a></td>
 				<td>

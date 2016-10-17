@@ -1,0 +1,159 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="#">首页</a></li>
+		<li><a href="#">任务管理</a></li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+	<div class="tools">
+		<form class="toolbar">
+			<input name="" type="text" class="dfinput" id="tContent" /> <input
+				class="btn" type="submit" value="查询" ng-click="getTaskByContext()">
+		</form>
+
+		<ul class="toolbar1">
+			<li class="click"><a ng-click="addTask()"><span><img
+						src="../images/t01.png" /></span>新建</a></li>
+		</ul>
+	</div>
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>内容</th>
+				<th>类型</th>
+				<th>状态</th>
+				<th>创建者</th>
+				<th>报警次数</th>
+				<th>合同</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr ng-repeat="t in tasks" id={{t.task_id}}>
+				<td>{{$index + 1}}</td>
+				<td>{{t.task_content |cutString}}</td>
+				<td><div ng-switch={{t.task_type}}>
+						<div ng-switch-when="0">普通任务</div>
+						<div ng-switch-when="1">文书任务</div>
+						<div ng-switch-when="2">执行管控任务</div>
+						<div ng-switch-when="3">其他</div>
+					</div></td>
+				<td><div ng-switch={{t.task_state}}>
+						<div ng-switch-when="0">待接收</div>
+						<div ng-switch-when="1">执行中</div>
+						<div ng-switch-when="2">已完成</div>
+					</div></td>
+				<td>{{t.creator.user_name}}</td>
+				<td>{{t.task_alarmnum}}</td>
+				<td><a class="tablelink"
+					href="/CIMS/contract/toAssistant2ContractPage.do#/contractDetail"
+					ng-click="getContId(t.contract.cont_id)">{{t.contract.cont_name}}</a></td>
+				<td><a ng-click="checkTask()" class="tablelink">查看</a><a
+					ng-click="finishTask()" class="tablelink finishLabel"
+					on-finish-render-filters>完成</a><a ng-click="delTask()"
+					class="tablelink delLabel">删除</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="tcdPageCode">页码容器</div>
+
+</div>
+<div class="tip" id="tipDel">
+	<div class="tiptop">
+		<span>提示信息</span>
+	</div>
+
+	<div class="tipinfo">
+		<div class="tipright">
+			<p>是否确认对信息的删除 ？</p>
+			<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+		</div>
+	</div>
+
+	<div class="tipbtn">
+		<input name="" type="button" class="sure" id="sureDel" value="确定" />&nbsp;
+		<input name="" type="button" class="cancel" id="cancelDel" value="取消" />
+	</div>
+</div>
+<!-- 派发任务模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipAdd" style="height: 480px">
+	<div class="tiptop">
+		<span>创建任务</span>
+	</div>
+	<div class="formbody">
+		<form id="" ng-submit="addTask()">
+			<ul class="forminfo">
+				<!-- <li><label>任务类型</label> <select name="tType" class="dfselect"
+					ng-model="task.task_type">
+						<option value="0">普通任务</option>
+
+				</select></li> -->
+				<li><label>接收人</label><select name="tReceiver" class="dfselect"
+					ng-model="task.receiver_id">
+						<option ng-repeat="user in users" value={{user.user_id}}>
+							<span>{{user.user_name}}</span>
+						</option>
+				</select></li>
+				<li><label>内容</label>
+				<textarea name="" cols="" rows="" class="textinput area_style"
+						ng-model="task.task_content" required></textarea></li>
+				<li><label>开始时间</label><input type="text"
+					ng-model="task.task_stime" class="dfinput dateFormat"
+					placeholder="格式：2016-09-07" required /><br />
+				<span class="error-span">日期格式：2016-09-07</span></li>
+				<li><label>结束时间</label><input type="text" name="task1_etime"
+					ng-model="task.task_etime" class="dfinput dateFormat"
+					placeholder="格式：2016-09-07" required /><br />
+				<span class="error-span">日期格式：2016-09-07</span></li>
+			</ul>
+			<div class="tipbtn">
+				<input name="" type="submit" class="sure" id="sureAdd" value="派发"
+					ng-click="addTask()" />&nbsp; <input name="" type="button"
+					class="cancel" id="cancelAdd" value="取消" />
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 派发任务模态框完 -->
+<!-- 查看任务模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipCheck" style="height: 480px">
+	<div class="tiptop text_right" >
+		<span>创建任务</span><img alt="" class="exit_image" id="cancelCheck" src="../images/exit.png">
+	</div>
+	<div class="formbody">
+		<form id="" ng-submit="addTask()">
+			<ul class="forminfo">
+				<li><label>任务类型</label> <select name="tType" class="dfselect"
+					ng-model="task.task_type">
+						<option value="0">普通任务</option>
+				</select></li>
+				<li><label>接收人</label><input type="text"
+					ng-model="task.receiver.user_name" class="dfinput"
+					/>
+						</li>
+				<li><label>内容</label>
+				<textarea name="" cols="" rows="" class="textinput area_style"
+						ng-model="task.task_content" required></textarea></li>
+				<li><label>开始时间</label><input type="text"
+					ng-model="task.task_stime" class="dfinput"
+					placeholder="格式：2016-09-07" />
+				</li>
+				<li><label>结束时间</label><input type="text" name="task1_etime"
+					ng-model="task.task_etime" class="dfinput"
+					placeholder="格式：2016-09-07" />
+				</li>
+			</ul>
+		</form>
+	</div>
+</div>
+<!-- 查看任务模态框完 -->
+<script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+</script>

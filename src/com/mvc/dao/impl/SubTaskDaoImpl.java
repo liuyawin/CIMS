@@ -26,6 +26,7 @@ public class SubTaskDaoImpl implements SubTaskDao {
 	public boolean updateState(Integer subTaskId) {
 		EntityManager em = emf.createEntityManager();
 		try {
+			em.getTransaction().begin();
 			String selectSql = " update sub_task set `suta_state` = 1  where suta_id =:suta_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("suta_id", subTaskId);

@@ -139,7 +139,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		console.log("发送请求获取合同信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'contract/getContractList.do',
+			url : baseUrl + 'contract/selectContract.do',
 			data : data
 		});
 	};
@@ -351,13 +351,13 @@ app.controller('ContractController', [
 				console.log(contract.contract);
 				var conFormData = JSON.stringify(contract.contract);
 				console.log(conFormData);
-				/*services.repeatAddContract({
+				services.repeatAddContract({
 					contract : conFormData,
 					cont_id : sessionStorage.getItem('contId')
 				}).success(function(data) {
-					 window.sessionStorage.setItem("contractId",); 
+					/* window.sessionStorage.setItem("contractId",); */
 					alert("添加合同成功！");
-				});*/
+				});
 			};
 
 			// zq：添加工期阶段的单项控件
@@ -790,9 +790,9 @@ app.filter('renoType', function() {
 		if (input == "0")
 			type = "未收款";
 		else if (input == "1")
-			type = "已付全款";
-		else if (input == "2")
 			type = "未付全款";
+		else if (input == "2")
+			type = "已付全款";
 		else if (input == "3")
 			type = "提前到款";
 		return type;

@@ -1,9 +1,12 @@
 package com.mvc.dao.impl;
 
+import java.text.SimpleDateFormat;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
+import org.eclipse.jdt.internal.compiler.classfmt.NonNullDefaultAwareTypeAnnotationWalker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -47,7 +50,7 @@ public class ProjectStageDaoImpl implements ProjectStageDao {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			String sql = "update project_stage ps set ps.prst_state=1 where ps.prst_id=:prst_id";
+			String sql = "update project_stage ps set ps.prst_state=1,prst_atime=now() where ps.prst_id=:prst_id";
 			Query query = em.createNativeQuery(sql);
 			query.setParameter("prst_id", prst_id);
 			query.executeUpdate();

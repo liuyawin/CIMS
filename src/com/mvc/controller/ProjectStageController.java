@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.SessionKeyConstants;
+import com.base.enums.RemoveType;
 import com.mvc.entity.Contract;
 import com.mvc.entity.ProjectStage;
 import com.mvc.entity.User;
+import com.mvc.service.AlarmService;
 import com.mvc.service.ContractService;
 import com.mvc.service.ProjectStageService;
 import com.mvc.service.UserService;
@@ -43,6 +45,8 @@ public class ProjectStageController {
 	ContractService contractService;
 	@Autowired
 	ProjectStageService projectStageService;
+	@Autowired
+	AlarmService alarmService;
 
 	/**
 	 * 添加工期阶段
@@ -78,6 +82,7 @@ public class ProjectStageController {
 				calendar.add(Calendar.DAY_OF_MONTH, -days);// 工作结束提醒时间=阶段截止时间-完工提醒天数
 				projectStage.setPrst_wtime(calendar.getTime());// 工作结束提醒时间
 				projectStage.setPrst_ctime(new Date(time));// 阶段录入时间
+				projectStage.setPrst_state(0);
 				User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 录入人
 				projectStage.setUser(user);
 				Contract contract = contractService.selectContById(Integer.parseInt(request.getParameter("cont_id")));// 所属合同
@@ -122,7 +127,9 @@ public class ProjectStageController {
 	 */
 	@RequestMapping("/finishPrst.do")
 	public @ResponseBody String finishPrst(HttpServletRequest request) {
-		boolean flag = projectStageService.updatePrstState(Integer.parseInt(request.getParameter("prstId")));
+		Integer prstId = Integer.parseInt(request.getParameter("prstId"));
+		boolean flag = projectStageService.updatePrstState(prstId);
+		alarmService.updateByIdType(prstId, RemoveType.PrstAlarm.value);
 		return String.valueOf(flag);
 	}
 

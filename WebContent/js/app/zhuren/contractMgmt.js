@@ -89,6 +89,12 @@ app
 										controller : 'ContractController'
 									})
 							.when(
+									'/finishedContract',
+									{
+										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractList.html',
+										controller : 'ContractController'
+									})
+							.when(
 									'/contractAdd',
 									{
 										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractAdd.html',
@@ -104,6 +110,18 @@ app
 									'/contractInfo',
 									{
 										templateUrl : '/CIMS/jsp/zhuren/contractInformation/contractInfo.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/prstInfo',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractInfo.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/renoInfo',
+									{
+										templateUrl : '/CIMS/jsp/assistant2/contractInformation/contractInfo.html',
 										controller : 'ContractController'
 									});
 				} ]);
@@ -136,7 +154,16 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-
+	
+	services.getFinishedContract = function(data) {
+		console.log("发送请求获取合同信息");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/selectContract.do',
+			data : data
+		});
+	};
+	
 	services.selectConByName = function(data) {
 		console.log("按名字查找合同");
 		return $http({
@@ -218,6 +245,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 		function($scope, services, $location) {
 			// 合同
 			var contract = $scope;
+			contract.flag = 0;//标志位，用于控制按钮是否显示
 			// 获取合同列表
 			contract.getContractList = function(page) {
 				services.getContractList({
@@ -237,6 +265,16 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 			// 获取逾期合同
 			contract.getOverdueContract = function() {
 				services.getOverdueContract({}).success(function(data) {
+					console.log("获取逾期合同成功！");
+					contract.contracts = data.list;
+				});
+			};
+			// 获取终结合同
+			contract.getFinishedContract = function() {
+				services.getFinishedContract({
+					findType:"4",
+					contName:""
+				}).success(function(data) {
 					console.log("获取逾期合同成功！");
 					contract.contracts = data.list;
 				});
@@ -389,6 +427,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/contractList') == 0) {// 如果是合同列表页
+					contract.flag = 1;//标志位，用于控制按钮是否显示
 					services.getContractList({
 						page : 1
 					}).success(function(data) {
@@ -470,6 +509,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					});
 
 				} else if ($location.path().indexOf('/debtContract') == 0) {
+					contract.flag = 1;//标志位，用于控制按钮是否显示
 					// contract.getDebtContract();
 					services.getDebtContract({
 						page : 1
@@ -489,6 +529,7 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 						}
 					});
 				} else if ($location.path().indexOf('/overdueContract') == 0) {
+					contract.flag = 1;//标志位，用于控制按钮是否显示
 					// contract.getOverdueContract();
 					services.getOverdueContract({
 						page : 1
@@ -507,6 +548,27 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 							});
 						}
 					});
+				}else if ($location.path().indexOf('/finishedContract') == 0) {//获取终结合同信息
+					contract.flag = 0;//标志位，用于控制按钮是否显示
+					services.getFinishedContract({
+						page : 1,
+						findType:"4",
+						contName:""
+					}).success(function(data) {
+						contract.contracts = data.list;
+						contract.totalPage = data.totalPage;
+						var $pages = $(".tcdPageCode");
+						console.log(contract.totalPage);
+						if ($pages.length != 0) {
+							$pages.createPage({
+								pageCount : contract.totalPage,
+								current : 1,
+								backFn : function(p) {
+									contract.getFinishedContract(p);// 点击页码时获取第p页的数据
+								}
+							});
+						}
+					});
 				} else if ($location.path().indexOf('/contractAdd') == 0) {
 					// 这里先获取人员列表
 					services.getAllUsers().success(function(data) {
@@ -518,8 +580,20 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 					 * $select.length; i++) { $select[i].options[0].selected =
 					 * true; } $('select').prop('selectedIndex', 1);
 					 */
+				} else if ($location.path().indexOf('/prstInfo') == 0) {
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					$("#renoInformation").hide();
+					$("#contInformation").hide();
+				} else if ($location.path().indexOf('/renoInfo') == 0) {
+					selectContractById(); // 根据ID获取合同信息
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					$("#contInformation").hide();
+					$("#prstInformation").hide();
 				} else if ($location.path().indexOf('/contractInfo') == 0) {
-					//zq添加查找合同详情
+					// zq添加查找合同详情
 					selectContractById(); // 根据ID获取合同信息
 					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
 					selectRenoByContId();// 根据合同ID获取该合同的收款节点
@@ -638,9 +712,9 @@ app.filter('renoType', function() {
 		if (input == "0")
 			type = "未收款";
 		else if (input == "1")
-			type = "已付全款";
-		else if (input == "2")
 			type = "未付全款";
+		else if (input == "2")
+			type = "已付全款";
 		else if (input == "3")
 			type = "提前到款";
 		return type;

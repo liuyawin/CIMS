@@ -2,7 +2,6 @@ package com.mvc.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,14 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.SessionKeyConstants;
-import com.base.enums.IsDelete;
-import com.base.enums.TaskStatus;
+import com.base.enums.RemoveType;
+import com.base.enums.RenoStatus;
 import com.mvc.entity.Contract;
 import com.mvc.entity.Receipt;
 import com.mvc.entity.ReceiveNode;
 import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 import com.mvc.entity.User;
+import com.mvc.service.AlarmService;
 import com.mvc.service.ReceiptService;
 import com.mvc.service.ReceiveNodeService;
 import com.utils.Pager;
@@ -42,9 +42,11 @@ public class ReceiptController {
 	ReceiptService receiptService;
 	@Autowired
 	ReceiveNodeService receiveNodeService;
+	@Autowired
+	AlarmService alarmService;
 
 	/**
-	 * 返回收据界面
+	 * 文书二返回收据界面
 	 * 
 	 * @return
 	 */
@@ -52,7 +54,15 @@ public class ReceiptController {
 	public String taskReceivePage() {
 		return "assistant2/receiptInformation/index";
 	}
-
+	/**
+	 * 主任返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toZhurenReceiptPage.do")
+	public String zhurenReceivePage() {
+		return "zhuren/receiptInformation/index";
+	}
 	/**
 	 * 根据页数,合同，关键字返回任务列表
 	 * 
@@ -72,6 +82,7 @@ public class ReceiptController {
 		List<Receipt> list = receiptService.findByPage(cont_id, null, pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalRow", totalRow);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
@@ -137,22 +148,25 @@ public class ReceiptController {
 		receipt.setRece_money(Float.valueOf(jsonObject.getString("receMoney")));
 		receipt.setRece_remark(jsonObject.getString("receRemark"));
 		boolean receiptResult = receiptService.save(receipt);
-		ReceiveNode receiveNode2 = receiveNodeService.findByRenoId(Integer.valueOf(request.getParameter("renoId")));
+		Integer renoId = Integer.valueOf(request.getParameter("renoId"));
+		ReceiveNode receiveNode2 = receiveNodeService.findByRenoId(renoId);
 		Float reNoAMoney = receiveNode2.getReno_amoney() + Float.valueOf(jsonObject.getString("receMoney"));
 		Float reNoMoney = receiveNode2.getReno_money();
-		receiveNode2.setReno_amoney(reNoMoney);
+		receiveNode2.setReno_amoney(reNoAMoney);
 		Integer reNoStatus;
 		if (reNoAMoney == 0)
-			reNoStatus = 0;
+			reNoStatus = RenoStatus.waitReceive.value;
 		else if (0 < reNoAMoney && reNoAMoney < reNoMoney) {
-			reNoStatus = 1;
-		} else if (reNoAMoney == reNoMoney) {
-			reNoStatus = 2;
+			reNoStatus = RenoStatus.noEnough.value;
+		} else if ((Math.abs(reNoMoney - reNoAMoney) < 0.00000001)) {// 判断float相等
+			reNoStatus = RenoStatus.finish.value;
+			alarmService.updateByIdType(renoId, RemoveType.RenoAlarm.value);
 		} else {
-			reNoStatus = 3;
+			reNoStatus = RenoStatus.beyondActually.value;
+			alarmService.updateByIdType(renoId, RemoveType.RenoAlarm.value);
 		}
 		receiveNode2.setReno_state(reNoStatus);
-		boolean receiveNodeResult = receiveNodeService.addReceiveNode(receiveNode2);
+		receiveNodeService.addReceiveNode(receiveNode2);
 		if (receiptResult)
 			result.put("result", "true");
 		else {
