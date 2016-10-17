@@ -35,12 +35,12 @@
 		<script type="text/javascript"
 			src="${ctx}/js/lib/jquery.json-2.2.min.js"></script>
 		<script type="text/javascript">
-			$(document).ready(function() {
+			/* $(document).ready(function() {
 				$.getJSON("/CIMS/alarm/selectAlarms.do", {
 					isRemove : '0'
 					
 				}, function(data) {
 					$("#newsNum").text(data.totalRow);
 				});
-			});
+			}); */
 		</script>

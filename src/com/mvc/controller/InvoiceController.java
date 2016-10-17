@@ -58,6 +58,18 @@ public class InvoiceController {
 	}
 
 	/**
+	 * 返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toBillMngInvoicePage.do")
+	public String InvoiceReceivePage() {
+		return "billInformation/index";
+	}
+	
+	
+	
+	/**
 	 * 主任获取发票任务列表
 	 * 
 	 * @param request
