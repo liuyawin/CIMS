@@ -13,7 +13,10 @@ import com.mvc.entity.Alarm;
 public interface AlarmDao {
 
 	// 查找报警信息列表
-	public List<Alarm> findAlarmInformationList(Integer user_id, Integer isremove, Integer offset, Integer end);
+	List<Alarm> findAlarmInformationList(Integer user_id, String alarmType, Integer offset, Integer end);
+
+	// 张姣娜添加：获取报警列表条数
+	Integer countAlarmTotal(Integer user_id, String alarmType);
 
 	// 根据用户名查找报警信息
 	List<Alarm> findAlarmByUser(String username, Integer offset, Integer end);
