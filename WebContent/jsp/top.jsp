@@ -50,10 +50,11 @@
 					cookie[name.trim()] = value;
 				}
 				$('#userNum').html(cookie.userNum);
+				
 				$.getJSON("/CIMS/alarm/selectAlarms.do", {
 					isRemove : '0'					
 				}, function(data) {
 					$("#newsNum").text(data.totalRow);
 				});
-			});
+			}); 
 		</script>

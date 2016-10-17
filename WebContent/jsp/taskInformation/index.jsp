@@ -13,11 +13,12 @@
 <jsp:include page="/jsp/footer.jsp" />
 <script src="${ctx}/js/app/taskMgmt.js"></script>
 <script>
-	$(function(){
-		/* alert(window.location.href.indexOf('#')); */
+	/* $(function(){
+		alert(window.location.href.indexOf('#')); 
 		if(window.location.href.indexOf('#')==-1) 
 		document.getElementById("taskFirst").click();
 	})
+	*/
 </script>
 
 </body>

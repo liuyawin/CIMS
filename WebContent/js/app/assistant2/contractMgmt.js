@@ -481,7 +481,7 @@ app.controller('ContractController', [
 
 			// zq：读取合同的信息
 			function selectContractById() {
-				var cont_id = sessionStorage.getItem('contId');
+				var cont_id = sessionStorage.getItem('conId');
 				services.selectContractById({
 					cont_id : cont_id
 				}).success(function(data) {
