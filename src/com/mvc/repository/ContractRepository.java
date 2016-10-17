@@ -6,6 +6,12 @@ import org.springframework.data.repository.query.Param;
 
 import com.mvc.entity.Contract;
 
+/**
+ * 合同JPA
+ * 
+ * @author wangrui
+ * @date 2016-09-10
+ */
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
 
 	// 查询合同总条数

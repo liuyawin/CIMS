@@ -189,6 +189,8 @@ public class ContractController {
 		contract.setCont_state(0);// 合同状态
 		contract.setCont_ctime(new Date(time));// 合同创建时间
 		contract.setCreator(user);// 合同创建者
+		// contract = (Contract)
+		// JSONUtil.JSONToObj(jsonObject.toString(),Contract.class);//将json对象转换成实体对象，注意必须和实体类型一致
 		contractService.addContract(contract);
 		return contract.getCont_id();
 	}
@@ -257,20 +259,36 @@ public class ContractController {
 	 * 
 	 * @param request
 	 *            conId
-	 * @param session
 	 * @return 前十条合同信息，总页数
 	 */
 	@RequestMapping("/deleteContract.do")
-	public @ResponseBody String deleteContract(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String deleteContract(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		boolean isdelete = contractService.deleteContract(Integer.parseInt(request.getParameter("conId")));
 		if (isdelete) {// 删除成功
 			String contName = request.getParameter("contName");
+			String pageType = request.getParameter("pageType");// 和下面的methodType类似，debtContract：欠款，overdueContract：逾期，finishedContract：终结，ContractList：所有
 			int totalRow = Integer.parseInt(contractService.countTotal(contName, 1).toString());
 			Pager pager = new Pager();
 			pager.setPage(1);// 返回前十条
 			pager.setTotalRow(totalRow);
-			List<Contract> list = contractService.findConByName(contName, pager.getOffset(), pager.getPageSize());
+			List<Contract> list = null;
+			switch (pageType) {
+			case "ContractList":
+				list = contractService.findConByName(contName, pager.getOffset(), pager.getPageSize());
+				break;
+			case "debtContract":
+				list = contractService.findAllDebtCont(contName, pager.getOffset(), pager.getPageSize());
+				break;
+			case "overdueContract":
+				list = contractService.findAllOverdueCont(contName, pager.getOffset(), pager.getPageSize());
+				break;
+			case "finishedContract":
+				list = contractService.findAllEndCont(contName, pager.getOffset(), pager.getPageSize());
+				break;
+			default:
+				break;
+			}
 			jsonObject.put("list", list);
 			jsonObject.put("totalPage", pager.getTotalPage());
 			System.out.println(list);
@@ -283,11 +301,10 @@ public class ContractController {
 	 * 查找合同列表
 	 * 
 	 * @param request
-	 * @param session
 	 * @return list和总页数
 	 */
 	@RequestMapping("/selectContract.do")
-	public @ResponseBody String selectContract(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String selectContract(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		int methodType = Integer.parseInt(request.getParameter("findType"));// 合同方法类别：1-合同信息管理，2-欠款合同信息，3-工程逾期合同，4-终结合同信息
 		String contName = request.getParameter("contName");
