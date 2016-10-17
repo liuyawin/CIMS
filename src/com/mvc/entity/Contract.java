@@ -3,6 +3,7 @@
  */
 package com.mvc.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -22,7 +23,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "contract")
-public class Contract {
+public class Contract implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private Integer cont_id;// 合同ID
 	private String cont_onum;// 本公司编号
 	private String cont_cnum;// 业主方编号
@@ -54,6 +57,10 @@ public class Contract {
 	private Integer cont_state;// 状态,0:在建,1:竣工,2:停建
 	private Integer cont_rank;// 等级,用于报警类别的区分,0: 重要，1：一般
 	private String cont_remark;// 备注
+	private Integer invo_total;// 发票总数
+	private Float invo_totalmoney;// 发票总金额
+	private Integer rece_total;// 收据总数
+	private Float rece_totalmoney;// 收据总金额
 	private User creator;// 合同创建者
 	private User manager;// 项目经理
 	private Integer cont_ishistory;// 0：最新，1历史
@@ -303,6 +310,7 @@ public class Contract {
 	public void setCont_payalanum(Integer cont_payalanum) {
 		this.cont_payalanum = cont_payalanum;
 	}
+
 	@Column(columnDefinition = "INT default 0")
 	public Integer getCont_state() {
 		return cont_state;
@@ -326,6 +334,42 @@ public class Contract {
 
 	public void setCont_remark(String cont_remark) {
 		this.cont_remark = cont_remark;
+	}
+
+	@Column(columnDefinition = "INT default 0")
+	public Integer getInvo_total() {
+		return invo_total;
+	}
+
+	public void setInvo_total(Integer invo_total) {
+		this.invo_total = invo_total;
+	}
+
+	@Column(columnDefinition = "float(10,2) default '0.00'")
+	public Float getInvo_totalmoney() {
+		return invo_totalmoney;
+	}
+
+	public void setInvo_totalmoney(Float invo_totalmoney) {
+		this.invo_totalmoney = invo_totalmoney;
+	}
+
+	@Column(columnDefinition = "INT default 0")
+	public Integer getRece_total() {
+		return rece_total;
+	}
+
+	public void setRece_total(Integer rece_total) {
+		this.rece_total = rece_total;
+	}
+
+	@Column(columnDefinition = "float(10,2) default '0.00'")
+	public Float getRece_totalmoney() {
+		return rece_totalmoney;
+	}
+
+	public void setRece_totalmoney(Float rece_totalMoney) {
+		this.rece_totalmoney = rece_totalMoney;
 	}
 
 	@ManyToOne

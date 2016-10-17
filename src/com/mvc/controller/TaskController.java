@@ -56,9 +56,6 @@ public class TaskController {
 		return "taskInformation/index";
 	}
 
-	
-
-
 	/**
 	 * 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
 	 * 
