@@ -43,7 +43,7 @@ public class UserDaoImpl implements UserDao {
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("user_id", id);
 			query.executeUpdate();
-			String selectSql1 = " update user_dept_relation set `user_dept_relation_state`=1 where user_id=:user_id ";
+			String selectSql1 = " update user_dept_relation set `re_state`=1 where user_id=:user_id ";
 			Query query1 = em.createNativeQuery(selectSql1);
 			query1.setParameter("user_id", id);
 			query1.executeUpdate();
@@ -79,8 +79,7 @@ public class UserDaoImpl implements UserDao {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		int deptid = departmentRepository.findOnlyUserDesign();
-		String selectSql = "select * from user_dept_relation where dept_id=" + deptid
-				+ " and re_state=0";
+		String selectSql = "select * from user_dept_relation where dept_id=" + deptid + " and re_state=0";
 		Query query = em.createNativeQuery(selectSql, UserDeptRelation.class);
 		List<UserDeptRelation> list = query.getResultList();
 		em.close();
