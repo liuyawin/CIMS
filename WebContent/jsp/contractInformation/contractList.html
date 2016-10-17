@@ -25,14 +25,16 @@
 	<table class="tablelist">
 		<thead>
 			<tr>
+				<th>编号</th>
 				<th>合同名称</th>
 				<th>本公司编号</th>
-				<th>合同状态</th>
+				<th>状态</th>
 				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="con in contracts">
+				<td>{{$index + 1}}</td>
 				<td><a class="underline" href="#contractDetail">{{con.cont_name}}</a></td>
 				<td>{{con.cont_onum}}</td>
 				<td>{{con.cont_state | conState}}</td>

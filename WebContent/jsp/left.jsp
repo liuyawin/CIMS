@@ -3,6 +3,19 @@
 	src="${ctx}/js/lib/jquery.json-2.2.min.js"></script>
 <section class="leftbar">
 	<dl class="leftmenu">
+		<!-- 合同信息管理 -->
+  		<dd>
+  			<div class="title ">
+  			<span><img src="${ctx}/images/leftico01.png" /></span>合同信息管理
+  			</div>
+  			<ul class="menuson">				
+  				<li><cite></cite> <a href="${ctx}/contract/toContractPage.do#/debtContract">欠款合同</a><i></i></li>
+  				<li><cite></cite> <a href="${ctx}/contract/toContractPage.do#/overdueContract">逾期合同</a><i></i></li>
+  				<li><cite></cite> <a href="${ctx}/contract/toContractPage.do#/finishedContract">终结合同</a><i></i></li>
+  				<li><cite></cite> <a href="${ctx}/contract/toContractPage.do#/contractList">所有合同</a><i></i></li>
+			</ul>
+		</dd>
+  		<!-- 合同信息管理完 -->
 		<dd>
 			<div class="title">
 				<!-- <a href="#/test"><span><img src="../../images/leftico01.png" /></span>合同信息管理</a> -->
