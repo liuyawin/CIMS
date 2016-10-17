@@ -11,7 +11,7 @@
 </section>
 <jsp:include page="/jsp/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
-<script src="${ctx}/js/app/assistant2/taskMgmt.js"></script>
+<script src="${ctx}/js/app/taskMgmt.js"></script>
 <script>
 	$(function(){
 		/* alert(window.location.href.indexOf('#')); */

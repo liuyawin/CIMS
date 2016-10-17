@@ -41,17 +41,6 @@ public class ContractController {
 	UserService userService;
 
 	/**
-	 * 返回票据管理合同界面
-	 * 包 20161013
-	 * @return
-	 */
-	@RequestMapping("/toBillMngContractPage.do")
-	public String billMngContractPage() {
-		return "billInformation/index";
-	}
-	
-	
-	/**
 	 * 返回设总合同界面
 	 * 
 	 * @return
@@ -76,9 +65,19 @@ public class ContractController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/toZhurenContractPage.do")
-	public String zhurenContractPage() {
-		return "zhuren/contractInformation/index";
+	@RequestMapping("/toContractPage.do")
+	public String contractPage() {
+		return "contractInformation/index";
+	}
+
+	/**
+	 * 返回票据管理合同界面 包 20161013
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toBillMngContractPage.do")
+	public String billMngContractPage() {
+		return "billInformation/index";
 	}
 
 	/**

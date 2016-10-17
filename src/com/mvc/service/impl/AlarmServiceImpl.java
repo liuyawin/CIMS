@@ -25,14 +25,20 @@ public class AlarmServiceImpl implements AlarmService {
 
 	// 查找报警信息列表
 	@Override
-	public List<Alarm> findAlarmInformationList(Integer user_id, Integer isremove, Integer offset, Integer end) {
-		return alarmDao.findAlarmInformationList(user_id, isremove, offset, end);
+	public List<Alarm> findAlarmInformationList(Integer user_id, String alarmType, Integer offset, Integer end) {
+		return alarmDao.findAlarmInformationList(user_id, alarmType, offset, end);
+	}
+
+	// 张姣娜添加：统计报警列表条数，alarmType:2,3
+	@Override
+	public Integer countTotal(Integer user_id, String alarmType) {
+		return alarmDao.countAlarmTotal(user_id, alarmType);
 	}
 
 	// 统计报警列表条数
 	@Override
-	public Long countTotal(Integer user_id,Integer isremove) {
-		return alarmRepository.countAlarmTotal(user_id,isremove);
+	public Long countNumByUserId(Integer user_id) {
+		return alarmRepository.countNumByUserId(user_id);
 	}
 
 	// 根据ID查看报警详情

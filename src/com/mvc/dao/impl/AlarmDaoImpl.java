@@ -1,5 +1,6 @@
 package com.mvc.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -31,14 +32,20 @@ public class AlarmDaoImpl implements AlarmDao {
 	// 查找报警信息列表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Alarm> findAlarmInformationList(Integer user_id, Integer isremove, Integer offset, Integer end) {
+	public List<Alarm> findAlarmInformationList(Integer user_id, String alarmType, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		String selectSql = "select * from Alarm where receiver_id=:receiver_id and alar_isremove=:alarisremove ";
+		String[] chars = alarmType.split(",");
+		ArrayList<Integer> types = new ArrayList<Integer>();
+		for (int i = 0; i < chars.length; i++) {
+			types.add(Integer.valueOf(chars[i]));
+		}
+		String selectSql = "select * from Alarm where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
+		selectSql += " group by task_id,reno_id,prst_id  ";
 		selectSql += " order by alar_id desc limit :offset,:end";
 		Query query = em.createNativeQuery(selectSql, Alarm.class);
 		query.setParameter("receiver_id", user_id);
-		query.setParameter("alarisremove", isremove);
+		query.setParameter("alar_code", types);
 		query.setParameter("offset", offset);
 		query.setParameter("end", end);
 		List<Alarm> list = query.getResultList();
@@ -113,4 +120,22 @@ public class AlarmDaoImpl implements AlarmDao {
 		return true;
 	}
 
+	// 张姣娜添加：统计报警列表条数，alarmType:2,3
+	@SuppressWarnings("unchecked")
+	public Integer countAlarmTotal(Integer user_id, String alarmType) {
+		EntityManager em = emf.createEntityManager();
+		String[] chars = alarmType.split(",");
+		ArrayList<Integer> types = new ArrayList<Integer>();
+		for (int i = 0; i < chars.length; i++) {
+			types.add(Integer.valueOf(chars[i]));
+		}
+		String countSql = " select count(alar_id) from alarm a where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
+		countSql += " group by task_id,reno_id,prst_id  ";
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("receiver_id", user_id);
+		query.setParameter("alar_code", types);
+		List<Object> result = query.getResultList();
+		em.close();
+		return Integer.parseInt(result.get(0).toString());
+	}
 }

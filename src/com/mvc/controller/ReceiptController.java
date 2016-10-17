@@ -19,8 +19,6 @@ import com.base.enums.RenoStatus;
 import com.mvc.entity.Contract;
 import com.mvc.entity.Receipt;
 import com.mvc.entity.ReceiveNode;
-import com.mvc.entity.SubTask;
-import com.mvc.entity.Task;
 import com.mvc.entity.User;
 import com.mvc.service.AlarmService;
 import com.mvc.service.ReceiptService;
@@ -54,6 +52,7 @@ public class ReceiptController {
 	public String taskReceivePage() {
 		return "assistant2/receiptInformation/index";
 	}
+
 	/**
 	 * 主任返回收据界面
 	 * 
@@ -63,6 +62,7 @@ public class ReceiptController {
 	public String zhurenReceivePage() {
 		return "zhuren/receiptInformation/index";
 	}
+
 	/**
 	 * 根据页数,合同，关键字返回任务列表
 	 * 

@@ -132,6 +132,24 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// zq添加发票任务
+	services.addInvoiceTask = function(data) {
+
+		return $http({
+			method : 'post',
+			url : baseUrl + 'invoice/addInvoiceTask.do',
+			data : data,
+		});
+	};
+	// zq选择所有用户
+	services.selectAllUsers = function(data) {
+		console.log("发送请求获取合同信息");
+		return $http({
+			method : 'post',
+			url : baseUrl + 'user/getAllUserList.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 
@@ -229,6 +247,44 @@ app.controller('ContractController', [ '$scope', 'services', '$location',
 				$('#renoInformation').hide();
 				$('#renoShow').show();
 				$('#renoHide').hide();
+			}
+			// zq添加发票任务
+			contract.addInvoiceTask = function() {
+				selectAllUsers();
+				var contId = this.con.cont_id;
+				$("#tipAdd").fadeIn(200);
+				$(".overlayer").fadeIn(200);
+				$("#sureAdd").click(function() {
+
+					var taskFormData = JSON.stringify(contract.invoice);
+					services.addInvoiceTask({
+						invoice : taskFormData,
+						contId : contId
+					}).success(function(data) {
+
+						$("#tipAdd").fadeOut(100);
+						$(".overlayer").fadeOut(200);
+						contract.invoice = "";
+						alert("添加成功！");
+
+					});
+				});
+
+				$("#cancelAdd").click(function() {
+					$("#tipAdd").fadeOut(100);
+					$(".overlayer").fadeOut(200);
+					contract.invoice = "";
+
+				});
+
+			};
+			// zq获取所有用户
+			function selectAllUsers() {
+				services.selectAllUsers({}).success(function(data) {
+					console.log("获取用户列表成功！");
+					contract.users = data;
+
+				});
 			}
 
 			// 初始化页面信息
