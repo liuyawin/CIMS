@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -26,7 +28,8 @@ public class Files implements Serializable {
 	private String file_type;// 文件类型，后缀
 	private String file_path;// 文件保存路径
 	private Date file_ctime;// 文件创建时间
-	private Contract contract;// 所属合同
+	private Contract contract;// fk外键，合同ID
+	private User user; // fk外键，创建者ID
 	private Integer file_isdelete;// 0：未删除，1：删除，默认未删除
 
 	@Id
@@ -72,12 +75,24 @@ public class Files implements Serializable {
 		this.file_ctime = file_ctime;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "cont_id")
 	public Contract getContract() {
 		return contract;
 	}
 
 	public void setContract(Contract contract) {
 		this.contract = contract;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Column(columnDefinition = "INT default 0")

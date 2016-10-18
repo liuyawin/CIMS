@@ -18,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.mvc.entity.Contract;
 import com.mvc.entity.Files;
+import com.mvc.service.ContractService;
 import com.mvc.service.FileService;
 
 /**
@@ -36,11 +38,13 @@ public class FileController {
 
 	@Autowired
 	FileService fileService;
+	@Autowired
+	ContractService contractService;
 
 	/**
 	 * 上传文件
 	 * 
-	 * @param request
+	 * @param request（file,contId）
 	 * @return true,false
 	 * @throws IOException
 	 */
@@ -62,6 +66,9 @@ public class FileController {
 			SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMddhhmmssSSS");// 定义到毫秒
 			String nowStr = "";
 			Files fileBean = null;
+			
+			int contId = Integer.parseInt(request.getParameter("conId"));// 前台合同ID，需要测试怎么和file同时获取
+			Contract contract = contractService.selectContById(contId);
 			while (iter.hasNext()) {// 文件存储失败和存入数据库失败，都是失败
 				MultipartFile file = multiRequest.getFile(iter.next());// 将要上传的文件
 				fileBean = new Files();
@@ -83,6 +90,7 @@ public class FileController {
 						fileBean.setFile_type(suffix);// 文件类型，后缀
 						fileBean.setFile_path(path);// 文件路径
 						fileBean.setFile_ctime(new Date(time));// 创建时间
+						fileBean.setContract(contract);// 所属合同
 						flag = fileService.addFile(fileBean);
 						if (flag == false) {
 							break;
