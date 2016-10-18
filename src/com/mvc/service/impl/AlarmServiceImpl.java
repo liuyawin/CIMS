@@ -25,8 +25,9 @@ public class AlarmServiceImpl implements AlarmService {
 
 	// 查找报警信息列表
 	@Override
-	public List<Alarm> findAlarmInformationList(Integer user_id, String alarmType, Integer offset, Integer end) {
-		return alarmDao.findAlarmInformationList(user_id, alarmType, offset, end);
+	public List<Alarm> findAlarmInformationList(Integer user_id, String searchKey, String alarmType, Integer offset,
+			Integer end) {
+		return alarmDao.findAlarmInformationList(user_id, searchKey, alarmType, offset, end);
 	}
 
 	// 张姣娜添加：统计报警列表条数，alarmType:2,3

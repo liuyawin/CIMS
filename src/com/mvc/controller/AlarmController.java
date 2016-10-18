@@ -70,33 +70,33 @@ public class AlarmController {
 	// return "zhuren/alarmInformation/index";
 	// }
 
-	/**
-	 * 点击提醒消息进入报警列表
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toAlarmListPage.do")
-	public String AlarmList(HttpSession session) {
-		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		String path = "";
-		switch (user.getUser_num()) {
-		case "zhuren":
-			path = "zhuren/alarmInformation/index";
-			break;
-		case "zhou":
-			path = "assistant2/alarmInformation/index";
-			break;
-		case "shezong":
-			path = "manager/alarmInformation/index";
-			break;
-		case "admin":
-			path = "userManagement/alarmInformation/index";
-			break;
-		default:
-			break;
-		}
-		return path;
-	}
+	// /**
+	// * 点击提醒消息进入报警列表
+	// *
+	// * @return
+	// */
+	// @RequestMapping("/toAlarmListPage.do")
+	// public String AlarmList(HttpSession session) {
+	// User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+	// String path = "";
+	// switch (user.getUser_num()) {
+	// case "zhuren":
+	// path = "zhuren/alarmInformation/index";
+	// break;
+	// case "zhou":
+	// path = "assistant2/alarmInformation/index";
+	// break;
+	// case "shezong":
+	// path = "manager/alarmInformation/index";
+	// break;
+	// case "admin":
+	// path = "userManagement/alarmInformation/index";
+	// break;
+	// default:
+	// break;
+	// }
+	// return path;
+	// }
 
 	/**
 	 * 查找报警信息列表
@@ -111,11 +111,12 @@ public class AlarmController {
 		String alarmType = request.getParameter("alarmType");
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer totalRow = alarmService.countTotal(user.getUser_id(), alarmType);
+		String searchKey = request.getParameter("searchKey");
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
-		List<Alarm> list = alarmService.findAlarmInformationList(user.getUser_id(), alarmType, pager.getOffset(),
-				pager.getLimit());
+		List<Alarm> list = alarmService.findAlarmInformationList(user.getUser_id(), searchKey, alarmType,
+				pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		jsonObject.put("totalRow", totalRow);

@@ -32,7 +32,8 @@ public class AlarmDaoImpl implements AlarmDao {
 	// 查找报警信息列表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Alarm> findAlarmInformationList(Integer user_id, String alarmType, Integer offset, Integer end) {
+	public List<Alarm> findAlarmInformationList(Integer user_id, String searchKey, String alarmType, Integer offset,
+			Integer end) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		String[] chars = alarmType.split(",");
@@ -41,6 +42,10 @@ public class AlarmDaoImpl implements AlarmDao {
 			types.add(Integer.valueOf(chars[i]));
 		}
 		String selectSql = "select * from Alarm where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
+		// 判断查找关键字是否为空
+		if (null != searchKey) {
+			selectSql += " and ( alar_content like '%" + searchKey + "%' )";
+		}
 		selectSql += " group by task_id,reno_id,prst_id  ";
 		selectSql += " order by alar_id desc limit :offset,:end";
 		Query query = em.createNativeQuery(selectSql, Alarm.class);
