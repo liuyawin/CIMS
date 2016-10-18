@@ -355,7 +355,7 @@ h2 {
 .main {
 	float: left;
 	width: 100%;
-	min-height: 40px; /* 加这一句撑开右部分页面，否则刚进入页面时leftbar隐入左侧不显示 */
+	min-height: 40px; /*加这一句撑开右部分页面，否则刚进入页面时leftbar隐入左侧不显示 */
 }
 
 /*right.html*/

@@ -723,9 +723,10 @@ app.controller("UploadController",[
 		'$scope',		
 		'FileUploader',
 		function($scope, FileUploader) {
-	/* ！！！上传文件*/
+			/* ！！！上传文件*/
 			var uploader = $scope.uploader = new FileUploader({
-				url : 'upload.php'
+				url : '/CIMS/file/upload.do',
+				data:{conId:sessionStorage.getItem("contractId")}
 			});
 
 			// FILTERS

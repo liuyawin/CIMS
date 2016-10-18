@@ -8,7 +8,7 @@
 <section class="main" ng-app="department">
 	<div ng-view></div>
 </section>
-<jsp:include page="/jsp/userManagement/left.jsp" />
+<jsp:include page="/jsp/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
 
 <script src="${ctx}/js/app/userManagement/department.js"></script>

@@ -103,7 +103,7 @@ public class UserController {
 		user.setUser_email(jsonObject.getString("user_email"));
 
 		Role role = new Role();
-		role.setRole_id(Integer.parseInt(jsonObject.getString("roleId")));
+		role.setRole_id(Integer.parseInt(jsonObject.getJSONObject("role").getString("role_id")));
 		user.setRole(role);
 		user.setUser_isdelete(0);
 		boolean result;

@@ -2,7 +2,7 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li>首页</li>
-		<li>合同列表</li>
+		<li>合同列表</li> 
 		<li>发票列表</li>
 	</ul>
 </div>
@@ -17,10 +17,13 @@
 			| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
 			次发票！</label>
 	</div>
+
 	<ul class="toolbar1">
-			<li class="click"><a href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img
-						src="../images/t01.png" /></span>开发票</a></li>
-		</ul>
+		<li class="click"><a
+			href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img
+					src="../images/t01.png" /></span>开发票</a></li>
+	</ul>
+
 	<table class="tablelist">
 		<thead>
 			<tr>
@@ -51,8 +54,9 @@
 
 				<td class="width10"><a ng-click="selectInvoiceById()"
 					class="tablelink underline">查看</a><a ng-click="invoiceInfo()"
-					class="tablelink underline">审核</a><a ng-click="updateInvoiceState()"
-					class="tablelink underline">完成</a></td>
+					class="tablelink underline">审核</a><a
+					ng-click="updateInvoiceState()" class="tablelink underline">完成</a></td>
+
 			</tr>
 		</tbody>
 	</table>
@@ -72,8 +76,10 @@
 		<ul class="forminfo">
 			<li><label>发票金额</label> <input name="" type="text"
 				class="dfinput" ng-model="invoice.invo_money" />万元</li>
+
 			<li><label>开发票时间</label><input name="" type="text"
 				class="dfinput" ng-model="invoice.invo_time" /></li>
+
 			<li><label>业主公司</label><input name="" type="text"
 				class="dfinput" ng-model="invoice.invo_firm" readonly /></li>
 			<li><label>发起者</label> <input name="" type="text"
@@ -88,6 +94,7 @@
 	</div>
 </div>
 <!-- 查看任务模态框完 -->
+
 <!-- 审核发票任务模态框 -->
 <div class="overlayer"></div>
 <div class="tip" id="sendInvoTask" style="height: 540px">
@@ -100,9 +107,10 @@
 			<legend>发票信息</legend>
 			<ul class="forminfo">
 				<li><label>名称：</label>{{invoice.invo_name}}</li>
-				<li><label>应开票时间：</label>{{invoice.invo_etime.time |dateType}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>金额：</label>{{invoice.invo_money | receFloat}}
-					&nbsp;&nbsp;万元</li>
-				
+				<li><label>应开票时间：</label>{{invoice.invo_etime.time |dateType}}
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>金额：</label>{{invoice.invo_money
+					| receFloat}} &nbsp;&nbsp;万元</li>
+
 				<li><label>业主公司名称：</label>{{invoice.invo_firm}}</li>
 				<li><label>实开票时间：</label>{{invoice.invo_time}}</li>
 				<!-- <li><label>开始时间：</label></li>
@@ -114,27 +122,28 @@
 	<div class="formbody">
 		<form id="" ng-submit="distributeInvoice()">
 			<ul class="forminfo">
-				<li class="auditInfo"><label>执行人</label> <select class="dfselect"
-					ng-model="receiverId">
+				<li class="auditInfo"><label>执行人</label> <select
+					class="dfselect" ng-model="receiverId">
 						<option ng-repeat="user in users" value={{user.user_id}}>{{user.user_name}}</option>
 				</select></li>
-				<li class="auditInfo"><label>截止时间</label> <input type="text" ng-model="invoEtime"
-					class="dfinput dateFormat" placeholder="格式：2016-09-07" /><span
-					class="error-span">格式错误</span></li>
-					<li class="finishInfo"><label>实开发票时间</label> <input type="text" ng-model="invoTime"
-					class="dfinput dateFormat" placeholder="格式：2016-09-07" /><span
-					class="error-span">格式错误</span></li>
+				<li class="auditInfo"><label>截止时间</label> <input type="text"
+					ng-model="invoEtime" class="dfinput dateFormat"
+					placeholder="格式：2016-09-07" /><span class="error-span">格式错误</span></li>
+				<li class="finishInfo"><label>实开发票时间</label> <input type="text"
+					ng-model="invoTime" class="dfinput dateFormat"
+					placeholder="格式：2016-09-07" /><span class="error-span">格式错误</span></li>
 				<li class="auditInfo"><input type="text" ng-model="invoiceId"
-					class="dfinput hideE" value={{invoice.invo_id}}/></li>
+					class="dfinput hideE" value={{invoice.invo_id}} /></li>
 			</ul>
 			<!-- 按钮 -->
 			<div class="tipbtn">
-			<input name="" type="button" class="sure finishInfo" value="完成" id="sureFinishSend" />&nbsp;
-				<input name="" type="button" class="sure auditInfo" value="审核" id="sureSend" />&nbsp;
-				<input name="" type="button" class="cancel" id="cancelSend"
-					value="取消" />
+				<input name="" type="button" class="sure finishInfo" value="完成"
+					id="sureFinishSend" />&nbsp; <input name="" type="button"
+					class="sure auditInfo" value="审核" id="sureSend" />&nbsp; <input
+					name="" type="button" class="cancel" id="cancelSend" value="取消" />
 			</div>
 		</form>
 	</div>
 </div>
 <!-- 审核发票任务模态框完 -->
+
