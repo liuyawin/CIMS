@@ -110,6 +110,25 @@ public class TaskController {
 	}
 
 	/**
+	 * 根据合同ID和任务类型返回任务列表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/selectTaskByConId.do")
+	public @ResponseBody String getTasksByContId(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Integer contId = Integer.valueOf(request.getParameter("contId"));
+		Integer taskType = Integer.valueOf(request.getParameter("taskType"));
+		List<Task> list = taskService.findByContIdAndType(user.getUser_id(), contId, taskType);
+		jsonObject.put("list", list);
+		System.out.println("返回列表:" + jsonObject.toString());
+		return jsonObject.toString();
+	}
+
+	/**
 	 * 根据任务ID查询任务详情
 	 * 
 	 * @param request

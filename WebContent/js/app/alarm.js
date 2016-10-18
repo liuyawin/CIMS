@@ -81,6 +81,9 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/taskAlarmList', {
 		templateUrl : '/CIMS/jsp/alarmInformation/alarmList.html',
 		controller : 'AlarmController'
+	}).when('/contractDetail', {
+		templateUrl : '/CIMS/jsp/contractInformation/contractDetail.html',
+		controller : 'ContractController'
 	})
 
 } ]);
@@ -88,7 +91,7 @@ app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
 	// 张姣娜：根据报警类型查询报警列表
-	services.selectAlarmByState = function(data) {
+	services.selectAlarmByType = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'alarm/selectAlarmByType.do',
@@ -113,7 +116,8 @@ app.controller('AlarmController', [
 		function($scope, services, $location) {
 			// 合同
 			var alarm = $scope;
-			var isRemove;
+			var alarmType;
+
 			// zq查看合同ID，并记入sessione
 			alarm.getContId = function(contId) {
 				sessionStorage.setItem('contId', contId);
@@ -122,14 +126,42 @@ app.controller('AlarmController', [
 			alarm.getAlarmId = function(alarId) {
 				sessionStorage.setItem('alarId', alarId);
 			};
-			// zq根据状态查找报警列表
-			function selectAlarmByState(page, isRemove) {
-				services.selectAlarmByState({
-					isRemove : isRemove,
+
+			alarm.selectAlarmByContent = function() {
+				services.selectAlarmByContent({
+					alarmType : alarmType,
+					page : 1,
+					alarmContent : alarm.alarmContent
+				}).success(function(data) {
+					alarm.alarms = data.list;
+				});
+			}
+			// zq根据内容查找报警列表
+			function findAlarmByContent(page, alarmType,alarmContent) {
+				services.selectAlarmByContent({
+					alarmType : alarmType,
+					page : page,
+					alarmContent:alarmContent
+				}).success(function(data) {
+					alarm.alarms = data.list;
+				});
+			}
+			// zq根据类型查找报警列表
+			function selectAlarmByType(page, alarmType) {
+				services.selectAlarmByType({
+					alarmType : alarmType,
 					page : page
 				}).success(function(data) {
 					alarm.alarms = data.list;
-
+				});
+			}
+			// zjn根据contId查找合同详情
+			function contDetailByContId() {
+				var contId = sessionStorage.getItem('contId');
+				services.contDetailByContId({
+					contId : contId
+				}).success(function(data) {
+					alarm.cont = data.cont;
 				});
 			}
 			// zq根据id 查找报警详情
@@ -139,7 +171,6 @@ app.controller('AlarmController', [
 					alarId : alarId
 				}).success(function(data) {
 					alarm.alarm = data.alarm;
-
 				});
 			}
 			// zq按查询内容获取任务列表的换页
@@ -152,7 +183,7 @@ app.controller('AlarmController', [
 						pageCount : totalPage,
 						current : page,
 						backFn : function(p) {
-							selectAlarmByState(p, alarmType);
+							selectAlarmByType(p, alarmType);
 						}
 					});
 				}
@@ -161,9 +192,9 @@ app.controller('AlarmController', [
 			// zq初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
-				if ($location.path().indexOf('/debtAlarmList') == 0) {//获取收款超时报警列表
+				if ($location.path().indexOf('/debtAlarmList') == 0) {// 获取收款超时报警列表
 					alarmType = "2,3";
-					services.selectAlarmByState({
+					services.selectAlarmByType({
 						alarmType : alarmType,
 						page : 1
 					}).success(function(data) {
@@ -171,18 +202,18 @@ app.controller('AlarmController', [
 						pageTurnByContent(alarmType, data.totalPage, 1);
 
 					});
-				} else if ($location.path().indexOf('/overdueAlarmList') == 0) {//获取获取工程逾期报警列表
+				} else if ($location.path().indexOf('/overdueAlarmList') == 0) {// 获取获取工程逾期报警列表
 					alarmType = "4,5";
-					services.selectAlarmByState({
+					services.selectAlarmByType({
 						alarmType : alarmType,
 						page : 1
 					}).success(function(data) {
 						alarm.alarms = data.list;
 						pageTurnByContent(alarmType, data.totalPage, 1);
 					});
-				} else if ($location.path().indexOf('/taskAlarmList') == 0) {//获取任务超时报警列表
+				} else if ($location.path().indexOf('/taskAlarmList') == 0) {// 获取任务超时报警列表
 					alarmType = "1";
-					services.selectAlarmByState({
+					services.selectAlarmByType({
 						alarmType : alarmType,
 						page : 1
 					}).success(function(data) {
@@ -228,7 +259,6 @@ app.filter('dateType', function() {
 		if (input != null) {
 			type = new Date(input).toLocaleDateString().replace(/\//g, '-');
 		}
-
 		return type;
 	}
 });

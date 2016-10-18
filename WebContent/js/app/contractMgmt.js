@@ -60,13 +60,11 @@ var app = angular
 var permissionList;
 angular.element(document).ready(function() {
 	console.log("获取权限列表！");
-	permissionList = "W";
-	/*$.get('/CIMS/login/getUserPermission.do',
+	$.get('/CIMS/login/getUserPermission.do',
 		function(data) {
-			permissionList = data.permission; 
-			// console.log("身份是：" +permissionList); 
+			permissionList = data.permission; // console.log("身份是：" + permissionList); 
 			angular.bootstrap(document, ['contract']);
-	});*/
+	});
 });
 
 /*
@@ -85,12 +83,14 @@ app.run(['$rootScope', '$location', 'permissions', function($rootScope, $locatio
 angular.module('contract').factory('permissions', function($rootScope) {
 	return {
 		setPermissions: function(permissions) {
-			permissionList = permissions;
+			permissionList =
+				permissions;
 			$rootScope.$broadcast('permissionsChanged')
 		},
 		hasPermission: function(permission) {
 			permission = permission.trim();
-			console.log("后台传来的权限：" + permissionList);
+			console.log("后台传来的权限：" +
+				permissionList);
 			return permissionList.indexOf(permission) != -1;
 		}
 	};
@@ -103,7 +103,8 @@ angular.module('contract').directive('hasPermission', function(permissions) {
 			var value = attrs.hasPermission.trim(); // value:界面上的权限
 
 			function toggleVisibilityBasedOnPermission() {
-				console.log("界面上的权限：" + value);
+				console.log("界面上的权限：" +
+					value);
 				var hasPermission = permissions.hasPermission(value); // hasPermission
 				console.log("是否有这个权限：" + hasPermission);
 				if(hasPermission) element.show();

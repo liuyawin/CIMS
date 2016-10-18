@@ -81,9 +81,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.WaitingDealFindByPage(user_id, invoiceState, offset, end);
 	}
 
-	// 点击完成更新发票状态
-	public boolean updateInvoiceState(Integer invoiceId, Integer state) {
-		return invoiceDao.updateInvoiceState(invoiceId, state);
+	// 点击完成发票任务
+	public boolean invoiceFinish(Integer invoiceId, Date invoTime) {
+		return invoiceDao.invoiceFinish(invoiceId, invoTime);
 	}
 
 	// 主任转发发票
