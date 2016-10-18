@@ -1,7 +1,7 @@
 ﻿# CIMS
 This is a Contract Implementation Management System.
 
-  ##前端开发规范：
+ # 前端开发规范：
   
   1.自己只能修改自己负责模块的文件，禁止修改公共文件。
   
@@ -13,7 +13,7 @@ This is a Contract Implementation Management System.
   
   5.写注释写注释写注释
 
-  ##后台开发规范：
+ # 后台开发规范：
   
   1.所有新建的类都要有注释，格式如下：
     <pre>
