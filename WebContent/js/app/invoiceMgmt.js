@@ -414,44 +414,6 @@ invoiceApp
 							}
 							initData();// 初始化
 							dateformat();// 格式化日期格式
-
-							// 点击创建任务时弹出模态框
-							invoice.invoiceInfo = function() {
-								var invoId = this.invo.invo_id;
-								services.getAllUsers().success(function(data) {
-									invoice.users = data;
-								});
-								selectInvoiceById(invoId);
-								invoice.invoiceId = invoId;
-								$(".overlayer").fadeIn(200);
-								$("#sendInvoTask").fadeIn(200);
-								return false;
-							};
-
-							$(".tiptop a").click(function() {
-								$(".overlayer").fadeOut(200);
-								$("#sendInvoTask").fadeOut(200);
-							});
-
-							$("#sureSend").click(function() {
-
-								services.updateInvoice({
-									invoId : invoice.invoiceId,
-									invoEtime : invoice.invoEtime,
-									receiverId : invoice.receiverId
-								}).success(function(data) {
-									alert("操作成功！");
-									getWaitingDealInvoice(1, invoState)
-								});
-								$(".overlayer").fadeOut(100);
-								$("#sendInvoTask").fadeOut(100);
-							});
-
-							$("#cancelSend").click(function() {
-								sessionStorage.setItem("contractId", "");
-								$(".overlayer").fadeOut(100);
-								$("#sendInvoTask").fadeOut(100);
-							});
 						} ]);
 
 // 小数过滤器

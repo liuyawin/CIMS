@@ -1,0 +1,127 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li>首页</li>
+		<li>合同信息</li>
+		<li>修改合同基本信息</li>
+	</ul>
+</div>
+<!-- 录入合同基本信息 -->
+<div class="formbody">
+	<!-- contract/addContract.do -->
+	<form ng-submit="updateContract()">
+		<div class="formtitle">
+			<span>基本信息</span>
+		</div>
+
+		<ul class="forminfo">
+			<li class="hidden"><label>合同id</label><input type="text"
+				id="contId" value="{{cont.cont_id}}" class="dfinput" /></li>
+			<li><label>合同名称</label><input type="text"
+				id="contName" value="{{cont.cont_name}}" class="dfinput" /></li>
+			<li><label>项目名称</label><input type="text" id="contProject"
+				value="{{cont.cont_project}}" class="dfinput" /></li>
+			<li><label>合同类型</label><label id="conTypeValue" style="display:none">{{cont.cont_type}}</label> 
+			<select class="dfselect" id="conType">
+					<option value="规划">规划</option>
+					<option value="可行性">预可行性</option>
+					<option value="可行性">可行性</option>
+					<option value="施工图">施工图</option>
+					<option value="评估">评估</option>
+					<option value="其他">其他</option>
+			</select></li>
+			<li><label>合同等级</label>
+				<label id="conRankValue" style="display:none">{{cont.cont_rank}}</label>
+				<div class="radio-div">
+					<input type="radio" value="0" name="contract.cont_rank" class="conRank">重要
+				</div>
+				<div class="radio-div">
+					<input type="radio" value="1" name="contract.cont_rank" class="conRank">一般
+				</div>
+				</li>
+			<li><label>甲方联系人</label><input type="text" id="contCheader"
+				value="{{cont.cont_cheader}}" class="dfinput" /></li>
+			<li><label>联系方式</label><input type="text" id="contCtel"
+				value="{{cont.cont_ctel}}" class="dfinput" /></li>
+			<li><label>部&nbsp; &nbsp; &nbsp; 门</label><input type="text" id="contCdept"
+				value="{{cont.cont_cdept}}" class="dfinput" /></li>
+			<li><label>&nbsp;</label><input type="submit" id="addContract"
+				class="btn" value="提交" /></li>
+		</ul>
+	</form>
+</div>
+<!-- 录入合同基本信息完 -->
+<!-- 上传文件 -->
+<div class="formbody" ng-controller="UploadController" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+	<!-- contract/addContract.do -->
+		<div class="formtitle">
+			<span>上传附件</span>
+		</div>
+
+		<ul class="forminfo">
+			<li><input type="file" nv-file-select=""
+				uploader="uploader" /></li>
+		</ul>
+		<table class="table-upload">
+			<thead>
+				<tr>
+					<th width="40%">文件名</th>
+					<th ng-show="uploader.isHTML5">大小</th>
+					<th ng-show="uploader.isHTML5">进度</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in uploader.queue">
+					<td><strong>{{ item.file.name }}</strong></td>
+					<td ng-show="uploader.isHTML5" nowrap>{{
+						item.file.size/1024/1024|number:2 }} MB</td>
+					<td ng-show="uploader.isHTML5">
+						<div class="progress" style="margin-bottom: 0;">
+							<div class="progress-bar" role="progressbar"
+								ng-style="{ 'width': item.progress + '%' }"></div>
+						</div>
+					</td>
+					<td class="text-center"><span ng-show="item.isSuccess"><i
+							class="glyphicon glyphicon-ok"></i></span> <span ng-show="item.isCancel"><i
+							class="glyphicon glyphicon-ban-circle"></i></span> <span
+						ng-show="item.isError"><i
+							class="glyphicon glyphicon-remove"></i></span></td>
+					<td nowrap>
+				
+						<button type="button" class="btn-delete"
+							ng-click="item.remove()">
+							<span class="glyphicon glyphicon-trash"></span> 移除
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div class="div-btn">
+			<button type="button" class="btn"
+				ng-click="uploader.uploadAll()"
+				ng-disabled="!uploader.getNotUploadedItems().length">
+				全部上传
+			</button>
+			<button type="button" class="btn"
+				ng-click="uploader.clearQueue()"
+				ng-disabled="!uploader.queue.length">
+				全部移除
+			</button>
+		</div>
+</div>
+<!-- 上传文件完 -->
+<script>
+	window.onload = function(){
+		//选中合同类型默认选项
+		var type = $("#conTypeValue").html();
+		console.log("合同类型："+type);
+		$('#conType').find("option").eq(type).attr("selected", true);
+		//选中合同等级默认选项
+		var rank = $("#conRankValue").html();
+		console.log("合同等级："+rank);
+		$('.conRank').eq(rank).attr("checked", "checked");
+	}
+</script>

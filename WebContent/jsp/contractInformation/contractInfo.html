@@ -14,6 +14,7 @@
 			class="hand showInfo" id="contShow" ng-click="showContInfo()"><img
 			src="../images/hideInfo.png" class="hand hideE showInfo"
 			id="contHide" ng-click="hideContInfo()"></span>
+		<a class="update-btn" href="#/contractUpdate">修改</a>
 	</div>
 	<table class="tbl tablelist" id="contInformation">
 		<tr>
@@ -105,7 +106,69 @@
 	</table>
 
 </div>
+<!-- 文书任务
+<div class="formbody">
 
+	<div class="formtitle">
+		<span>文书任务<img src="../images/showInfo.png"
+			class="hand showInfo" id="task1Show" ng-click="showTask1()"><img
+			src="../images/hideInfo.png" class="hand hideE showInfo"
+			id="task1Hide" ng-click="hideTask1()"></span>
+	</div>
+	<table class="tbl tablelist" id="task1Information">
+		<tr>
+			<td class="width10 text-center">工期阶段</td>
+			<td class="width20 text-center">内 容</td>
+			<td class="width10 text-center">应完工时间</td>
+			<td class="width10 text-center">工期进度</td>
+			<td class="width10 text-center">项目经理</td>
+			<td class="width10 text-center">实完工时间</td>
+
+		</tr>
+		<tr ng-repeat="stage in prst">
+			<td class="width10 text-center">阶段{{$index+1}}</td>
+			<td>{{stage.prst_content}}</td>
+			<td>{{stage.prst_etime.time | dateType}}</td>
+			<td>{{stage.prst_state |prstType}}</td>
+			<td>{{stage.manager.user_name}}</td>
+			<td>{{stage.prst_atime.time | dateType}}</td>
+
+		</tr>
+	</table>
+</div>
+文书任务完
+执行管控任务
+<div class="formbody">
+
+	<div class="formtitle">
+		<span>执行管控任务<img src="../images/showInfo.png"
+			class="hand showInfo" id="task2Show" ng-click="showTask2()"><img
+			src="../images/hideInfo.png" class="hand hideE showInfo"
+			id="task2Hide" ng-click="hideTask2()"></span>
+	</div>
+	<table class="tbl tablelist" id="task2Information">
+		<tr>
+			<td class="width10 text-center">工期阶段</td>
+			<td class="width20 text-center">内 容</td>
+			<td class="width10 text-center">应完工时间</td>
+			<td class="width10 text-center">工期进度</td>
+			<td class="width10 text-center">项目经理</td>
+			<td class="width10 text-center">实完工时间</td>
+
+		</tr>
+		<tr ng-repeat="stage in prst">
+			<td class="width10 text-center">阶段{{$index+1}}</td>
+			<td>{{stage.prst_content}}</td>
+			<td>{{stage.prst_etime.time | dateType}}</td>
+			<td>{{stage.prst_state |prstType}}</td>
+			<td>{{stage.manager.user_name}}</td>
+			<td>{{stage.prst_atime.time | dateType}}</td>
+
+		</tr>
+
+	</table>
+</div>
+执行管控任务完 -->
 <div class="formbody">
 
 	<div class="formtitle">
