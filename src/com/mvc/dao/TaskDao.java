@@ -2,7 +2,6 @@ package com.mvc.dao;
 
 import java.util.List;
 
-import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 
 /**
@@ -26,4 +25,6 @@ public interface TaskDao {
 	// 根据状态，关键字查询任务总条数
 	Integer countByParam(Integer user_id, Integer task_state, String searchKey, Integer sendOrReceive);
 
+	// 根据合同ID和任务类型返回任务列表
+	List<Task> findByContIdAndType(Integer user_id, Integer contId, Integer taskType);
 }

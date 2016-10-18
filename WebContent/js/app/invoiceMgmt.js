@@ -180,7 +180,7 @@ invoiceApp
 						function($scope, services, $location) {
 							// 合同
 							var invoice = $scope;
-							var invoState;
+							invoice.invoState;
 							// zq查看合同ID，并记入sessione
 							invoice.getContId = function(contId) {
 								sessionStorage.setItem('conId', contId);
@@ -298,14 +298,13 @@ invoiceApp
 							});
 
 							$("#sureSend").click(function() {
-
 								services.updateInvoice({
 									invoId : invoice.invoiceId,
 									invoEtime : invoice.invoEtime,
 									receiverId : invoice.receiverId
 								}).success(function(data) {
 									alert("操作成功！");
-									getWaitingDealInvoice(1, invoState)
+									getZRInvoice(1, invoState);
 								});
 								$(".overlayer").fadeOut(100);
 								$("#sendInvoTask").fadeOut(100);
@@ -327,10 +326,12 @@ invoiceApp
 								$("#sendInvoTask").fadeIn(200);
 								return false;
 							}
+							
 							$("#sureFinishSend").click(function() {
+								alert(invoice.invoTime);
 								services.updateInvoiceState({
-									invoiceId : invoice.invoiceId
-								/* ,incoTime:invoice.invoTime */
+									invoiceId : invoice.invoiceId,
+									invoTime : invoice.invoTime
 								}).success(function(data) {
 									alert("操作成功！");
 									getWaitingDealInvoice(1, invoState);
@@ -359,7 +360,7 @@ invoiceApp
 
 								'/invoiceTaskList') == 0) {
 									// 根据权限判断显示待处理的发票
-									invoState = 0;
+									invoState = 1;
 									services.getZRInvoice({
 										page : 1,
 										invoState : invoState
@@ -414,44 +415,6 @@ invoiceApp
 							}
 							initData();// 初始化
 							dateformat();// 格式化日期格式
-
-							// 点击创建任务时弹出模态框
-							invoice.invoiceInfo = function() {
-								var invoId = this.invo.invo_id;
-								services.getAllUsers().success(function(data) {
-									invoice.users = data;
-								});
-								selectInvoiceById(invoId);
-								invoice.invoiceId = invoId;
-								$(".overlayer").fadeIn(200);
-								$("#sendInvoTask").fadeIn(200);
-								return false;
-							};
-
-							$(".tiptop a").click(function() {
-								$(".overlayer").fadeOut(200);
-								$("#sendInvoTask").fadeOut(200);
-							});
-
-							$("#sureSend").click(function() {
-
-								services.updateInvoice({
-									invoId : invoice.invoiceId,
-									invoEtime : invoice.invoEtime,
-									receiverId : invoice.receiverId
-								}).success(function(data) {
-									alert("操作成功！");
-									getWaitingDealInvoice(1, invoState)
-								});
-								$(".overlayer").fadeOut(100);
-								$("#sendInvoTask").fadeOut(100);
-							});
-
-							$("#cancelSend").click(function() {
-								sessionStorage.setItem("contractId", "");
-								$(".overlayer").fadeOut(100);
-								$("#sendInvoTask").fadeOut(100);
-							});
 						} ]);
 
 // 小数过滤器

@@ -4,8 +4,6 @@
 package com.mvc.service;
 
 import java.util.List;
-
-import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 
 /**
@@ -38,5 +36,7 @@ public interface TaskService {
 	// 根据任务Id删除任务
 	boolean delete(Integer taskId);
 
+	// 根据合同ID和任务类型返回任务列表
+	List<Task> findByContIdAndType(Integer user_id, Integer contId, Integer taskType);
 
 }

@@ -234,16 +234,21 @@ public class InvoiceController {
 	}
 
 	/**
-	 * 点击更新发票状态
+	 * 点击确认完成开发票任务
 	 * 
 	 * @param request
 	 * @param session
 	 * @return
+	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/updateInvoiceState.do")
-	public @ResponseBody String updateInvoiceState(HttpServletRequest request, HttpSession session) {
-		Integer invoiceId = Integer.valueOf(request.getParameter("invoiceId"));
-		boolean result = invoiceService.updateInvoiceState(invoiceId, InvoiceStatus.finish.value);
+	public @ResponseBody String invoiceFinish(HttpServletRequest request, HttpSession session) throws ParseException {
+		Integer invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
+		System.out.println("发票Id"+invoiceId);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date invoTime = format.parse(request.getParameter("invoTime"));
+		System.out.println("发票Id"+invoTime);
+		boolean result = invoiceService.invoiceFinish(invoiceId, invoTime);
 		return JSON.toJSONString(result);
 	}
 
