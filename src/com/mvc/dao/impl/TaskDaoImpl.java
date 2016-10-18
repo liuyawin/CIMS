@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.TaskDao;
-import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 import com.mvc.repository.SubTaskRepository;
 import com.mvc.repository.TaskRepository;
@@ -129,5 +128,19 @@ public class TaskDaoImpl implements TaskDao {
 		return Integer.parseInt(result.get(0).toString());
 	}
 
+	// 根据合同ID和任务类型返回任务列表
+	@SuppressWarnings("unchecked")
+	public List<Task> findByContIdAndType(Integer user_id, Integer contId, Integer taskType) {
+		EntityManager em = emf.createEntityManager();
+		String selectSql = "select * from task where  creator_id =:user_id and task_type=:task_type and cont_id=:cont_id and task_isdelete=0";
+		selectSql += " order by task_id desc ";
+		Query query = em.createNativeQuery(selectSql, Task.class);
+		query.setParameter("user_id", user_id);
+		query.setParameter("task_type", taskType);
+		query.setParameter("cont_id", contId);
+		List<Task> list = query.getResultList();
+		em.close();
+		return list;
+	}
 
 }

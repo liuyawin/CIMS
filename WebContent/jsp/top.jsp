@@ -25,8 +25,11 @@
 			</ul>
 
 			<div class="user">
+
 				<span id="userNum"></span> <i>报警</i><a
-					href="/CIMS/alarm/toAlarmPage.do#/debtAlarmList"><b id="newsNum"></b></a>
+					href="/CIMS/alarm/toAlarmPage.do#/debtAlarmList"><b
+					id="newsNum"></b></a>
+
 			</div>
 		</div>
 	</header>

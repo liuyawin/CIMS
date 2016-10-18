@@ -111,11 +111,12 @@ public class AlarmController {
 		String alarmType = request.getParameter("alarmType");
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer totalRow = alarmService.countTotal(user.getUser_id(), alarmType);
+		String searchKey = request.getParameter("searchKey");
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
-		List<Alarm> list = alarmService.findAlarmInformationList(user.getUser_id(), alarmType, pager.getOffset(),
-				pager.getLimit());
+		List<Alarm> list = alarmService.findAlarmInformationList(user.getUser_id(), searchKey, alarmType,
+				pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		jsonObject.put("totalRow", totalRow);
