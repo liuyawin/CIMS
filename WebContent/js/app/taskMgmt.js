@@ -100,7 +100,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	};
 
 	// zq通过内容查找任务
-	services.getTaskByContext = function(data) {
+	services.getTaskByKeys = function(data) {
 		console.log("发送请求获取合同信息");
 		return $http({
 			method : 'post',
@@ -194,8 +194,10 @@ app
 							};
 							taskHtml.task = {};
 							// zq根据内容查询任务列表
-							taskHtml.getTaskByContext = function() {
-								services.getTaskByContext({
+							taskHtml.getTaskByKeys = function() {
+								tState = taskHtml.tState;
+								alert(tState);
+								services.getTaskBykeys({
 									context : $("#tContent").val(),
 									page : 1,
 									taskState : tState,
@@ -478,7 +480,7 @@ app
 
 							// zq 获取任务列表按照内容翻页查找函数
 							function getTaskListByContent(taskState, page) {
-								services.getTaskByContext({
+								services.getTaskByKeys({
 									context : $("#tContent").val(),
 									page : page,
 									taskState : taskState,
@@ -552,6 +554,7 @@ app
 								if ($location.path().indexOf('/receiveTask') == 0) {
 									// contract.getContractList();
 									tState = 0;
+									taskHtml.tState = "0";
 									sendOrReceive = 1;
 									services.getTaskList({
 										taskState : tState,
@@ -566,6 +569,7 @@ app
 										.indexOf('/sendTask') == 0) {
 									// contract.getOverdueContract();
 									tState = 0;
+									taskHtml.tState = "0";
 									sendOrReceive = 0;
 									services.getTaskList({
 										taskState : tState,

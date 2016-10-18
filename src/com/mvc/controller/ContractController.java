@@ -174,6 +174,7 @@ public class ContractController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = JSONObject.fromObject(request.getParameter("contract"));
+		System.out.println("ceshi "+jsonObject.toString());
 		long time = System.currentTimeMillis();
 		Contract contract = new Contract();
 		contract.setCont_name(jsonObject.getString("cont_name"));// 合同名称

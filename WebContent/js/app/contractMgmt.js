@@ -1,7 +1,7 @@
 var app = angular
 		.module(
 				'contract',
-				[ 'ngRoute' , 'angularFileUpload'],
+				[ 'ngRoute', 'angularFileUpload' ],
 				function($httpProvider) {// ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
 					$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -716,67 +716,88 @@ app.controller('ContractController', [
 			$(".dateFormat").click(function() {
 				$(this).parent().children("span").css('display', 'none');
 			});
-			
-			
-			} ]);
-app.controller("UploadController",[
-		'$scope',		
-		'FileUploader',
-		function($scope, FileUploader) {
-			/* ！！！上传文件*/
-			var uploader = $scope.uploader = new FileUploader({
-				url : '/CIMS/file/upload.do',
-				data:{conId:sessionStorage.getItem("contractId")}
-			});
 
-			// FILTERS
-
-			uploader.filters.push({
-				name : 'customFilter',
-				fn : function(item /* {File|FileLikeObject} */, options) {
-					return this.queue.length < 10;
-				}
-			});
-
-			// CALLBACKS
-
-			uploader.onWhenAddingFileFailed = function(item /* {File|FileLikeObject} */,
-					filter, options) {
-				console.info('onWhenAddingFileFailed', item, filter, options);
-			};
-			uploader.onAfterAddingFile = function(fileItem) {
-				console.info('onAfterAddingFile', fileItem);
-			};
-			uploader.onAfterAddingAll = function(addedFileItems) {
-				console.info('onAfterAddingAll', addedFileItems);
-			};
-			uploader.onBeforeUploadItem = function(item) {
-				console.info('onBeforeUploadItem', item);
-			};
-			uploader.onProgressItem = function(fileItem, progress) {
-				console.info('onProgressItem', fileItem, progress);
-			};
-			uploader.onProgressAll = function(progress) {
-				console.info('onProgressAll', progress);
-			};
-			uploader.onSuccessItem = function(fileItem, response, status, headers) {
-				console.info('onSuccessItem', fileItem, response, status, headers);
-			};
-			uploader.onErrorItem = function(fileItem, response, status, headers) {
-				console.info('onErrorItem', fileItem, response, status, headers);
-			};
-			uploader.onCancelItem = function(fileItem, response, status, headers) {
-				console.info('onCancelItem', fileItem, response, status, headers);
-			};
-			uploader.onCompleteItem = function(fileItem, response, status, headers) {
-				console.info('onCompleteItem', fileItem, response, status, headers);
-			};
-			uploader.onCompleteAll = function() {
-				console.info('onCompleteAll');
-			};
-			console.info('uploader', uploader);
-			/* ！！！上传文件完*/		
 		} ]);
+app
+		.controller(
+				"UploadController",
+				[
+						'$scope',
+						'FileUploader',
+						function($scope, FileUploader) {
+							/* ！！！上传文件 */
+							var uploader = $scope.uploader = new FileUploader({
+								url : '/CIMS/file/upload.do',
+								data : {
+									conId : sessionStorage
+											.getItem("contractId")
+								}
+							});
+
+							// FILTERS
+
+							uploader.filters.push({
+								name : 'customFilter',
+								fn : function(
+										item /* {File|FileLikeObject} */,
+										options) {
+									return this.queue.length < 10;
+								}
+							});
+
+							// CALLBACKS
+
+							uploader.onWhenAddingFileFailed = function(
+									item /* {File|FileLikeObject} */, filter,
+									options) {
+								console.info('onWhenAddingFileFailed', item,
+										filter, options);
+							};
+							uploader.onAfterAddingFile = function(fileItem) {
+								console.info('onAfterAddingFile', fileItem);
+							};
+							uploader.onAfterAddingAll = function(addedFileItems) {
+								console
+										.info('onAfterAddingAll',
+												addedFileItems);
+							};
+							uploader.onBeforeUploadItem = function(item) {
+								console.info('onBeforeUploadItem', item);
+							};
+							uploader.onProgressItem = function(fileItem,
+									progress) {
+								console.info('onProgressItem', fileItem,
+										progress);
+							};
+							uploader.onProgressAll = function(progress) {
+								console.info('onProgressAll', progress);
+							};
+							uploader.onSuccessItem = function(fileItem,
+									response, status, headers) {
+								console.info('onSuccessItem', fileItem,
+										response, status, headers);
+							};
+							uploader.onErrorItem = function(fileItem, response,
+									status, headers) {
+								console.info('onErrorItem', fileItem, response,
+										status, headers);
+							};
+							uploader.onCancelItem = function(fileItem,
+									response, status, headers) {
+								console.info('onCancelItem', fileItem,
+										response, status, headers);
+							};
+							uploader.onCompleteItem = function(fileItem,
+									response, status, headers) {
+								console.info('onCompleteItem', fileItem,
+										response, status, headers);
+							};
+							uploader.onCompleteAll = function() {
+								console.info('onCompleteAll');
+							};
+							console.info('uploader', uploader);
+							/* ！！！上传文件完 */
+						} ]);
 // 小数过滤器
 app.filter('receFloat', function() {
 	return function(input) {
