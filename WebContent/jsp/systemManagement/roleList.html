@@ -34,7 +34,8 @@
 			<tr ng-repeat="role in roles">
 				<td>{{$index + 1 }}</td>
 				<td>{{role.role_name}}</td>
-				<td><a href="#" class="tablelink">查看</a><a
+				<td><a href="#roleList" class="tablelink"
+					ng-click="detailRoleBtn(this)">查看</a><a
 					ng-click="editRoleBtn(this)" class="tablelink"> 修改</a><a
 					href="#roleList" class="tablelink"
 					ng-click="deleteRole(role.role_id)"> 删除</a></td>
@@ -53,7 +54,7 @@
 <!-- 新建和修改模态框 -->
 
 <div class="overlayer"></div>
-<div class="tip" style="height: 200px;">
+<div class="tip" style="height: 550px;">
 	<div class="tiptop">
 		<span>用户设置</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
@@ -64,6 +65,114 @@
 			<ul class="forminfo">
 				<li><label>角色名称<b>*</b></label><input type="text"
 					class="dfinput" ng-model="addingRole.role_name" id="mustInput" /></li>
+				<li><table class="tablelist" style="width: 430px">
+						<tr>
+							<th>合同权限</th>
+						</tr>
+						<tr>
+							<td><input id="con_per" name="0"
+								ng-checked="isSelected('con_per',0)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限1 <input id="con_per"
+								name="1" ng-checked="isSelected('con_per',1)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限2 <input id="con_per"
+								name="2" ng-checked="isSelected('con_per',2)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限3 <input id="con_per"
+								name="3" ng-checked="isSelected('con_per',3)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限4 <input id="con_per"
+								name="4" ng-checked="isSelected('con_per',4)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限5</td>
+						</tr>
+						<tr>
+							<th>任务权限</th>
+						</tr>
+						<tr>
+							<td><input id="task_per" name="0"
+								ng-checked="isSelected('task_per',0)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限1 <input id="task_per"
+								name="1" ng-checked="isSelected('task_per',1)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限2 <input id="task_per"
+								name="2" ng-checked="isSelected('task_per',2)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限3 <input id="task_per"
+								name="3" ng-checked="isSelected('task_per',3)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限4 <input id="task_per"
+								name="4" ng-checked="isSelected('task_per',4)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限5</td>
+
+						</tr>
+						<tr>
+							<th>票据权限</th>
+						</tr>
+						<tr>
+							<td><input id="bill_per" name="0"
+								ng-checked="isSelected('bill_per',0)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限1 <input id="bill_per"
+								name="1" ng-checked="isSelected('bill_per',1)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限2 <input id="bill_per"
+								name="2" ng-checked="isSelected('bill_per',2)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限3 <input id="bill_per"
+								name="3" ng-checked="isSelected('bill_per',3)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限4 <input id="bill_per"
+								name="4" ng-checked="isSelected('bill_per',4)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限5</td>
+						</tr>
+						<tr>
+							<th>系统管理权限</th>
+						</tr>
+						<tr>
+							<td><input id="system_per" name="0"
+								ng-checked="isSelected('system_per',0)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限1 <input id="system_per"
+								name="1" ng-checked="isSelected('system_per',1)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限2 <input id="system_per"
+								name="2" ng-checked="isSelected('system_per',2)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限3 <input id="system_per"
+								name="3" ng-checked="isSelected('system_per',3)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限4 <input id="system_per"
+								name="4" ng-checked="isSelected('system_per',4)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限5</td>
+						</tr>
+						<tr>
+							<th>报警权限</th>
+						</tr>
+						<tr>
+							<td><input id="alarm_per" name="0"
+								ng-checked="isSelected('alarm_per',0)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限1 <input id="alarm_per"
+								name="1" ng-checked="isSelected('alarm_per',1)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限2 <input id="alarm_per"
+								name="2" ng-checked="isSelected('alarm_per',2)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限3 <input id="alarm_per"
+								name="3" ng-checked="isSelected('alarm_per',3)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限4 <input id="alarm_per"
+								name="4" ng-checked="isSelected('alarm_per',4)"
+								ng-click="updateSelection($event)" type="checkbox"
+								ng-true-value="1" ng-false-value=0 />权限5</td>
+						</tr>
+					</table></li>
 			</ul>
 			<!-- 按钮 -->
 			<div class="tipbtn">
@@ -78,6 +187,109 @@
 			<ul class="forminfo">
 				<li><label>角色名称<b>*</b></label><input type="text"
 					class="dfinput" ng-model="editRole.role_name" id="mustInput" /></li>
+				<li><table class="tablelist" style="width: 430px">
+						<tr>
+							<th>合同权限</th>
+						</tr>
+						<tr>
+							<td><input id="con_per" name="0"
+								ng-checked="isSelected('con_per',0)"
+								ng-click="updateSelection($event)" type="checkbox" />权限1
+								<input id="con_per" name="1"
+								ng-checked="isSelected('con_per',1)"
+								ng-click="updateSelection($event)" type="checkbox" />权限2
+								<input id="con_per" name="2"
+								ng-checked="isSelected('con_per',2)"
+								ng-click="updateSelection($event)" type="checkbox" />权限3
+								<input id="con_per" name="3"
+								ng-checked="isSelected('con_per',3)"
+								ng-click="updateSelection($event)" type="checkbox" />权限4
+								<input id="con_per" name="4"
+								ng-checked="isSelected('con_per',4)"
+								ng-click="updateSelection($event)" type="checkbox" />权限5</td>
+						</tr>
+						<tr>
+							<th>任务权限</th>
+						</tr>
+						<tr>
+							<td><input id="task_per" name="0"
+								ng-checked="isSelected('task_per',0)"
+								ng-click="updateSelection($event)" type="checkbox" />权限1
+								<input id="task_per" name="1"
+								ng-checked="isSelected('task_per',1)"
+								ng-click="updateSelection($event)" type="checkbox" />权限2
+								<input id="task_per" name="2"
+								ng-checked="isSelected('task_per',2)"
+								ng-click="updateSelection($event)" type="checkbox" />权限3
+								<input id="task_per" name="3"
+								ng-checked="isSelected('task_per',3)"
+								ng-click="updateSelection($event)" type="checkbox" />权限4
+								<input id="task_per" name="4"
+								ng-checked="isSelected('task_per',4)"
+								ng-click="updateSelection($event)" type="checkbox" />权限5</td>
+
+						</tr>
+						<tr>
+							<th>票据权限</th>
+						</tr>
+						<tr>
+							<td><input id="bill_per" name="0"
+								ng-checked="isSelected('bill_per',0)"
+								ng-click="updateSelection($event)" type="checkbox" />权限1
+								<input id="bill_per" name="1"
+								ng-checked="isSelected('bill_per',1)"
+								ng-click="updateSelection($event)" type="checkbox" />权限2
+								<input id="bill_per" name="2"
+								ng-checked="isSelected('bill_per',2)"
+								ng-click="updateSelection($event)" type="checkbox" />权限3
+								<input id="bill_per" name="3"
+								ng-checked="isSelected('bill_per',3)"
+								ng-click="updateSelection($event)" type="checkbox" />权限4
+								<input id="bill_per" name="4"
+								ng-checked="isSelected('bill_per',4)"
+								ng-click="updateSelection($event)" type="checkbox" />权限5</td>
+						</tr>
+						<tr>
+							<th>系统管理权限</th>
+						</tr>
+						<tr>
+							<td><input id="system_per" name="0"
+								ng-checked="isSelected('system_per',0)"
+								ng-click="updateSelection($event)" type="checkbox" />权限1
+								<input id="system_per" name="1"
+								ng-checked="isSelected('system_per',1)"
+								ng-click="updateSelection($event)" type="checkbox" />权限2
+								<input id="system_per" name="2"
+								ng-checked="isSelected('system_per',2)"
+								ng-click="updateSelection($event)" type="checkbox" />权限3
+								<input id="system_per" name="3"
+								ng-checked="isSelected('system_per',3)"
+								ng-click="updateSelection($event)" type="checkbox" />权限4
+								<input id="system_per" name="4"
+								ng-checked="isSelected('system_per',4)"
+								ng-click="updateSelection($event)" type="checkbox" />权限5</td>
+						</tr>
+						<tr>
+							<th>报警权限</th>
+						</tr>
+						<tr>
+							<td><input id="alarm_per" name="0"
+								ng-checked="isSelected('alarm_per',0)"
+								ng-click="updateSelection($event)" type="checkbox" />权限1
+								<input id="alarm_per" name="1"
+								ng-checked="isSelected('alarm_per',1)"
+								ng-click="updateSelection($event)" type="checkbox" />权限2
+								<input id="alarm_per" name="2"
+								ng-checked="isSelected('alarm_per',2)"
+								ng-click="updateSelection($event)" type="checkbox" />权限3
+								<input id="alarm_per" name="3"
+								ng-checked="isSelected('alarm_per',3)"
+								ng-click="updateSelection($event)" type="checkbox" />权限4
+								<input id="alarm_per" name="4"
+								ng-checked="isSelected('alarm_per',4)"
+								ng-click="updateSelection($event)" type="checkbox" />权限5</td>
+						</tr>
+					</table></li>
 			</ul>
 			<!-- 按钮 -->
 			<div class="tipbtn">

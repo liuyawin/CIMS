@@ -110,9 +110,13 @@ public class AlarmController {
 		JSONObject jsonObject = new JSONObject();
 		String alarmType = request.getParameter("alarmType");
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+<<<<<<< HEAD
 		Integer totalRow = alarmService.countTotal(user.getUser_id(), alarmType);
 		System.out.println("总条数"+totalRow);
+=======
+>>>>>>> 4d17cd8f0340bef9ac80aa7a88c2c7528ceb7b90
 		String searchKey = request.getParameter("searchKey");
+		Integer totalRow = alarmService.countTotal(user.getUser_id(), alarmType, searchKey);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
@@ -137,7 +141,6 @@ public class AlarmController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Long totalRow = alarmService.countNumByUserId(user.getUser_id());
 		jsonObject.put("totalRow", totalRow);
-		System.out.println("任务总条数totalRow:" + totalRow);
 		return jsonObject.toString();
 	}
 

@@ -21,11 +21,11 @@
 		<thead>
 			<tr>
 				<th>合同名称</th>
-				<th>本公司编号</th>
-				<th>合同状态</th>
-				<th>工程阶段报警次数</th>
-				<th>收款节点报警次数</th>
-				<th>合同金额</th>
+				<th>合同金额(万元)</th>
+				<th>开发票次数</th>
+				<th>已开发票金额(万元)</th>
+				<th>开收据次数</th>
+				<th>已开收据金额(万元)</th>
 				<th>发票</th>
 				<th>收据</th>
 			</tr>
@@ -33,11 +33,11 @@
 		<tbody>
 			<tr ng-repeat="con in contracts">
 				<td><a class="underline" href="#contractInfo">{{con.cont_name}}</a></td>
-				<td>{{con.cont_onum}}</td>
-				<td>{{con.cont_state | conState}}</td>
-				<td>{{con.cont_proalanum}}</td>
-				<td>{{con.cont_payalanum}}</td>
 				<td>{{con.cont_money}}</td>
+				<td>{{con.invo_total}}</td>
+				<td>{{con.invo_totalmoney}}</td>
+				<td>{{con.rece_total}}</td>
+				<td>{{con.rece_totalmoney}}</td>
 				<td>
 					<!-- <a href="#"
 					class="tablelink">录发票</a> --> <a
