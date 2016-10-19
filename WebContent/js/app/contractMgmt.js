@@ -60,11 +60,13 @@ var app = angular
 var permissionList;
 angular.element(document).ready(function() {
 	console.log("获取权限列表！");
-	$.get('/CIMS/login/getUserPermission.do',
+	permissionList = "W"; // console.log("身份是：" + permissionList); 
+	angular.bootstrap(document, ['contract']);
+	/*$.get('/CIMS/login/getUserPermission.do',
 		function(data) {
 			permissionList = data.permission; // console.log("身份是：" + permissionList); 
 			angular.bootstrap(document, ['contract']);
-	});
+	});*/
 });
 
 /*
@@ -786,6 +788,12 @@ app.controller('ContractController', [
 		}
 
 		initData();
+		
+		$scope.$on('reGetData', function () {
+			console.log("重新获取数据！");
+	        initData();
+	    });
+		
 		// 验证日期输入格式
 		var $dateFormat = $(".dateFormat");
 		var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
