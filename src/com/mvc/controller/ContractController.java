@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.base.constants.SessionKeyConstants;
-import com.base.enums.ContractType;
 import com.mvc.entity.Contract;
 import com.mvc.entity.User;
 import com.mvc.service.ContractService;
@@ -183,8 +182,7 @@ public class ContractController {
 			contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
 		}
 		if (jsonObject.containsKey("cont_type")) {
-			ContractType ct = Enum.valueOf(ContractType.class, jsonObject.getString("cont_type"));
-			contract.setCont_type(ct.value);// 枚举,合同的类型
+			contract.setCont_type(Integer.parseInt(jsonObject.getString("cont_type")));
 		}
 		if (jsonObject.containsKey("cont_cheader")) {
 			contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
@@ -412,8 +410,7 @@ public class ContractController {
 				contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
 			}
 			if (jsonObject.containsKey("cont_type")) {
-				ContractType ct = Enum.valueOf(ContractType.class, jsonObject.getString("cont_type"));
-				contract.setCont_type(ct.value);// 枚举,合同的类型
+				contract.setCont_type(Integer.parseInt(jsonObject.getString("cont_type")));
 			}
 			if (jsonObject.containsKey("cont_cheader")) {
 				contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
