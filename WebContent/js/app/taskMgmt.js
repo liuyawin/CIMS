@@ -196,7 +196,7 @@ app
 							// zq根据内容查询任务列表
 							taskHtml.getTaskByKeys = function() {
 								tState = taskHtml.tState;
-								alert(tState);
+								
 								services.getTaskBykeys({
 									context : $("#tContent").val(),
 									page : 1,

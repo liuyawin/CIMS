@@ -111,6 +111,7 @@ public class AlarmController {
 		String alarmType = request.getParameter("alarmType");
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer totalRow = alarmService.countTotal(user.getUser_id(), alarmType);
+		System.out.println("总条数"+totalRow);
 		String searchKey = request.getParameter("searchKey");
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
