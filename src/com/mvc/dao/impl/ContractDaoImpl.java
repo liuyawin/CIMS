@@ -168,4 +168,18 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
+	// 修改合同基本信息
+	@Override
+	public Boolean updateConById(Integer cont_id, Contract contract) {
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			em.merge(contract);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+		return true;
+	}
+
 }

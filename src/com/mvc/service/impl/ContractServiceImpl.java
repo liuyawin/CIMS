@@ -78,4 +78,10 @@ public class ContractServiceImpl implements ContractService {
 		return contractDao.findAllEndCont(contName, offset, end);
 	}
 
+	// 修改合同基本信息
+	@Override
+	public Boolean updateConById(Integer cont_id, Contract contract) {
+		return contractDao.updateConById(cont_id, contract);
+	}
+
 }

@@ -26,4 +26,7 @@ public interface ContractDao {
 
 	// 查询所有终结合同列表
 	List<Contract> findAllEndCont(String contName, Integer offset, Integer end);
+
+	// 修改合同基本信息
+	Boolean updateConById(Integer cont_id, Contract contract);
 }

@@ -158,7 +158,6 @@ public class ContractController {
 		List<Contract> list = contractService.findConByName(contName, pager.getOffset(), pager.getPageSize());// 合同名
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println(jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -176,14 +175,28 @@ public class ContractController {
 		jsonObject = JSONObject.fromObject(request.getParameter("contract"));
 		long time = System.currentTimeMillis();
 		Contract contract = new Contract();
-		contract.setCont_name(jsonObject.getString("cont_name"));// 合同名称
-		contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
-		ContractType ct = Enum.valueOf(ContractType.class, jsonObject.getString("cont_type"));
-		contract.setCont_type(ct.value);// 枚举,合同的类型
-		contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
-		contract.setCont_ctel(jsonObject.getString("cont_ctel"));// 业主联系方式
-		contract.setCont_cdept(jsonObject.getString("cont_cdept"));// 业主联系部门
-		contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
+		if (jsonObject.containsKey("cont_name")) {
+			contract.setCont_name(jsonObject.getString("cont_name"));// 合同名称
+		}
+		if (jsonObject.containsKey("cont_project")) {
+			contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
+		}
+		if (jsonObject.containsKey("cont_type")) {
+			ContractType ct = Enum.valueOf(ContractType.class, jsonObject.getString("cont_type"));
+			contract.setCont_type(ct.value);// 枚举,合同的类型
+		}
+		if (jsonObject.containsKey("cont_cheader")) {
+			contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
+		}
+		if (jsonObject.containsKey("cont_ctel")) {
+			contract.setCont_ctel(jsonObject.getString("cont_ctel"));// 业主联系方式
+		}
+		if (jsonObject.containsKey("cont_cdept")) {
+			contract.setCont_cdept(jsonObject.getString("cont_cdept"));// 业主联系部门
+		}
+		if (jsonObject.containsKey("cont_rank")) {
+			contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
+		}
 		contract.setCont_initiation(1);// 已立项
 		contract.setCont_ishistory(0);// 未删除
 		contract.setCont_state(0);// 合同状态
@@ -223,28 +236,66 @@ public class ContractController {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		if (jsonObject != null) {
 			try {
-				contract.setCont_onum(jsonObject.getString("cont_onum"));// 本公司编号
-				contract.setCont_cnum(jsonObject.getString("cont_cnum"));// 业主方编号
-				contract.setCont_initiation(jsonObject.getInt("cont_initiation"));// 是否立项
-				contract.setCont_pnum(jsonObject.getString("cont_pnum"));// 项目编码
-				contract.setCont_stime(format.parse(jsonObject.getString("cont_stime")));// 合同签订时间
-				contract.setCont_money(Float.parseFloat(jsonObject.getString("cont_money")));// 合同金额
-				contract.setCont_hasproxy(Integer.parseInt(jsonObject.getString("cont_hasproxy")));// 是否有委托书
-				contract.setCont_client(jsonObject.getString("cont_client"));// 业主公司名称
-				contract.setCont_caddress(jsonObject.getString("cont_caddress"));// 业主地址
-				contract.setCont_cemail(jsonObject.getString("cont_cemail"));// 业主邮箱
-				contract.setCont_cfax(jsonObject.getString("cont_cfax"));// 业主传真
-				contract.setCont_czipcode(jsonObject.getString("cont_czipcode"));// 业主邮编
-				contract.setCont_bank(jsonObject.getString("cont_bank"));// 开户行
-				contract.setCont_account(jsonObject.getString("cont_account"));// 银行账户
-				contract.setCont_taxidennum(jsonObject.getString("cont_taxidennum"));// 纳税人识别号
-				contract.setCont_orgcodenum(jsonObject.getString("cont_orgcodenum"));// 组织机构代码证号
-				contract.setCont_avetaxpayer(jsonObject.getInt("cont_avetaxpayer"));// 增税人一般纳税人
+				if (jsonObject.containsKey("cont_onum")) {
+					contract.setCont_onum(jsonObject.getString("cont_onum"));// 本公司编号
+				}
+				if (jsonObject.containsKey("cont_cnum")) {
+					contract.setCont_cnum(jsonObject.getString("cont_cnum"));// 业主方编号
+				}
+				if (jsonObject.containsKey("cont_initiation")) {
+					contract.setCont_initiation(jsonObject.getInt("cont_initiation"));// 是否立项
+				}
+				if (jsonObject.containsKey("cont_pnum")) {
+					contract.setCont_pnum(jsonObject.getString("cont_pnum"));// 项目编码
+				}
+				if (jsonObject.containsKey("cont_stime")) {
+					contract.setCont_stime(format.parse(jsonObject.getString("cont_stime")));// 合同签订时间
+				}
+				if (jsonObject.containsKey("cont_money")) {
+					contract.setCont_money(Float.parseFloat(jsonObject.getString("cont_money")));// 合同金额
+				}
+				if (jsonObject.containsKey("cont_hasproxy")) {
+					contract.setCont_hasproxy(Integer.parseInt(jsonObject.getString("cont_hasproxy")));// 是否有委托书
+				}
+				if (jsonObject.containsKey("cont_client")) {
+					contract.setCont_client(jsonObject.getString("cont_client"));// 业主公司名称
+				}
+				if (jsonObject.containsKey("cont_caddress")) {
+					contract.setCont_caddress(jsonObject.getString("cont_caddress"));// 业主地址
+				}
+				if (jsonObject.containsKey("cont_cemail")) {
+					contract.setCont_cemail(jsonObject.getString("cont_cemail"));// 业主邮箱
+				}
+				if (jsonObject.containsKey("cont_cfax")) {
+					contract.setCont_cfax(jsonObject.getString("cont_cfax"));// 业主传真
+				}
+				if (jsonObject.containsKey("cont_czipcode")) {
+					contract.setCont_czipcode(jsonObject.getString("cont_czipcode"));// 业主邮编
+				}
+				if (jsonObject.containsKey("cont_bank")) {
+					contract.setCont_bank(jsonObject.getString("cont_bank"));// 开户行
+				}
+				if (jsonObject.containsKey("cont_account")) {
+					contract.setCont_account(jsonObject.getString("cont_account"));// 银行账户
+				}
+				if (jsonObject.containsKey("cont_taxidennum")) {
+					contract.setCont_taxidennum(jsonObject.getString("cont_taxidennum"));// 纳税人识别号
+				}
+				if (jsonObject.containsKey("cont_orgcodenum")) {
+					contract.setCont_orgcodenum(jsonObject.getString("cont_orgcodenum"));// 组织机构代码证号
+				}
+				if (jsonObject.containsKey("cont_avetaxpayer")) {
+					contract.setCont_avetaxpayer(jsonObject.getInt("cont_avetaxpayer"));// 增税人一般纳税人
+				}
+				if (jsonObject.containsKey("cont_remark")) {
+					contract.setCont_remark(jsonObject.getString("cont_remark"));// 备注
+				}
+				if (jsonObject.containsKey("manager")) {
+					JSONObject json = JSONObject.fromObject(jsonObject.getString("manager"));
+					User manager = userService.findById(Integer.parseInt(json.getString("user_id")));// 项目经理
+					contract.setManager(manager);
+				}
 				contract.setCont_state(0);// 状态,初始默认为在建 0:在建,1:竣工,2:停建
-				contract.setCont_remark(jsonObject.getString("cont_remark"));// 备注
-				JSONObject json = JSONObject.fromObject(jsonObject.getString("manager"));
-				User manager = userService.findById(Integer.parseInt(json.getString("user_id")));// 项目经理
-				contract.setManager(manager);
 				// 存入数据库
 				contractService.addContract(contract);
 			} catch (ParseException e) {
@@ -332,6 +383,48 @@ public class ContractController {
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 根据合同ID修改合同基本信息
+	 * 
+	 * @param request
+	 * @param session
+	 * @return 成功返回1，失败返回0
+	 */
+	@RequestMapping("/updateConById.do")
+	public @ResponseBody Integer updateConById(HttpServletRequest request, HttpSession session) {
+		int cont_id = Integer.parseInt(request.getParameter("conId"));
+		Contract contract = contractService.selectContById(cont_id);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = JSONObject.fromObject(request.getParameter("contract"));
+		if (jsonObject.containsKey("cont_name")) {
+			contract.setCont_name(jsonObject.getString("cont_name"));// 合同名称
+		}
+		if (jsonObject.containsKey("cont_project")) {
+			contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
+		}
+		if (jsonObject.containsKey("cont_type")) {
+			ContractType ct = Enum.valueOf(ContractType.class, jsonObject.getString("cont_type"));
+			contract.setCont_type(ct.value);// 枚举,合同的类型
+		}
+		if (jsonObject.containsKey("cont_cheader")) {
+			contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
+		}
+		if (jsonObject.containsKey("cont_ctel")) {
+			contract.setCont_ctel(jsonObject.getString("cont_ctel"));// 业主联系方式
+		}
+		if (jsonObject.containsKey("cont_cdept")) {
+			contract.setCont_cdept(jsonObject.getString("cont_cdept"));// 业主联系部门
+		}
+		if (jsonObject.containsKey("cont_rank")) {
+			contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
+		}
+		boolean flag = contractService.updateConById(cont_id, contract);
+		if (flag == true)
+			return 1;
+		else
+			return 0;
 	}
 
 }
