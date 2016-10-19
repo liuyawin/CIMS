@@ -173,6 +173,7 @@ public class ContractController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = JSONObject.fromObject(request.getParameter("contract"));
+		System.out.println("ceshi "+jsonObject.toString());
 		long time = System.currentTimeMillis();
 		Contract contract = new Contract();
 		if (jsonObject.containsKey("cont_name")) {

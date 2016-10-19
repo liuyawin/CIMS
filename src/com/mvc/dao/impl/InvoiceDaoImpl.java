@@ -27,14 +27,15 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	EntityManagerFactory emf;
 
 	// 根据发票id修改状态
-	public boolean updateInvoiceState(Integer id, Integer state) {
+	public boolean invoiceFinish(Integer id, Date invoTime) {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			String selectSql = " update invoice set `invo_state` = :invo_state  where invo_id =:invo_id ";
+			String selectSql = " update invoice set invo_state = :invo_state ,invo_time=:invo_time where invo_id =:invo_id ";
 			Query query = em.createNativeQuery(selectSql);
-			query.setParameter("invo_state", state);
+			query.setParameter("invo_state", InvoiceStatus.finish.value);
 			query.setParameter("invo_id", id);
+			query.setParameter("invo_time", invoTime);
 			query.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();

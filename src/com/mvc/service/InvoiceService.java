@@ -47,7 +47,7 @@ public interface InvoiceService {
 	List<Invoice> WaitingDealFindByPage(Integer user_id, Integer invoiceState, Integer offset, Integer end);
 
 	// 点击完成更新发票状态
-	boolean updateInvoiceState(Integer invoiceId, Integer state);
+	boolean invoiceFinish(Integer invoiceId, Date invoTime);
 
 	// 主任转发发票
 	boolean transmitInvoice(Integer invoiceId, Date invoEtime, Integer receiverId);
