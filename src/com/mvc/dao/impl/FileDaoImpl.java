@@ -32,7 +32,7 @@ public class FileDaoImpl implements FileDao {
 	public List<Files> findFileByConId(Integer cont_id) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select * from files f where f.isdelete=0 and f.cont_id=:cont_id order by f.file_id");
+		sql.append("select * from files f where f.file_isdelete=0 and f.cont_id=:cont_id order by f.file_id");
 		Query query = em.createNativeQuery(sql.toString(), Files.class);
 		query.setParameter("cont_id", cont_id);
 		List<Files> list = query.getResultList();
