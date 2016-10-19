@@ -212,6 +212,9 @@ app.controller('userController', [
 					"alarm_per" ];
 			// 初始化权限数据容器
 			function initCheckBoxData() {
+				$("input:checkbox[name='selectAllChkBx']").attr("checked",
+						false);
+
 				user.selected = {};
 				for (var i = 0; i < 5; i++) {
 					user.selected[perName[i]] = new Array();
@@ -227,6 +230,16 @@ app.controller('userController', [
 				if (action == 'remove') {
 					user.selected[id][name] = 0;
 				}
+			}
+			user.selectAll = function($event, subPerName) {
+				if ($event.target.checked == true) {
+					for (var i = 0; i < 10; i++)
+						user.selected[subPerName][i] = 1;
+				} else {
+					for (var i = 0; i < 10; i++)
+						user.selected[subPerName][i] = 0;
+				}
+
 			}
 			// 根据用户选择更新权限数据容器
 			user.updateSelection = function($event, id) {
@@ -254,7 +267,7 @@ app.controller('userController', [
 			};
 
 			// 点击修改时弹出模态框
-			user.editUser = function(obj) {
+			user.editUserBtn = function(obj) {
 				var user_id = this.user.user_id;
 				services.getAllRoleList().success(function(data) {
 					user.roles2 = data;
@@ -344,7 +357,7 @@ app.controller('userController', [
 				$(".roleEdit").show();
 				return false;
 			};
-			//点击查看按钮时弹出模态框
+			// 点击查看按钮时弹出模态框
 			user.detailRoleBtn = function(obj) {
 				var roleID = this.role.role_id;
 				initCheckBoxData();
@@ -506,6 +519,11 @@ app.controller('userController', [
 			}
 
 			initData();
+			$scope.$on('reGetData', function() {
+				console.log("重新获取数据！");
+				initData();
+			});
+
 		} ]);
 
 /*
