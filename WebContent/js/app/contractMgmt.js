@@ -790,8 +790,7 @@ app
 				var uploader = $scope.uploader = new FileUploader({
 					url: '/CIMS/file/upload.do',
 					data: {
-						conId: sessionStorage
-							.getItem("contractId")
+						conId:sessionStorage.getItem("contractId")
 					}
 				});
 

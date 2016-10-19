@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -52,7 +53,7 @@ public class FileController {
 	 * @throws IOException
 	 */
 	@RequestMapping("/upload.do")
-	public @ResponseBody String upload(HttpServletRequest request) throws IOException {
+	public @ResponseBody String upload(HttpServletRequest request, HttpSession session) throws IOException {
 		boolean flag = true;
 		// 创建一个通用的多部分解析器
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
@@ -70,7 +71,7 @@ public class FileController {
 			String nowStr = "";
 			Files fileBean = null;
 
-			int contId = Integer.parseInt(request.getParameter("conId"));// 前台合同ID，需要测试怎么和file同时获取
+			int contId = (int) session.getAttribute("cont_id");// 从session中取出con_id
 			Contract contract = contractService.selectContById(contId);
 			while (iter.hasNext()) {// 文件存储失败和存入数据库失败，都是失败
 				MultipartFile file = multiRequest.getFile(iter.next());// 将要上传的文件
@@ -93,6 +94,7 @@ public class FileController {
 						fileBean.setFile_type(suffix);// 文件类型，后缀
 						fileBean.setFile_path(path);// 文件路径
 						fileBean.setFile_ctime(new Date(time));// 创建时间
+						fileBean.setFile_isdelete(0);// 是否删除
 						fileBean.setContract(contract);// 所属合同
 						flag = fileService.addFile(fileBean);
 						if (flag == false) {
