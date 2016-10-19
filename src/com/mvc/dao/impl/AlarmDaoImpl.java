@@ -41,13 +41,16 @@ public class AlarmDaoImpl implements AlarmDao {
 		for (int i = 0; i < chars.length; i++) {
 			types.add(Integer.valueOf(chars[i]));
 		}
-		String selectSql = "select * from Alarm where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
+
+		 String selectSql = "select count(1)num , alar_id,alar_time,alar_content,alar_code,alar_isremove,receiver_id,cont_id,task_id,reno_id,prst_id from Alarm where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
+
+//		String selectSql = "select * from Alarm where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
 		// 判断查找关键字是否为空
 		if (null != searchKey) {
 			selectSql += " and ( alar_content like '%" + searchKey + "%' )";
 		}
 		selectSql += " group by task_id,reno_id,prst_id  ";
-		selectSql += " order by alar_id desc limit :offset,:end";
+		selectSql += " order by alar_id desc limit :offset,:end ";
 		Query query = em.createNativeQuery(selectSql, Alarm.class);
 		query.setParameter("receiver_id", user_id);
 		query.setParameter("alar_code", types);
@@ -127,15 +130,20 @@ public class AlarmDaoImpl implements AlarmDao {
 
 	// 张姣娜添加：统计报警列表条数，alarmType:2,3
 	@SuppressWarnings("unchecked")
-	public Integer countAlarmTotal(Integer user_id, String alarmType) {
+	public Integer countAlarmTotal(Integer user_id, String alarmType, String searchKey) {
 		EntityManager em = emf.createEntityManager();
 		String[] chars = alarmType.split(",");
 		ArrayList<Integer> types = new ArrayList<Integer>();
 		for (int i = 0; i < chars.length; i++) {
 			types.add(Integer.valueOf(chars[i]));
 		}
-		String countSql = " select count(alar_id) from alarm a where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
-		countSql += " group by task_id,reno_id,prst_id  ";
+		System.out.println("types:" + types.toString());
+		String countSql = " select count(*) from (select count(alar_id) from alarm a where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
+		// 判断查找关键字是否为空
+		if (null != searchKey) {
+			countSql += " and ( alar_content like '%" + searchKey + "%' )";
+		}
+		countSql += " group by task_id,reno_id,prst_id) as tmp  ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("receiver_id", user_id);
 		query.setParameter("alar_code", types);
