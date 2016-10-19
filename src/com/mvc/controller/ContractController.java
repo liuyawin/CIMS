@@ -182,7 +182,7 @@ public class ContractController {
 			contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
 		}
 		if (jsonObject.containsKey("cont_type")) {
-			contract.setCont_type(Integer.parseInt(jsonObject.getString("cont_type")));
+			contract.setCont_type(Integer.parseInt(jsonObject.getString("cont_type")));// 合同类型
 		}
 		if (jsonObject.containsKey("cont_cheader")) {
 			contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
@@ -410,7 +410,7 @@ public class ContractController {
 				contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
 			}
 			if (jsonObject.containsKey("cont_type")) {
-				contract.setCont_type(Integer.parseInt(jsonObject.getString("cont_type")));
+				contract.setCont_type(Integer.parseInt(jsonObject.getString("cont_type")));// 合同类型
 			}
 			if (jsonObject.containsKey("cont_cheader")) {
 				contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
