@@ -16,33 +16,32 @@
 
 		<ul class="forminfo">
 			<li class="hidden"><label>合同id</label><input type="text"
-				id="contId" value="{{cont.cont_id}}" class="dfinput" /></li>
+				ng-model="cont.cont_id"  class="dfinput" /></li>
 			<li><label>合同名称</label><input type="text"
-				id="contName" value="{{cont.cont_name}}" class="dfinput" /></li>
-			<li><label>项目名称</label><input type="text" id="contProject"
-				value="{{cont.cont_project}}" class="dfinput" /></li>
-			<li><label>合同类型</label><label id="conTypeValue" style="display:none">{{cont.cont_type}}</label> 
-			<select class="dfselect" id="conType">
-					<option value="规划">规划</option>
-					<option value="可行性">预可行性</option>
-					<option value="可行性">可行性</option>
-					<option value="施工图">施工图</option>
-					<option value="评估">评估</option>
-					<option value="其他">其他</option>
+				ng-model="cont.cont_name" class="dfinput" /></li>
+			<li><label>项目名称</label><input type="text"
+				ng-model="cont.cont_project" class="dfinput" /></li>
+			<li><label>合同类型</label>
+			<select class="dfselect" ng-model="cont.cont_type">
+					<option value="0">规划</option>
+					<option value="1">预可行性</option>
+					<option value="2">可行性</option>
+					<option value="3">施工图</option>
+					<option value="4">评估</option>
+					<option value="5">其他</option>
 			</select></li>
 			<li><label>合同等级</label>
-				<label id="conRankValue" style="display:none">{{cont.cont_rank}}</label>
 				<div class="radio-div">
-					<input type="radio" value="0" name="contract.cont_rank" class="conRank">重要
+					<input type="radio" value="0" ng-model="cont.cont_rank" class="conRank">重要
 				</div>
 				<div class="radio-div">
-					<input type="radio" value="1" name="contract.cont_rank" class="conRank">一般
+					<input type="radio" value="1" ng-model="cont.cont_rank" class="conRank">一般
 				</div>
 				</li>
-			<li><label>甲方联系人</label><input type="text" id="contCheader"
-				value="{{cont.cont_cheader}}" class="dfinput" /></li>
-			<li><label>联系方式</label><input type="text" id="contCtel"
-				value="{{cont.cont_ctel}}" class="dfinput" /></li>
+			<li><label>甲方联系人</label><input type="text"
+				ng-model="cont.cont_cheader" class="dfinput" /></li>
+			<li><label>联系方式</label><input type="text"
+				ng-model="cont.cont_ctel" class="dfinput" /></li>
 			<!-- <li><label>部&nbsp; &nbsp; &nbsp; 门</label><input type="text" id="contCdept"
 				value="{{cont.cont_cdept}}" class="dfinput" /></li> -->
 			<li><label>&nbsp;</label><input type="submit" id="addContract"
@@ -51,6 +50,20 @@
 	</form>
 </div>
 <!-- 录入合同基本信息完 -->
+<!-- 附件列表 -->
+<div class="formbody">
+	<!-- contract/addContract.do -->
+		<div class="formtitle">
+			<span>附件列表</span>
+		</div>
+
+		<ul class="forminfo">
+			<li ng-repeat="file in fileList">
+				<span>{{file.file_name}}</span><a>删除</a>
+			</li>
+		</ul>
+</div>
+<!-- 附件列表完 -->
 <!-- 上传文件 -->
 <div class="formbody" ng-controller="UploadController" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
 	<!-- contract/addContract.do -->
@@ -113,15 +126,3 @@
 		</div>
 </div>
 <!-- 上传文件完 -->
-<script>
-	window.onload = function(){
-		//选中合同类型默认选项
-		var type = $("#conTypeValue").html();
-		console.log("合同类型："+type);
-		$('#conType').find("option").eq(type).attr("selected", true);
-		//选中合同等级默认选项
-		var rank = $("#conRankValue").html();
-		console.log("合同等级："+rank);
-		$('.conRank').eq(rank).attr("checked", "checked");
-	}
-</script>

@@ -173,7 +173,7 @@ public class ContractController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = JSONObject.fromObject(request.getParameter("contract"));
-		System.out.println("ceshi "+jsonObject.toString());
+		System.out.println("ceshi " + jsonObject.toString());
 		long time = System.currentTimeMillis();
 		Contract contract = new Contract();
 		if (jsonObject.containsKey("cont_name")) {
@@ -395,33 +395,42 @@ public class ContractController {
 	 */
 	@RequestMapping("/updateConById.do")
 	public @ResponseBody Integer updateConById(HttpServletRequest request, HttpSession session) {
-		int cont_id = Integer.parseInt(request.getParameter("conId"));
-		Contract contract = contractService.selectContById(cont_id);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = JSONObject.fromObject(request.getParameter("contract"));
-		if (jsonObject.containsKey("cont_name")) {
-			contract.setCont_name(jsonObject.getString("cont_name"));// 合同名称
+		Contract contract = null;
+		Integer cont_id = null;
+		Boolean flag = null;
+		if (jsonObject.containsKey("cont_id")) {
+			cont_id = Integer.parseInt(jsonObject.getString("cont_id"));// 合同名称
+			contract = contractService.selectContById(cont_id);
 		}
-		if (jsonObject.containsKey("cont_project")) {
-			contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
+		if (contract != null) {
+			if (jsonObject.containsKey("cont_name")) {
+				contract.setCont_name(jsonObject.getString("cont_name"));// 合同名称
+			}
+			if (jsonObject.containsKey("cont_project")) {
+				contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
+			}
+			if (jsonObject.containsKey("cont_type")) {
+				ContractType ct = Enum.valueOf(ContractType.class, jsonObject.getString("cont_type"));
+				contract.setCont_type(ct.value);// 枚举,合同的类型
+			}
+			if (jsonObject.containsKey("cont_cheader")) {
+				contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
+			}
+			if (jsonObject.containsKey("cont_ctel")) {
+				contract.setCont_ctel(jsonObject.getString("cont_ctel"));// 业主联系方式
+			}
+			if (jsonObject.containsKey("cont_cdept")) {
+				contract.setCont_cdept(jsonObject.getString("cont_cdept"));// 业主联系部门
+			}
+			if (jsonObject.containsKey("cont_rank")) {
+				contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
+			}
 		}
-		if (jsonObject.containsKey("cont_type")) {
-			ContractType ct = Enum.valueOf(ContractType.class, jsonObject.getString("cont_type"));
-			contract.setCont_type(ct.value);// 枚举,合同的类型
+		if (cont_id != null) {
+			flag = contractService.updateConById(cont_id, contract);
 		}
-		if (jsonObject.containsKey("cont_cheader")) {
-			contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
-		}
-		if (jsonObject.containsKey("cont_ctel")) {
-			contract.setCont_ctel(jsonObject.getString("cont_ctel"));// 业主联系方式
-		}
-		if (jsonObject.containsKey("cont_cdept")) {
-			contract.setCont_cdept(jsonObject.getString("cont_cdept"));// 业主联系部门
-		}
-		if (jsonObject.containsKey("cont_rank")) {
-			contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
-		}
-		boolean flag = contractService.updateConById(cont_id, contract);
 		if (flag == true)
 			return 1;
 		else
