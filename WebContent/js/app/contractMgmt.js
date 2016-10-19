@@ -57,30 +57,32 @@ var app = angular
 		});
 // 获取权限列表
 
-var permissionList;
+/*var permissionList;
 angular.element(document).ready(function() {
 	console.log("获取权限列表！");
+	permissionList = "W"; // console.log("身份是：" + permissionList); 
+	angular.bootstrap(document, ['contract']);
 	$.get('/CIMS/login/getUserPermission.do',
 		function(data) {
 			permissionList = data.permission; // console.log("身份是：" + permissionList); 
 			angular.bootstrap(document, ['contract']);
 	});
-});
+});*/
 
 /*
  * app.run([ 'permissions', function(permissions) {
  * permissions.setPermissions(permissionList) } ]);
  */
-app.run(['$rootScope', '$location', 'permissions', function($rootScope, $location, permissions) {
+app.run(['$rootScope', '$location', function($rootScope, $location) {
 	// permissions.setPermissions(permissionList)
 	$rootScope.$on('$routeChangeSuccess', function(evt, next, previous) {
 		console.log('路由跳转成功');
-		permissions.setPermissions(permissionList);
+		//permissions.setPermissions(permissionList);
 		$rootScope.$broadcast('reGetData');
 	});
 }]);
 
-angular.module('contract').factory('permissions', function($rootScope) {
+/*angular.module('contract').factory('permissions', function($rootScope) {
 	return {
 		setPermissions: function(permissions) {
 			permissionList =
@@ -114,7 +116,7 @@ angular.module('contract').directive('hasPermission', function(permissions) {
 			scope.$on('permissionsChanged', toggleVisibilityBasedOnPermission);
 		}
 	};
-});
+});*/
 
 // 路由配置
 app
@@ -249,13 +251,11 @@ app.factory('services', ['$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 
-	services.addContract = function(data, file) {
-		console.log(data);
+	services.updateConById = function(data) {
 		return $http({
 			method: 'post',
-			url: baseUrl + 'contract/updateContract.do',
+			url: baseUrl + 'contract/updateConById.do',
 			data: data,
-			file: file
 		});
 	};
 
@@ -294,11 +294,19 @@ app.factory('services', ['$http', 'baseUrl', function($http, baseUrl) {
 	services.selectRenoByContId = function(data) {
 		return $http({
 			method: 'post',
-			url: baseUrl + 'receiveNode/ selectRenoByContId.do',
+			url: baseUrl + 'receiveNode/selectRenoByContId.do',
 			data: data
 		});
 	};
 
+	services.selectFileByConId = function(data) {
+		return $http({
+			method: 'post',
+			url: baseUrl + 'file/selectFileByConId.do',
+			data: data
+		});
+	};
+	
 	return services;
 }]);
 
@@ -369,20 +377,11 @@ app.controller('ContractController', [
 		};
 		// 修改合同
 		contract.updateContract = function() {
-			var newCon = {};
-			newCon.cont_id = $("#contId").val();
-			newCon.cont_name = $("#contName").val();
-			newCon.cont_project = $("#contProject").val();
-			newCon.con_rank = $("#conRank").val();
-			newCon.cont_cheader = $("#contCheader").val();
-			newCon.cont_ctel = $("#contCtel").val();
-			newCon.cont_cdept = $("#contCdept").val();
-			var conFormData = JSON.stringify(newCon);
+			var conFormData = JSON.stringify(contract.cont);
 			console.log(conFormData);
-			services.addContract({
+			services.updateConById({
 				contract: conFormData
 			}).success(function(data) {
-				sessionStorage.setItem("contractId", data);
 				alert("修改合同成功！");
 			});
 		};
@@ -497,27 +496,7 @@ app.controller('ContractController', [
 			}
 		}
 
-		// 合同，文书任务，执行管控任务，收款节点，工期阶段的详情
-		contract.showTask1 = function() {
-			$('#task1Information').show();
-			$('#task1Show').hide();
-			$('#task1Hide').show();
-		}
-		contract.hideTask1 = function() {
-			$('#task1Information').hide();
-			$('#task1Show').show();
-			$('#task1Hide').hide();
-		}
-		contract.showTask2 = function() {
-			$('#task2Information').show();
-			$('#task2Show').hide();
-			$('#task2Hide').show();
-		}
-		contract.hideTask2 = function() {
-			$('#task2Information').hide();
-			$('#task2Show').show();
-			$('#task2Hide').hide();
-		}
+		// 合同，收款节点，工期阶段的详情
 		contract.showContInfo = function() {
 			$('#contInformation').show();
 			$('#contShow').hide();
@@ -771,21 +750,22 @@ app.controller('ContractController', [
 				$("#renoInformation").hide();
 				$("#prstInformation").hide();
 			} else if($location.path().indexOf('/contractUpdate') == 0) {
-				// zq添加查找合同详情
 				selectContractById(); // 根据ID获取合同信息
-				// 选中合同类型默认选项
-				var type = $("#conTypeValue").html();
-				console.log("合同类型：" + type);
-				$('#conType').find("option").eq(type)
-					.attr("selected", true);
-				// 选中合同等级默认选项
-				var rank = $("#conRankValue").html();
-				console.log("合同等级：" + rank);
-				$('.conRank').eq(rank).attr("checked", "checked");
+				services.selectFileByConId({
+					conId : sessionStorage.getItem('conId')
+				}).success(function(data){
+					contract.fileList = data.list;
+				});
 			}
 		}
 
 		initData();
+		
+		$scope.$on('reGetData', function () {
+			console.log("重新获取数据！");
+	        initData();
+	    });
+		
 		// 验证日期输入格式
 		var $dateFormat = $(".dateFormat");
 		var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
