@@ -67,16 +67,16 @@ receiptapp.run([ '$rootScope', '$location', function($rootScope, $location) {
 // 路由配置
 receiptapp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/receiptInfo', {
-		templateUrl : '/CIMS/jsp/zhuren/receiptInformation/receiptInfo.html',
+		templateUrl : '/CIMS/jsp/billInformation/receiptInfo.html',
 		controller : 'ReceiptController'
 	}).when('/receiptList', {
-		templateUrl : '/CIMS/jsp/zhuren/receiptInformation/receiptList.html',
+		templateUrl : '/CIMS/jsp/billInformation/receiptList.html',
 		controller : 'ReceiptController'
 	}).when('/receiptAdd', {
-		templateUrl : '/CIMS/jsp/zhuren/receiptInformation/receiptAdd.html',
+		templateUrl : '/CIMS/jsp/billInformation/receiptAdd.html',
 		controller : 'ReceiptController'
 	}).when('/receiptDetail', {
-		templateUrl : '/CIMS/jsp/zhuren/receiptInformation/receiptDetail.html',
+		templateUrl : '/CIMS/jsp/billInformation/receiptDetail.html',
 		controller : 'ReceiptController'
 	})
 } ]);
