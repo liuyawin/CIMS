@@ -20,6 +20,7 @@ import com.mvc.entity.Contract;
 import com.mvc.entity.User;
 import com.mvc.service.ContractService;
 import com.mvc.service.UserService;
+import com.utils.JSONUtil;
 import com.utils.Pager;
 
 import net.sf.json.JSONObject;
@@ -172,39 +173,19 @@ public class ContractController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = JSONObject.fromObject(request.getParameter("contract"));
-		System.out.println("ceshi " + jsonObject.toString());
 		long time = System.currentTimeMillis();
 		Contract contract = new Contract();
-		if (jsonObject.containsKey("cont_name")) {
-			contract.setCont_name(jsonObject.getString("cont_name"));// 合同名称
-		}
-		if (jsonObject.containsKey("cont_project")) {
-			contract.setCont_project(jsonObject.getString("cont_project"));// 项目名称
-		}
-		if (jsonObject.containsKey("cont_type")) {
-			contract.setCont_type(Integer.parseInt(jsonObject.getString("cont_type")));// 合同类型
-		}
-		if (jsonObject.containsKey("cont_cheader")) {
-			contract.setCont_cheader(jsonObject.getString("cont_cheader"));// 业主联系人
-		}
-		if (jsonObject.containsKey("cont_ctel")) {
-			contract.setCont_ctel(jsonObject.getString("cont_ctel"));// 业主联系方式
-		}
-		if (jsonObject.containsKey("cont_cdept")) {
-			contract.setCont_cdept(jsonObject.getString("cont_cdept"));// 业主联系部门
-		}
-		if (jsonObject.containsKey("cont_rank")) {
-			contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
-		}
+		contract = (Contract) JSONUtil.JSONToObj(jsonObject.toString(), Contract.class);// 将json对象转换成实体对象，注意必须和实体类型一致
 		contract.setCont_initiation(1);// 已立项
 		contract.setCont_ishistory(0);// 未删除
 		contract.setCont_state(0);// 合同状态
 		contract.setCont_ctime(new Date(time));// 合同创建时间
 		contract.setCreator(user);// 合同创建者
-		// contract = (Contract)
-		// JSONUtil.JSONToObj(jsonObject.toString(),Contract.class);//将json对象转换成实体对象，注意必须和实体类型一致
+		
 		contractService.addContract(contract);
-		return contract.getCont_id();
+		int cont_id = contract.getCont_id();
+		session.setAttribute("cont_id", cont_id);// 创建合同时将cont_id放入session
+		return cont_id;
 	}
 
 	/**

@@ -816,9 +816,6 @@ app
 				console.log("上传时获得合同ID："+sessionStorage.getItem("conId"));
 				var uploader = $scope.uploader = new FileUploader({
 					url: '/CIMS/file/upload.do',
-					/*data: {
-						conId: '23'
-					}*/
 				});
 
 				// FILTERS
