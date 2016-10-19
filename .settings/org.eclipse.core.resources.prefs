@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
+encoding//WebContent/jsp/alarmInformation/alarmDetail.html=UTF-8
+encoding//WebContent/jsp/alarmInformation/alarmList.html=UTF-8
 encoding//WebContent/jsp/assistant2/alarmInformation/alarmList.html=UTF-8
 encoding//WebContent/jsp/assistant2/contractInformation/contractList.html=UTF-8
 encoding//WebContent/jsp/assistant2/invoiceInformation/invoiceList.html=UTF-8
@@ -10,6 +12,7 @@ encoding//WebContent/jsp/billInformation/receiptAdd.html=UTF-8
 encoding//WebContent/jsp/billInformation/receiptDetail.html=UTF-8
 encoding//WebContent/jsp/billInformation/receiptInfo.html=UTF-8
 encoding//WebContent/jsp/billInformation/receiptList.html=UTF-8
+encoding//WebContent/jsp/contractInformation/contractList.html=UTF-8
 encoding//WebContent/jsp/left.jsp=UTF-8
 encoding//WebContent/jsp/manager/alarmInformation/alarmDetail.html=UTF-8
 encoding//WebContent/jsp/manager/alarmInformation/alarmList.html=UTF-8

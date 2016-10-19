@@ -1,0 +1,48 @@
+<!-- 修改文书任务 -->
+<div class="formbody float">
+	<form ng-submit="addTask1()">
+		<div class="formtitle">
+			<span>文书任务</span>
+		</div>
+
+		<ul class="forminfo">
+			<li class="hidden"><label>任务ID</label><input type="text" name="task2_stime"
+				ng-model="task2.task_stime" class="dfinput dateFormat" /></li>
+			<li><label>执行人</label> <select class="dfselect"
+				ng-model="task1.receiver_id">
+					<option ng-repeat="user in users" value={{user.user_id}}>{{user.user_name}}</option>
+			</select></li>
+			<li><label>子任务</label>
+				<div class="div-checkbox">
+					<input type="checkbox" ng-true-value="true" ng-false-value="false"
+						ng-model="task1.print" />打印印刷
+				</div>
+				<div class="div-checkbox">
+					<input type="checkbox" ng-true-value="true" ng-false-value="false"
+						ng-model="task1.sign" />签字
+				</div>
+				<div class="div-checkbox">
+					<input type="checkbox" ng-true-value="true" ng-false-value="false"
+						ng-model="task1.seal" />盖章
+				</div>
+				<div class="div-checkbox">
+					<input type="checkbox" ng-true-value="true" ng-false-value="false"
+						ng-model="task1.post" />邮寄
+				</div>
+				<div class="div-checkbox">
+					<input type="checkbox" id="selectAll" ng-click="selectAllTask()" />全选
+				</div></li>
+			<li><label>开始时间</label><input type="text"
+				ng-model="task1.task_stime" class="dfinput dateFormat" /><span
+				class="error-span">日期格式：2016-09-07</span></li>
+			<li><label>结束时间</label><input type="text" name="task1_etime"
+				ng-model="task1.task_etime" class="dfinput dateFormat " /><span
+				class="error-span">日期格式：2016-09-07</span></li>
+			<li><label>备注</label> <textarea ng-model="task1.task_content"
+					class="textarea"></textarea></li>
+			<li><label>&nbsp;</label><input type="submit" class="btn"
+				value="提交" /></li>
+		</ul>
+	</form>
+</div>
+<!-- 修改文书任务完 -->

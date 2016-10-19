@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mvc.dao.TaskDao;
-import com.mvc.entity.SubTask;
 import com.mvc.entity.Task;
 import com.mvc.repository.TaskRepository;
 import com.mvc.service.TaskService;
@@ -63,5 +62,9 @@ public class TaskServiceImpl implements TaskService {
 		return taskDao.delete(taskId);
 	}
 
+	// 根据合同ID和任务类型返回任务列表
+	public List<Task> findByContIdAndType(Integer user_id, Integer contId, Integer taskType) {
+		return taskDao.findByContIdAndType(user_id, contId, taskType);
+	}
 
 }
