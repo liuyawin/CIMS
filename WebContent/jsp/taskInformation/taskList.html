@@ -9,20 +9,18 @@
 <div class="rightinfo">
 	<div class="tools">
 		<form class="toolbar">
-			<input name="" type="text" class="dfinput" id="tContent" /> <input
-				class="btn" type="submit" value="查询" ng-click="getTaskByContext()">
+			<input name="" type="text" class="dfinput" id="tContent" /><select
+				class="dfselect" ng-model="tState" style="width: 167px">
+				<option value="0">新任务</option>
+				<option value="1">处理中</option>
+				<option value="2">已完成</option>
+				<option value="-1">全部</option>
+			</select> <input class="btn" type="submit" value="查询"
+				ng-click="getTaskByKeys()">
 		</form>
-		<select class="select1">
-			<option>UI设计师</option>
-			<option>交互设计师</option>
-			<option>前端设计师</option>
-			<option>网页设计师</option>
-			<option>Flash动画</option>
-			<option>视觉设计师</option>
-			<option>插画设计师</option>
-			<option>美工</option>
-			<option>其他</option>
-		</select>
+
+
+
 		<ul class="toolbar1">
 			<li class="click"><a ng-click="addTask()"><span><img
 						src="../images/t01.png" /></span>新建</a></li>
@@ -206,6 +204,4 @@
 <script type="text/javascript">
 	$('.tablelist tbody tr:odd').addClass('odd');
 </script>
-<script type="text/javascript">
 
-</script>
