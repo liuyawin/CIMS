@@ -32,8 +32,8 @@ public class AlarmServiceImpl implements AlarmService {
 
 	// 张姣娜添加：统计报警列表条数，alarmType:2,3
 	@Override
-	public Integer countTotal(Integer user_id, String alarmType) {
-		return alarmDao.countAlarmTotal(user_id, alarmType);
+	public Integer countTotal(Integer user_id, String alarmType, String searchKey) {
+		return alarmDao.countAlarmTotal(user_id, alarmType, searchKey);
 	}
 
 	// 统计报警列表条数

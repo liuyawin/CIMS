@@ -3,7 +3,6 @@ package com.mvc.service;
 import java.util.List;
 
 import com.mvc.entity.Alarm;
-
 /**
  * 报警
  * 
@@ -16,7 +15,7 @@ public interface AlarmService {
 			Integer end);
 
 	// 张姣娜添加：统计报警列表条数，alarmType:2,3
-	Integer countTotal(Integer user_id, String alarmType);
+	Integer countTotal(Integer user_id, String alarmType, String searchKey);
 
 	// 统计报警列表条数
 	Long countNumByUserId(Integer user_id);
