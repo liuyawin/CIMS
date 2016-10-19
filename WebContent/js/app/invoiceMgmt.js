@@ -72,13 +72,8 @@ invoiceApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/invoiceList', {
 		templateUrl : '/CIMS/jsp/billInformation/invoiceList.html',
 		controller : 'InvoiceController'
-	// <<<<<<< HEAD
-	// }).when('/unInvoiceTaskList', {
-	// templateUrl : '/CIMS/jsp/billInformation/invoiceTaskList.html',
-	// =======
 	}).when('/invoiceTaskList', {
 		templateUrl : '/CIMS/jsp/billInformation/invoiceList.html',
-		// >>>>>>> 9bf826fe5b107b5a9e22479ecc6b7d8ac1f1bfdc
 		controller : 'InvoiceController'
 	})
 } ]);
@@ -326,7 +321,7 @@ invoiceApp
 								$("#sendInvoTask").fadeIn(200);
 								return false;
 							}
-							
+
 							$("#sureFinishSend").click(function() {
 								alert(invoice.invoTime);
 								services.updateInvoiceState({

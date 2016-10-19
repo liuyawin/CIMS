@@ -3,7 +3,6 @@ package com.mvc.dao;
 import java.util.List;
 
 import com.mvc.entity.Alarm;
-
 /**
  * 报警
  * 
@@ -17,7 +16,7 @@ public interface AlarmDao {
 			Integer end);
 
 	// 张姣娜添加：获取报警列表条数
-	Integer countAlarmTotal(Integer user_id, String alarmType);
+	Integer countAlarmTotal(Integer user_id, String alarmType, String searchKey);
 
 	// 根据用户名查找报警信息
 	List<Alarm> findAlarmByUser(String username, Integer offset, Integer end);

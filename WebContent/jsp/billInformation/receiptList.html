@@ -11,10 +11,17 @@
 	<div class="formtitle">
 		<span>收据详情</span>
 	</div>
-	<div >
+	<div>
 		<label class="text_style">应收款 {{cont.cont_money | receFloat}}
 			万元！</label><label class="text_style">实收款 {{totalMoney | receFloat}}
 			万元！</label><label class="text_style">共开了 {{totalRow}} 张收据！</label>
+	</div>
+	<div class="tools">
+		<ul class="toolbar1">
+			<li class="click"><a
+				href="/CIMS/contract/toContractPage.do#/renoInfo"><span><img
+						src="../images/t01.png" /></span>开收据</a></li>
+		</ul>
 	</div>
 	<table class="tablelist">
 		<thead>
@@ -25,7 +32,7 @@
 				<th class="width10">应收款时间</th>
 				<th>收款节点</th>
 				<th>交款业主公司</th>
-				<th  class="width10">录入人员</th>
+				<th class="width10">录入人员</th>
 				<th>备注</th>
 				<th>操作</th>
 			</tr>
@@ -42,7 +49,8 @@
 				<td class="width15">{{rece.rece_firm}}</td>
 				<td class="width10">{{rece.user.user_name}}</td>
 				<td class="width15">{{rece.rece_remark | cutString}}</td>
-				<td class="width10"><a href="#receiptDetail" class="tablelink" ng-click="getReceId(rece.rece_id)">详情</a></td>
+				<td class="width10"><a href="#receiptDetail" class="tablelink"
+					ng-click="getReceId(rece.rece_id)">详情</a></td>
 			</tr>
 		</tbody>
 	</table>
