@@ -307,6 +307,14 @@ app.factory('services', ['$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 	
+	services.deleteFileById = function(data) {
+		return $http({
+			method: 'post',
+			url: baseUrl + 'file/deleteFileById.do',
+			data: data
+		});
+	};
+	
 	return services;
 }]);
 
@@ -371,7 +379,8 @@ app.controller('ContractController', [
 			services.addContract({
 				contract: conFormData
 			}, contract.file).success(function(data) {
-				sessionStorage.setItem("contractId", data);
+				console.log("合同创建成功时保存的合同ID："+data);
+				sessionStorage.setItem("conId", data);
 				alert("创建合同成功！");
 			});
 		};
@@ -419,9 +428,21 @@ app.controller('ContractController', [
 					preventDefault(e);
 				}
 			}
+		//删除上传的文件
+		contract.deleteFile = function(e) {
+			preventDefault(e);
+			var fileId = this.file.file_id;
+			console.log("文件的ID为："+fileId);
+			services.deleteFileById({
+				fileId : fileId
+			}).success(function(data) {
+				selectFileByConId(sessionStorage.getItem("conId"));
+				alert("删除文件成功！");
+			});
+		};
 			// 添加文书任务
 		contract.addTask1 = function() {
-			var conId = sessionStorage.getItem("contractId");
+			var conId = sessionStorage.getItem("conId");
 			console.log(conId);
 			if(conId.trim() == "") {
 				alert("请先录入合同信息！");
@@ -439,7 +460,7 @@ app.controller('ContractController', [
 		};
 		// 添加执行管控任务
 		contract.addTask2 = function() {
-			var conId = sessionStorage.getItem("contractId");
+			var conId = sessionStorage.getItem("conId");
 			console.log(conId);
 			if(conId.trim() == "") {
 				alert("请先录入合同信息！");
@@ -485,7 +506,16 @@ app.controller('ContractController', [
 				contract.reno = data.list;
 			});
 		}
-
+		
+		//获取跟合同相关的上传文件列表
+		function selectFileByConId(conId){
+			services.selectFileByConId({
+				conId : conId
+			}).success(function(data){
+				contract.fileList = data.list;
+			});
+		}
+		
 		contract.selectAllTask = function() {
 			var $selectAll = $("#selectAll");
 			console.log($selectAll.is(':checked'));
@@ -539,7 +569,7 @@ app.controller('ContractController', [
 				var conId = this.con.cont_id;
 				services.getAllUsers().success(function(data) {
 					contract.users = data;
-					sessionStorage.setItem("contractId", conId);
+					sessionStorage.setItem("conId", conId);
 				});
 				$(".overlayer").fadeIn(200);
 				$(".tip").fadeIn(200);
@@ -547,13 +577,13 @@ app.controller('ContractController', [
 			};
 
 			$(".tiptop a").click(function() {
-				sessionStorage.setItem("contractId", "");
+				sessionStorage.setItem("conId", "");
 				$(".overlayer").fadeOut(200);
 				$(".tip").fadeOut(200);
 			});
 
 			$(".sure").click(function() {
-				var conId = sessionStorage.getItem("contractId");
+				var conId = sessionStorage.getItem("conId");
 				if(contract.task.task_type == "1") {
 					var task1 = JSON.stringify(contract.task1);
 					services.addTask({
@@ -578,7 +608,7 @@ app.controller('ContractController', [
 			});
 
 			$(".cancel").click(function() {
-				sessionStorage.setItem("contractId", "");
+				sessionStorage.setItem("conId", "");
 				$(".overlayer").fadeOut(100);
 				$(".tip").fadeOut(100);
 			});
@@ -715,7 +745,7 @@ app.controller('ContractController', [
 				console.log("进入添加合同页面！");
 				services.getAllUsers().success(function(data) {
 					contract.users = data;
-					sessionStorage.setItem("contractId", "");
+					sessionStorage.setItem("conId", "");
 				});
 				// 输入时间的input默认值设置为当前时间
 				var date = new Date();
@@ -751,11 +781,7 @@ app.controller('ContractController', [
 				$("#prstInformation").hide();
 			} else if($location.path().indexOf('/contractUpdate') == 0) {
 				selectContractById(); // 根据ID获取合同信息
-				services.selectFileByConId({
-					conId : sessionStorage.getItem('conId')
-				}).success(function(data){
-					contract.fileList = data.list;
-				});
+				selectFileByConId(sessionStorage.getItem('conId'));
 			}
 		}
 
@@ -787,12 +813,12 @@ app
 			'FileUploader',
 			function($scope, FileUploader) {
 				/* ！！！上传文件 */
+				console.log("上传时获得合同ID："+sessionStorage.getItem("conId"));
 				var uploader = $scope.uploader = new FileUploader({
 					url: '/CIMS/file/upload.do',
-					data: {
-						conId: sessionStorage
-							.getItem("contractId")
-					}
+					/*data: {
+						conId: '23'
+					}*/
 				});
 
 				// FILTERS

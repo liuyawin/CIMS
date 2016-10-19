@@ -57,11 +57,11 @@
 			<span>附件列表</span>
 		</div>
 
-		<ul class="forminfo">
-			<li ng-repeat="file in fileList">
-				<span>{{file.file_name}}</span><a>删除</a>
-			</li>
-		</ul>
+		<table>
+			<tr ng-repeat="file in fileList">
+				<td class="td-fileName">{{file.file_name}}</td><td><a ng-click="deleteFile()" href="#">删除</a></td>
+			</tr>
+		</table>
 </div>
 <!-- 附件列表完 -->
 <!-- 上传文件 -->
