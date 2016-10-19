@@ -171,7 +171,7 @@ app
 					})
 				.when(
 					'/renoInfo', {
-						templateUrl: '/CIMS/jsp/assistant2/contractInformation/contractInfo.html',
+						templateUrl: '/CIMS/jsp/contractInformation/contractInfo.html',
 						controller: 'ContractController'
 					});
 		}

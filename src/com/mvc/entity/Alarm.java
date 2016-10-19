@@ -12,9 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Formula;
-import org.jboss.logging.Property;
-
 /**
  * 报警
  * 
@@ -36,7 +33,7 @@ public class Alarm implements Serializable {
 	private Task task;// 任务Id
 	private ReceiveNode receiveNode;// 收款节点
 	private ProjectStage projectStage;// 工期阶段
-	private Integer num;
+	private Integer num;// 去重后的报警次数
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -132,8 +129,6 @@ public class Alarm implements Serializable {
 		this.projectStage = projectStage;
 	}
 
-	// @Formula(value = "select count(alar_id) from alarm")
-//	@Column(name = "num", columnDefinition = "select count(alar_id) from alarm")
 	public Integer getNum() {
 		return num;
 	}
