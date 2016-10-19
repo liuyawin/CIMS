@@ -177,7 +177,10 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	return services;
 } ]);
 
-app.controller('userController', [ '$scope', 'services', '$location',
+app.controller('userController', [
+		'$scope',
+		'services',
+		'$location',
 		function($scope, services, $location) {
 
 			var user = $scope;
@@ -203,6 +206,38 @@ app.controller('userController', [ '$scope', 'services', '$location',
 				}).success(function(data) {
 					user.users = data.list;
 				});
+			}
+			// 功能模块权限字段名
+			var perName = [ "con_per", "task_per", "bill_per", "system_per",
+					"alarm_per" ];
+			// 初始化权限数据容器
+			function initCheckBoxData() {
+				user.selected = {};
+				for (var i = 0; i < 5; i++) {
+					user.selected[perName[i]] = new Array();
+					for (var j = 0; j < 10; j++)
+						user.selected[perName[i]][j] = 0;
+				}
+			}
+			// 根据用户选择更新权限数据容器
+			var updateSelected = function(action, id, name) {
+				if (action == 'add') {
+					user.selected[id][name] = 1;
+				}
+				if (action == 'remove') {
+					user.selected[id][name] = 0;
+				}
+			}
+			// 根据用户选择更新权限数据容器
+			user.updateSelection = function($event, id) {
+				var checkbox = $event.target;
+				var action = (checkbox.checked ? 'add' : 'remove');
+				updateSelected(action, checkbox.id, checkbox.name);
+			}
+			// 控件内容初始化
+			user.isSelected = function(id, name) {
+				var t = user.selected[id][name];
+				return t;
 			}
 
 			// 用户模态框开始
@@ -238,6 +273,7 @@ app.controller('userController', [ '$scope', 'services', '$location',
 				$("#editUser-form").slideDown(200);
 				return false;
 			};
+
 			// 修改报用户
 			$(".sure2").click(function() {
 				var EditUser = JSON.stringify(user.editUser);
@@ -283,6 +319,7 @@ app.controller('userController', [ '$scope', 'services', '$location',
 			// 角色模态框开始
 			// 点击新建按钮事件
 			user.addNewRole = function() {
+				initCheckBoxData();
 				$(".overlayer").fadeIn(200);
 				$(".tip").fadeIn(200);
 				$("#addRole-form").slideDown(200);
@@ -292,26 +329,49 @@ app.controller('userController', [ '$scope', 'services', '$location',
 			// 点击修改时弹出模态框
 			user.editRoleBtn = function(obj) {
 				var roleID = this.role.role_id;
+				initCheckBoxData();
 				services.selectRoleById({
 					roleid : roleID
 				}).success(function(data) {
 					user.editRole = data.role;
+					user.selected = $.parseJSON(data.role.role_permission);
 					console.log(roleID);
 				});
 				$(".overlayer").fadeIn(200);
 				$(".tip").fadeIn(200);
 				$("#addRole-form").hide();
 				$("#editRole-form").slideDown(200);
+				$(".roleEdit").show();
+				return false;
+			};
+			//点击查看按钮时弹出模态框
+			user.detailRoleBtn = function(obj) {
+				var roleID = this.role.role_id;
+				initCheckBoxData();
+				services.selectRoleById({
+					roleid : roleID
+				}).success(function(data) {
+					user.editRole = data.role;
+					user.selected = $.parseJSON(data.role.role_permission);
+					console.log(roleID);
+				});
+				$(".overlayer").fadeIn(200);
+				$(".tip").fadeIn(200);
+				$("#addRole-form").hide();
+				$("#editRole-form").slideDown(200);
+				$(".roleEdit").hide();
 				return false;
 			};
 			// 修改角色
 			$(".roleEdit").click(function() {
 				var EditRole = JSON.stringify(user.editRole);
+				var EditRolePermission = JSON.stringify(user.selected);
 				console.log(EditRole);
+
 				services.addRole({
 					role_name : user.editRole.role_name,
 					role_id : user.editRole.role_id,
-					role_permission : ''
+					role_permission : EditRolePermission
 				}).success(function(data) {
 					alert("修改成功！");
 					getRoleListByPage(1);
@@ -335,10 +395,11 @@ app.controller('userController', [ '$scope', 'services', '$location',
 			// 添加角色
 			$(".roleAdd").click(function() {
 				var AddUser = JSON.stringify(user.addinguser);
+				var rolePermission = JSON.stringify(user.selected);
 				console.log(AddUser);
 				services.addRole({
 					role_name : user.addingRole.role_name,
-					role_permission : ''
+					role_permission : rolePermission
 				}).success(function(data) {
 					alert("新建成功！");
 					getRoleListByPage(1);
@@ -434,7 +495,7 @@ app.controller('userController', [ '$scope', 'services', '$location',
 					getAllRoleList();
 
 				} else if ($location.path().indexOf('/roleList') == 0) {
-
+					initCheckBoxData();
 					services.getRoleListByPage({
 						page : 1
 					}).success(function(data) {

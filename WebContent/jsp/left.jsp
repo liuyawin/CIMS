@@ -24,8 +24,10 @@
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a href="${ctx}/role/toUserManagePage.do#/roleList">角色列表</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/role/toUserManagePage.do#/userList">用户列表</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/role/toUserManagePage.do#/roleList">角色列表</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/role/toUserManagePage.do#/userList">用户列表</a><i></i></li>
 				<li><cite></cite> <a
 					href="${ctx}/alarmLevel/toAlarmSetPage.do#/alarmSet">报警设置</a><i></i></li>
 			</ul>
@@ -66,3 +68,4 @@
 
 
 	</section>
+</section>
