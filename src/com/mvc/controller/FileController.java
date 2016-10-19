@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,8 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.mvc.entity.Contract;
 import com.mvc.entity.Files;
+import com.mvc.service.ContractService;
 import com.mvc.service.FileService;
+
+import net.sf.json.JSONObject;
 
 /**
  * 文件上传
@@ -36,11 +41,13 @@ public class FileController {
 
 	@Autowired
 	FileService fileService;
+	@Autowired
+	ContractService contractService;
 
 	/**
 	 * 上传文件
 	 * 
-	 * @param request
+	 * @param request（file,contId）
 	 * @return true,false
 	 * @throws IOException
 	 */
@@ -62,6 +69,9 @@ public class FileController {
 			SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMddhhmmssSSS");// 定义到毫秒
 			String nowStr = "";
 			Files fileBean = null;
+
+			int contId = Integer.parseInt(request.getParameter("conId"));// 前台合同ID，需要测试怎么和file同时获取
+			Contract contract = contractService.selectContById(contId);
 			while (iter.hasNext()) {// 文件存储失败和存入数据库失败，都是失败
 				MultipartFile file = multiRequest.getFile(iter.next());// 将要上传的文件
 				fileBean = new Files();
@@ -83,6 +93,7 @@ public class FileController {
 						fileBean.setFile_type(suffix);// 文件类型，后缀
 						fileBean.setFile_path(path);// 文件路径
 						fileBean.setFile_ctime(new Date(time));// 创建时间
+						fileBean.setContract(contract);// 所属合同
 						flag = fileService.addFile(fileBean);
 						if (flag == false) {
 							break;
@@ -97,10 +108,49 @@ public class FileController {
 		return String.valueOf(flag);
 	}
 
+	/**
+	 * 根据合同ID获取文件列表
+	 * 
+	 * @param request
+	 * @return 文件列表list
+	 */
+	@RequestMapping("/selectFileByConId.do")
+	public @ResponseBody String selectFileByConId(HttpServletRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		int cont_id = Integer.parseInt(request.getParameter("conId"));
+		List<Files> list = fileService.findFileByConId(cont_id);
+		jsonObject.put("list", list);
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 根据文件ID删除文件
+	 * 
+	 * @param request
+	 * @return 该合同下的文件列表list
+	 */
+	@RequestMapping("/deleteFileById.do")
+	public @ResponseBody String deleteFileById(HttpServletRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		int file_id = Integer.parseInt(request.getParameter("fileId"));
+		Files file = fileService.findFileById(file_id);
+		if (file != null) {
+			int cont_id = file.getContract().getCont_id();
+			// 先删除，后获取
+			boolean flag = fileService.deleteById(file_id);
+			if (flag) {
+				List<Files> list = fileService.findFileByConId(cont_id);
+				jsonObject.put("list", list);
+			}
+		}
+		return jsonObject.toString();
+	}
+
 	// @RequestMapping("/download.do")
 	// public @ResponseBody String download(HttpServletRequest request) throws
 	// IOException {
 	// String filename = request.getParameter("filename");// 接收前台传过来的文件名
 	//
 	// }
+
 }

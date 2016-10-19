@@ -117,7 +117,7 @@ app.controller('AlarmController', [
 			// 合同
 			var alarm = $scope;
 			var alarmType;
-
+			var alarmContent = "";
 			// zq查看合同ID，并记入sessione
 			alarm.getContId = function(contId) {
 				sessionStorage.setItem('contId', contId);
@@ -126,31 +126,24 @@ app.controller('AlarmController', [
 			alarm.getAlarmId = function(alarId) {
 				sessionStorage.setItem('alarId', alarId);
 			};
-
+			// 根据内容进行查找
 			alarm.selectAlarmByContent = function() {
-				services.selectAlarmByContent({
+				alarmContent = alarm.alarmContent;
+				services.selectAlarmByType({
 					alarmType : alarmType,
 					page : 1,
-					alarmContent : alarm.alarmContent
+					searchKey : alarmContent
 				}).success(function(data) {
 					alarm.alarms = data.list;
-				});
-			}
-			// zq根据内容查找报警列表
-			function findAlarmByContent(page, alarmType,alarmContent) {
-				services.selectAlarmByContent({
-					alarmType : alarmType,
-					page : page,
-					alarmContent:alarmContent
-				}).success(function(data) {
-					alarm.alarms = data.list;
+					pageTurnByContent(alarmType, data.totalPage, 1);
 				});
 			}
 			// zq根据类型查找报警列表
 			function selectAlarmByType(page, alarmType) {
 				services.selectAlarmByType({
 					alarmType : alarmType,
-					page : page
+					page : page,
+					searchKey : alarmContent
 				}).success(function(data) {
 					alarm.alarms = data.list;
 				});
@@ -196,7 +189,8 @@ app.controller('AlarmController', [
 					alarmType = "2,3";
 					services.selectAlarmByType({
 						alarmType : alarmType,
-						page : 1
+						page : 1,
+						searchKey : alarmContent
 					}).success(function(data) {
 						alarm.alarms = data.list;
 						pageTurnByContent(alarmType, data.totalPage, 1);
@@ -206,7 +200,8 @@ app.controller('AlarmController', [
 					alarmType = "4,5";
 					services.selectAlarmByType({
 						alarmType : alarmType,
-						page : 1
+						page : 1,
+						searchKey : alarmContent
 					}).success(function(data) {
 						alarm.alarms = data.list;
 						pageTurnByContent(alarmType, data.totalPage, 1);
@@ -215,7 +210,8 @@ app.controller('AlarmController', [
 					alarmType = "1";
 					services.selectAlarmByType({
 						alarmType : alarmType,
-						page : 1
+						page : 1,
+						searchKey : alarmContent
 					}).success(function(data) {
 						alarm.alarms = data.list;
 						pageTurnByContent(alarmType, data.totalPage, 1);
