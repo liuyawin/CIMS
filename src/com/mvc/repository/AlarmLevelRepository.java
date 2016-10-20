@@ -13,7 +13,7 @@ import com.mvc.entity.AlarmLevel;
  * @author wanghuimin
  * @date 2016年9月22日
  */
-public interface AlarmLevelRepository extends JpaRepository<AlarmLevel, Long> {
+public interface AlarmLevelRepository extends JpaRepository<AlarmLevel, Integer> {
 	// 获取报警等级列表
 	@Query(" select a from AlarmLevel a ")
 	List<AlarmLevel> findAlarmLevelList();

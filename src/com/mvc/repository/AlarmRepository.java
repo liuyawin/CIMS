@@ -12,7 +12,7 @@ import com.mvc.entity.Alarm;
  * @author wanghuimin
  * @date 2016年9月26日
  */
-public interface AlarmRepository extends JpaRepository<Alarm, Long> {
+public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
 	// 统计报警列表条数
 	@Query("select count(alar_id) from Alarm a where receiver_id=:receiver_id and alar_isremove=0 and alar_id in (select alar_id from Alarm group by task_id,reno_id,prst_id  having count(*)>1)")

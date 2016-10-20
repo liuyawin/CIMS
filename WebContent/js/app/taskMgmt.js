@@ -556,9 +556,8 @@ app
 								});
 								console.log("初始化页面信息");
 								if ($location.path().indexOf('/receiveTask') == 0) {
-									// contract.getContractList();
-									tState = 0;
-									taskHtml.tState = "0";
+									tState = -1;
+									taskHtml.tState = "-1";
 									sendOrReceive = 1;
 									services.getTaskList({
 										taskState : tState,
@@ -571,9 +570,8 @@ app
 
 								} else if ($location.path()
 										.indexOf('/sendTask') == 0) {
-									// contract.getOverdueContract();
-									tState = 0;
-									taskHtml.tState = "0";
+									tState = -1;
+									taskHtml.tState = "-1";
 									sendOrReceive = 0;
 									services.getTaskList({
 										taskState : tState,

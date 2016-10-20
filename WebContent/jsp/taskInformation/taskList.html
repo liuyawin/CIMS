@@ -1,7 +1,7 @@
 <div class="place">
 	<span>位置：</span>
 	<ul class="placeul">
-		<li><a href="#">首页</a></li>
+		<li><a href="/CIMS/login/toIndex.do">首页</a></li>
 		<li><a href="#">任务管理</a></li>
 	</ul>
 </div>
@@ -12,10 +12,10 @@
 			<input name="" type="text" class="dfinput" id="tContent"
 				placeholder="内容关键字" /><select class="dfselect" ng-model="tState"
 				style="width: 167px">
+				<option value="-1">全部</option>
 				<option value="0">新任务</option>
 				<option value="1">处理中</option>
 				<option value="2">已完成</option>
-				<option value="-1">全部</option>
 			</select> <input class="btn" type="submit" value="查询"
 				ng-click="getTaskByKeys()">
 		</form>
