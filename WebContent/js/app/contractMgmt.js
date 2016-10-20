@@ -651,7 +651,7 @@ app.controller('ContractController', [
 			// 添加单个工期阶段
 			contract.addOneStage = function() {// 动态添加工期阶段
 				$scope.fchat = new Object();
-				console.log("dfdsfdfs"+$scope.fchat);
+				console.log("工期阶段" + JSON.stringify($scope.fchat));
 				$scope.fchat.stages = [ {
 					key : 0,
 					value : ""
