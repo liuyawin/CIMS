@@ -8,9 +8,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,8 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.Contract;
 import com.mvc.entity.Files;
+import com.mvc.entity.User;
 import com.mvc.service.ContractService;
 import com.mvc.service.FileService;
 
@@ -52,7 +60,7 @@ public class FileController {
 	 * @throws IOException
 	 */
 	@RequestMapping("/upload.do")
-	public @ResponseBody String upload(HttpServletRequest request) throws IOException {
+	public @ResponseBody String upload(HttpServletRequest request, HttpSession session) throws IOException {
 		boolean flag = true;
 		// 创建一个通用的多部分解析器
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
@@ -70,7 +78,8 @@ public class FileController {
 			String nowStr = "";
 			Files fileBean = null;
 
-			int contId = Integer.parseInt(request.getParameter("conId"));// 前台合同ID，需要测试怎么和file同时获取
+			int contId = (int) session.getAttribute("cont_id");// 从session中取出con_id
+			User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 			Contract contract = contractService.selectContById(contId);
 			while (iter.hasNext()) {// 文件存储失败和存入数据库失败，都是失败
 				MultipartFile file = multiRequest.getFile(iter.next());// 将要上传的文件
@@ -93,7 +102,9 @@ public class FileController {
 						fileBean.setFile_type(suffix);// 文件类型，后缀
 						fileBean.setFile_path(path);// 文件路径
 						fileBean.setFile_ctime(new Date(time));// 创建时间
+						fileBean.setFile_isdelete(0);// 是否删除
 						fileBean.setContract(contract);// 所属合同
+						fileBean.setUser(user);// 上传者
 						flag = fileService.addFile(fileBean);
 						if (flag == false) {
 							break;
@@ -146,11 +157,26 @@ public class FileController {
 		return jsonObject.toString();
 	}
 
-	// @RequestMapping("/download.do")
-	// public @ResponseBody String download(HttpServletRequest request) throws
-	// IOException {
-	// String filename = request.getParameter("filename");// 接收前台传过来的文件名
-	//
-	// }
+	/**
+	 * 文件下载
+	 * 
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping("/download.do")
+	public ResponseEntity<byte[]> download(HttpServletRequest request) throws IOException {
+		int file_id = Integer.parseInt(request.getParameter("file_id"));
+		Files fileBean = fileService.findFileById(file_id);
+		String fileName = fileBean.getFile_name();
+		File file = new File(fileBean.getFile_path());
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		headers.setContentDispositionFormData("attachment", fileName);
+
+		ResponseEntity<byte[]> byteArr = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers,
+				HttpStatus.OK);
+		return byteArr;
+	}
 
 }

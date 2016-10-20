@@ -1702,6 +1702,11 @@ h2 {
 	margin-left: 2%;
 }
 
-.update-btn {
-	float: right;
+.update-btn{
+	float:right;
+}
+
+.td-fileName{
+	width:400px;
+	height:24px;
 }
