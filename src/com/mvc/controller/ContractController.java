@@ -181,7 +181,7 @@ public class ContractController {
 		contract.setCont_state(0);// 合同状态
 		contract.setCont_ctime(new Date(time));// 合同创建时间
 		contract.setCreator(user);// 合同创建者
-		
+
 		contractService.addContract(contract);
 		int cont_id = contract.getCont_id();
 		session.setAttribute("cont_id", cont_id);// 创建合同时将cont_id放入session
@@ -237,8 +237,8 @@ public class ContractController {
 				if (jsonObject.containsKey("cont_hasproxy")) {
 					contract.setCont_hasproxy(Integer.parseInt(jsonObject.getString("cont_hasproxy")));// 是否有委托书
 				}
-				if (jsonObject.containsKey("cont_client")) {
-					contract.setCont_client(jsonObject.getString("cont_client"));// 业主公司名称
+				if (jsonObject.containsKey("cont_cdept")) {
+					contract.setCont_client(jsonObject.getString("cont_cdept"));// 业主联系部门
 				}
 				if (jsonObject.containsKey("cont_caddress")) {
 					contract.setCont_caddress(jsonObject.getString("cont_caddress"));// 业主地址

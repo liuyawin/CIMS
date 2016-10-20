@@ -72,15 +72,21 @@ public class ProjectStageController {
 			stage = (JSONObject) it.next();
 			projectStage = new ProjectStage();
 			try {
-				projectStage.setPrst_content(stage.getString("prst_content"));// 阶段内容
-				Date date = format.parse(stage.getString("prst_etime"));// 阶段截止时间
-				projectStage.setPrst_etime(date);// 阶段截止时间
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(date);
-				int days = Integer.parseInt(stage.getString("prst_wday"));// 完工提醒天数
-				projectStage.setPrst_wday(days);// 添加完工提醒的天数
-				calendar.add(Calendar.DAY_OF_MONTH, -days);// 工作结束提醒时间=阶段截止时间-完工提醒天数
-				projectStage.setPrst_wtime(calendar.getTime());// 工作结束提醒时间
+				if (stage.containsKey("prst_content")) {
+					projectStage.setPrst_content(stage.getString("prst_content"));// 阶段内容
+				}
+				if (stage.containsKey("prst_etime")) {
+					Date date = format.parse(stage.getString("prst_etime"));// 阶段截止时间
+					projectStage.setPrst_etime(date);// 阶段截止时间
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(date);
+					if (stage.containsKey("prst_wday")) {
+						int days = Integer.parseInt(stage.getString("prst_wday"));// 完工提醒天数
+						projectStage.setPrst_wday(days);// 添加完工提醒的天数
+						calendar.add(Calendar.DAY_OF_MONTH, -days);// 工作结束提醒时间=阶段截止时间-完工提醒天数
+						projectStage.setPrst_wtime(calendar.getTime());// 工作结束提醒时间
+					}
+				}
 				projectStage.setPrst_ctime(new Date(time));// 阶段录入时间
 				projectStage.setPrst_state(0);
 				User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 录入人
