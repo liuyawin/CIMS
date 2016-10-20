@@ -40,64 +40,6 @@ public class AlarmController {
 		return "alarmInformation/index";
 	}
 
-	// /**
-	// * 设置进入报警起始页
-	// *
-	// * @return
-	// */
-	// @RequestMapping("/toManagerAlarmPage.do")
-	// public String managerReceivePage() {
-	// return "manager/alarmInformation/index";
-	// }
-	//
-	// /**
-	// * 报警页面跳转
-	// *
-	// * @return
-	// */
-	// @RequestMapping("/toAssistant2AlarmPage.do")
-	// public String alarmJumpPage() {
-	// return "assistant2/alarmInformation/index";
-	// }
-	//
-	// /**
-	// * 报警页面跳转
-	// *
-	// * @return
-	// */
-	// @RequestMapping("/toZhurenAlarmPage.do")
-	// public String zhurenAlarmPage() {
-	// return "zhuren/alarmInformation/index";
-	// }
-
-	// /**
-	// * 点击提醒消息进入报警列表
-	// *
-	// * @return
-	// */
-	// @RequestMapping("/toAlarmListPage.do")
-	// public String AlarmList(HttpSession session) {
-	// User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-	// String path = "";
-	// switch (user.getUser_num()) {
-	// case "zhuren":
-	// path = "zhuren/alarmInformation/index";
-	// break;
-	// case "zhou":
-	// path = "assistant2/alarmInformation/index";
-	// break;
-	// case "shezong":
-	// path = "manager/alarmInformation/index";
-	// break;
-	// case "admin":
-	// path = "userManagement/alarmInformation/index";
-	// break;
-	// default:
-	// break;
-	// }
-	// return path;
-	// }
-
 	/**
 	 * 查找报警信息列表
 	 * 

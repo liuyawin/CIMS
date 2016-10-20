@@ -17,7 +17,7 @@ import com.mvc.entity.SubTask;
  * @author zjn
  * @date 2016年9月9日
  */
-public interface SubTaskRepository extends JpaRepository<SubTask, Long> {
+public interface SubTaskRepository extends JpaRepository<SubTask, Integer> {
 
 	// 根据任务ID获取子任务列表
 	@Query("select s from SubTask s where task_id = :task_id ")

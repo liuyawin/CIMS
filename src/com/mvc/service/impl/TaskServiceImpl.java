@@ -67,4 +67,9 @@ public class TaskServiceImpl implements TaskService {
 		return taskDao.findByContIdAndType(user_id, contId, taskType);
 	}
 
+	// 根据任务类型获取任务条数
+	public Integer countByType(Integer userId, Integer taskType) {
+		return taskDao.countByType(userId, taskType);
+	}
+
 }

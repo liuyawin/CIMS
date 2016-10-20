@@ -355,7 +355,7 @@ invoiceApp
 
 								'/invoiceTaskList') == 0) {
 									// 根据权限判断显示待处理的发票
-									invoState = 1;
+									invoState = 0;
 									services.getZRInvoice({
 										page : 1,
 										invoState : invoState
