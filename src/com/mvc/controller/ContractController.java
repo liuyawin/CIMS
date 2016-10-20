@@ -199,7 +199,9 @@ public class ContractController {
 	 */
 	@RequestMapping("/selectContractById.do")
 	public @ResponseBody String selectContById(HttpServletRequest request, HttpSession session) {
-		Contract contract = contractService.selectContById(Integer.parseInt(request.getParameter("cont_id")));
+		int cont_id = Integer.parseInt(request.getParameter("cont_id"));
+		session.setAttribute("cont_id", cont_id);// 将cont_id放入session
+		Contract contract = contractService.selectContById(cont_id);
 		return JSON.toJSONString(contract);
 	}
 

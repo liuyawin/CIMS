@@ -322,7 +322,7 @@ app.factory('services', ['$http', 'baseUrl', function($http, baseUrl) {
 	services.downloadFileByConId = function(data) {
 		return $http({
 			method: 'post',
-			url: baseUrl + 'file/downloadFileByConId.do',
+			url: baseUrl + 'file/download.do',
 			data: data
 		});
 	}; 
