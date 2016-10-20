@@ -39,6 +39,7 @@ public class ProjectStage implements Serializable {
 	private Contract contract;// fk外键， 所属合同
 	private User user; // fk外键，录入人
 	private User manager; // fk外键，项目经理
+	private Integer prst_isdelete;// 0:未删除，1:已删除
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -67,7 +68,7 @@ public class ProjectStage implements Serializable {
 		this.prst_etime = prst_etime;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getPrst_state() {
 		return prst_state;
 	}
@@ -138,6 +139,7 @@ public class ProjectStage implements Serializable {
 		this.manager = manager;
 	}
 
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getPrst_wday() {
 		return prst_wday;
 	}
@@ -146,4 +148,12 @@ public class ProjectStage implements Serializable {
 		this.prst_wday = prst_wday;
 	}
 
+	@Column(columnDefinition = "INT not null default 0")
+	public Integer getPrst_isdelete() {
+		return prst_isdelete;
+	}
+
+	public void setPrst_isdelete(Integer prst_isdelete) {
+		this.prst_isdelete = prst_isdelete;
+	}
 }

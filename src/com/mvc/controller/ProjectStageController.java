@@ -80,17 +80,19 @@ public class ProjectStageController {
 					projectStage.setPrst_etime(date);// 阶段截止时间
 					Calendar calendar = Calendar.getInstance();
 					calendar.setTime(date);
+					int days = 0;
 					if (stage.containsKey("prst_wday")) {
-						int days = Integer.parseInt(stage.getString("prst_wday"));// 完工提醒天数
-						projectStage.setPrst_wday(days);// 添加完工提醒的天数
-						calendar.add(Calendar.DAY_OF_MONTH, -days);// 工作结束提醒时间=阶段截止时间-完工提醒天数
-						projectStage.setPrst_wtime(calendar.getTime());// 工作结束提醒时间
+						days = Integer.parseInt(stage.getString("prst_wday"));// 完工提醒天数
 					}
+					projectStage.setPrst_wday(days);// 添加完工提醒的天数
+					calendar.add(Calendar.DAY_OF_MONTH, -days);// 工作结束提醒时间=阶段截止时间-完工提醒天数
+					projectStage.setPrst_wtime(calendar.getTime());// 工作结束提醒时间
 				}
 				projectStage.setPrst_ctime(new Date(time));// 阶段录入时间
-				projectStage.setPrst_state(0);
+				projectStage.setPrst_state(0);// 默认未完成
 				User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);// 录入人
 				projectStage.setUser(user);
+				projectStage.setPrst_isdelete(0);// 默认未删除
 				Contract contract = contractService.selectContById(Integer.parseInt(request.getParameter("cont_id")));// 所属合同
 				projectStage.setContract(contract);
 				if (contract.getManager() != null) {// 先判断是否有项目经理
