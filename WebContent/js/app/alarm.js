@@ -204,6 +204,7 @@ app.controller('AlarmController', [
 						searchKey : alarmContent
 					}).success(function(data) {
 						alarm.alarms = data.list;
+						
 						pageTurnByContent(alarmType, data.totalPage, 1);
 					});
 				} else if ($location.path().indexOf('/taskAlarmList') == 0) {// 获取任务超时报警列表
