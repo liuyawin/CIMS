@@ -6,7 +6,7 @@
 		<!-- 合同信息管理 -->
 		<dd>
 			<div class="title ">
-				<span><img src="${ctx}/images/leftico01.png" /></span>合同信息管理
+				<span><img src="${ctx}/images/leftico01.png" /></span>合同管理
 			</div>
 			<ul class="menuson">
 				<li><cite></cite> <a
@@ -19,14 +19,15 @@
 					href="${ctx}/contract/toContractPage.do#/contractList">所有合同</a><i></i></li>
 			</ul>
 		</dd>
-		<!-- 合同信息管理完 -->
+	</dl>
+	<!-- 任务管理 -->
+	<dl class="leftmenu">
 		<dd>
 			<div class="title">
-				<!-- <a href="#/test"><span><img src="../../images/leftico01.png" /></span>合同信息管理</a> -->
 				<span><img src="${ctx}/images/leftico01.png" /></span>任务管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a id="taskFirst"
+				<li><cite></cite> <a
 					href="${ctx}/task/toTaskPage.do#/receiveTask">接收的任务</a><i></i></li>
 				<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
 				<li><cite></cite> <a
@@ -35,21 +36,8 @@
 		</dd>
 
 	</dl>
-	<dl class="leftmenu" id="admin">
-		<dd>
-			<div class="title">
-				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
-			</div>
-			<ul class="menuson">
-				<li><cite></cite> <a
-					href="${ctx}/role/toUserManagePage.do#/roleList">角色列表</a><i></i></li>
-				<li><cite></cite> <a
-					href="${ctx}/role/toUserManagePage.do#/userList">用户列表</a><i></i></li>
-				<li><cite></cite> <a
-					href="${ctx}/alarmLevel/toAlarmSetPage.do#/alarmSet">报警设置</a><i></i></li>
-			</ul>
-		</dd>
-
+	<!-- 票据管理 -->
+	<dl class="leftmenu">
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>票据管理
@@ -60,7 +48,9 @@
 			</ul>
 
 		</dd>
-		<!-- 报警列表信息栏-->
+	</dl>
+	<!-- 报警信息-->
+	<dl class="leftmenu">
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
@@ -74,7 +64,22 @@
 					href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList">任务超时</a><i></i></li>
 			</ul>
 		</dd>
-
+	</dl>
+	<!-- 基础信息管理 -->
+	<dl class="leftmenu">
+		<dd>
+			<div class="title">
+				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
+			</div>
+			<ul class="menuson">
+				<li><cite></cite> <a
+					href="${ctx}/role/toUserManagePage.do#/roleList">角色列表</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/role/toUserManagePage.do#/userList">用户列表</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/alarmLevel/toAlarmSetPage.do#/alarmSet">报警设置</a><i></i></li>
+			</ul>
+		</dd>
 	</dl>
 
 </section>

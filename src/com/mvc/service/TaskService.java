@@ -39,4 +39,7 @@ public interface TaskService {
 	// 根据合同ID和任务类型返回任务列表
 	List<Task> findByContIdAndType(Integer user_id, Integer contId, Integer taskType);
 
+	// 根据任务类型获取任务条数
+	Integer countByType(Integer userId, Integer taskType);
+
 }

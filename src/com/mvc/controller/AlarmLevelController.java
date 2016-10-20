@@ -38,7 +38,7 @@ public class AlarmLevelController {
 	 */
 	@RequestMapping(value="/toAlarmSetPage.do")
 	public String alarmLevelJumpPage(){
-		return "userManagement/alarmInformation/index";
+		return "systemManagement/index";
 	}
 
 	/**

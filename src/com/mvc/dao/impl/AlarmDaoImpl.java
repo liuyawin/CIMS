@@ -1,5 +1,6 @@
 package com.mvc.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +42,7 @@ public class AlarmDaoImpl implements AlarmDao {
 		for (int i = 0; i < chars.length; i++) {
 			types.add(Integer.valueOf(chars[i]));
 		}
-
-		 String selectSql = "select count(1)num , alar_id,alar_time,alar_content,alar_code,alar_isremove,receiver_id,cont_id,task_id,reno_id,prst_id from Alarm where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
-
-//		String selectSql = "select * from Alarm where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
+		String selectSql = "select count(1)num , alar_id,alar_time,alar_content,alar_code,alar_isremove,receiver_id,cont_id,task_id,reno_id,prst_id from Alarm where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
 		// 判断查找关键字是否为空
 		if (null != searchKey) {
 			selectSql += " and ( alar_content like '%" + searchKey + "%' )";
@@ -80,7 +78,6 @@ public class AlarmDaoImpl implements AlarmDao {
 	}
 
 	// 统计报警条数
-	@SuppressWarnings("unchecked")
 	@Override
 	public Integer countAlarmTotalNum(String searchKey) {
 		EntityManager em = emf.createEntityManager();
@@ -94,9 +91,9 @@ public class AlarmDaoImpl implements AlarmDao {
 			countSql += " where receiver_id=:receiver_id  ";
 			query.setParameter("receiver", reveiverid);
 		}
-		List<Object> result = query.getResultList();
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
 		em.close();
-		return Integer.parseInt(result.get(0).toString());
+		return totalRow.intValue();
 	}
 
 	// 根据ID及其类型解除报警
@@ -129,7 +126,6 @@ public class AlarmDaoImpl implements AlarmDao {
 	}
 
 	// 张姣娜添加：统计报警列表条数，alarmType:2,3
-	@SuppressWarnings("unchecked")
 	public Integer countAlarmTotal(Integer user_id, String alarmType, String searchKey) {
 		EntityManager em = emf.createEntityManager();
 		String[] chars = alarmType.split(",");
@@ -147,8 +143,8 @@ public class AlarmDaoImpl implements AlarmDao {
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("receiver_id", user_id);
 		query.setParameter("alar_code", types);
-		List<Object> result = query.getResultList();
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
 		em.close();
-		return Integer.parseInt(result.get(0).toString());
+		return totalRow.intValue();
 	}
 }
