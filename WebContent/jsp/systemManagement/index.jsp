@@ -19,7 +19,6 @@
 <script src="${ctx}/js/app/alarmSet.js"></script>
 <script type="text/javascript">
 	angular.element(document).ready(function() {
-		//angular.bootstrap(document.getElementById("contract"), [ "contract" ]);
 		angular.bootstrap(document.getElementById("alarm"), [ "alarm" ]);
 	});
 </script>
