@@ -185,9 +185,9 @@ public class FileController {
 	 * @throws IOException
 	 */
 	@RequestMapping("/download.do")
-	public ResponseEntity<byte[]> downloadFiles(HttpServletRequest request) throws IOException {
+	public ResponseEntity<byte[]> downloadFiles(HttpServletRequest request,HttpSession session) throws IOException {
 		ResponseEntity<byte[]> byteArr = null;
-		int cont_id = Integer.parseInt(request.getParameter("conId"));
+		int cont_id = (int) session.getAttribute("cont_id");
 		List<File> files = new ArrayList<File>();// 文件list
 		List<Files> list = fileService.findFileByConId(cont_id);
 		Iterator<Files> it = list.iterator();
