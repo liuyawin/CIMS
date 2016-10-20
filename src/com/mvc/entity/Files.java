@@ -95,7 +95,7 @@ public class Files implements Serializable {
 		this.user = user;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getFile_isdelete() {
 		return file_isdelete;
 	}

@@ -36,6 +36,7 @@ public class ReceiveNode implements Serializable {
 	private User user;// fk外键，录入人
 	private Contract contract;// fk外键，所属合同
 	private ProjectStage projectStage;// fk外键，关联阶段
+	private Integer reno_isdelete;// 0:未删除，1:已删除
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -73,7 +74,7 @@ public class ReceiveNode implements Serializable {
 		this.reno_time = reno_time;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getReno_state() {
 		return reno_state;
 	}
@@ -145,13 +146,22 @@ public class ReceiveNode implements Serializable {
 		this.reno_wtime = reno_wtime;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getReno_wday() {
 		return reno_wday;
 	}
 
 	public void setReno_wday(Integer reno_wday) {
 		this.reno_wday = reno_wday;
+	}
+
+	@Column(columnDefinition = "INT not null default 0")
+	public Integer getReno_isdelete() {
+		return reno_isdelete;
+	}
+
+	public void setReno_isdelete(Integer reno_isdelete) {
+		this.reno_isdelete = reno_isdelete;
 	}
 
 }

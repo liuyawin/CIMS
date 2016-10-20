@@ -73,12 +73,13 @@ public class ReceiveNodeController {
 					Calendar calendar = Calendar.getInstance();
 					calendar.setTime(date);
 					receiveNode.setReno_time(date);// 节点截止时间
+					int days = 0;
 					if (node.containsKey("reno_wday")) {
-						int days = Integer.parseInt(node.getString("reno_wday"));// 收款提醒天数
-						receiveNode.setReno_wday(days);// 添加收款提醒的天数
-						calendar.add(Calendar.DAY_OF_MONTH, -days);// 收款结束提醒时间=收款截止时间-收款提醒天数
-						receiveNode.setReno_wtime(calendar.getTime());// 收款结束提醒时间
+						days = Integer.parseInt(node.getString("reno_wday"));// 收款提醒天数
 					}
+					receiveNode.setReno_wday(days);// 添加收款提醒的天数
+					calendar.add(Calendar.DAY_OF_MONTH, -days);// 收款结束提醒时间=收款截止时间-收款提醒天数
+					receiveNode.setReno_wtime(calendar.getTime());// 收款结束提醒时间
 				}
 				if (node.containsKey("reno_content")) {
 					receiveNode.setReno_content(node.getString("reno_content"));// 节点内容
@@ -93,6 +94,7 @@ public class ReceiveNodeController {
 				receiveNode.setUser(user);
 				Contract contract = contractService.selectContById(Integer.parseInt(request.getParameter("cont_id")));// 所属合同
 				receiveNode.setContract(contract);
+				receiveNode.setReno_isdelete(0);// 默认未删除
 
 				if (node.containsKey("projectStage")) {
 					ProjectStage projectStage = projectStageService
