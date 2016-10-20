@@ -3,7 +3,7 @@
 
 <head>
 <meta charset="utf-8" />
-<title>无标题文档</title>
+<title>合同信息管理</title>
 <link href="${ctx}/css/style.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/css/admin.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/css/zhou.css" rel="stylesheet" type="text/css" />
@@ -30,7 +30,7 @@
 
 				<span id="userNum"></span> <i>消息</i><a
 					href="/CIMS/alarm/toAlarmPage.do#/debtAlarmList"><b
-					id="newsNum">18</b></a>
+					id="newsNum">0</b></a>
 			</div>
 
 		</div>
@@ -48,77 +48,110 @@
 		<script type="text/javascript"
 			src="${ctx}/js/lib/jquery.json-2.2.min.js"></script>
 		<script type="text/javascript">
-			$(document).ready(
-					function() {
-						var cookie = {};
-						var cookies = document.cookie;
-						if (cookies === "")
-							return cookie;
-						var list = cookies.split(";");
-						for (var i = 0; i < list.length; i++) {
-							var cookieString = list[i];
-							var p = cookieString.indexOf("=");
-							var name = cookieString.substring(0, p);
-							var value = cookieString.substring(p + 1,
-									cookieString.length);
-							console.log(name);
-							console.log(value);
-							cookie[name.trim()] = value;
+			//消息闪烁
+			var show = function() { //有新消息时在title处闪烁提示
+				var step = 0, _title = document.title;
+				var timer = setInterval(function() {
+					step++;
+					if (step == 3) {
+						step = 1
+					}
+					;
+					if (step == 1) {
+						document.title = '【　　　】' + _title
+					}
+					;
+					if (step == 2) {
+						document.title = '【新消息】' + _title
+					}
+					;
+				}, 500);
+				return [ timer, _title ];
+			}
+			var clear = function(timerArr) { //去除闪烁提示，恢复初始title文本
+				if (timerArr) {
+					clearInterval(timerArr[0]);
+					document.title = timerArr[1];
+				}
+				;
+			}
+
+			function initData() {
+				$.getJSON("/CIMS/login/getInitData.do", {}, function(data) {
+					$("#taskCnt").text(data.totalReceiveTaskNum);
+					$("#RnAlarmCnt").text(data.debtAlarmNum);
+					$("#PsAlarmCnt").text(data.overdueAlarmNum);
+					$("#TskAlarmCnt").text(data.taskAlarmNum);
+					msgCnt = 0 + data.totalReceiveTaskNum + data.debtAlarmNum
+							+ data.overdueAlarmNum + data.taskAlarmNum;
+					$("#newsNum").html(msgCnt);
+				})
+			}
+			$(function() {
+				var blinkTitl
+				var cookie = {};
+				var cookies = document.cookie;
+				if (cookies === "")
+					return cookie;
+				var list = cookies.split(";");
+				for (var i = 0; i < list.length; i++) {
+					var cookieString = list[i];
+					var p = cookieString.indexOf("=");
+					var name = cookieString.substring(0, p);
+					var value = cookieString.substring(p + 1,
+							cookieString.length);
+					console.log(name);
+					console.log(value);
+					cookie[name.trim()] = value;
+				}
+				$('#userNum').html(cookie.userNum);
+
+				//$.getJSON("/CIMS/alarm/AlarmsTotalNum.do", {},
+				//		function(data) {
+				//			$("#newsNum").text(data.totalRow);
+				//		});
+				initData();
+				var msgCnt;
+				var title = document.title;
+				//window.setInterval(showalert, 5000);
+				function showalert() {
+					var lastMsgCnt = sessionStorage.getItem("msgCnt");
+					$.getJSON("/CIMS/login/getInitData.do", {}, function(data) {
+						$("#taskCnt").text(data.totalReceiveTaskNum);
+						$("#RnAlarmCnt").text(data.debtAlarmNum);
+						$("#PsAlarmCnt").text(data.overdueAlarmNum);
+						$("#TskAlarmCnt").text(data.taskAlarmNum);
+						msgCnt = 0 + data.totalReceiveTaskNum
+								+ data.debtAlarmNum + data.overdueAlarmNum
+								+ data.taskAlarmNum;
+						$("#newsNum").html(msgCnt);
+						sessionStorage.setItem("msgCnt", msgCnt);
+						if (msgCnt > lastMsgCnt) {
+							//todo--提示爆闪
+							var timerArr = show();
+							console.log("执行到这里");
+							setTimeout(function() { //此处是过一定时间后自动消失
+								clear(timerArr);
+							}, 10000);
+						} else {
+							document.title = title;
 						}
-						$('#userNum').html(cookie.userNum);
 
-						//$.getJSON("/CIMS/alarm/AlarmsTotalNum.do", {},
-						//		function(data) {
-						//			$("#newsNum").text(data.totalRow);
-						//		});
-
-						var msgCnt;
-						window.setInterval(showalert, 5000);
-						function showalert() {
-							var lastMsgCnt = sessionStorage.getItem("msgCnt");
-							$.getJSON("/CIMS/login/getInitData.do", {},
-									function(data) {
-										$("#taskCnt").text(
-												data.totalReceiveTaskNum);
-										$("#RnAlarmCnt")
-												.text(data.debtAlarmNum);
-										$("#PsAlarmCnt").text(
-												data.overdueAlarmNum);
-										$("#TskAlarmCnt").text(
-												data.taskAlarmNum);
-										msgCnt = 0 + data.totalReceiveTaskNum
-												+ data.debtAlarmNum
-												+ data.overdueAlarmNum
-												+ data.taskAlarmNum;
-										$("#newsNum").html(msgCnt);
-										if (msgCnt > lastMsgCnt) {
-											sessionStorage.setItem("msgCnt",
-													msgCnt);
-											
-											//todo--提示爆闪
-											
-											window.setTimeout(show, 3000);//取消爆闪
-										}
-
-									});
-
-						}
-						function show() {
-							//取消爆闪
-						}
-						//鼠标移到user上时显示消息的div，在消息div以外任意地方点击鼠标时消息div隐藏
-						$(".user").hover(function(){  
-				            $("#news").show();  
-				        },function(){  
-				            /* $("#news").hide();   */
-				        }) 
-				        $(document).click(function(){
-				            $("#news").hide();
-
-				        });
-						$("#news").click(function(event){
-						    event.stopPropagation();
-
-						});
 					});
+
+				}
+				//鼠标移到user上时显示消息的div，在消息div以外任意地方点击鼠标时消息div隐藏
+				$(".user").hover(function() {
+					$("#news").show();
+				}, function() {
+					/* $("#news").hide();   */
+				})
+				$(document).click(function() {
+					$("#news").hide();
+
+				});
+				$("#news").click(function(event) {
+					event.stopPropagation();
+				});
+			});
 		</script>
