@@ -61,6 +61,8 @@ public class Contract implements Serializable {
 	private Float invo_totalmoney;// 发票总金额
 	private Integer rece_total;// 收据总数
 	private Float rece_totalmoney;// 收据总金额
+	private String cur_prst;// 当前工期阶段
+	private String cur_reno;// 当前收款节点
 	private User creator;// 合同创建者
 	private User manager;// 项目经理
 	private Integer cont_ishistory;// 0：最新，1历史
@@ -311,7 +313,7 @@ public class Contract implements Serializable {
 		this.cont_payalanum = cont_payalanum;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getCont_state() {
 		return cont_state;
 	}
@@ -370,6 +372,24 @@ public class Contract implements Serializable {
 
 	public void setRece_totalmoney(Float rece_totalMoney) {
 		this.rece_totalmoney = rece_totalMoney;
+	}
+
+	@Column(columnDefinition = "varchar(100) not null default '未录入工期阶段'")
+	public String getCur_prst() {
+		return cur_prst;
+	}
+
+	public void setCur_prst(String cur_prst) {
+		this.cur_prst = cur_prst;
+	}
+
+	@Column(columnDefinition = "varchar(100) not null default '未录入收款节点'")
+	public String getCur_reno() {
+		return cur_reno;
+	}
+
+	public void setCur_reno(String cur_reno) {
+		this.cur_reno = cur_reno;
 	}
 
 	@ManyToOne
