@@ -441,7 +441,6 @@ app.controller('ContractController', [
 		// zq查看合同ID，并记入sessionStorage
 		contract.getConId = function(conId) {
 			sessionStorage.setItem('conId', conId);
-			alert(conId);
 		};
 
 		function preventDefault(e) {
@@ -569,9 +568,15 @@ app.controller('ContractController', [
 			var $selectAll = $("#selectAll");
 			console.log($selectAll.is(':checked'));
 			if($selectAll.is(':checked')) {
-				$(":checkbox").attr("checked", true);
+				contract.task1.print = "true";
+				contract.task1.sign = "true";
+				contract.task1.seal = "true";
+				contract.task1.post = "true";
 			} else {
-				$(":checkbox").attr("checked", false);
+				contract.task1.print = "false";
+				contract.task1.sign = "false";
+				contract.task1.seal = "false";
+				contract.task1.post = "false";
 			}
 		}
 
@@ -1171,7 +1176,7 @@ app
 						response, status, headers);
 				};
 				uploader.onCompleteAll = function() {
-					console.info('onCompleteAll');
+					alert("文件上传成功！");
 				};
 				console.info('uploader', uploader);
 				/* ！！！上传文件完 */

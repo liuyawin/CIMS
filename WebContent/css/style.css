@@ -1704,6 +1704,7 @@ h2 {
 
 .update-btn{
 	float:right;
+	margin-left:12px;
 }
 
 .td-fileName{
