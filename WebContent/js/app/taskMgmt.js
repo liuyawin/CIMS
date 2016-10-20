@@ -196,8 +196,8 @@ app
 							// zq根据内容查询任务列表
 							taskHtml.getTaskByKeys = function() {
 								tState = taskHtml.tState;
-								
-								services.getTaskBykeys({
+
+								services.getTaskByKeys({
 									context : $("#tContent").val(),
 									page : 1,
 									taskState : tState,
@@ -549,7 +549,11 @@ app
 
 							// zq初始化
 							function initData() {
-
+								$(".tiptop a").click(function() {
+									sessionStorage.setItem("contractId", "");
+									$(".overlayer").fadeOut(200);
+									$(".tip").fadeOut(200);
+								});
 								console.log("初始化页面信息");
 								if ($location.path().indexOf('/receiveTask') == 0) {
 									// contract.getContractList();

@@ -8,7 +8,7 @@ package com.utils;
  */
 public class Pager {
 	private int page = 1; // 当前页
-	private int pageSize = 2; // 每页多少行
+	private int pageSize = 10; // 每页多少行
 	private int offset;// 当前页起始行
 	private int limit = pageSize;// 往后取多少条
 	private int totalRow; // 共多少行
