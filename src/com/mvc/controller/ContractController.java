@@ -383,6 +383,7 @@ public class ContractController {
 		Boolean flag = null;
 		if (jsonObject.containsKey("cont_id")) {
 			cont_id = Integer.parseInt(jsonObject.getString("cont_id"));// 合同名称
+			session.setAttribute("cont_id", cont_id);// 修改合同时将cont_id放入session
 			contract = contractService.selectContById(cont_id);
 		}
 		if (contract != null) {
