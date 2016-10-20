@@ -1,5 +1,6 @@
 package com.mvc.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,8 +148,8 @@ public class AlarmDaoImpl implements AlarmDao {
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("receiver_id", user_id);
 		query.setParameter("alar_code", types);
-		List<Object> result = query.getResultList();
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
 		em.close();
-		return Integer.parseInt(result.get(0).toString());
+		return totalRow.intValue();
 	}
 }
