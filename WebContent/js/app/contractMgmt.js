@@ -153,7 +153,11 @@ app
 					'/contractDetail', {
 						templateUrl: '/CIMS/jsp/contractInformation/contractDetail.html',
 						controller: 'ContractController'
-					})
+					}).when(
+							'/contractModify', {
+								templateUrl: '/CIMS/jsp/contractInformation/contractDetail.html',
+								controller: 'ContractController'
+							})
 				.when(
 					'/contractInfo', {
 						templateUrl: '/CIMS/jsp/contractInformation/contractInfo.html',
@@ -314,6 +318,46 @@ app.factory('services', ['$http', 'baseUrl', function($http, baseUrl) {
 			data: data
 		});
 	};
+	// zq根据合同和收款节点添加收据
+	services.addReceipt = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receipt/createReceipt.do',
+			data : data
+		});
+	};
+	// zq从设计部取出项目经理人选
+	services.selectUsersFromDesign = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'user/selectUsersFromDesign.do',
+			data : data
+		});
+	};
+	// zq补录合同信息
+	services.repeatAddContract = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/repeatAddContract.do',
+			data : data
+		});
+	};
+	// zq添加工期阶段
+	services.addProjectStage = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectStage/addProjectStage.do',
+			data : data
+		});
+	};
+	// zq添加收款节点
+	services.addReceiveNode = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receiveNode/addReceiveNode.do',
+			data : data
+		});
+	};
 	
 	return services;
 }]);
@@ -397,6 +441,7 @@ app.controller('ContractController', [
 		// zq查看合同ID，并记入sessionStorage
 		contract.getConId = function(conId) {
 			sessionStorage.setItem('conId', conId);
+			alert(conId);
 		};
 
 		function preventDefault(e) {
@@ -485,6 +530,10 @@ app.controller('ContractController', [
 				cont_id: cont_id
 			}).success(function(data) {
 				contract.cont = data;
+				contract.contract = data;
+				contract.contract.cont_stime = new Date(
+						data.cont_stime).toLocaleDateString()
+						.replace(/\//g, '-');
 
 			});
 		}
@@ -518,16 +567,11 @@ app.controller('ContractController', [
 		
 		contract.selectAllTask = function() {
 			var $selectAll = $("#selectAll");
+			console.log($selectAll.is(':checked'));
 			if($selectAll.is(':checked')) {
-				contract.task1.print = "true";
-				contract.task1.sign = "true";
-				contract.task1.seal = "true";
-				contract.task1.post = "true";
+				$(":checkbox").attr("checked", true);
 			} else {
-				contract.task1.print = "false";
-				contract.task1.sign = "false";
-				contract.task1.seal = "false";
-				contract.task1.post = "false";
+				$(":checkbox").attr("checked", false);
 			}
 		}
 
@@ -564,7 +608,242 @@ app.controller('ContractController', [
 			$('#renoShow').show();
 			$('#renoHide').hide();
 		}
+		
+		// zq添加添加收据功能
+		// zq查看合同ID，并记入sessione
+		contract.addReceipt = function() {
+			var renoId = this.node.reno_id;
+			var contId = this.node.contract.cont_id;
+			$(".overlayer").fadeIn(200);
+			$("#tipAdd").fadeIn(200);
+			$("#sureAdd").click(function() {
+				var receFormData = JSON.stringify(contract.receipt);
+				services.addReceipt({
+					receipt : receFormData,
+					renoId : renoId,
+					contId : contId
+				}).success(function(data) {
 
+					$("#tipAdd").fadeOut(100);
+					$(".overlayer").fadeOut(200);
+					selectRenoByContId();
+					alert("收据添加成功！");
+					contract.receipt = "";
+
+				});
+			});
+
+			$("#cancelAdd").click(function() {
+				$("#tipAdd").fadeOut(100);
+				$(".overlayer").fadeOut(200);
+				contract.receipt = "";
+			});
+
+		};
+
+		// zq：添加工期阶段的单项控件
+		function addStage() {// 动态添加工期阶段
+			$scope.fchat = new Object();
+			$scope.fchat.stages = [ {
+				key : 0,
+				value : ""
+			} ];
+			// 初始化时由于只有1条回复，所以不允许删除
+			$scope.fchat.canDescStage = false;
+			// 增加回复数
+			$scope.fchat.incrStage = function($index) {
+				$scope.fchat.stages.splice($index + 1, 0, {
+					key : new Date().getTime(),
+					value : ""
+				});
+				// 用时间戳作为每个item的key
+				// 增加新的回复后允许删除
+				$scope.fchat.canDescStage = true;
+
+			} // 减少回复数
+			$scope.fchat.decrStage = function($index) {
+
+				// 如果回复数大于1，删除被点击回复
+				if ($scope.fchat.stages.length > 1) {
+					$scope.fchat.stages.splice($index, 1);
+				}
+				// 如果回复数为1，不允许删除
+				if ($scope.fchat.stages.length == 1) {
+					$scope.fchat.canDescStage = false;
+				}
+			}
+			// 动态添加工期
+			// 将字符串连接起来
+			/*
+			 * $scope.fchat.combineReplies = function() { var cr = ""; for
+			 * (var i = 0; i < $scope.fchat.stages.length; i++) { cr += "#" +
+			 * $scope.fchat.stages[i].value; }
+			 * 
+			 * return cr; }
+			 */
+		}
+		// 添加单个工期阶段
+		contract.addOneStage = function() {// 动态添加工期阶段
+			$scope.fchat = new Object();
+			console.log("工期阶段" + JSON.stringify($scope.fchat));
+			$scope.fchat.stages = [ {
+				key : 0,
+				value : ""
+			} ];
+			$(".overlayer").fadeIn(200);
+			$("#prstAdd").fadeIn(200);
+			$("#sureAddPrst").click(function() {
+				var conId = sessionStorage.getItem("conId");
+				var prstFormData = JSON.stringify($scope.fchat);
+				console.log(prstFormData);
+				services.addProjectStage({
+					projectStage : prstFormData,
+					cont_id : conId
+				}).success(function(data) {
+					alert("添加工期成功！");
+					selectPrstByContId();
+				});
+				$(".overlayer").fadeOut(100);
+				$("#prstAdd").fadeOut(100);
+			});
+
+			$("#cancelAddPrst").click(function() {
+
+				$(".overlayer").fadeOut(100);
+				$("#prstAdd").fadeOut(100);
+			});
+
+		}
+
+		// zq：补录合同
+		contract.repeatAddContract = function() {
+			console.log(contract.contract);
+			var conFormData = JSON.stringify(contract.contract);
+			console.log(conFormData);
+			services.repeatAddContract({
+				contract : conFormData,
+				cont_id : sessionStorage.getItem('conId')
+			}).success(function(data) {
+				/* window.sessionStorage.setItem("contractId",); */
+				alert("添加合同成功！");
+			});
+		};
+		// zq：添加工期阶段到数据库
+		contract.addProjectStage = function() {
+			var cont_id = sessionStorage.getItem("conId");
+			var prstFormData = JSON.stringify($scope.fchat);
+			services.addProjectStage({
+				projectStage : prstFormData,
+				cont_id : cont_id
+			}).success(function(data) {
+				alert("添加工期成功！");
+				addNode();
+				selectPrstByContId();
+				$("#addReceiveNode").show();
+			});
+		}
+		// ps显示图片
+		contract.psShowDel = function(num) {
+			$("#ps" + num + "").find("img").css('visibility', 'visible');
+		}
+		// ps显示图片
+		contract.psHideDel = function(num) {
+			$("#ps" + num + "").find("img").css('visibility', 'hidden');
+		}
+		// rn显示图片
+		contract.rnShowDel = function(num) {
+			$("#rn" + num + "").find("img").css('visibility', 'visible');
+		}
+		// rn显示图片
+		contract.rnHideDel = function(num) {
+			$("#rn" + num + "").find("img").css('visibility', 'hidden');
+		}
+		// zq：添加收款节点到数据库
+		contract.addReceiveNode = function() {
+			var cont_id = sessionStorage.getItem("conId");
+			var renoFormData = JSON.stringify($scope.rnchat);
+			console.log(renoFormData);
+			services.addReceiveNode({
+				receiveNode : renoFormData,
+				cont_id : cont_id
+			}).success(function(data) {
+				alert("添加节点成功！");
+			});
+		}
+		// zq添加收款节点控件
+		function addNode() {// 动态添加工期阶段
+			$scope.rnchat = new Object();
+			$scope.rnchat.nodes = [ {
+				key : 0,
+				value : ""
+			} ];
+			// 初始化时由于只有1条回复，所以不允许删除
+			$scope.rnchat.canDescNode = false;
+			// 增加回复数
+			$scope.rnchat.incrNode = function($index) {
+
+				$scope.rnchat.nodes.splice($index + 1, 0, {
+					key : new Date().getTime(),
+					value : ""
+				});
+				// 用时间戳作为每个item的key
+				// 增加新的回复后允许删除
+				$scope.rnchat.canDescNode = true;
+
+			} // 减少回复数
+			$scope.rnchat.decrNode = function($index) {
+
+				// 如果回复数大于1，删除被点击回复
+				if ($scope.rnchat.nodes.length > 1) {
+					$scope.rnchat.nodes.splice($index, 1);
+				}
+				// 如果回复数为1，不允许删除
+				if ($scope.rnchat.nodes.length == 1) {
+					$scope.rnchat.canDescNode = false;
+				}
+			}
+		}
+		// 添加单个收款节点
+		contract.addOneNode = function() {// 动态添加工期阶段
+
+			$scope.rnchat = new Object();
+			$scope.rnchat.nodes = [ {
+				key : 0,
+				value : ""
+			} ];
+			selectPrstByContId();
+			$(".overlayer").fadeIn(200);
+			$("#renoAdd").fadeIn(200);
+			$("#sureAddReno").click(function() {
+
+				var conId = sessionStorage.getItem("conId");
+				var renoFormData = JSON.stringify($scope.rnchat);
+				console.log(renoFormData);
+				services.addReceiveNode({
+					receiveNode : renoFormData,
+					cont_id : conId
+				}).success(function(data) {
+					selectRenoByContId();
+					alert("添加收款节点成功！");
+				});
+				$(".overlayer").fadeOut(100);
+				$(".tip").fadeOut(100);
+			});
+
+			$("#cancelAddReno").click(function() {
+
+				$(".overlayer").fadeOut(100);
+				$(".tip").fadeOut(100);
+			});
+
+		}
+	
+		// zq：从设计部查找人员
+		function selectUsersFromDesign() {
+			services.selectUsersFromDesign({}).success(function(data) {
+				contract.userDepts = data;
+			});
+		}
 		// 初始化页面信息
 		function initData() {
 			console.log("初始化页面信息");
@@ -787,7 +1066,17 @@ app.controller('ContractController', [
 			} else if($location.path().indexOf('/contractUpdate') == 0) {
 				selectContractById(); // 根据ID获取合同信息
 				selectFileByConId(sessionStorage.getItem('conId'));
-			}
+			}else if ($location.path().indexOf('/contractDetail') == 0) {
+				selectUsersFromDesign();// 查找设计部人员
+
+				selectContractById(); // 根据ID获取合同信息
+				addStage();// 显示工期阶段录入界面
+			} else if ($location.path().indexOf('/contractModify') == 0) {
+				selectUsersFromDesign();// 查找设计部人员
+				selectContractById(); // 根据ID获取合同信息
+				$("#prstContainer").hide();
+				$("#renoContainer").hide();
+			} 
 		}
 
 		initData();
@@ -882,7 +1171,7 @@ app
 						response, status, headers);
 				};
 				uploader.onCompleteAll = function() {
-					alert("文件上传成功！");
+					console.info('onCompleteAll');
 				};
 				console.info('uploader', uploader);
 				/* ！！！上传文件完 */
