@@ -153,7 +153,11 @@ app
 					'/contractDetail', {
 						templateUrl: '/CIMS/jsp/contractInformation/contractDetail.html',
 						controller: 'ContractController'
-					})
+					}).when(
+							'/contractModify', {
+								templateUrl: '/CIMS/jsp/contractInformation/contractDetail.html',
+								controller: 'ContractController'
+							})
 				.when(
 					'/contractInfo', {
 						templateUrl: '/CIMS/jsp/contractInformation/contractInfo.html',
@@ -437,6 +441,7 @@ app.controller('ContractController', [
 		// zq查看合同ID，并记入sessionStorage
 		contract.getConId = function(conId) {
 			sessionStorage.setItem('conId', conId);
+			alert(conId);
 		};
 
 		function preventDefault(e) {
@@ -525,6 +530,10 @@ app.controller('ContractController', [
 				cont_id: cont_id
 			}).success(function(data) {
 				contract.cont = data;
+				contract.contract = data;
+				contract.contract.cont_stime = new Date(
+						data.cont_stime).toLocaleDateString()
+						.replace(/\//g, '-');
 
 			});
 		}
@@ -829,7 +838,12 @@ app.controller('ContractController', [
 
 		}
 	
-		
+		// zq：从设计部查找人员
+		function selectUsersFromDesign() {
+			services.selectUsersFromDesign({}).success(function(data) {
+				contract.userDepts = data;
+			});
+		}
 		// 初始化页面信息
 		function initData() {
 			console.log("初始化页面信息");
