@@ -266,6 +266,54 @@ receiptapp.controller('ReceiptController', [
 
 				});
 			}
+			function findRoleFromCookie() {
+				var cookie = {};
+
+				var cookies = document.cookie;
+				if (cookies === "")
+					return cookie;
+				var list = cookies.split(";");
+				for (var i = 0; i < list.length; i++) {
+					var cookieString = list[i];
+					/* console.log("cookie内容" + cookieString); */
+					var p = cookieString.indexOf("=");
+					var name = cookieString.substring(0, p);
+					var value = cookieString.substring(p + 1,
+							cookieString.length);
+					console.log(name);
+					cookie[name.trim()] = value;
+					console.log("进来了,已经赋值" + name);
+					if (name.trim() == "role") {
+						sessionStorage.setItem("userRole",
+								value);
+						switch (sessionStorage.getItem(
+						'userRole').trim()) {
+				case "1":
+					receipt.receAddShow = true;
+					
+					break;
+				case "2":
+					receipt.receAddShow = false;
+					
+					break;
+				case "3":
+					receipt.receAddShow = true;
+					
+
+					break;
+				case "4":
+					receipt.receAddShow = false;
+					
+					break;
+				case "5":
+					receipt.receAddShow = false;
+					
+					break;
+				}
+					}
+
+				}
+			}
 			// zq初始化页面信息
 			function initData() {
 				$("#invoice").hide();
@@ -300,6 +348,7 @@ receiptapp.controller('ReceiptController', [
 				});
 			}
 			initData();// 初始化
+			findRoleFromCookie();
 			dateformat();// 格式化日期格式
 
 		} ]);
@@ -469,6 +518,66 @@ receiptapp.filter('cutString', function() {
 		return content;
 	}
 });
+app.directive(
+		'hasPermission',
+		function($timeout) {
+			return {
+				restrict : 'A',
+				link : function(scope, element, attr) {
+
+					var key = attr.hasPermission.trim(); // 获取页面上的权限值
+					console.log("获取页面上的权限值" + key);
+					/* console.log("cookie内容" + JSON.stringify(cookie)); */
+					/*
+					 * if (sessionStorage.getItem('userRole').trim() ==
+					 * "3") { element.css("display", "none"); }
+					 */
+					switch (sessionStorage.getItem('userRole').trim()) {
+					case "1":
+						var keys1 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
+						var regStr1 = "\\s" + key + "\\s";
+						var reg1 = new RegExp(regStr1);
+						if (keys1.search(reg1) < 0) {
+							element.css("display", "none");
+						}
+						break;
+					case "2":
+						var keys2 = " tContDetail ";
+						var regStr2 = "\\s" + key + "\\s";
+						var reg2 = new RegExp(regStr2);
+						if (keys2.search(reg2) < 0) {
+							element.css("display", "none");
+						}
+						break;
+					case "3":
+						var keys3 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
+						var regStr3 = "\\s" + key + "\\s";
+						var reg3 = new RegExp(regStr3);
+						if (keys3.search(reg3) < 0) {
+							element.css("display", "none");
+						}
+						break;
+					case "4":
+						var keys4 = " bInvoAdd tContDetail ";
+						var regStr4 = "\\s" + key + "\\s";
+						var reg4 = new RegExp(regStr4);
+						if (keys4.search(reg4) < 0) {
+							element.css("display", "none");
+						}
+						break;
+					case "5":
+						var keys5 = " cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
+						var regStr5 = "\\s" + key + "\\s";
+						var reg5 = new RegExp(regStr5);
+						if (keys5.search(reg5) < 0) {
+							element.css("display", "none");
+						}
+						break;
+					}
+				}
+			};
+
+		});
 
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:

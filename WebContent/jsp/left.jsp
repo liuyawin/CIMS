@@ -2,7 +2,7 @@
 <script type="text/javascript"
 	src="${ctx}/js/lib/jquery.json-2.2.min.js"></script>
 <section class="leftbar">
-	<dl class="leftmenu">
+	<dl class="leftmenu" id="contract">
 		<!-- 合同信息管理 -->
 		<dd>
 			<div class="title ">
@@ -30,14 +30,14 @@
 				<li><cite></cite> <a
 					href="${ctx}/task/toTaskPage.do#/receiveTask">接收的任务</a><i></i></li>
 				<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="invoiceTask"><cite></cite> <a
 					href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
 			</ul>
 		</dd>
 
 	</dl>
 	<!-- 票据管理 -->
-	<dl class="leftmenu">
+	<dl class="leftmenu" id="billInformation">
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>票据管理
@@ -56,9 +56,9 @@
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a
+				<li id="debtAlarm"><cite></cite> <a
 					href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款超时</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="overdueAlarm"><cite></cite> <a
 					href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList">工程逾期</a><i></i></li>
 				<li><cite></cite> <a
 					href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList">任务超时</a><i></i></li>
@@ -66,7 +66,7 @@
 		</dd>
 	</dl>
 	<!-- 基础信息管理 -->
-	<dl class="leftmenu">
+	<dl class="leftmenu" id="userManagement">
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
@@ -83,3 +83,51 @@
 	</dl>
 
 </section>
+<script>
+	$(document).ready(function() {
+		var cookie = {};
+
+		var cookies = document.cookie;
+		if (cookies === "")
+			return cookie;
+		var list = cookies.split(";");
+		for (var i = 0; i < list.length; i++) {
+			var cookieString = list[i];
+			/* console.log("cookie内容" + cookieString); */
+			var p = cookieString.indexOf("=");
+			var name = cookieString.substring(0, p);
+			var value = cookieString.substring(p + 1, cookieString.length);
+		
+			cookie[name.trim()] = value;
+			
+			if (name.trim() == "role") {
+				if(value.trim()=="2"){}
+				switch (value.trim()) {
+				case "1":
+				
+					break;
+				case "2":
+					$("#contract").hide();
+					$("#invoiceTask").hide();
+					$("#userManagement").hide();
+					$("#billInformation").hide();
+					$("#overdueAlarm").hide();
+					$("#debtAlarm").hide();
+
+					break;
+				case "3":
+					$("#userManagement").hide();
+					break;
+				case "4":
+					$("#userManagement").hide();
+					break;
+				case "5":
+					$("#userManagement").hide();
+					break;
+				}
+				
+			}
+
+		}
+	});
+</script>

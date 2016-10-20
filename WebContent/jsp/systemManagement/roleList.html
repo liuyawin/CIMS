@@ -16,7 +16,7 @@
 				class="btn" type="submit" value="查询" ng-click="selectPerByName()">
 		</form>
 
-		<ul class="toolbar1">
+		<ul class="toolbar1" has-permission='uRoleAdd'>
 			<li class="click" ng-click="addNewRole()"><a href="#"><span><img
 						src="../images/t01.png" /></span>新建</a></li>
 		</ul>
@@ -37,9 +37,9 @@
 				<td>{{role.role_name}}</td>
 				<td><a href="#roleList" class="tablelink"
 					ng-click="detailRoleBtn(this)">查看</a><a
-					ng-click="editRoleBtn(this)" class="tablelink"> 修改</a><a
+					ng-click="editRoleBtn(this)" class="tablelink" has-permission='uRoleEdit'> 修改</a><a
 					href="#roleList" class="tablelink"
-					ng-click="deleteRole(role.role_id)"> 删除</a></td>
+					ng-click="deleteRole(role.role_id)" has-permission='uRoleDel'> 删除</a></td>
 			</tr>
 		</tbody>
 	</table>
