@@ -19,9 +19,7 @@
 					href="${ctx}/contract/toContractPage.do#/contractList">所有合同</a><i></i></li>
 			</ul>
 		</dd>
-	</dl>
 	<!-- 任务管理 -->
-	<dl class="leftmenu">
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico01.png" /></span>任务管理
@@ -35,9 +33,7 @@
 			</ul>
 		</dd>
 
-	</dl>
 	<!-- 票据管理 -->
-	<dl class="leftmenu">
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>票据管理
@@ -48,9 +44,7 @@
 			</ul>
 
 		</dd>
-	</dl>
 	<!-- 报警信息-->
-	<dl class="leftmenu">
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
@@ -64,9 +58,7 @@
 					href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList">任务超时</a><i></i></li>
 			</ul>
 		</dd>
-	</dl>
 	<!-- 基础信息管理 -->
-	<dl class="leftmenu">
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
@@ -80,6 +72,5 @@
 					href="${ctx}/alarmLevel/toAlarmSetPage.do#/alarmSet">报警设置</a><i></i></li>
 			</ul>
 		</dd>
-	</dl>
 
 </section>
