@@ -1,5 +1,6 @@
 package com.mvc.dao.impl;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -78,27 +79,25 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	}
 
 	// 根据合同ID，关键字查询发票总条数
-	@SuppressWarnings("unchecked")
 	public Integer countByContId(Integer cont_id) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select count(invo_id) from invoice where invo_isdelete=0 and contract_id=:contract_id ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("contract_id", cont_id);
-		List<Object> result = query.getResultList();
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
 		em.close();
-		return Integer.parseInt(result.get(0).toString());
+		return totalRow.intValue();
 	}
 
 	// 根据合同ID查询发票总金额
-	@SuppressWarnings("unchecked")
 	public Float totalMoneyOfInvoice(Integer contId) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select sum(invo_money) from invoice i where contract_id=:contract_id ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("contract_id", contId);
-		List<Object> result = query.getResultList();
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
 		em.close();
-		return Float.valueOf(result.get(0).toString());
+		return totalRow.floatValue();
 	}
 
 	// 根据用户id，页数返回发票列表
@@ -131,16 +130,15 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	}
 
 	// 按发票状态获取列表
-	@SuppressWarnings("unchecked")
 	public Integer WaitingDealCountByParam(Integer user_id, Integer invoiceState) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select count(invo_id) from invoice where invo_isdelete=0 and receiver_id=:receiver_id and invo_state=:invo_state ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("receiver_id", user_id);
 		query.setParameter("invo_state", invoiceState);
-		List<Object> result = query.getResultList();
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
 		em.close();
-		return Integer.parseInt(result.get(0).toString());
+		return totalRow.intValue();
 	}
 
 	// 根据用户id，页数返回发票列表

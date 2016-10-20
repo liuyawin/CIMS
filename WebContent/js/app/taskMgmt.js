@@ -196,8 +196,8 @@ app
 							// zq根据内容查询任务列表
 							taskHtml.getTaskByKeys = function() {
 								tState = taskHtml.tState;
-								alert(tState);
-								services.getTaskBykeys({
+
+								services.getTaskByKeys({
 									context : $("#tContent").val(),
 									page : 1,
 									taskState : tState,
@@ -549,12 +549,15 @@ app
 
 							// zq初始化
 							function initData() {
-
+								$(".tiptop a").click(function() {
+									sessionStorage.setItem("contractId", "");
+									$(".overlayer").fadeOut(200);
+									$(".tip").fadeOut(200);
+								});
 								console.log("初始化页面信息");
 								if ($location.path().indexOf('/receiveTask') == 0) {
-									// contract.getContractList();
-									tState = 0;
-									taskHtml.tState = "0";
+									tState = -1;
+									taskHtml.tState = "-1";
 									sendOrReceive = 1;
 									services.getTaskList({
 										taskState : tState,
@@ -567,9 +570,8 @@ app
 
 								} else if ($location.path()
 										.indexOf('/sendTask') == 0) {
-									// contract.getOverdueContract();
-									tState = 0;
-									taskHtml.tState = "0";
+									tState = -1;
+									taskHtml.tState = "-1";
 									sendOrReceive = 0;
 									services.getTaskList({
 										taskState : tState,

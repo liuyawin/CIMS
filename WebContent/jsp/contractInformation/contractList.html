@@ -1,7 +1,7 @@
 <div class="place">
 	<span>位置：</span>
 	<ul class="placeul">
-		<li>首页</li>
+		<li><a href="/CIMS/login/toIndex.do">首页</a></li>
 		<li>合同列表</li>
 	</ul>
 </div>
@@ -27,8 +27,8 @@
 			<tr>
 				<th>编号</th>
 				<th>合同名称</th>
-				<th>本公司编号</th>
-				<th>状态</th>
+				<th>应收金额</th>
+				<th>实收金额</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -36,8 +36,8 @@
 			<tr ng-repeat="con in contracts">
 				<td>{{$index + 1}}</td>
 				<td><a class="underline" href="#contractInfo" ng-click="getConId(con.cont_id)">{{con.cont_name}}</a></td>
-				<td>{{con.cont_onum}}</td>
-				<td>{{con.cont_state | conState}}</td>
+				<td>{{con.cont_money}}</td>
+				<td>{{con.rece_totalmoney}}</td>
 				<td><a href="#contractInfo" class="tablelink underline"
 					ng-click="getConId(con.cont_id)">查看</a><a ng-show="flag==1"
 					ng-click="deleteContract()"
@@ -96,8 +96,7 @@
 						ng-model="task1.post" />邮寄
 				</div>
 				<div class="div-checkbox">
-					<input type="checkbox" ng-true-value="true" ng-false-value="false"
-						ng-model="task1.file" />归档
+					<input type="checkbox" id="selectAll" ng-click="selectAllTask()" />全选
 				</div></li>
 			<li><label>开始时间</label><input type="text"
 				ng-model="task1.task_stime" class="dfinput dateFormat"

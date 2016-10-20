@@ -17,6 +17,8 @@
 				src="${ctx}/images/logo1.png" title="系统首页" /></a>
 		</div>
 
+
+
 		<div class="topright">
 			<ul>
 				<%-- <li><span><img src="${ctx}/images/help.png" title="帮助"  class="helpimg"/></span><a href="#">帮助</a></li> --%>
@@ -26,11 +28,19 @@
 
 			<div class="user">
 
-				<span id="userNum"></span> <i>报警</i><a
+				<span id="userNum"></span> <i>消息</i><a
 					href="/CIMS/alarm/toAlarmPage.do#/debtAlarmList"><b
-					id="newsNum"></b></a>
-
+					id="newsNum">18</b></a>
 			</div>
+
+		</div>
+		<div id="news">
+			<ul>
+				<li><i>收款超时：</i><a href=""><b id="RnAlarmCnt"></b></a></li>
+				<li><i>工程超时：</i><a href=""><b id="PsAlarmCnt"></b></a></li>
+				<li><i>任务超时：</i><a href=""><b id="TskAlarmCnt"></b></a></li>
+				<li><i>新任务：</i><a href=""><b id="taskCnt"></b></a></li>
+			</ul>
 		</div>
 	</header>
 	<section class="containner">
@@ -57,9 +67,58 @@
 						}
 						$('#userNum').html(cookie.userNum);
 
-						$.getJSON("/CIMS/alarm/AlarmsTotalNum.do", {},
-								function(data) {
-									$("#newsNum").text(data.totalRow);
-								});
+						//$.getJSON("/CIMS/alarm/AlarmsTotalNum.do", {},
+						//		function(data) {
+						//			$("#newsNum").text(data.totalRow);
+						//		});
+
+						var msgCnt;
+						window.setInterval(showalert, 5000);
+						function showalert() {
+							var lastMsgCnt = sessionStorage.getItem("msgCnt");
+							$.getJSON("/CIMS/login/getInitData.do", {},
+									function(data) {
+										$("#taskCnt").text(
+												data.totalReceiveTaskNum);
+										$("#RnAlarmCnt")
+												.text(data.debtAlarmNum);
+										$("#PsAlarmCnt").text(
+												data.overdueAlarmNum);
+										$("#TskAlarmCnt").text(
+												data.taskAlarmNum);
+										msgCnt = 0 + data.totalReceiveTaskNum
+												+ data.debtAlarmNum
+												+ data.overdueAlarmNum
+												+ data.taskAlarmNum;
+										$("#newsNum").html(msgCnt);
+										if (msgCnt > lastMsgCnt) {
+											sessionStorage.setItem("msgCnt",
+													msgCnt);
+											
+											//todo--提示爆闪
+											
+											window.setTimeout(show, 3000);//取消爆闪
+										}
+
+									});
+
+						}
+						function show() {
+							//取消爆闪
+						}
+						//鼠标移到user上时显示消息的div，在消息div以外任意地方点击鼠标时消息div隐藏
+						$(".user").hover(function(){  
+				            $("#news").show();  
+				        },function(){  
+				            /* $("#news").hide();   */
+				        }) 
+				        $(document).click(function(){
+				            $("#news").hide();
+
+				        });
+						$("#news").click(function(event){
+						    event.stopPropagation();
+
+						});
 					});
 		</script>

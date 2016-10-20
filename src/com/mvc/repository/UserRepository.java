@@ -14,7 +14,7 @@ import com.mvc.entity.User;
  * @author wanghuimin
  * @date 2016年9月7日
  */
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 	// 根据ID查询用户信息
 	@Query("select u from User u where user_id = :id")
 	public User findById(@Param("id") Integer id);
@@ -30,30 +30,29 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	// 根据userNum查询用户信息
 	@Query("select u from User u where user_num = :user_num")
 	public User findByUserNum(@Param("user_num") String user_num);
-	
+
 	// 查询用户总条数
 	@Query("select count(user_id) from User u where user_isdelete=0")
 	public Long countTotal();
-	
-	//根据id删除
+
+	// 根据id删除
 	@Query("update User set user_isdelete=1 where user_id = :user_id")
 	public boolean deleteByUserId(@Param("user_id") Integer user_id);
 
-	//查询用户角色条数
+	// 查询用户角色条数
 	@Query("select count(user_id) from User u where user_id=:user_id and user_isdelete=0")
 	public Long countRoleTotal(@Param("user_id") Integer user_id);
-	
-	//判断用户是否存在
+
+	// 判断用户是否存在
 	@Query("select count(user_id) from User u where role_id=:role_id and user_isdelete=0")
 	public Long countUserByroleid(@Param("role_id") Integer role_id);
-	
-	//根据ID查看用户详情
+
+	// 根据ID查看用户详情
 	@Query("select u from User u where user_id=:user_id and user_isdelete=0")
 	public User findUserContentById(@Param("user_id") Integer user_id);
-	
-	//根据用户名查找用户id（报警）
+
+	// 根据用户名查找用户id（报警）
 	@Query("select user_id from User u where user_name=:user_name and user_isdelete=0 ")
 	public Integer findUserByUsername(@Param("user_name") String username);
-	
 
 }

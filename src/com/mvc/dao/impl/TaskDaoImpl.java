@@ -1,5 +1,6 @@
 package com.mvc.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.base.enums.TaskStatus;
 import com.mvc.dao.TaskDao;
 import com.mvc.entity.Task;
 import com.mvc.repository.SubTaskRepository;
@@ -57,7 +59,6 @@ public class TaskDaoImpl implements TaskDao {
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("task_state", state);
 			query.setParameter("task_id", id);
-
 			query.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();
@@ -106,7 +107,6 @@ public class TaskDaoImpl implements TaskDao {
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
 	// 根据状态，关键字查询任务总条数
 	public Integer countByParam(Integer user_id, Integer task_state, String searchKey, Integer sendOrReceive) {
 		EntityManager em = emf.createEntityManager();
@@ -123,9 +123,9 @@ public class TaskDaoImpl implements TaskDao {
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("task_state", task_state);
 		query.setParameter("user_id", user_id);
-		List<Object> result = query.getResultList();
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
 		em.close();
-		return Integer.parseInt(result.get(0).toString());
+		return totalRow.intValue();
 	}
 
 	// 根据合同ID和任务类型返回任务列表
@@ -141,6 +141,19 @@ public class TaskDaoImpl implements TaskDao {
 		List<Task> list = query.getResultList();
 		em.close();
 		return list;
+	}
+
+	// 根据任务类型获取任务条数
+	public Integer countByType(Integer userId, Integer taskType) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = " select count(task_id) from task where task_isdelete=0 and task_state=:task_state and receiver_id=:user_id and task_type=:task_type ";
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("task_state", TaskStatus.waitingReceipt.value);
+		query.setParameter("user_id", userId);
+		query.setParameter("task_type", taskType);
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		em.close();
+		return totalRow.intValue();
 	}
 
 }
