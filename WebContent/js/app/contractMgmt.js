@@ -302,7 +302,7 @@ app.factory('services', ['$http', 'baseUrl', function($http, baseUrl) {
 			data: data
 		});
 	};
-
+	//获取文件列表
 	services.selectFileByConId = function(data) {
 		return $http({
 			method: 'post',
@@ -310,7 +310,7 @@ app.factory('services', ['$http', 'baseUrl', function($http, baseUrl) {
 			data: data
 		});
 	};
-	
+	//删除文件
 	services.deleteFileById = function(data) {
 		return $http({
 			method: 'post',
@@ -318,6 +318,14 @@ app.factory('services', ['$http', 'baseUrl', function($http, baseUrl) {
 			data: data
 		});
 	};
+	//下载文件
+	services.downloadFileByConId = function(data) {
+		return $http({
+			method: 'post',
+			url: baseUrl + 'file/downloadFileByConId.do',
+			data: data
+		});
+	}; 
 	// zq根据合同和收款节点添加收据
 	services.addReceipt = function(data) {
 		return $http({
@@ -442,7 +450,16 @@ app.controller('ContractController', [
 		contract.getConId = function(conId) {
 			sessionStorage.setItem('conId', conId);
 		};
-
+		//根据合同ID下载相关文件
+		contract.downloadFile = function(e){
+			preventDefault(e);
+			var conId = sessionStorage.getItem("conId");
+			console.log("要下载文件的合同ID为"+conId);
+			services.downloadFileByConId({
+				conId: conId
+			}).success(function(data) {
+			});
+		}
 		function preventDefault(e) {
 			if(e && e.preventDefault) {
 				// 阻止默认浏览器动作(W3C)
@@ -465,8 +482,19 @@ app.controller('ContractController', [
 					}).success(function(data) {
 						contract.contracts = data.list;
 						contract.totalPage = data.totalPage;
-						alert("删除成功！");
+						console.log(contract.totalPage);
+						var $pages = $(".tcdPageCode");
+						if($pages.length != 0) {
+							$pages.createPage({
+								pageCount: contract.totalPage,
+								current: 1,
+								backFn: function(p) {
+									contract.getContractList(p); // 点击页码时获取第p页的数据
+								}
+							});
+						}
 						preventDefault(e);
+						alert("删除成功！");			
 					});
 				} else {
 					preventDefault(e);
@@ -476,7 +504,6 @@ app.controller('ContractController', [
 		contract.deleteFile = function(e) {
 			preventDefault(e);
 			var fileId = this.file.file_id;
-			console.log("文件的ID为："+fileId);
 			services.deleteFileById({
 				fileId : fileId
 			}).success(function(data) {
@@ -930,47 +957,6 @@ app.controller('ContractController', [
 							}
 						});
 					}
-					/*
-					 * // 点击创建任务时弹出模态框 contract.newTask = function() {
-					 * console.log("弹出模态框！"); var conId = this.con.cont_id;
-					 * services.getAllUsers().success(function(data) {
-					 * contract.users = data;
-					 * sessionStorage.setItem("contractId", conId); });
-					 * $(".overlayer").fadeIn(200); $(".tip").fadeIn(200);
-					 * return false; };
-					 * 
-					 * $(".tiptop a").click(function() {
-					 * sessionStorage.setItem("contractId", "");
-					 * $(".overlayer").fadeOut(200); $(".tip").fadeOut(200);
-					 * });
-					 * 
-					 * $(".sure").click(function() { var conId =
-					 * sessionStorage.getItem("contractId"); if
-					 * (contract.task.task_type == "1") { var task1 =
-					 * JSON.stringify(contract.task1); services.addTask({
-					 * task : task1, taskType : "1",// 1代表文书任务 conId : conId
-					 * }).success(function(data) { alert("添加文书任务成功！"); }); }
-					 * else if (contract.task.task_type == "0") { var task2 =
-					 * JSON.stringify(contract.task2); services.addTask({
-					 * task : task2, taskType : "2",// 2代表执行管控任务 conId :
-					 * conId }).success(function(data) {
-					 * alert("添加执行管控任务成功！"); }); }
-					 * $(".overlayer").fadeOut(100); $(".tip").fadeOut(100);
-					 * });
-					 * 
-					 * $(".cancel").click(function() {
-					 * sessionStorage.setItem("contractId", "");
-					 * $(".overlayer").fadeOut(100); $(".tip").fadeOut(100);
-					 * });
-					 * 
-					 * $(".taskType").change(function() { if
-					 * (contract.task.task_type == "1") {
-					 * $("#addTask1-form").slideDown(200);
-					 * $("#addTask2-form").hide(); } else if
-					 * (contract.task.task_type == "0") {
-					 * $("#addTask1-form").hide();
-					 * $("#addTask2-form").slideDown(200); } });
-					 */
 				});
 
 			} else if($location.path().indexOf('/debtContract') == 0) {

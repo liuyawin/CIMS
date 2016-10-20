@@ -29,9 +29,10 @@
 				<span id="userNum"></span> <i>报警</i><a
 					href="/CIMS/alarm/toAlarmPage.do#/debtAlarmList"><b
 					id="newsNum"></b></a>
-
+				
 			</div>
 		</div>
+		<div class="news"></div>
 	</header>
 	<section class="containner">
 		<script type="text/javascript" src="${ctx}/js/lib/jquery-1.9.1.min.js"></script>
