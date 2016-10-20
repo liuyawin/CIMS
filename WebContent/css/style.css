@@ -201,9 +201,10 @@ h2 {
 	padding-left: 35px;
 }
 
-.news{
-	width:120px;
-	height:120px;
+#news{
+	display:none;
+	width:100px;
+	height:115px;
 	border:1px solid #DDD;
 	border-radius:2px;
 	position:absolute;
@@ -213,6 +214,16 @@ h2 {
 	z-index:1111;
 }
 
+#news li{
+	padding:6px 12px;
+	border-bottom:1px solid #DDD;
+	
+}
+
+#news li i{
+	font-family:"微软雅黑";
+	font-style: normal;
+}
 
 .user b {
 	display: inline-block;
