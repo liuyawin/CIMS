@@ -252,9 +252,10 @@ app.controller('ContractController', [
 				$('#renoHide').hide();
 			}
 			// zq添加发票任务
-			contract.addInvoiceTask = function() {
+			contract.addInvoiceTask = function(contId) {
 				selectAllUsers();
-				var contId = this.con.cont_id;
+				/*var contId = this.con.cont_id;*/
+				sessionStorage.setItem("conId",contId);
 				$("#tipAdd").fadeIn(200);
 				$(".overlayer").fadeIn(200);
 
@@ -264,7 +265,7 @@ app.controller('ContractController', [
 				var taskFormData = JSON.stringify(contract.invoice);
 				services.addInvoiceTask({
 					invoice : taskFormData,
-					contId : contId
+					contId : sessionStorage.getItem("conId")
 				}).success(function(data) {
 
 					$("#tipAdd").fadeOut(100);
@@ -306,9 +307,40 @@ app.controller('ContractController', [
 							cookieString.length);
 					console.log(name);
 					cookie[name.trim()] = value;
-					console.log("进来了,已经赋值" + name);
 					if (name.trim() == "role") {
-						sessionStorage.setItem("userRole", value);
+						sessionStorage.setItem("userRole",
+								value);
+						role = value;
+						switch (sessionStorage.getItem(
+								'userRole').trim()) {
+						case "1":
+							invoice.invoAddShow = true;
+							invoice.invoAuditShow = true;
+							invoice.invoFinishShow = true;
+							break;
+						case "2":
+							invoice.invoAddShow = false;
+							invoice.invoAuditShow = false;
+							invoice.invoFinishShow = false;
+
+							break;
+						case "3":
+							invoice.invoAddShow = false;
+							invoice.invoAuditShow = false;
+							invoice.invoFinishShow = true;
+
+							break;
+						case "4":
+							invoice.invoAddShow = true;
+							invoice.invoAuditShow = false;
+							invoice.invoFinishShow = false;
+							break;
+						case "5":
+							invoice.invoAddShow = false;
+							invoice.invoAuditShow = true;
+							invoice.invoFinishShow = false;
+							break;
+						}
 					}
 
 				}

@@ -146,7 +146,7 @@ app
 						}
 						break;
 					case "3":
-						var keys3 = " cBodyEdit debtAlarmNum overdueAlarmNum managerControlTaskNum cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
+						var keys3 = " cBodyEdit debtAlarmNum billTaskNum overdueAlarmNum managerControlTaskNum cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
 						var regStr3 = "\\s" + key + "\\s";
 						var reg3 = new RegExp(regStr3);
 						if (keys3.search(reg3) < 0) {
