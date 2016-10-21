@@ -442,6 +442,7 @@ app.controller('ContractController', [
 		contract.getConId = function(conId) {
 			sessionStorage.setItem('conId', conId);
 		};
+		//阻止默认事件
 		function preventDefault(e) {
 			if(e && e.preventDefault) {
 				// 阻止默认浏览器动作(W3C)
