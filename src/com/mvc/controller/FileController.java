@@ -185,9 +185,16 @@ public class FileController {
 	 * @throws IOException
 	 */
 	@RequestMapping("/download.do")
+<<<<<<< HEAD
 	public ResponseEntity<byte[]> downloadFiles(HttpServletRequest request, HttpSession session) throws IOException {
 		ResponseEntity<byte[]> byteArr = null;
 		int cont_id = (int) session.getAttribute("cont_id");// 从session中获取cont_id
+=======
+	public ResponseEntity<byte[]> downloadFiles(HttpServletRequest request,HttpSession session) throws IOException {
+		ResponseEntity<byte[]> byteArr = null;
+		int cont_id = (int) session.getAttribute("cont_id");
+		List<File> files = new ArrayList<File>();// 文件list
+>>>>>>> 9f308ba4aaa5a47bbc76bf9d00a46875d3828f70
 		List<Files> list = fileService.findFileByConId(cont_id);
 		// 在服务器端创建打包下载的临时文件
 		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/download");

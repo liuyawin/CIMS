@@ -318,14 +318,6 @@ app.factory('services', ['$http', 'baseUrl', function($http, baseUrl) {
 			data: data
 		});
 	};
-	//下载文件
-	services.downloadFileByConId = function(data) {
-		return $http({
-			method: 'post',
-			url: baseUrl + 'file/download.do',
-			data: data
-		});
-	}; 
 	// zq根据合同和收款节点添加收据
 	services.addReceipt = function(data) {
 		return $http({
@@ -450,16 +442,6 @@ app.controller('ContractController', [
 		contract.getConId = function(conId) {
 			sessionStorage.setItem('conId', conId);
 		};
-		//根据合同ID下载相关文件
-		contract.downloadFile = function(e){
-			preventDefault(e);
-			var conId = sessionStorage.getItem("conId");
-			console.log("要下载文件的合同ID为"+conId);
-			services.downloadFileByConId({
-				conId: conId
-			}).success(function(data) {
-			});
-		}
 		function preventDefault(e) {
 			if(e && e.preventDefault) {
 				// 阻止默认浏览器动作(W3C)
