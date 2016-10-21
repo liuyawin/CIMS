@@ -211,18 +211,18 @@ public class LoginController {
 	public @ResponseBody String getInitData(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-
-		AlarmStatistic alarmStatistic = alarmStatisticService.findAlst(user.getUser_id());
-		jsonObject.put("totalReceiveTaskNum", alarmStatistic.getTotal_receive_task_num());
-		jsonObject.put("waitAuditBillTaskNum", alarmStatistic.getWait_audit_bill_task_num());
-		jsonObject.put("assistantTaskNum", alarmStatistic.getAssistant_task_num());
-		jsonObject.put("managerControlTaskNum", alarmStatistic.getManager_control_task_num());
-		jsonObject.put("billTaskNum", alarmStatistic.getBill_task_num());
-		jsonObject.put("otherTaskNum", alarmStatistic.getOther_task_num());
-		jsonObject.put("debtAlarmNum", alarmStatistic.getDebt_alarm_num());
-		jsonObject.put("overdueAlarmNum", alarmStatistic.getOverdue_alarm_num());
-		jsonObject.put("taskAlarmNum", alarmStatistic.getTask_alarm_num());
-
+		if (user != null) {
+			AlarmStatistic alarmStatistic = alarmStatisticService.findAlst(user.getUser_id());
+			jsonObject.put("totalReceiveTaskNum", alarmStatistic.getTotal_receive_task_num());
+			jsonObject.put("waitAuditBillTaskNum", alarmStatistic.getWait_audit_bill_task_num());
+			jsonObject.put("assistantTaskNum", alarmStatistic.getAssistant_task_num());
+			jsonObject.put("managerControlTaskNum", alarmStatistic.getManager_control_task_num());
+			jsonObject.put("billTaskNum", alarmStatistic.getBill_task_num());
+			jsonObject.put("otherTaskNum", alarmStatistic.getOther_task_num());
+			jsonObject.put("debtAlarmNum", alarmStatistic.getDebt_alarm_num());
+			jsonObject.put("overdueAlarmNum", alarmStatistic.getOverdue_alarm_num());
+			jsonObject.put("taskAlarmNum", alarmStatistic.getTask_alarm_num());
+		}
 		return jsonObject.toString();
 	}
 }
