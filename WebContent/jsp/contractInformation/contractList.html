@@ -31,6 +31,7 @@
 				<th>实收金额</th>
 				<th>工期阶段</th>
 				<th>收款节点</th>
+				<th>合同状态</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -42,6 +43,7 @@
 				<td>{{con.rece_totalmoney}}</td>
 				<td>{{con.cur_prst}}</td>
 				<td>{{con.cur_reno}}</td>
+				<td>{{con.cont_state}}</td>
 				<td><a href="#contractInfo" class="tablelink underline"
 					ng-click="getConId(con.cont_id)">查看</a><a ng-show="flag==1"
 					ng-click="deleteContract()"
@@ -70,7 +72,7 @@
 				<input class="taskType" type="radio" value="1" ng-model="task.task_type">文书任务
 			</div>
 			<div class="radio-div">
-				<input class="taskType" type="radio" value="0" ng-model="task.task_type">执行管控任务
+				<input class="taskType" type="radio" value="0" ng-model="task.task_type">补录合同信息
 			</div>
 		</div>
 	</div>
