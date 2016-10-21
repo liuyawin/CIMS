@@ -29,4 +29,5 @@ public interface ContractDao {
 
 	// 修改合同基本信息
 	Boolean updateConById(Integer cont_id, Contract contract);
+
 }
