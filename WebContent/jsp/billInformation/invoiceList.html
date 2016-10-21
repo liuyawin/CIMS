@@ -11,14 +11,14 @@
 	<div class="formtitle">
 		<span>发票详情</span>
 	</div>
-	<div>
+	<div id="invoPrompt">
 		<label class="text_style">合同总金额 {{cont.cont_money |
 			invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
 			| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
 			次发票！</label>
 	</div>
 
-	<ul class="toolbar1">
+	<ul class="toolbar1" ng-show="invoAddShow">
 		<li class="click"><a
 			href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img
 					src="../images/t01.png" /></span>开发票</a></li>
@@ -54,8 +54,8 @@
 
 				<td class="width10"><a ng-click="selectInvoiceById()"
 					class="tablelink underline">查看</a><a ng-click="invoiceInfo()"
-					class="tablelink underline">审核</a><a
-					ng-click="updateInvoiceState()" class="tablelink underline">完成</a></td>
+					class="tablelink underline" ng-show="invoAuditShow">审核</a><a
+					ng-click="updateInvoiceState()" class="tablelink underline" ng-show="invoFinishShow">完成</a></td>
 
 			</tr>
 		</tbody>

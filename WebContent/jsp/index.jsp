@@ -26,12 +26,12 @@
 		</div>
 
 		<ul class="infolist">
-			<li><a
+			<li has-permission='waitAuditBillTaskNum'><a
 				href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList"
 				class="">待审核发票任务：{{waitAuditBillTaskNum}}</a></li>
-			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">文书任务：{{assistantTaskNum}}</a></li>
-			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">执行管控任务：{{managerControlTaskNum}}</a></li>
-			<li><a
+			<li has-permission='assistantTaskNum'><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">文书任务：{{assistantTaskNum}}</a></li>
+			<li has-permission='managerControlTaskNum'><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">执行管控任务：{{managerControlTaskNum}}</a></li>
+			<li has-permission='billTaskNum'><a
 				href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList"
 				class="">发票任务： {{billTaskNum}}</a></li>
 			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">其他任务：{{otherTaskNum}}</a></li>
@@ -42,9 +42,9 @@
 		</div>
 
 		<ul class="infolist">
-			<li><a href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList"
+			<li has-permission='debtAlarmNum'><a href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList"
 				class="">收款超时：{{debtAlarmNum}}</a></li>
-			<li><a href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList"
+			<li has-permission='overdueAlarmNum'><a href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList"
 				class="">工程逾期：{{overdueAlarmNum}}</a></li>
 			<li><a href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList"
 				class="">任务超时：{{taskAlarmNum}}</a></li>
