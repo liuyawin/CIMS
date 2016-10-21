@@ -109,7 +109,7 @@
 				initData();
 				var msgCnt;
 				var title = document.title;
-				window.setInterval(showalert, 5000);
+				//window.setInterval(showalert, 5000);
 				function showalert() {
 					var lastMsgCnt = sessionStorage.getItem("msgCnt");
 					$.getJSON("/CIMS/login/getInitData.do", {}, function(data) {
