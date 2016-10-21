@@ -96,9 +96,9 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		String countSql = " select sum(invo_money) from invoice i where contract_id=:contract_id ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("contract_id", contId);
-		List<Object> result = query.getResultList();
+		List<Object> totalRow = query.getResultList();
 		em.close();
-		return Float.valueOf(result.get(0).toString());
+		return Float.valueOf(totalRow.get(0).toString());
 	}
 
 	// 根据用户id，页数返回发票列表
@@ -137,9 +137,9 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("receiver_id", user_id);
 		query.setParameter("invo_state", invoiceState);
-		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		List<Object> totalRow = query.getResultList();
 		em.close();
-		return totalRow.intValue();
+		return Integer.parseInt(totalRow.get(0).toString());
 	}
 
 	// 根据用户id，页数返回发票列表
