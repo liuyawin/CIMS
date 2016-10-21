@@ -213,15 +213,51 @@ public class LoginController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		if (user != null) {
 			AlarmStatistic alarmStatistic = alarmStatisticService.findAlst(user.getUser_id());
-			jsonObject.put("totalReceiveTaskNum", alarmStatistic.getTotal_receive_task_num());
-			jsonObject.put("waitAuditBillTaskNum", alarmStatistic.getWait_audit_bill_task_num());
-			jsonObject.put("assistantTaskNum", alarmStatistic.getAssistant_task_num());
-			jsonObject.put("managerControlTaskNum", alarmStatistic.getManager_control_task_num());
-			jsonObject.put("billTaskNum", alarmStatistic.getBill_task_num());
-			jsonObject.put("otherTaskNum", alarmStatistic.getOther_task_num());
-			jsonObject.put("debtAlarmNum", alarmStatistic.getDebt_alarm_num());
-			jsonObject.put("overdueAlarmNum", alarmStatistic.getOverdue_alarm_num());
-			jsonObject.put("taskAlarmNum", alarmStatistic.getTask_alarm_num());
+			if (alarmStatistic.getTotal_receive_task_num() == null) {
+				jsonObject.put("totalReceiveTaskNum", 0);
+			} else {
+				jsonObject.put("totalReceiveTaskNum", alarmStatistic.getTotal_receive_task_num());
+			}
+			if (alarmStatistic.getWait_audit_bill_task_num() == null) {
+				jsonObject.put("waitAuditBillTaskNum", 0);
+			} else {
+				jsonObject.put("waitAuditBillTaskNum", alarmStatistic.getWait_audit_bill_task_num());
+			}
+			if (alarmStatistic.getAssistant_task_num() == null) {
+				jsonObject.put("assistantTaskNum", 0);
+			} else {
+				jsonObject.put("assistantTaskNum", alarmStatistic.getAssistant_task_num());
+			}
+			if (alarmStatistic.getManager_control_task_num() == null) {
+				jsonObject.put("managerControlTaskNum", 0);
+			} else {
+				jsonObject.put("managerControlTaskNum", alarmStatistic.getManager_control_task_num());
+			}
+			if (alarmStatistic.getBill_task_num() == null) {
+				jsonObject.put("billTaskNum", 0);
+			} else {
+				jsonObject.put("billTaskNum", alarmStatistic.getBill_task_num());
+			}
+			if (alarmStatistic.getOther_task_num() == null) {
+				jsonObject.put("otherTaskNum", 0);
+			} else {
+				jsonObject.put("otherTaskNum", alarmStatistic.getOther_task_num());
+			}
+			if (alarmStatistic.getDebt_alarm_num() == null) {
+				jsonObject.put("debtAlarmNum", 0);
+			} else {
+				jsonObject.put("debtAlarmNum", alarmStatistic.getDebt_alarm_num());
+			}
+			if (alarmStatistic.getOverdue_alarm_num() == null) {
+				jsonObject.put("overdueAlarmNum", 0);
+			} else {
+				jsonObject.put("overdueAlarmNum", alarmStatistic.getOverdue_alarm_num());
+			}
+			if (alarmStatistic.getTask_alarm_num() == null) {
+				jsonObject.put("taskAlarmNum", 0);
+			} else {
+				jsonObject.put("taskAlarmNum", alarmStatistic.getTask_alarm_num());
+			}
 		}
 		return jsonObject.toString();
 	}
