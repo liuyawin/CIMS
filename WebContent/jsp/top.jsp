@@ -42,6 +42,10 @@
 				<li><a href="${ctx}/task/toTaskPage.do#/receiveTask">新任务：<b id="taskCnt"></b></a></li>
 			</ul>
 		</div>
+		<audio id="audio" class="hidden">
+			<source src="${ctx}/audio/Msg.mp3"></source>
+			<source src="${ctx}/audio/msg.wav"></source>
+		</audio>
 	</header>
 	<section class="containner">
 		<script type="text/javascript" src="${ctx}/js/lib/jquery-1.9.1.min.js"></script>
@@ -109,7 +113,7 @@
 				initData();
 				var msgCnt;
 				var title = document.title;
-				//window.setInterval(showalert, 5000);
+				window.setInterval(showalert, 5000);
 				function showalert() {
 					var lastMsgCnt = sessionStorage.getItem("msgCnt");
 					$.getJSON("/CIMS/login/getInitData.do", {}, function(data) {
@@ -125,7 +129,7 @@
 						if (msgCnt > lastMsgCnt) {
 							//todo--提示爆闪
 							var timerArr = show();
-							console.log("执行到这里");
+							$('#audio')[0].play();
 							setTimeout(function() { //此处是过一定时间后自动消失
 								clear(timerArr);
 							}, 5000);
