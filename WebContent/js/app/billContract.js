@@ -257,30 +257,31 @@ app.controller('ContractController', [
 				var contId = this.con.cont_id;
 				$("#tipAdd").fadeIn(200);
 				$(".overlayer").fadeIn(200);
-				$("#sureAdd").click(function() {
 
-					var taskFormData = JSON.stringify(contract.invoice);
-					services.addInvoiceTask({
-						invoice : taskFormData,
-						contId : contId
-					}).success(function(data) {
+			};
+			$("#sureAdd").click(function() {
 
-						$("#tipAdd").fadeOut(100);
-						$(".overlayer").fadeOut(200);
-						contract.invoice = "";
-						alert("添加成功！");
+				var taskFormData = JSON.stringify(contract.invoice);
+				services.addInvoiceTask({
+					invoice : taskFormData,
+					contId : contId
+				}).success(function(data) {
 
-					});
-				});
-
-				$("#cancelAdd").click(function() {
 					$("#tipAdd").fadeOut(100);
 					$(".overlayer").fadeOut(200);
 					contract.invoice = "";
+					alert("添加成功！");
 
 				});
+			});
 
-			};
+			$("#cancelAdd").click(function() {
+				$("#tipAdd").fadeOut(100);
+				$(".overlayer").fadeOut(200);
+				contract.invoice = "";
+
+			});
+
 			// zq获取所有用户
 			function selectAllUsers() {
 				services.selectAllUsers({}).success(function(data) {
@@ -514,66 +515,66 @@ app.directive("dateFormat", function() {
 	}
 });
 app
-.directive(
-		'hasPermission',
-		function($timeout) {
-			return {
-				restrict : 'A',
-				link : function(scope, element, attr) {
+		.directive(
+				'hasPermission',
+				function($timeout) {
+					return {
+						restrict : 'A',
+						link : function(scope, element, attr) {
 
-					var key = attr.hasPermission.trim(); // 获取页面上的权限值
-					console.log("获取页面上的权限值" + key);
-					/* console.log("cookie内容" + JSON.stringify(cookie)); */
-					/*
-					 * if (sessionStorage.getItem('userRole').trim() ==
-					 * "3") { element.css("display", "none"); }
-					 */
-					switch (sessionStorage.getItem('userRole').trim()) {
-					case "1":
-						var keys1 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-						var regStr1 = "\\s" + key + "\\s";
-						var reg1 = new RegExp(regStr1);
-						if (keys1.search(reg1) < 0) {
-							element.css("display", "none");
+							var key = attr.hasPermission.trim(); // 获取页面上的权限值
+							console.log("获取页面上的权限值" + key);
+							/* console.log("cookie内容" + JSON.stringify(cookie)); */
+							/*
+							 * if (sessionStorage.getItem('userRole').trim() ==
+							 * "3") { element.css("display", "none"); }
+							 */
+							switch (sessionStorage.getItem('userRole').trim()) {
+							case "1":
+								var keys1 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
+								var regStr1 = "\\s" + key + "\\s";
+								var reg1 = new RegExp(regStr1);
+								if (keys1.search(reg1) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "2":
+								var keys2 = " tContDetail ";
+								var regStr2 = "\\s" + key + "\\s";
+								var reg2 = new RegExp(regStr2);
+								if (keys2.search(reg2) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "3":
+								var keys3 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
+								var regStr3 = "\\s" + key + "\\s";
+								var reg3 = new RegExp(regStr3);
+								if (keys3.search(reg3) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "4":
+								var keys4 = " bInvoAdd tContDetail ";
+								var regStr4 = "\\s" + key + "\\s";
+								var reg4 = new RegExp(regStr4);
+								if (keys4.search(reg4) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "5":
+								var keys5 = " cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
+								var regStr5 = "\\s" + key + "\\s";
+								var reg5 = new RegExp(regStr5);
+								if (keys5.search(reg5) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							}
 						}
-						break;
-					case "2":
-						var keys2 = " tContDetail ";
-						var regStr2 = "\\s" + key + "\\s";
-						var reg2 = new RegExp(regStr2);
-						if (keys2.search(reg2) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "3":
-						var keys3 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
-						var regStr3 = "\\s" + key + "\\s";
-						var reg3 = new RegExp(regStr3);
-						if (keys3.search(reg3) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "4":
-						var keys4 = " bInvoAdd tContDetail ";
-						var regStr4 = "\\s" + key + "\\s";
-						var reg4 = new RegExp(regStr4);
-						if (keys4.search(reg4) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "5":
-						var keys5 = " cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-						var regStr5 = "\\s" + key + "\\s";
-						var reg5 = new RegExp(regStr5);
-						if (keys5.search(reg5) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					}
-				}
-			};
+					};
 
-		});
+				});
 
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:

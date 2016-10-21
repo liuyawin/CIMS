@@ -29,7 +29,7 @@ public class AlarmStatisticDaoImpl implements AlarmStatisticDao {
 	public AlarmStatistic findAlst(Integer user_id) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select * from (select sum(case when task_state=1 then 1 else 0 end) total_receive_task_num,");// 当前用户接收的所有任务
+		sql.append("select * from (select sum(case when task_state=0 then 1 else 0 end) total_receive_task_num,");// 当前用户接收的所有任务
 		sql.append("sum(case when task_state=0 and task_type=1 then 1 else 0 end) assistant_task_num,");// 文书任务
 		sql.append("sum(case when task_state=0 and task_type=2 then 1 else 0 end) manager_control_task_num,");// 执行管控任务
 		sql.append("sum(case when task_state=0 and task_type=0 then 1 else 0 end) other_task_num ");// 普通任务

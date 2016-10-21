@@ -59,14 +59,34 @@
 					</div></td>
 				<td>{{t.creator.user_name}}</td>
 				<td>{{t.task_alarmnum}}</td>
-				<td has-permission='tContCollect'><a class="tablelink"
+				<td has-permission='tContCollect'><div ng-switch={{t.task_type}}>
+						<div ng-switch-when="0"></div>
+						<div ng-switch-when="1"><a class="tablelink"
 					href="/CIMS/contract/toContractPage.do#/contractDetail"
 					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></td>
-				<td has-permission='tContDetail'><a class="tablelink"
+						|cutString}}</a></div>
+						<div ng-switch-when="2"><a class="tablelink"
+					href="/CIMS/contract/toContractPage.do#/contractDetail"
+					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+						|cutString}}</a></div>
+						
+					</div></td>
+				<td has-permission='tContDetail'><div ng-switch={{t.task_type}}>
+						<div ng-switch-when="0"></div>
+						<div ng-switch-when="1"><a class="tablelink"
 					href="/CIMS/contract/toContractPage.do#/contractInfo"
 					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></td>
+						|cutString}}</a></div>
+						<div ng-switch-when="2"><a class="tablelink"
+					href="/CIMS/contract/toContractPage.do#/contractInfo"
+					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+						|cutString}}</a></div>
+						
+					</div></td>
+				<td><a ng-click="checkTask()" class="tablelink">查看</a><a
+					ng-click="finishTask()" class="tablelink finishLabel">完成</a><a
+					ng-click="delTask()" class="tablelink delLabel">删除</a></td>
+
 				<td><a ng-click="checkTask()" class="tablelink">查看</a><a
 					ng-click="finishTask()" class="tablelink finishLabel">完成</a><a
 					ng-click="delTask()" class="tablelink delLabel">删除</a></td>
