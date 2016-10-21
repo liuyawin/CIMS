@@ -175,6 +175,7 @@ invoiceApp
 						function($scope, services, $location) {
 							// 合同
 							var invoice = $scope;
+							var role;
 							invoice.invoState;
 							// zq查看合同ID，并记入sessione
 							invoice.getContId = function(contId) {
@@ -334,6 +335,61 @@ invoiceApp
 								$(".overlayer").fadeOut(100);
 								$("#sendInvoTask").fadeOut(100);
 							});
+							function findRoleFromCookie() {
+								var cookie = {};
+
+								var cookies = document.cookie;
+								if (cookies === "")
+									return cookie;
+								var list = cookies.split(";");
+								for (var i = 0; i < list.length; i++) {
+									var cookieString = list[i];
+									/* console.log("cookie内容" + cookieString); */
+									var p = cookieString.indexOf("=");
+									var name = cookieString.substring(0, p);
+									var value = cookieString.substring(p + 1,
+											cookieString.length);
+
+									cookie[name.trim()] = value;
+
+									if (name.trim() == "role") {
+										sessionStorage.setItem("userRole",
+												value);
+										role = value;
+										switch (sessionStorage.getItem(
+												'userRole').trim()) {
+										case "1":
+											invoice.invoAddShow = true;
+											invoice.invoAuditShow = true;
+											invoice.invoFinishShow = true;
+											break;
+										case "2":
+											invoice.invoAddShow = false;
+											invoice.invoAuditShow = false;
+											invoice.invoFinishShow = false;
+
+											break;
+										case "3":
+											invoice.invoAddShow = false;
+											invoice.invoAuditShow = false;
+											invoice.invoFinishShow = true;
+
+											break;
+										case "4":
+											invoice.invoAddShow = true;
+											invoice.invoAuditShow = false;
+											invoice.invoFinishShow = false;
+											break;
+										case "5":
+											invoice.invoAddShow = false;
+											invoice.invoAuditShow = true;
+											invoice.invoFinishShow = false;
+											break;
+										}
+									}
+
+								}
+							}
 
 							// zq初始化页面信息
 							function initData() {
@@ -354,40 +410,64 @@ invoiceApp
 								} else if ($location.path().indexOf(
 
 								'/invoiceTaskList') == 0) {
+									$("#invoPrompt").hide();
 									// 根据权限判断显示待处理的发票
-									invoState = 0;
-									services.getZRInvoice({
-										page : 1,
-										invoState : invoState
-									}).success(function(data) {
-										invoice.invoices = data.list;
-										var $pages = $(".tcdPageCode");
-										if ($pages.length != 0) {
-											$(".tcdPageCode").createPage({
-												pageCount : data.totalPage,
-												current : 1,
-												backFn : function(p) {
+									if (role == "5") {
+										invoState = 0;
+										services
+												.getZRInvoice({
+													page : 1,
+													invoState : invoState
+												})
+												.success(
+														function(data) {
+															invoice.invoices = data.list;
+															var $pages = $(".tcdPageCode");
+															if ($pages.length != 0) {
+																$(
+																		".tcdPageCode")
+																		.createPage(
+																				{
+																					pageCount : data.totalPage,
+																					current : 1,
+																					backFn : function(
+																							p) {
 
-													getZRInvoice(p, invoState);
-												}
-											});
-										}
-									});
-
-									// 根据权限显示待处理的发票
-									/*
-									 * invoState=1; services
-									 * .getWaitingDealInvoice({ page : 1,
-									 * invoState : invoState }) .success(
-									 * function(data) { invoice.invoices =
-									 * data.list; var $pages =
-									 * $(".tcdPageCode"); if ($pages.length !=
-									 * 0) { $(".tcdPageCode") .createPage( {
-									 * pageCount : data.totalPage, current : 1,
-									 * backFn : function( p) {
-									 * getWaitingDealInvoice( p, invoState); }
-									 * }); } });
-									 */
+																						getZRInvoice(
+																								p,
+																								invoState);
+																					}
+																				});
+															}
+														});
+									} else if (role == "3") {
+										invoState = 1;
+										services
+												.getWaitingDealInvoice({
+													page : 1,
+													invoState : invoState
+												})
+												.success(
+														function(data) {
+															invoice.invoices = data.list;
+															var $pages = $(".tcdPageCode");
+															if ($pages.length != 0) {
+																$(
+																		".tcdPageCode")
+																		.createPage(
+																				{
+																					pageCount : data.totalPage,
+																					current : 1,
+																					backFn : function(
+																							p) {
+																						getWaitingDealInvoice(
+																								p,
+																								invoState);
+																					}
+																				});
+															}
+														});
+									}
 
 								}
 							}
@@ -408,7 +488,9 @@ invoiceApp
 													.css('display', 'none');
 										});
 							}
+							findRoleFromCookie();
 							initData();// 初始化
+
 							dateformat();// 格式化日期格式
 						} ]);
 
@@ -494,7 +576,68 @@ invoiceApp.filter('invoState', function() {
 		return state;
 	}
 });
+app
+		.directive(
+				'hasPermission',
+				function($timeout) {
+					return {
+						restrict : 'A',
+						link : function(scope, element, attr) {
 
+							var key = attr.hasPermission.trim(); // 获取页面上的权限值
+							console.log("获取页面上的权限值" + key);
+							/* console.log("cookie内容" + JSON.stringify(cookie)); */
+							/*
+							 * if (sessionStorage.getItem('userRole').trim() ==
+							 * "3") { element.css("display", "none"); }
+							 */
+							switch (sessionStorage.getItem('userRole').trim()) {
+							case "1":
+								var keys1 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
+								var regStr1 = "\\s" + key + "\\s";
+								var reg1 = new RegExp(regStr1);
+								if (keys1.search(reg1) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "2":
+								var keys2 = " tContDetail ";
+								var regStr2 = "\\s" + key + "\\s";
+								var reg2 = new RegExp(regStr2);
+								if (keys2.search(reg2) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "3":
+								var keys3 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
+								var regStr3 = "\\s" + key + "\\s";
+								var reg3 = new RegExp(regStr3);
+								if (keys3.search(reg3) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "4":
+								var keys4 = " bInvoAdd tContDetail ";
+								var regStr4 = "\\s" + key + "\\s";
+								var reg4 = new RegExp(regStr4);
+								if (keys4.search(reg4) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "5":
+								var keys5 = " cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
+								var regStr5 = "\\s" + key + "\\s";
+								var reg5 = new RegExp(regStr5);
+
+								if (keys5.search(reg5) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							}
+						}
+					};
+
+				});
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
  * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,

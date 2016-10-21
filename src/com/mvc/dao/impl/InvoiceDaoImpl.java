@@ -90,14 +90,15 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	}
 
 	// 根据合同ID查询发票总金额
+	@SuppressWarnings("unchecked")
 	public Float totalMoneyOfInvoice(Integer contId) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select sum(invo_money) from invoice i where contract_id=:contract_id ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("contract_id", contId);
-		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		List<Object> result = query.getResultList();
 		em.close();
-		return totalRow.floatValue();
+		return Float.valueOf(result.get(0).toString());
 	}
 
 	// 根据用户id，页数返回发票列表

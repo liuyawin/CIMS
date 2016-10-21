@@ -36,10 +36,10 @@
 		</div>
 		<div id="news">
 			<ul>
-				<li><i>收款超时：</i><a href=""><b id="RnAlarmCnt"></b></a></li>
-				<li><i>工程超时：</i><a href=""><b id="PsAlarmCnt"></b></a></li>
-				<li><i>任务超时：</i><a href=""><b id="TskAlarmCnt"></b></a></li>
-				<li><i>新任务：</i><a href=""><b id="taskCnt"></b></a></li>
+				<li><a href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款超时：<b id="RnAlarmCnt"></b></a></li>
+				<li><a href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList">工程超时：<b id="PsAlarmCnt"></b></a></li>
+				<li><a href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList">任务超时：<b id="TskAlarmCnt"></b></a></li>
+				<li><a href="${ctx}/task/toTaskPage.do#/receiveTask">新任务：<b id="taskCnt"></b></a></li>
 			</ul>
 		</div>
 	</header>

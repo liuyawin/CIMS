@@ -15,7 +15,7 @@
 				class="btn" type="submit" value="查询" ng-click="selectConByName()">
 		</form>
 
-		<ul class="toolbar1">
+		<ul class="toolbar1" has-permission='uUserAdd'>
 			<li class="click"><a href="#/userAdd"><span><img
 						src="../images/t01.png" /></span>新建</a></li>
 		</ul>
@@ -39,7 +39,7 @@
 				<td>{{user.user_name}}</td>
 				<td>{{user.user_tel}}</td>
 				<td><a href="#" class="tablelink">查看</a><a href="#"
-					class="tablelink"> 修改</a><a ng-click="deleteUser(user.user_id)"  class="tablelink"> 删除</a></td>
+					class="tablelink" has-permission='uUserEdit'> 修改</a><a ng-click="deleteUser(user.user_id)"  class="tablelink" has-permission='uUserDel'> 删除</a></td>
 			</tr>
 		</tbody>
 	</table>

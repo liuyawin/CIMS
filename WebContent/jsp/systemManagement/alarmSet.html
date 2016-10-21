@@ -18,7 +18,7 @@
 				class="btn" type="submit" value="查询" ng-click="selectAlarmByName()">
 		</form>
 
-		<ul class="toolbar1">
+		<ul class="toolbar1" has-permission='uAlarmAdd'>
 			<li class="click" ng-click="addNewAlarmLevel()"><a href=""><span><img
 						src="../images/t01.png" /></span>新建</a></li>
 		</ul>
@@ -42,9 +42,9 @@
 				<td>{{level.role.role_name}}</td>
 				<td>{{level.alle_rank| alleRank}}</td>
 				<td>{{level.alle_days}}</td>
-				<td><a class="tablelink underline" ng-click="edit(this)">修改</a><a
+				<td><a class="tablelink underline" ng-click="edit(this)" has-permission='uAlarmEdit'>修改</a><a
 					ng-click="deleteAlarmLevel(this)" href="#alarmSet"
-					class="tablelink underline"> 删除</a><label class="hidden">{{level.alle_id}}</label></td>
+					class="tablelink underline" has-permission='uAlarmDel'> 删除</a><label class="hidden">{{level.alle_id}}</label></td>
 			</tr>
 		</tbody>
 	</table>

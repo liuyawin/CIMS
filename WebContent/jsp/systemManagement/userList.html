@@ -17,7 +17,7 @@
 				ng-click="selectUserByName()">
 		</form>
 
-		<ul class="toolbar1">
+		<ul class="toolbar1" has-permission='uUserAdd'>
 			<li class="click" ng-click="addNewUser()"><a href="#"><span><img
 						src="../images/t01.png" /></span>新建</a></li>
 		</ul>
@@ -42,9 +42,9 @@
 				<td>{{user.user_name}}</td>
 				<td>{{user.user_tel}}</td>
 				<td>{{user.role.role_name}}</td>
-				<td><a ng-click="editUserBtn(this)" class="tablelink"> 修改</a><a
+				<td><a ng-click="editUserBtn(this)" class="tablelink" has-permission='uUserEdit'> 修改</a><a
 					href="#userList" ng-click="deleteUser(user.user_id)"
-					class="tablelink"> 删除</a></td>
+					class="tablelink" has-permission='uUserDel'> 删除</a></td>
 			</tr>
 		</tbody>
 	</table>

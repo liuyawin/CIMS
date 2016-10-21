@@ -36,8 +36,8 @@
 				<th>状态</th>
 				<th>创建者</th>
 				<th>报警次数</th>
-				<th>补录合同</th>
-				<th>查看合同</th>
+				<th has-permission='tContCollect'>补录合同</th>
+				<th has-permission='tContDetail'>查看合同</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -59,11 +59,11 @@
 					</div></td>
 				<td>{{t.creator.user_name}}</td>
 				<td>{{t.task_alarmnum}}</td>
-				<td><a class="tablelink"
+				<td has-permission='tContCollect'><a class="tablelink"
 					href="/CIMS/contract/toContractPage.do#/contractDetail"
 					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
 						|cutString}}</a></td>
-				<td><a class="tablelink"
+				<td has-permission='tContDetail'><a class="tablelink"
 					href="/CIMS/contract/toContractPage.do#/contractInfo"
 					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
 						|cutString}}</a></td>
