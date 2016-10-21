@@ -106,14 +106,10 @@
 				}
 				$('#userNum').html(cookie.userNum);
 
-				//$.getJSON("/CIMS/alarm/AlarmsTotalNum.do", {},
-				//		function(data) {
-				//			$("#newsNum").text(data.totalRow);
-				//		});
 				initData();
 				var msgCnt;
 				var title = document.title;
-				//window.setInterval(showalert, 5000);
+				window.setInterval(showalert, 5000);
 				function showalert() {
 					var lastMsgCnt = sessionStorage.getItem("msgCnt");
 					$.getJSON("/CIMS/login/getInitData.do", {}, function(data) {
@@ -132,7 +128,7 @@
 							console.log("执行到这里");
 							setTimeout(function() { //此处是过一定时间后自动消失
 								clear(timerArr);
-							}, 10000);
+							}, 5000);
 						} else {
 							document.title = title;
 						}
@@ -151,7 +147,7 @@
 
 				});
 				$("#news").click(function(event) {
-					event.stopPropagation();
+					event.stopPropagation();//阻止事件冒泡
 				});
 			});
 		</script>
