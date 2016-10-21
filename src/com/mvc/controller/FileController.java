@@ -173,68 +173,30 @@ public class FileController {
 		int file_id = Integer.parseInt(request.getParameter("file_id"));
 		Files fileBean = fileService.findFileById(file_id);
 		String fileName = fileBean.getFile_name();
-		ResponseEntity<byte[]> byteArr = downloadFile(fileName, fileBean.getFile_path());
+		ResponseEntity<byte[]> byteArr = SingleDownloadFile(fileName, fileBean.getFile_path());
 		return byteArr;
 	}
 
 	/**
-	 * 多文件下载（也可以下载单个文件，格式为压缩文件，前台读取）
+	 * 文件下载（多个文件:格式为压缩文件，单个文件：不压缩。前台读取）
 	 * 
 	 * @param request
 	 * @return
 	 * @throws IOException
 	 */
 	@RequestMapping("/download.do")
-	public ResponseEntity<byte[]> downloadFiles(HttpServletRequest request) throws IOException {
+	public ResponseEntity<byte[]> downloadFiles(HttpServletRequest request, HttpSession session) throws IOException {
 		ResponseEntity<byte[]> byteArr = null;
-		int cont_id = Integer.parseInt(request.getParameter("conId"));
-		List<File> files = new ArrayList<File>();// 文件list
+		int cont_id = (int) session.getAttribute("cont_id");// 从session中获取cont_id
 		List<Files> list = fileService.findFileByConId(cont_id);
-		Iterator<Files> it = list.iterator();
-		int file_id = 0;
-		boolean flag = true;
-		String cont_name = "";// 合同名用作压缩文件的名称
-		Date date = new Date();
-		SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMddhhmmss");// 定义到秒
-		String nowStr = dateformat.format(date);
-
-		while (it.hasNext()) {
-			file_id = it.next().getFile_id();
-			Files fileBean = fileService.findFileById(file_id);
-			if (flag) {// 合同名只需获取一次
-				cont_name = fileBean.getContract().getCont_name();
-				flag = false;
-			}
-			File file = new File(fileBean.getFile_path());
-			files.add(file);
-		}
-
-		String fileName = cont_name + nowStr + ".zip";// 压缩文件名格式：合同名+日期+.zip
 		// 在服务器端创建打包下载的临时文件
 		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/download");
-		createDir(path);
-		String zipPath = path + "\\" + fileName;// 压缩文件路径
-		File file = new File(zipPath);
-		byte[] buffer = new byte[1024];
-		try {
-			ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(file));// 压缩流
-
-			for (int i = 0; i < files.size(); i++) {
-				FileInputStream fis = new FileInputStream(files.get(i));
-				zipStream.putNextEntry(new ZipEntry(files.get(i).getName()));
-				zipStream.setEncoding("GBK"); // 设置压缩文件内的字符编码，不然会变成乱码
-				int len;
-				while ((len = fis.read(buffer)) > 0) {// 读入需要下载的文件的内容，打包到zip文件
-					zipStream.write(buffer, 0, len);
-				}
-				zipStream.closeEntry();
-				fis.close();
-			}
-			zipStream.close();
-
-			byteArr = downloadFile(fileName, zipPath);
-		} catch (Exception e) {
-			e.printStackTrace();
+		int file_num = list.size();
+		if (file_num == 1) {// 单个文件下载
+			Files fileBean = list.get(0);
+			byteArr = SingleDownloadFile(fileBean.getFile_name(), fileBean.getFile_path());
+		} else if (file_num > 1) {// 多文件压缩下载
+			byteArr = mutiDownloadFile(list, path);
 		}
 		return byteArr;
 	}
@@ -258,7 +220,7 @@ public class FileController {
 	 * @param zipPath
 	 * @return
 	 */
-	public ResponseEntity<byte[]> downloadFile(String fileName, String zipPath) {
+	public ResponseEntity<byte[]> SingleDownloadFile(String fileName, String zipPath) {
 		try {
 			fileName = new String(fileName.getBytes("GB2312"), "ISO_8859_1");// 避免文件名中文不显示
 		} catch (UnsupportedEncodingException e1) {
@@ -273,6 +235,63 @@ public class FileController {
 		try {
 			byteArr = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.OK);
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return byteArr;
+	}
+
+	/**
+	 * 多文件文件下载（后台调用）
+	 * 
+	 * @param list
+	 * @param path
+	 * @return
+	 */
+	public ResponseEntity<byte[]> mutiDownloadFile(List<Files> list, String path) {
+		ResponseEntity<byte[]> byteArr = null;
+		List<File> files = new ArrayList<File>();// 文件list
+		Iterator<Files> it = list.iterator();
+		int file_id = 0;
+		boolean flag = true;
+		String cont_name = "";// 合同名用作压缩文件的名称
+		Date date = new Date();
+		SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMddhhmmss");// 定义到秒
+		String nowStr = dateformat.format(date);
+
+		while (it.hasNext()) {
+			file_id = it.next().getFile_id();
+			Files fileBean = fileService.findFileById(file_id);
+			if (flag) {// 合同名只需获取一次
+				cont_name = fileBean.getContract().getCont_name();
+				flag = false;
+			}
+			File file = new File(fileBean.getFile_path());
+			files.add(file);
+		}
+
+		String fileName = cont_name + nowStr + ".zip";// 压缩文件名格式：合同名+日期+.zip
+		createDir(path);
+		String zipPath = path + "\\" + fileName;// 压缩文件路径
+		File file = new File(zipPath);
+		byte[] buffer = new byte[1024];
+		try {
+			ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(file));// 压缩流
+
+			for (int i = 0; i < files.size(); i++) {
+				FileInputStream fis = new FileInputStream(files.get(i));
+				zipStream.putNextEntry(new ZipEntry(files.get(i).getName()));
+				zipStream.setEncoding("GBK"); // 设置压缩文件内的字符编码，不然会变成乱码
+				int len;
+				while ((len = fis.read(buffer)) > 0) {// 读入需要下载的文件的内容，打包到zip文件
+					zipStream.write(buffer, 0, len);
+				}
+				zipStream.closeEntry();
+				fis.close();
+			}
+			zipStream.close();
+
+			byteArr = SingleDownloadFile(fileName, zipPath);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return byteArr;

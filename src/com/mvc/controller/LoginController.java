@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.CookieKeyConstants;
 import com.base.constants.PageNameConstants;
 import com.base.constants.SessionKeyConstants;
-import com.base.enums.TaskStatus;
-import com.base.enums.TaskType;
+import com.mvc.entity.AlarmStatistic;
 import com.mvc.entity.User;
 import com.mvc.service.AlarmService;
+import com.mvc.service.AlarmStatisticService;
 import com.mvc.service.InvoiceService;
 import com.mvc.service.TaskService;
 import com.mvc.service.UserService;
@@ -44,6 +44,8 @@ public class LoginController {
 	TaskService taskService;
 	@Autowired
 	AlarmService alarmService;
+	@Autowired
+	AlarmStatisticService alarmStatisticService;
 
 	/**
 	 * 加载默认起始页
@@ -209,35 +211,17 @@ public class LoginController {
 	public @ResponseBody String getInitData(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		// 当前用户接收的所有任务
-		Integer totalReceiveTaskNum = taskService.countByParam(user.getUser_id(), TaskStatus.waitingReceipt.value, null,
-				1);// 0表示发送，1表示接收
-		// 待审核发票任务
-		Integer waitAuditBillTaskNum = invoiceService.countByParam(user.getUser_id(), 0);// 0:未审核；1：已审核
-		// 文书任务
-		Integer assistantTaskNum = taskService.countByType(user.getUser_id(), TaskType.assistants.value);
-		// 执行管控任务
-		Integer managerControlTaskNum = taskService.countByType(user.getUser_id(), TaskType.monitor.value);
-		// 发票任务
-		Integer billTaskNum = invoiceService.countByParam(user.getUser_id(), 1);
-		// 其他任务
-		Integer otherTaskNum = taskService.countByType(user.getUser_id(), TaskType.normal.value);
-		// 收款超时
-		Integer debtAlarmNum = alarmService.countTotal(user.getUser_id(), "2,3", null);
-		// 工程逾期
-		Integer overdueAlarmNum = alarmService.countTotal(user.getUser_id(), "4,5", null);
-		// 任务超时
-		Integer taskAlarmNum = alarmService.countTotal(user.getUser_id(), "1", null);
 
-		jsonObject.put("totalReceiveTaskNum", totalReceiveTaskNum);
-		jsonObject.put("waitAuditBillTaskNum", waitAuditBillTaskNum);
-		jsonObject.put("assistantTaskNum", assistantTaskNum);
-		jsonObject.put("managerControlTaskNum", managerControlTaskNum);
-		jsonObject.put("billTaskNum", billTaskNum);
-		jsonObject.put("otherTaskNum", otherTaskNum);
-		jsonObject.put("debtAlarmNum", debtAlarmNum);
-		jsonObject.put("overdueAlarmNum", overdueAlarmNum);
-		jsonObject.put("taskAlarmNum", taskAlarmNum);
+		AlarmStatistic alarmStatistic = alarmStatisticService.findAlst(user.getUser_id());
+		jsonObject.put("totalReceiveTaskNum", alarmStatistic.getTotal_receive_task_num());
+		jsonObject.put("waitAuditBillTaskNum", alarmStatistic.getWait_audit_bill_task_num());
+		jsonObject.put("assistantTaskNum", alarmStatistic.getAssistant_task_num());
+		jsonObject.put("managerControlTaskNum", alarmStatistic.getManager_control_task_num());
+		jsonObject.put("billTaskNum", alarmStatistic.getBill_task_num());
+		jsonObject.put("otherTaskNum", alarmStatistic.getOther_task_num());
+		jsonObject.put("debtAlarmNum", alarmStatistic.getDebt_alarm_num());
+		jsonObject.put("overdueAlarmNum", alarmStatistic.getOverdue_alarm_num());
+		jsonObject.put("taskAlarmNum", alarmStatistic.getTask_alarm_num());
 
 		return jsonObject.toString();
 	}

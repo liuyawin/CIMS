@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.ContractDao;
-import com.mvc.entity.AlarmStatistic;
 import com.mvc.entity.Contract;
 
 /**
@@ -181,46 +180,6 @@ public class ContractDaoImpl implements ContractDao {
 			em.close();
 		}
 		return true;
-	}
-
-	// 报警统计
-	@Override
-	public AlarmStatistic findAlst(Integer user_id) {
-		EntityManager em = emf.createEntityManager();
-		StringBuilder sql = new StringBuilder();
-		// 当前用户接收的所有任务
-		sql.append(
-				"select count(task_id) as totalReceiveTaskNum from task where task_isdelete=0 and task_state=1 and receiver_id=:user_id ");
-		// 文书任务
-		sql.append(
-				"select count(task_id) as assistantTaskNum from task where task_isdelete=0 and task_state=0 and receiver_id=:user_id and task_type=1 ");
-		// 执行管控任务
-		sql.append(
-				"select count(task_id) as managerControlTaskNum from task where task_isdelete=0 and task_state=0 and receiver_id=:user_id and task_type=2  ");
-		// 普通任务
-		sql.append(
-				"select count(task_id) as otherTaskNum from task where task_isdelete=0 and task_state=0 and receiver_id=:user_id and task_type=3 ");
-
-		// 待审核发票任务
-		sql.append("select count(invo_id) as waitAuditBillTaskNum from invoice where invo_isdelete=0 and audit_id=:user_id and invo_state=0 ");
-		// 发票任务
-		sql.append("select count(invo_id) as billTaskNum from invoice where invo_isdelete=0 and audit_id=:user_id and invo_state=1 ");
-
-		// 收款超时
-		sql.append(
-				"select count(*) as debtAlarmNum from (select count(alar_id) from alarm a where receiver_id=:user_id and alar_isremove=0 and alar_code in(2,3) group by task_id,reno_id,prst_id) as tmp ");
-		// 工程逾期
-		sql.append(
-				"select count(*) as overdueAlarmNum from (select count(alar_id) from alarm a where receiver_id=:user_id and alar_isremove=0 and alar_code in(4,5) group by task_id,reno_id,prst_id) as tmp ");
-		// 任务超时
-		sql.append(
-				"select count(*) as taskAlarmNum from (select count(alar_id) from alarm a where receiver_id=:user_id and alar_isremove=0 and alar_code=1 group by task_id,reno_id,prst_id) as tmp ");
-
-		Query query = em.createNativeQuery(sql.toString(), Contract.class);
-		query.setParameter("user_id", user_id);
-		AlarmStatistic alarmStatistic = (AlarmStatistic) query.getSingleResult();
-		em.close();
-		return alarmStatistic;
 	}
 
 }

@@ -2,7 +2,6 @@ package com.mvc.dao;
 
 import java.util.List;
 
-import com.mvc.entity.AlarmStatistic;
 import com.mvc.entity.Contract;
 
 public interface ContractDao {
@@ -31,6 +30,4 @@ public interface ContractDao {
 	// 修改合同基本信息
 	Boolean updateConById(Integer cont_id, Contract contract);
 
-	//报警统计
-	AlarmStatistic findAlst(Integer user_id);
 }

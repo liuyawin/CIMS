@@ -21,15 +21,15 @@ public class AlarmStatistic implements Serializable {
 	private static final long serialVersionUID = -1705098726238981603L;
 
 	private Integer alst_id;// ID
-	private Integer totalReceiveTaskNum;// 当前用户接收的所有任务
-	private Integer waitAuditBillTaskNum;// 待审核发票任务
-	private Integer assistantTaskNum;// 文书任务
-	private Integer managerControlTaskNum;// 执行管控任务
-	private Integer billTaskNum;// 发票任务
-	private Integer otherTaskNum;// 其他任务
-	private Integer debtAlarmNum;// 收款超时
-	private Integer overdueAlarmNum;// 工程逾期
-	private Integer taskAlarmNum;// 任务超时
+	private Integer total_receive_task_num;// 当前用户接收的所有任务
+	private Integer wait_audit_bill_task_num;// 待审核发票任务
+	private Integer assistant_task_num;// 文书任务
+	private Integer manager_control_task_num;// 执行管控任务
+	private Integer bill_task_num;// 发票任务
+	private Integer other_task_num;// 其他任务
+	private Integer debt_alarm_num;// 收款超时
+	private Integer overdue_alarm_num;// 工程逾期
+	private Integer task_alarm_num;// 任务超时
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,76 +41,76 @@ public class AlarmStatistic implements Serializable {
 		this.alst_id = alst_id;
 	}
 
-	public Integer getTotalReceiveTaskNum() {
-		return totalReceiveTaskNum;
+	public Integer getTotal_receive_task_num() {
+		return total_receive_task_num;
 	}
 
-	public void setTotalReceiveTaskNum(Integer totalReceiveTaskNum) {
-		this.totalReceiveTaskNum = totalReceiveTaskNum;
+	public void setTotal_receive_task_num(Integer total_receive_task_num) {
+		this.total_receive_task_num = total_receive_task_num;
 	}
 
-	public Integer getWaitAuditBillTaskNum() {
-		return waitAuditBillTaskNum;
+	public Integer getWait_audit_bill_task_num() {
+		return wait_audit_bill_task_num;
 	}
 
-	public void setWaitAuditBillTaskNum(Integer waitAuditBillTaskNum) {
-		this.waitAuditBillTaskNum = waitAuditBillTaskNum;
+	public void setWait_audit_bill_task_num(Integer wait_audit_bill_task_num) {
+		this.wait_audit_bill_task_num = wait_audit_bill_task_num;
 	}
 
-	public Integer getAssistantTaskNum() {
-		return assistantTaskNum;
+	public Integer getAssistant_task_num() {
+		return assistant_task_num;
 	}
 
-	public void setAssistantTaskNum(Integer assistantTaskNum) {
-		this.assistantTaskNum = assistantTaskNum;
+	public void setAssistant_task_num(Integer assistant_task_num) {
+		this.assistant_task_num = assistant_task_num;
 	}
 
-	public Integer getManagerControlTaskNum() {
-		return managerControlTaskNum;
+	public Integer getManager_control_task_num() {
+		return manager_control_task_num;
 	}
 
-	public void setManagerControlTaskNum(Integer managerControlTaskNum) {
-		this.managerControlTaskNum = managerControlTaskNum;
+	public void setManager_control_task_num(Integer manager_control_task_num) {
+		this.manager_control_task_num = manager_control_task_num;
 	}
 
-	public Integer getBillTaskNum() {
-		return billTaskNum;
+	public Integer getBill_task_num() {
+		return bill_task_num;
 	}
 
-	public void setBillTaskNum(Integer billTaskNum) {
-		this.billTaskNum = billTaskNum;
+	public void setBill_task_num(Integer bill_task_num) {
+		this.bill_task_num = bill_task_num;
 	}
 
-	public Integer getOtherTaskNum() {
-		return otherTaskNum;
+	public Integer getOther_task_num() {
+		return other_task_num;
 	}
 
-	public void setOtherTaskNum(Integer otherTaskNum) {
-		this.otherTaskNum = otherTaskNum;
+	public void setOther_task_num(Integer other_task_num) {
+		this.other_task_num = other_task_num;
 	}
 
-	public Integer getDebtAlarmNum() {
-		return debtAlarmNum;
+	public Integer getDebt_alarm_num() {
+		return debt_alarm_num;
 	}
 
-	public void setDebtAlarmNum(Integer debtAlarmNum) {
-		this.debtAlarmNum = debtAlarmNum;
+	public void setDebt_alarm_num(Integer debt_alarm_num) {
+		this.debt_alarm_num = debt_alarm_num;
 	}
 
-	public Integer getOverdueAlarmNum() {
-		return overdueAlarmNum;
+	public Integer getOverdue_alarm_num() {
+		return overdue_alarm_num;
 	}
 
-	public void setOverdueAlarmNum(Integer overdueAlarmNum) {
-		this.overdueAlarmNum = overdueAlarmNum;
+	public void setOverdue_alarm_num(Integer overdue_alarm_num) {
+		this.overdue_alarm_num = overdue_alarm_num;
 	}
 
-	public Integer getTaskAlarmNum() {
-		return taskAlarmNum;
+	public Integer getTask_alarm_num() {
+		return task_alarm_num;
 	}
 
-	public void setTaskAlarmNum(Integer taskAlarmNum) {
-		this.taskAlarmNum = taskAlarmNum;
+	public void setTask_alarm_num(Integer task_alarm_num) {
+		this.task_alarm_num = task_alarm_num;
 	}
 
 }
