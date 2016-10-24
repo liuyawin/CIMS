@@ -30,11 +30,11 @@
 				href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList"
 				class="">待审核发票任务：{{waitAuditBillTaskNum}}</a></li>
 			<li has-permission='assistantTaskNum'><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">文书任务：{{assistantTaskNum}}</a></li>
-			<li has-permission='managerControlTaskNum'><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">执行管控任务：{{managerControlTaskNum}}</a></li>
+			<li has-permission='managerControlTaskNum'><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">补录合同任务：{{managerControlTaskNum}}</a></li>
 			<li has-permission='billTaskNum'><a
 				href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList"
 				class="">发票任务： {{billTaskNum}}</a></li>
-			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">其他任务：{{otherTaskNum}}</a></li>
+			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">普通任务：{{otherTaskNum}}</a></li>
 		</ul>
 
 		<div class="welinfo">
