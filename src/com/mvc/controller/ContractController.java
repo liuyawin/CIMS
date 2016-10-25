@@ -41,27 +41,7 @@ public class ContractController {
 	UserService userService;
 
 	/**
-	 * 返回设总合同界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toManagerContractPage.do")
-	public String managerContractPage() {
-		return "manager/contractInformation/index";
-	}
-
-	/**
-	 * 返回文书2合同界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toAssistant2ContractPage.do")
-	public String assistant2ContractPage() {
-		return "assistant2/contractInformation/index";
-	}
-
-	/**
-	 * 返回主任合同界面
+	 * 返回合同界面
 	 * 
 	 * @return
 	 */
@@ -326,7 +306,7 @@ public class ContractController {
 			}
 			jsonObject.put("list", list);
 			jsonObject.put("totalPage", pager.getTotalPage());
-			System.out.println("的手机"+list);
+			System.out.println("的手机" + list);
 			System.out.println(pager.getTotalPage());
 		}
 		return jsonObject.toString();
