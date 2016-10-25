@@ -174,7 +174,7 @@
 			<td>{{node.projectStage.prst_content}}</td>
 			<td>{{node.reno_state |renoType}}</td>
 			<td><a ng-click="" class="tablelink" has-permission='cRnEdit'>修改</a><a ng-click="" class="tablelink" has-permission='cRnDel'>删除</a><a
-				ng-click="addReceipt()" class="tablelink" has-permission='bReceAdd'>开收据</a></td>
+				ng-click="addReceipt(node.contract.cont_id,node.reno_id)" class="tablelink" has-permission='bReceAdd'>开收据</a></td>
 
 		</tr>
 

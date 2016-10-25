@@ -214,6 +214,13 @@ invoiceApp
 									invoice.totalMoney = data.totalMoney;
 								});
 							}
+							// 更改任务时间的格式
+							function changeDateType(time) {
+
+								newDate = new Date(time).toLocaleDateString()
+										.replace(/\//g, '-');
+								return newDate;
+							}
 							// 根据发票ID查找发票
 							function selectInvoiceById(invoId) {
 								/*
@@ -247,7 +254,7 @@ invoiceApp
 								$("#cancelCheck").click(function() {
 									$("#tipCheck").fadeOut(100);
 									$(".overlayer").fadeOut(200);
-									taskHtml.task = "";
+									invoice.task = "";
 								});
 							}
 
@@ -324,7 +331,7 @@ invoiceApp
 							}
 
 							$("#sureFinishSend").click(function() {
-								alert(invoice.invoTime);
+								
 								services.updateInvoiceState({
 									invoiceId : invoice.invoiceId,
 									invoTime : invoice.invoTime
@@ -393,6 +400,11 @@ invoiceApp
 
 							// zq初始化页面信息
 							function initData() {
+								$(".tiptop a").click(function() {
+									
+									$(".overlayer").fadeOut(200);
+									$(".tip").fadeOut(200);
+								});
 								$("#invoice").show();
 								$("#receipt").hide();
 								$("#contract").hide();

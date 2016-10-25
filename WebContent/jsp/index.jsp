@@ -34,7 +34,7 @@
 			<li has-permission='billTaskNum'><a
 				href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList"
 				class="">发票任务： {{billTaskNum}}</a></li>
-			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">其他任务：{{otherTaskNum}}</a></li>
+			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">普通任务：{{otherTaskNum}}</a></li>
 		</ul>
 
 		<div class="welinfo">

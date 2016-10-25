@@ -309,7 +309,7 @@ public class ContractController {
 			pager.setTotalRow(totalRow);
 			List<Contract> list = null;
 			switch (pageType) {
-			case "ContractList":
+			case "contractList":
 				list = contractService.findConByName(contName, pager.getOffset(), pager.getPageSize());
 				break;
 			case "debtContract":
@@ -326,7 +326,7 @@ public class ContractController {
 			}
 			jsonObject.put("list", list);
 			jsonObject.put("totalPage", pager.getTotalPage());
-			System.out.println(list);
+			System.out.println("的手机"+list);
 			System.out.println(pager.getTotalPage());
 		}
 		return jsonObject.toString();

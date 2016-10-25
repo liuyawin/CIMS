@@ -108,24 +108,37 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	// 根据状态，关键字查询任务总条数
+	@SuppressWarnings("unchecked")
 	public Integer countByParam(Integer user_id, Integer task_state, String searchKey, Integer sendOrReceive) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = "";
-		// 0表示发送，1表示接收
-		if (sendOrReceive == 1) {
-			countSql = " select count(task_id) from task where task_isdelete=0 and task_state=:task_state and receiver_id=:user_id";
+		// task_state == -1表示查询所有状态任务，否则按状态查找
+		if (task_state == -1) {
+			// 0表示发送，1表示接收
+			if (sendOrReceive == 1) {
+				countSql = "select count(task_id) from task where task_isdelete=0 and receiver_id=:user_id";
+			} else {
+				countSql = "select count(task_id) from task where task_isdelete=0 and creator_id=:user_id";
+			}
 		} else {
-			countSql = " select count(task_id) from task where task_isdelete=0 and task_state=:task_state and creator_id=:user_id ";
+			// 0表示发送，1表示接收
+			if (sendOrReceive == 1) {
+				countSql = " select count(task_id) from task where task_isdelete=0 and task_state=:task_state and receiver_id=:user_id";
+			} else {
+				countSql = " select count(task_id) from task where task_isdelete=0 and task_state=:task_state and creator_id=:user_id ";
+			}
 		}
 		if (null != searchKey) {
 			countSql += "   and (task_content like '%" + searchKey + "%'  )";
 		}
 		Query query = em.createNativeQuery(countSql);
-		query.setParameter("task_state", task_state);
 		query.setParameter("user_id", user_id);
-		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		if (task_state != -1) {
+			query.setParameter("task_state", task_state);
+		}
+		List<Object> totalRow = query.getResultList();
 		em.close();
-		return totalRow.intValue();
+		return Integer.parseInt(totalRow.get(0).toString());
 	}
 
 	// 根据合同ID和任务类型返回任务列表
@@ -151,9 +164,9 @@ public class TaskDaoImpl implements TaskDao {
 		query.setParameter("task_state", TaskStatus.waitingReceipt.value);
 		query.setParameter("user_id", userId);
 		query.setParameter("task_type", taskType);
-		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		List<Object> totalRow = query.getResultList();
 		em.close();
-		return totalRow.intValue();
+		return Integer.parseInt(totalRow.get(0).toString());
 	}
 
 }

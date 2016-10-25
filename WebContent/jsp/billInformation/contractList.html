@@ -43,7 +43,7 @@
 					class="tablelink">录发票</a> --> <a
 					href="/CIMS/invoice/toBillMngInvoicePage.do#/invoiceList"
 					class="tablelink" ng-click="getConId(con.cont_id)">详情</a> <a
-					class="tablelink" ng-click="addInvoiceTask()" has-permission='bInvoAdd'>开发票</a>
+					class="tablelink" ng-click="addInvoiceTask(con.cont_id)" has-permission='bInvoAdd'>开发票</a>
 				</td>
 				<td><a
 					href="/CIMS/invoice/toBillMngInvoicePage.do#/receiptList"

@@ -91,9 +91,9 @@ public class AlarmDaoImpl implements AlarmDao {
 			countSql += " where receiver_id=:receiver_id  ";
 			query.setParameter("receiver", reveiverid);
 		}
-		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		List<Object> totalRow = query.getResultList();
 		em.close();
-		return totalRow.intValue();
+		return Integer.parseInt(totalRow.get(0).toString());
 	}
 
 	// 根据ID及其类型解除报警
@@ -143,8 +143,8 @@ public class AlarmDaoImpl implements AlarmDao {
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("receiver_id", user_id);
 		query.setParameter("alar_code", types);
-		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		List<Object> totalRow = query.getResultList();
 		em.close();
-		return totalRow.intValue();
+		return Integer.parseInt(totalRow.get(0).toString());
 	}
 }

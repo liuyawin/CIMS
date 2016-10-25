@@ -78,7 +78,7 @@ public class TaskController {
 				pager.getLimit(), sendOrReceive);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("返回列表:" + jsonObject.toString());
+		System.out.println("totalPage返回列表:" + pager.getTotalPage());
 		return jsonObject.toString();
 	}
 

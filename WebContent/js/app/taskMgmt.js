@@ -216,45 +216,34 @@ app
 								selectAllUsers();
 								$("#tipAdd").fadeIn(200);
 								$(".overlayer").fadeIn(200);
-								$("#sureAdd")
-										.click(
-												function() {
-													var taskFormData = JSON
-															.stringify(taskHtml.task);
-													var taskType = 0;
 
-													console
-															.log(taskFormData.task_type);
-													services
-															.addTask(
-																	{
-																		task : taskFormData,
-																		conId : "",
-																		taskType : taskType
-																	})
-															.success(
-																	function(
-																			data) {
-
-																		alert("添加成功！");
-																		$(
-																				"#tipAdd")
-																				.fadeOut(
-																						100);
-																		$(
-																				".overlayer")
-																				.fadeOut(
-																						200);
-																	});
-												});
-
-								$("#cancelAdd").click(function() {
-									$("#tipAdd").fadeOut(100);
-									$(".overlayer").fadeOut(200);
-
-								});
 							};
+							$("#sureAdd").click(
+									function() {
+										var taskFormData = JSON
+												.stringify(taskHtml.task);
+										var taskType = 0;
 
+										console.log(taskFormData.task_type);
+										services.addTask({
+											task : taskFormData,
+											conId : "",
+											taskType : taskType
+										}).success(function(data) {
+
+											alert("添加成功！");
+											$("#tipAdd").fadeOut(100);
+											$(".overlayer").fadeOut(200);
+											taskHtml.task = "";
+										});
+									});
+
+							$("#cancelAdd").click(function() {
+								$("#tipAdd").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								taskHtml.task = ""
+
+							});
 							// 查看任务
 							taskHtml.checkTask = function() {
 								var taskId = this.t.task_id;
@@ -389,34 +378,39 @@ app
 							// 显示提示框及删除功能的实现 删除任务
 							taskHtml.delTask = function() {
 								var taskId = this.t.task_id;
+								sessionStorage.setItem("taskId",taskId);
 								$("#tipDel").fadeIn(200);
 								$(".overlayer").fadeIn(200);
-								$("#sureDel").click(function() {
-									services.deleteTask({
-										taskId : taskId
-									}).success(function(data) {
-										console.log("根据内容获取任务列表成功！");
-										alert("删除成功！");
-										/* $("#" + taskId + "").hide(); */
-										services.getTaskList({
-											taskState : tState,
-											page : 1,
-											sendOrReceive : sendOrReceive
-										}).success(function(data) {
-											taskHtml.tasks = data.list;
-											pageTurn(tState, data.totalPage, 1)
-										});
-										$("#tipDel").fadeOut(100);
-										$(".overlayer").fadeOut(200);
-									});
-								});
-
-								$("#cancelDel").click(function() {
-									$("#tipDel").fadeOut(100);
-									$(".overlayer").fadeOut(200);
-								});
 
 							};
+							$("#sureDel").click(function() {
+								$("#tipDel").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								services.deleteTask({
+									taskId : sessionStorage.getItem('taskId')
+								}).success(function(data) {
+									console.log("根据内容获取任务列表成功！");
+									
+									alert("删除成功！");
+									/* $("#" + taskId + "").hide(); */
+									services.getTaskList({
+										taskState : tState,
+										page : 1,
+										sendOrReceive : sendOrReceive
+									}).success(function(data) {
+										taskHtml.tasks = data.list;
+										pageTurn(tState, data.totalPage, 1);
+										
+									});
+									
+								});
+							});
+
+							$("#cancelDel").click(function() {
+								$("#tipDel").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+							});
+
 							// zq完成任务确认
 							taskHtml.finishTask = function() {
 								var taskId = this.t.task_id;
@@ -579,7 +573,7 @@ app
 								});
 								console.log("初始化页面信息");
 								if ($location.path().indexOf('/receiveTask') == 0) {
-									tState = -1;
+									tState = "-1";
 									taskHtml.tState = "-1";
 									sendOrReceive = 1;
 									services.getTaskList({
@@ -588,12 +582,12 @@ app
 										sendOrReceive : sendOrReceive
 									}).success(function(data) {
 										taskHtml.tasks = data.list;
-										pageTurn(0, data.totalPage, 1)
+										pageTurn(tState, data.totalPage, 1)
 									});
 
 								} else if ($location.path()
 										.indexOf('/sendTask') == 0) {
-									tState = -1;
+									tState = "-1";
 									taskHtml.tState = "-1";
 									sendOrReceive = 0;
 									services.getTaskList({
@@ -602,7 +596,7 @@ app
 										sendOrReceive : sendOrReceive
 									}).success(function(data) {
 										taskHtml.tasks = data.list;
-										pageTurn(0, data.totalPage, 1);
+										pageTurn(tState, data.totalPage, 1);
 									});
 								}
 							}
@@ -675,6 +669,8 @@ app.filter('cutString', function() {
 		if (input != "") {
 			var shortInput = input.substr(0, 8);
 			content = shortInput + "……";
+		} else {
+			content = "无";
 		}
 
 		return content;
@@ -700,66 +696,66 @@ app.filter('dateType', function() {
 });
 
 app
-.directive(
-		'hasPermission',
-		function($timeout) {
-			return {
-				restrict : 'A',
-				link : function(scope, element, attr) {
+		.directive(
+				'hasPermission',
+				function($timeout) {
+					return {
+						restrict : 'A',
+						link : function(scope, element, attr) {
 
-					var key = attr.hasPermission.trim(); // 获取页面上的权限值
-					console.log("获取页面上的权限值" + key);
-					/* console.log("cookie内容" + JSON.stringify(cookie)); */
-					/*
-					 * if (sessionStorage.getItem('userRole').trim() ==
-					 * "3") { element.css("display", "none"); }
-					 */
-					switch (sessionStorage.getItem('userRole').trim()) {
-					case "1":
-						var keys1 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-						var regStr1 = "\\s" + key + "\\s";
-						var reg1 = new RegExp(regStr1);
-						if (keys1.search(reg1) < 0) {
-							element.css("display", "none");
+							var key = attr.hasPermission.trim(); // 获取页面上的权限值
+							console.log("获取页面上的权限值" + key);
+							/* console.log("cookie内容" + JSON.stringify(cookie)); */
+							/*
+							 * if (sessionStorage.getItem('userRole').trim() ==
+							 * "3") { element.css("display", "none"); }
+							 */
+							switch (sessionStorage.getItem('userRole').trim()) {
+							case "1":
+								var keys1 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
+								var regStr1 = "\\s" + key + "\\s";
+								var reg1 = new RegExp(regStr1);
+								if (keys1.search(reg1) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "2":
+								var keys2 = " tContDetail ";
+								var regStr2 = "\\s" + key + "\\s";
+								var reg2 = new RegExp(regStr2);
+								if (keys2.search(reg2) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "3":
+								var keys3 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
+								var regStr3 = "\\s" + key + "\\s";
+								var reg3 = new RegExp(regStr3);
+								if (keys3.search(reg3) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "4":
+								var keys4 = " bInvoAdd tContDetail ";
+								var regStr4 = "\\s" + key + "\\s";
+								var reg4 = new RegExp(regStr4);
+								if (keys4.search(reg4) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							case "5":
+								var keys5 = " cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
+								var regStr5 = "\\s" + key + "\\s";
+								var reg5 = new RegExp(regStr5);
+								if (keys5.search(reg5) < 0) {
+									element.css("display", "none");
+								}
+								break;
+							}
 						}
-						break;
-					case "2":
-						var keys2 = " tContDetail ";
-						var regStr2 = "\\s" + key + "\\s";
-						var reg2 = new RegExp(regStr2);
-						if (keys2.search(reg2) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "3":
-						var keys3 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
-						var regStr3 = "\\s" + key + "\\s";
-						var reg3 = new RegExp(regStr3);
-						if (keys3.search(reg3) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "4":
-						var keys4 = " bInvoAdd tContDetail ";
-						var regStr4 = "\\s" + key + "\\s";
-						var reg4 = new RegExp(regStr4);
-						if (keys4.search(reg4) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "5":
-						var keys5 = " cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-						var regStr5 = "\\s" + key + "\\s";
-						var reg5 = new RegExp(regStr5);
-						if (keys5.search(reg5) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					}
-				}
-			};
+					};
 
-		});
+				});
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
  * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,
