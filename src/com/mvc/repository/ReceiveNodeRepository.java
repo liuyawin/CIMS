@@ -17,7 +17,7 @@ import com.mvc.entity.ReceiveNode;
 public interface ReceiveNodeRepository extends JpaRepository<ReceiveNode, Integer> {
 
 	// 根据合同ID查找收款节点列表
-	@Query("select rn from ReceiveNode rn where cont_id = :cont_id ")
+	@Query("select rn from ReceiveNode rn where cont_id = :cont_id and reno_isdelete=0")
 	List<ReceiveNode> findByContId(@Param("cont_id") Integer cont_id);
 
 }

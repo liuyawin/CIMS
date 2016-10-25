@@ -20,4 +20,7 @@ public interface ReceiveNodeService {
 
 	// 根据ID查询收款节点
 	ReceiveNode findByRenoId(Integer reno_id);
+
+	// 根据收款节点ID删除收款节点
+	Boolean deleteReno(Integer reno_id);
 }
