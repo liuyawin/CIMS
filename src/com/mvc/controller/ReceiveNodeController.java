@@ -195,4 +195,18 @@ public class ReceiveNodeController {
 		boolean flag = receiveNodeService.addReceiveNode(receiveNode);
 		return String.valueOf(flag);
 	}
+
+	/**
+	 * 根据合同ID查找收款节点
+	 * 
+	 * @param request
+	 * @return ReceiveNode
+	 */
+	@RequestMapping("/selectRenoById.do")
+	public @ResponseBody String selectRenoById(HttpServletRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		ReceiveNode receiveNode = receiveNodeService.findByRenoId(Integer.parseInt(request.getParameter("renoId")));
+		jsonObject.put("receiveNode", receiveNode);
+		return jsonObject.toString();
+	}
 }
