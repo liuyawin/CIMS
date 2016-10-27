@@ -29,7 +29,7 @@ public class ReceiveNodeDaoImpl implements ReceiveNodeDao {
 	public Boolean updateState(Integer id, Integer state) {
 		EntityManager em = emf.createEntityManager();
 		try {
-			String selectSql = "update recive_node rn set rn.reno_state=:reno_state where reno_id =:reno_id ";
+			String selectSql = "update recive_node rn set rn.reno_state=:reno_state where rn.reno_id=:reno_id and rn.reno_isdelete=0";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("reno_state", state);
 			query.setParameter("reno_id", id);
@@ -46,7 +46,7 @@ public class ReceiveNodeDaoImpl implements ReceiveNodeDao {
 	@Override
 	public List<ReceiveNode> selectRenoByContId(Integer cont_id) {
 		EntityManager em = emf.createEntityManager();
-		String sql = "select * from receive_node rn where cont_id=:cont_id";
+		String sql = "select * from receive_node rn where rn.cont_id=:cont_id  and rn.reno_isdelete=0";
 		Query query = em.createNativeQuery(sql, ReceiveNode.class);
 		query.setParameter("cont_id", cont_id);
 		List<ReceiveNode> list = query.getResultList();

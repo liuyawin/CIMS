@@ -170,6 +170,12 @@ app
 									{
 										templateUrl : '/CIMS/jsp/contractInformation/contractInfo.html',
 										controller : 'ContractController'
+									})
+							.when(
+									'/contractRecord',
+									{
+										templateUrl : '/CIMS/jsp/contractInformation/contractRecord.html',
+										controller : 'ContractController'
 									});
 				} ]);
 app.constant('baseUrl', '/CIMS/');
@@ -291,6 +297,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'receiveNode/selectRenoByContId.do',
+			data : data
+		});
+	};
+	// lwt根据合同ID获取合同操作记录
+	services.selectContRecordByContId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contractRecord/selectContRecordByContId.do',
 			data : data
 		});
 	};
@@ -620,15 +634,7 @@ app.controller('ContractController', [
 
 			// zq添加添加收据功能
 			// zq查看合同ID，并记入sessione
-			contract.addReceipt = function(contId,renoId) {
-				/*var renoId = this.node.reno_id;
-				var contId = this.node.contract.cont_id;*/
-				sessionStorage.setItem("conId",contId);
-				sessionStorage.setItem("renoId",renoId);
-				$(".overlayer").fadeIn(200);
-				$("#tipAdd").fadeIn(200);
-
-			};
+			 
 			$("#sureAdd").click(function() {
 				var receFormData = JSON.stringify(contract.receipt);
 				services.addReceipt({
@@ -1066,6 +1072,13 @@ app.controller('ContractController', [
 					selectContractById(); // 根据ID获取合同信息
 					$("#prstContainer").hide();
 					$("#renoContainer").hide();
+				} else if ($location.path().indexOf('/contractRecord') == 0) {
+
+					services.selectContRecordByContId({
+						cont_id : sessionStorage.getItem("conId")
+					}).success(function(data) {
+						contract.records = data.list;
+					});
 				}
 			}
 
@@ -1283,6 +1296,20 @@ app.filter('dateType', function() {
 		return type;
 	}
 });
+app.filter('dateTimeType',
+		function() {
+			return function(input) {
+				var type = "";
+				if (input != null) {
+					var date = new Date(input).toLocaleDateString().replace(
+							/\//g, '-');
+					var time = new Date(input).toLocaleTimeString()
+					type = date + "  " + time;
+				}
+
+				return type;
+			}
+		});
 // 等级的判断
 app.filter('conRank', function() {
 	return function(input) {

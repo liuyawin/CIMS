@@ -137,8 +137,46 @@ public class ProjectStageController {
 	public @ResponseBody String finishPrst(HttpServletRequest request) {
 		Integer prstId = Integer.parseInt(request.getParameter("prstId"));
 		boolean flag = projectStageService.updatePrstState(prstId);
-		alarmService.updateByIdType(prstId, RemoveType.PrstAlarm.value);
+		alarmService.updateByIdType(prstId, RemoveType.PrstAlarm.value);// 解除报警
 		return String.valueOf(flag);
 	}
 
+	/**
+	 * 删除工期
+	 * 
+	 * @param request
+	 * @return true、false
+	 */
+	@RequestMapping("/delPrst.do")
+	public @ResponseBody String delPrst(HttpServletRequest request) {
+		Integer prstId = Integer.parseInt(request.getParameter("prstId"));
+		boolean flag = projectStageService.deletePrstState(prstId);
+		alarmService.updateByIdType(prstId, RemoveType.PrstAlarm.value);// 解除报警
+		return String.valueOf(flag);
+	}
+
+	/**
+	 * 修改工期
+	 * 
+	 * @param request
+	 * @return true、false
+	 */
+//	@RequestMapping("/modifyPrst.do")
+//	public @ResponseBody String updatePrst(HttpServletRequest request) {
+//		Integer prstId = Integer.parseInt(request.getParameter("prstId"));		
+//		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("projectStage"));//暂时先按对象获取（非数组）
+//		if (jsonObject != null) {
+//			try {
+//				if (jsonObject.containsKey("cont_onum")) {
+//					contract.setCont_onum(jsonObject.getString("cont_onum"));// 本公司编号
+//				}
+//			}catch (Exception e) {
+//				e.printStackTrace();
+//			}
+		
+		
+//		boolean flag = projectStageService.deletePrstState(prstId);
+//		alarmService.updateByIdType(prstId, RemoveType.PrstAlarm.value);
+//		return String.valueOf(flag);
+//	}
 }
