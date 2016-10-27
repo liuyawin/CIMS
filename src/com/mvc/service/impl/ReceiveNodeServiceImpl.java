@@ -46,4 +46,9 @@ public class ReceiveNodeServiceImpl implements ReceiveNodeService {
 		return receiveNodeRepository.findOne(reno_id);
 	}
 
+	// 根据收款节点ID删除收款节点
+	@Override
+	public Boolean deleteReno(Integer reno_id) {
+		return receiveNodeDao.deleteReno(reno_id);
+	}
 }

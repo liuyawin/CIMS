@@ -133,7 +133,7 @@ public class AlarmDaoImpl implements AlarmDao {
 		for (int i = 0; i < chars.length; i++) {
 			types.add(Integer.valueOf(chars[i]));
 		}
-		System.out.println("types:" + types.toString());
+		System.out.println("types:" + chars.toString());
 		String countSql = " select count(*) from (select count(alar_id) from alarm a where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
 		// 判断查找关键字是否为空
 		if (null != searchKey) {
