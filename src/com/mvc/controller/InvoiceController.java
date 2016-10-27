@@ -38,26 +38,6 @@ public class InvoiceController {
 	InvoiceService invoiceService;
 
 	/**
-	 * 文书二返回收据界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toAssistant2InvoicePage.do")
-	public String invoiceReceivePage() {
-		return "assistant2/invoiceInformation/index";
-	}
-
-	/**
-	 * 主任返回收据界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toZhurenInvoicePage.do")
-	public String zhurenInvoiceReceivePage() {
-		return "zhuren/invoiceInformation/index";
-	}
-
-	/**
 	 * 返回收据界面
 	 * 
 	 * @return
@@ -80,7 +60,6 @@ public class InvoiceController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer invoState = Integer.valueOf(request.getParameter("invoState"));// 0:未审核；1：已审核
 		Integer totalRow = invoiceService.countByParam(user.getUser_id(), invoState);
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
@@ -88,7 +67,6 @@ public class InvoiceController {
 				pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -105,7 +83,6 @@ public class InvoiceController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer invoiceState = Integer.valueOf(request.getParameter("invoState"));
 		Integer totalRow = invoiceService.WaitingDealCountByParam(user.getUser_id(), invoiceState);
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
@@ -113,7 +90,6 @@ public class InvoiceController {
 				pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -129,7 +105,6 @@ public class InvoiceController {
 		JSONObject jsonObject = new JSONObject();
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
 		Integer totalRow = invoiceService.countByContId(contId);
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
@@ -137,7 +112,6 @@ public class InvoiceController {
 		jsonObject.put("list", list);
 		jsonObject.put("totalRow", totalRow);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -154,7 +128,6 @@ public class InvoiceController {
 		Integer invoiceId = Integer.valueOf(request.getParameter("invoiceId"));
 		Invoice invoice = invoiceService.findById(invoiceId);
 		jsonObject.put("invoice", invoice);
-		System.out.println("返回列表发票:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -171,7 +144,6 @@ public class InvoiceController {
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
 		Float totalMoney = invoiceService.totalMoneyOfInvoice(contId);
 		jsonObject.put("totalMoney", totalMoney);
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -194,16 +166,28 @@ public class InvoiceController {
 		Contract contract = new Contract();
 		contract.setCont_id(Integer.valueOf(request.getParameter("contId")));
 		invoice.setContract(contract);
-		invoice.setInvo_money(Float.valueOf(jsonObject.getString("invoMoney")));
-		invoice.setInvo_firm(jsonObject.getString("invoFirm"));
-		User audit = new User();
-		audit.setUser_id(Integer.valueOf(jsonObject.getString("auditId")));
-		invoice.setAudit(audit);
-		Date sTime = format.parse(jsonObject.getString("invoStime"));
-		invoice.setInvo_stime(sTime);
-		Date eTime = format.parse(jsonObject.getString("invoEtime"));
-		invoice.setInvo_etime(eTime);
-		invoice.setInvo_remark(jsonObject.getString("invoRemark"));
+		if (jsonObject.containsKey("invoMoney")) {
+			invoice.setInvo_money(Float.valueOf(jsonObject.getString("invoMoney")));
+		}
+		if (jsonObject.containsKey("invoFirm")) {
+			invoice.setInvo_firm(jsonObject.getString("invoFirm"));
+		}
+		if (jsonObject.containsKey("auditId")) {
+			User audit = new User();
+			audit.setUser_id(Integer.valueOf(jsonObject.getString("auditId")));
+			invoice.setAudit(audit);
+		}
+		if (jsonObject.containsKey("invoStime")) {
+			Date sTime = format.parse(jsonObject.getString("invoStime"));
+			invoice.setInvo_stime(sTime);
+		}
+		if (jsonObject.containsKey("invoEtime")) {
+			Date eTime = format.parse(jsonObject.getString("invoEtime"));
+			invoice.setInvo_etime(eTime);
+		}
+		if (jsonObject.containsKey("invoRemark")) {
+			invoice.setInvo_remark(jsonObject.getString("invoRemark"));
+		}
 		User creator = new User();
 		creator.setUser_id(user.getUser_id());
 		invoice.setCreator(creator);
@@ -244,10 +228,8 @@ public class InvoiceController {
 	@RequestMapping(value = "/updateInvoiceState.do")
 	public @ResponseBody String invoiceFinish(HttpServletRequest request, HttpSession session) throws ParseException {
 		Integer invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
-		System.out.println("发票Id"+invoiceId);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date invoTime = format.parse(request.getParameter("invoTime"));
-		System.out.println("发票Id"+invoTime);
 		boolean result = invoiceService.invoiceFinish(invoiceId, invoTime);
 		return JSON.toJSONString(result);
 	}

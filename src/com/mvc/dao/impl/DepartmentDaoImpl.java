@@ -24,7 +24,8 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
-//根据id修改部门状态
+
+	// 根据id修改部门状态
 	public boolean delete(Integer id) {
 		EntityManager em = emf.createEntityManager();
 		try {
@@ -40,13 +41,13 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		}
 		return true;
 	}
-//筛选部门列表
+
+	// 筛选部门列表
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Department> findDepartmentAllByPage(Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		String selectSql = "select * from department where dept_state=0";		
+		String selectSql = "select * from department where dept_state=0";
 		selectSql += " order by dept_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, Department.class);
 		query.setParameter("offset", offset);
@@ -55,12 +56,12 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		em.close();
 		return list;
 	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Department> findDepartmentAll() {		
+	public List<Department> findDepartmentAll() {
 		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		String selectSql = "select * from department where dept_state=0";		
+		String selectSql = "select * from department where dept_state=0";
 		Query query = em.createNativeQuery(selectSql, Department.class);
 		List<Department> list = query.getResultList();
 		em.close();

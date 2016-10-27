@@ -70,7 +70,6 @@ public class TaskController {
 		Integer taskState = Integer.valueOf(request.getParameter("taskState"));
 		Integer sendOrReceive = Integer.valueOf(request.getParameter("sendOrReceive"));
 		Integer totalRow = taskService.countByParam(user.getUser_id(), taskState, null, sendOrReceive);// 0表示发送，1表示接收
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
@@ -78,7 +77,6 @@ public class TaskController {
 				pager.getLimit(), sendOrReceive);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("totalPage返回列表:" + pager.getTotalPage());
 		return jsonObject.toString();
 	}
 
@@ -89,15 +87,14 @@ public class TaskController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value = "/selectTaskByContext.do")
-	public @ResponseBody String getTasksBySearchKey(HttpServletRequest request, HttpSession session) {
+	@RequestMapping(value = "/selectTaskBySearchKey.do")
+	public @ResponseBody String getTasksByParam(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer taskState = Integer.valueOf(request.getParameter("taskState"));
 		Integer sendOrReceive = Integer.valueOf(request.getParameter("sendOrReceive"));
-		String searchKey = request.getParameter("context");
+		String searchKey = request.getParameter("searchKey");
 		Integer totalRow = taskService.countByParam(user.getUser_id(), taskState, searchKey, sendOrReceive);
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
@@ -105,7 +102,6 @@ public class TaskController {
 				pager.getLimit(), sendOrReceive);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -124,7 +120,6 @@ public class TaskController {
 		Integer taskType = Integer.valueOf(request.getParameter("taskType"));
 		List<Task> list = taskService.findByContIdAndType(user.getUser_id(), contId, taskType);
 		jsonObject.put("list", list);
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -166,41 +161,41 @@ public class TaskController {
 		long time = System.currentTimeMillis();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Contract contract = new Contract();
-		System.out.println("conId:" + request.getParameter("conId"));
 		if (request.getParameter("conId") != "") {
 			contract.setCont_id(Integer.valueOf(request.getParameter("conId")));
 			task.setContract(contract);
 		}
-		System.out.println("taskType:" + request.getParameter("taskType"));
 		Integer taskType = Integer.valueOf(request.getParameter("taskType"));
 		task.setTask_type(taskType);
 
 		task.setCreator(user);
 		jsonObject = JSONObject.fromObject(request.getParameter("task"));
-		System.out.println("task" + request.getParameter("task"));
-
-		User receiver = new User();
-		receiver.setUser_id(Integer.valueOf(jsonObject.getString("receiver_id")));
-		task.setReceiver(receiver);
-		task.setTask_ctime(new Date(time));
-		Date sdate = format.parse(jsonObject.getString("task_stime"));
-		Date edate = format.parse(jsonObject.getString("task_etime"));
-		if (jsonObject.containsKey("task_content")) {
-			task.setTask_content(jsonObject.getString("task_content"));// 备注，张群刘亚赢不统一
+		if (jsonObject.containsKey("receiver_id")) {
+			User receiver = new User();
+			receiver.setUser_id(Integer.valueOf(jsonObject.getString("receiver_id")));
+			task.setReceiver(receiver);
 		}
-		task.setTask_stime(sdate);
-		task.setTask_etime(edate);
+		if (jsonObject.containsKey("task_stime")) {
+			Date sdate = format.parse(jsonObject.getString("task_stime"));
+			task.setTask_stime(sdate);
+		}
+		task.setTask_ctime(new Date(time));
+		if (jsonObject.containsKey("task_etime")) {
+			Date edate = format.parse(jsonObject.getString("task_etime"));
+			task.setTask_etime(edate);
+		}
+		if (jsonObject.containsKey("task_content")) {
+			task.setTask_remark(jsonObject.getString("task_content"));
+		}
 		task.setTask_isdelete(IsDelete.NO.value);
 		task.setTask_state(TaskStatus.waitingReceipt.value);
 		task.setTask_alarmnum(0);
-		if (taskType != TaskType.assistants.value) {// 0代表普通任务；2代表执行管控任务
+		if (taskType != TaskType.assistants.value) {// 0代表普通任务；2代表补录合同任务
 			Task taskResult = taskService.save(task);
 			if (taskResult.getTask_id() != null) {
 				result.put("result", "true");
-				System.out.println("任务创建成功");
 			} else {
 				result.put("result", "false");
-				System.out.println("任务创建失败");
 			}
 		} else {// 1代表文书任务
 			List<String> subTasks = new ArrayList<String>();
@@ -224,7 +219,6 @@ public class TaskController {
 				flag = subTaskService.save(subTask);
 			}
 			if (flag) {
-				System.out.println("re:" + flag);
 				result.put("result", "true");
 			} else
 				result.put("result", "false");
