@@ -694,6 +694,7 @@ app.filter('dateType', function() {
 	}
 });
 
+<<<<<<< HEAD
 app
 		.directive(
 				'hasPermission',
@@ -755,6 +756,52 @@ app
 					};
 
 				});
+=======
+app.directive('hasPermission', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			var cookie = {};
+			var role = null;
+			var cookies = document.cookie;
+			if (cookies === "")
+				return cookie;
+			var list = cookies.split(";");
+			var value = attr.hasPermission.trim(); //获取页面上的权限值
+			console.log("获取页面上的权限值"+value);
+			/* console.log("cookie内容" + JSON.stringify(cookie)); */
+			for (var i = 0; i < list.length; i++) {
+				var cookieString = list[i];
+				/* console.log("cookie内容" + cookieString); */
+				var p = cookieString.indexOf("=");
+				var name = cookieString.substring(0, p);
+				var value = cookieString.substring(p + 1, cookieString.length);
+				console.log(name);
+				cookie[name.trim()] = value;
+				console.log("进来了");
+				if (name.trim() == "userRole") {
+					role = value;
+					if (value.trim() == "3") {
+						element.css("display", "none");
+					}
+				}
+			}
+			console.log("juese" + role);
+
+		}
+
+	/*
+	 * compile : function(element, attributes) { element.css("border", "1px
+	 * solid #cccccc"); var linkFunction = function($scope, element, attributes) {
+	 * element.html("Student: <b>"+$scope.student.name +"</b> , Roll No:
+	 * <b>"+$scope.student.rollno+"</b><br/>");
+	 * element.css("background-color", "#ff00ff"); } return linkFunction; }
+	 */
+	};
+
+});
+
+>>>>>>> 65790194486bbc18378273f041e19e703c6bc5fd
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
  * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,
