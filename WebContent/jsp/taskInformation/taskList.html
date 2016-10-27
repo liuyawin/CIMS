@@ -31,11 +31,11 @@
 		<thead>
 			<tr>
 				<th>序号</th>
-				<th>内容</th>
 				<th>类型</th>
 				<th>状态</th>
 				<th>创建者</th>
 				<th>报警次数</th>
+				<th>备注</th>
 				<th has-permission='tContCollect'>补录合同</th>
 				<th has-permission='tContDetail'>查看合同</th>
 				<th>操作</th>
@@ -45,7 +45,6 @@
 		<tbody>
 			<tr ng-repeat="t in tasks" id={{t.task_id}}>
 				<td>{{$index + 1}}</td>
-				<td>{{t.task_content |cutString}}</td>
 				<td><div ng-switch={{t.task_type}}>
 						<div ng-switch-when="0">普通任务</div>
 						<div ng-switch-when="1">文书任务</div>
@@ -59,29 +58,39 @@
 					</div></td>
 				<td>{{t.creator.user_name}}</td>
 				<td>{{t.task_alarmnum}}</td>
-				<td has-permission='tContCollect'><div ng-switch={{t.task_type}}>
+				<td>{{t.task_remark |cutString}}</td>
+				<td has-permission='tContCollect'><div
+						ng-switch={{t.task_type}}>
 						<div ng-switch-when="0"></div>
-						<div ng-switch-when="1"><a class="tablelink"
-					href="/CIMS/contract/toContractPage.do#/contractDetail"
-					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></div>
-						<div ng-switch-when="2"><a class="tablelink"
-					href="/CIMS/contract/toContractPage.do#/contractDetail"
-					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></div>
-						
+						<div ng-switch-when="1">
+							<a class="tablelink"
+								href="/CIMS/contract/toContractPage.do#/contractDetail"
+								ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+								|cutString}}</a>
+						</div>
+						<div ng-switch-when="2">
+							<a class="tablelink"
+								href="/CIMS/contract/toContractPage.do#/contractDetail"
+								ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+								|cutString}}</a>
+						</div>
+
 					</div></td>
 				<td has-permission='tContDetail'><div ng-switch={{t.task_type}}>
 						<div ng-switch-when="0"></div>
-						<div ng-switch-when="1"><a class="tablelink"
-					href="/CIMS/contract/toContractPage.do#/contractInfo"
-					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></div>
-						<div ng-switch-when="2"><a class="tablelink"
-					href="/CIMS/contract/toContractPage.do#/contractInfo"
-					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></div>
-						
+						<div ng-switch-when="1">
+							<a class="tablelink"
+								href="/CIMS/contract/toContractPage.do#/contractInfo"
+								ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+								|cutString}}</a>
+						</div>
+						<div ng-switch-when="2">
+							<a class="tablelink"
+								href="/CIMS/contract/toContractPage.do#/contractInfo"
+								ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+								|cutString}}</a>
+						</div>
+
 					</div></td>
 
 				<td><a ng-click="checkTask()" class="tablelink">查看</a><a
@@ -95,7 +104,7 @@
 
 </div>
 <!-- //删除任务模态框 -->
-<div class="tip" id="tipDel" style="height:220px">
+<div class="tip" id="tipDel" style="height: 220px">
 	<div class="tiptop">
 		<span>提示信息</span>
 	</div>
@@ -131,7 +140,7 @@
 						</option>
 				</select></li>
 				<li><label>内容</label> <textarea name="" cols="" rows=""
-						class="textinput area_style" ng-model="task.task_content" required></textarea></li>
+						class="textinput area_style" ng-model="task.task_remark" required></textarea></li>
 				<li><label>开始时间</label><input type="text"
 					ng-model="task.task_stime" class="dfinput dateFormat"
 					placeholder="格式：2016-09-07" required /> <span class="error-span">格式错误</span></li>
@@ -161,7 +170,7 @@
 				<li><label>接收人</label><input type="text"
 					ng-model="task.receiver.user_name" class="dfinput" /></li>
 				<li><label>内容</label> <textarea name="" cols="" rows=""
-						class="textinput area_style" ng-model="task.task_content" required></textarea></li>
+						class="textinput area_style" ng-model="task.task_remark" required></textarea></li>
 				<li><label>开始时间</label><input type="text"
 					ng-model="task.task_stime" class="dfinput"
 					placeholder="格式：2016-09-07" /></li>
