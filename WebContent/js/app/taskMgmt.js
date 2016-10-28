@@ -216,6 +216,15 @@ app
 								selectAllUsers();
 								$("#tipAdd").fadeIn(200);
 								$(".overlayer").fadeIn(200);
+								var date = new Date();
+								var timeNow = date.getFullYear() + "-"
+										+ (date.getMonth() + 1) + "-"
+										+ (date.getDate());
+								taskHtml.task = {
+									task_stime : timeNow,
+									task_etime : timeNow
+								};
+								
 
 							};
 							$("#sureAdd").click(

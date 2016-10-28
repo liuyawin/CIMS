@@ -131,6 +131,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	}
 
 	// 按发票状态获取列表
+	@SuppressWarnings("unchecked")
 	public Integer WaitingDealCountByParam(Integer user_id, Integer invoiceState) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select count(invo_id) from invoice where invo_isdelete=0 and receiver_id=:receiver_id and invo_state=:invo_state ";
@@ -176,6 +177,37 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			em.close();
 		}
 		return true;
+	}
+
+	// 根据发票状态查找发票
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Invoice> findByStateAndPerm(Integer invoState, String permission, Integer user_id) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from invoice where invo_isdelete=0");
+		if (permission.contains("tInvoAdd")) {// 开发票权限（主任、设总）
+			if (!permission.contains("tInvoAudit")) {// 无审核发票权限（设总）
+				sql.append(" and creator_id=:user_id");
+			}
+			if (invoState == -1) {// -1：全部，0：待审核，1：待处理，2：已完成
+				sql.append(" and invo_state in(0,1,2)");
+			} else {
+				sql.append(" and invo_state=：invoState");
+			}
+		} else {// 执行人(文书)
+			sql.append(" and receiver_id=:user_id");
+			if (invoState == -1) {// -1：全部，0：待审核，1：待处理，2：已完成
+				sql.append(" and invo_state in(1,2)");
+			} else {
+				sql.append(" and invo_state=：invoState");
+			}
+		}
+		Query query = em.createNativeQuery(sql.toString());
+		query.setParameter("user_id", user_id).setParameter("invoState", invoState);
+		List<Invoice> list = query.getResultList();
+		em.close();
+		return list;
 	}
 
 }

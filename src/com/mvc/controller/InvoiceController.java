@@ -244,10 +244,10 @@ public class InvoiceController {
 	@RequestMapping(value = "/updateInvoiceState.do")
 	public @ResponseBody String invoiceFinish(HttpServletRequest request, HttpSession session) throws ParseException {
 		Integer invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
-		System.out.println("发票Id"+invoiceId);
+		System.out.println("发票Id" + invoiceId);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date invoTime = format.parse(request.getParameter("invoTime"));
-		System.out.println("发票Id"+invoTime);
+		System.out.println("发票Id" + invoTime);
 		boolean result = invoiceService.invoiceFinish(invoiceId, invoTime);
 		return JSON.toJSONString(result);
 	}
@@ -269,4 +269,24 @@ public class InvoiceController {
 		boolean result = invoiceService.transmitInvoice(invoiceId, invoEtime, receiverId);
 		return JSON.toJSONString(result);
 	}
+
+	/**
+	 * 根据发票状态查找发票
+	 * 
+	 * @param request
+	 * @param session
+	 * @return list
+	 */
+	@RequestMapping(value = "/selectInvoiceByState.do")
+	public @ResponseBody String selectInvoiceByState(HttpServletRequest request, HttpSession session) {
+		Integer invoState = Integer.parseInt(request.getParameter("invoState"));// -1：全部，0：待审核，1：待处理，2：已完成
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Integer user_id = user.getUser_id();
+		String permission = user.getRole().getRole_permission();// 权限
+		List<Invoice> list = invoiceService.selectInvoiceByState(invoState, permission, user_id);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		return null;
+	}
+
 }

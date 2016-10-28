@@ -184,8 +184,7 @@ public class ReceiveNodeController {
 				}
 				if (jsonObject.containsKey("projectStage")) {
 					JSONObject tmp = (JSONObject) jsonObject.get("projectStage");
-					ProjectStage projectStage = projectStageService
-							.selectPrstById(Integer.parseInt(tmp.getString("prst_id")));
+					ProjectStage projectStage =projectStageService.selectPrstById(Integer.parseInt(tmp.getString("prst_id")));
 					receiveNode.setProjectStage(projectStage);// 所属阶段
 				}
 			} catch (Exception e) {

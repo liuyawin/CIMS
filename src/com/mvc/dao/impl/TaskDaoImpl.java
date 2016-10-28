@@ -1,6 +1,5 @@
 package com.mvc.dao.impl;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -157,6 +156,7 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	// 根据任务类型获取任务条数
+	@SuppressWarnings("unchecked")
 	public Integer countByType(Integer userId, Integer taskType) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select count(task_id) from task where task_isdelete=0 and task_state=:task_state and receiver_id=:user_id and task_type=:task_type ";

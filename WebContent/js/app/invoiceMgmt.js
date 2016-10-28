@@ -408,6 +408,7 @@ invoiceApp
 								$("#invoice").show();
 								$("#receipt").hide();
 								$("#contract").hide();
+								$("#receiveMoney").hide();
 								console.log("初始化页面信息");
 								if ($location.path().indexOf('/invoiceList') == 0) {// 如果是合同列表页
 
