@@ -22,5 +22,5 @@ public interface ReceiptDao {
 	Integer countByParam(Integer cont_id, String searchKey);
 
 	// 根据合同ID查询收据总金额
-	Float totalMoneyOfInvoice(Integer contId);
+	Float totalMoneyOfReceipt(Integer contId);
 }
