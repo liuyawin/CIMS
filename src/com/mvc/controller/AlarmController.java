@@ -53,14 +53,30 @@ public class AlarmController {
 		String alarmType = request.getParameter("alarmType");
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		String searchKey = request.getParameter("searchKey");
-		Integer totalRow = alarmService.countByParam(user.getUser_id(), alarmType, searchKey);
+		Integer totalRow = alarmService.countTotal(user.getUser_id(), alarmType, searchKey);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
-		List<Alarm> list = alarmService.findAlarmList(user.getUser_id(), searchKey, alarmType, pager.getOffset(),
-				pager.getLimit());
+		List<Alarm> list = alarmService.findAlarmInformationList(user.getUser_id(), searchKey, alarmType,
+				pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
+		jsonObject.put("totalRow", totalRow);
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 获取报警列表总数
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/AlarmsTotalNum.do")
+	public @ResponseBody String getAlarmsTotalNum(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Long totalRow = alarmService.countNumByUserId(user.getUser_id());
 		jsonObject.put("totalRow", totalRow);
 		return jsonObject.toString();
 	}
@@ -76,8 +92,30 @@ public class AlarmController {
 	public @ResponseBody String getAlarmContentById(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Integer alarmid = Integer.valueOf(request.getParameter("alarId"));
-		Alarm alarm = alarmService.findAlarmById(alarmid);
+		Alarm alarm = alarmService.findAlarmContentById(alarmid);
 		jsonObject.put("alarm", alarm);
 		return jsonObject.toString();
 	}
+
+	/**
+	 * 根据用户名查找报警信息
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/getAlarmByUser.do")
+	public @ResponseBody String getAlarmByUser(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		String username = request.getParameter("userName");
+		Integer totalPage = alarmService.countTotalNum(username);
+		Pager pager = new Pager();
+		pager.setPage(Integer.valueOf(request.getParameter("page")));
+		pager.setTotalRow(Integer.valueOf(totalPage.toString()));
+		List<Alarm> list = alarmService.findAlarmByUser(username, pager.getOffset(), pager.getLimit());
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+	}
+
 }

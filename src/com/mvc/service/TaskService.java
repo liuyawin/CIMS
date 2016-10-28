@@ -14,6 +14,9 @@ import com.mvc.entity.Task;
  */
 public interface TaskService {
 
+	// 根据用户ID和状态筛选任务列表,task_state:0 表示为接收，1表示执行中，2表示已完成
+	List<Task> findTaskByState(Integer receiver_id, Integer task_state);
+
 	// 更新任务状态
 	boolean updateState(Integer taskId, Integer task_state);
 
@@ -35,5 +38,8 @@ public interface TaskService {
 
 	// 根据合同ID和任务类型返回任务列表
 	List<Task> findByContIdAndType(Integer user_id, Integer contId, Integer taskType);
+
+	// 根据任务类型获取任务条数
+	Integer countByType(Integer userId, Integer taskType);
 
 }

@@ -63,7 +63,7 @@ public class ReceiptDaoImpl implements ReceiptDao {
 
 	// 根据合同ID查询收据总金额
 	@SuppressWarnings("unchecked")
-	public Float totalMoneyOfReceipt(Integer contId) {
+	public Float totalMoneyOfInvoice(Integer contId) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select sum(rece_money) from receipt r where cont_id=:cont_id ";
 		Query query = em.createNativeQuery(countSql);

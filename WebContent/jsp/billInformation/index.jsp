@@ -18,6 +18,11 @@
 	style="min-height: 40px;">
 	<div ng-view></div>
 </section>
+<section id="receiveMoney" class="main" ng-app="receiveMoney"
+	style="min-height: 40px;">
+	<div ng-view></div>
+</section>
+
 
 
 
@@ -26,11 +31,13 @@
 <script src="${ctx}/js/app/billContract.js"></script>
 <script src="${ctx}/js/app/receiptMgmt.js"></script>
 <script src="${ctx}/js/app/invoiceMgmt.js"></script>
+<script src="${ctx}/js/app/receiveMoneyMgmt.js"></script>
 <script type="text/javascript">
 	angular.element(document).ready(function() {
 		//angular.bootstrap(document.getElementById("contract"), [ "contract" ]);
 		angular.bootstrap(document.getElementById("invoice"), [ "invoice" ]);
 		angular.bootstrap(document.getElementById("receipt"), [ "receipt" ]);
+		angular.bootstrap(document.getElementById("receiveMoney"), [ "receiveMoney" ]);
 	});
 </script>
 </body>

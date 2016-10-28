@@ -44,6 +44,26 @@ public class ReceiptController {
 	AlarmService alarmService;
 
 	/**
+	 * 文书二返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toAssistant2ReceiptPage.do")
+	public String taskReceivePage() {
+		return "assistant2/receiptInformation/index";
+	}
+
+	/**
+	 * 主任返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toZhurenReceiptPage.do")
+	public String zhurenReceivePage() {
+		return "zhuren/receiptInformation/index";
+	}
+
+	/**
 	 * 根据页数,合同，关键字返回任务列表
 	 * 
 	 * @param request
@@ -95,7 +115,7 @@ public class ReceiptController {
 	public @ResponseBody String totalMoney(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
-		Float totalMoney = receiptService.totalMoneyOfReceipt(contId);
+		Float totalMoney = receiptService.totalMoneyOfInvoice(contId);
 		jsonObject.put("totalMoney", totalMoney);
 		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
@@ -122,19 +142,11 @@ public class ReceiptController {
 		receiveNode.setReno_id(Integer.valueOf(request.getParameter("renoId")));
 		receipt.setReceiveNode(receiveNode);
 		receipt.setUser(user);
-		if (jsonObject.containsKey("receAtime")) {
-			Date sdate = format.parse(jsonObject.getString("receAtime"));
-			receipt.setRece_atime(sdate);
-		}
-		if (jsonObject.containsKey("receFirm")) {
-			receipt.setRece_firm(jsonObject.getString("receFirm"));
-		}
-		if (jsonObject.containsKey("receMoney")) {
-			receipt.setRece_money(Float.valueOf(jsonObject.getString("receMoney")));
-		}
-		if (jsonObject.containsKey("receRemark")) {
-			receipt.setRece_remark(jsonObject.getString("receRemark"));
-		}
+		Date sdate = format.parse(jsonObject.getString("receAtime"));
+		receipt.setRece_atime(sdate);
+		receipt.setRece_firm(jsonObject.getString("receFirm"));
+		receipt.setRece_money(Float.valueOf(jsonObject.getString("receMoney")));
+		receipt.setRece_remark(jsonObject.getString("receRemark"));
 		boolean receiptResult = receiptService.save(receipt);
 		Integer renoId = Integer.valueOf(request.getParameter("renoId"));
 		ReceiveNode receiveNode2 = receiveNodeService.findByRenoId(renoId);

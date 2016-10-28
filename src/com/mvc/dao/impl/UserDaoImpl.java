@@ -61,6 +61,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public List<User> findUserAllByPage(Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
 		String selectSql = "select * from User where user_isdelete=0";
 		selectSql += " order by user_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, User.class);
@@ -76,6 +77,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public List<UserDeptRelation> findUserFromDesign() {
 		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
 		int deptid = departmentRepository.findOnlyUserDesign();
 		String selectSql = "select * from user_dept_relation where dept_id=" + deptid + " and re_state=0";
 		Query query = em.createNativeQuery(selectSql, UserDeptRelation.class);

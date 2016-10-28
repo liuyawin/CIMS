@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mvc.service.impl;
 
 import java.util.List;
@@ -10,42 +7,60 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.AlarmDao;
 import com.mvc.entity.Alarm;
-import com.mvc.repository.AlarmRepositoty;
+import com.mvc.repository.AlarmRepository;
 import com.mvc.service.AlarmService;
 
 /**
- * 报警相关
+ * 报警
  * 
- * @author zjn
- * @date 2016年10月25日
+ * @author wanghuimin
+ * @date 2016年9月26日
  */
 @Service("alarmServiceImpl")
 public class AlarmServiceImpl implements AlarmService {
 	@Autowired
-	AlarmRepositoty alarmRepository;
+	AlarmRepository alarmRepository;
 	@Autowired
 	AlarmDao alarmDao;
 
-	// 根据ID查看报警详情
-	@Override
-	public Alarm findAlarmById(Integer alarmid) {
-		return alarmRepository.findAlarmById(alarmid);
-	}
-
-	// 根据参数统计报警列表条数，alarmType是数组类型:[2,3]
-	@Override
-	public Integer countByParam(Integer user_id, String alarmType, String searchKey) {
-		return alarmDao.countByParam(user_id, alarmType, searchKey);
-	}
-
 	// 查找报警信息列表
 	@Override
-	public List<Alarm> findAlarmList(Integer user_id, String searchKey, String alarmType, Integer offset, Integer end) {
-		return alarmDao.findAlarmList(user_id, searchKey, alarmType, offset, end);
+	public List<Alarm> findAlarmInformationList(Integer user_id, String searchKey, String alarmType, Integer offset,
+			Integer end) {
+		return alarmDao.findAlarmInformationList(user_id, searchKey, alarmType, offset, end);
+	}
+
+	// 张姣娜添加：统计报警列表条数，alarmType:2,3
+	@Override
+	public Integer countTotal(Integer user_id, String alarmType, String searchKey) {
+		return alarmDao.countAlarmTotal(user_id, alarmType, searchKey);
+	}
+
+	// 统计报警列表条数
+	@Override
+	public Long countNumByUserId(Integer user_id) {
+		return alarmRepository.countNumByUserId(user_id);
+	}
+
+	// 根据ID查看报警详情
+	@Override
+	public Alarm findAlarmContentById(Integer alarmid) {
+		return alarmRepository.findAlarmContentById(alarmid);
+	}
+
+	// 根据用户名查找报警信息
+	@Override
+	public List<Alarm> findAlarmByUser(String username, Integer offset, Integer end) {
+		return alarmDao.findAlarmByUser(username, offset, end);
+	}
+
+	// 统计报警条数
+	@Override
+	public Integer countTotalNum(String searchKey) {
+		return alarmDao.countAlarmTotalNum(searchKey);
 	}
 
 	// 根据ID及其类型解除报警
-	@Override
 	public boolean updateByIdType(Integer Id, Integer IdType) {
 		return alarmDao.updateByIdType(Id, IdType);
 	}

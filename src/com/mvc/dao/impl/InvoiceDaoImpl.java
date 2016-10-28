@@ -131,7 +131,6 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	}
 
 	// 按发票状态获取列表
-	@SuppressWarnings("unchecked")
 	public Integer WaitingDealCountByParam(Integer user_id, Integer invoiceState) {
 		EntityManager em = emf.createEntityManager();
 		String countSql = " select count(invo_id) from invoice where invo_isdelete=0 and receiver_id=:receiver_id and invo_state=:invo_state ";

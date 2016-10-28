@@ -1,5 +1,6 @@
 package com.mvc.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.base.enums.TaskStatus;
 import com.mvc.dao.TaskDao;
 import com.mvc.entity.Task;
 import com.mvc.repository.SubTaskRepository;
@@ -18,7 +20,7 @@ import com.mvc.repository.TaskRepository;
 /**
  * 文书任务
  * 
- * @author zjn
+ * @author wanghuimin
  * @date 2016年9月9日
  */
 @Repository("taskDaoImpl")
@@ -152,6 +154,19 @@ public class TaskDaoImpl implements TaskDao {
 		List<Task> list = query.getResultList();
 		em.close();
 		return list;
+	}
+
+	// 根据任务类型获取任务条数
+	public Integer countByType(Integer userId, Integer taskType) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = " select count(task_id) from task where task_isdelete=0 and task_state=:task_state and receiver_id=:user_id and task_type=:task_type ";
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("task_state", TaskStatus.waitingReceipt.value);
+		query.setParameter("user_id", userId);
+		query.setParameter("task_type", taskType);
+		List<Object> totalRow = query.getResultList();
+		em.close();
+		return Integer.parseInt(totalRow.get(0).toString());
 	}
 
 }

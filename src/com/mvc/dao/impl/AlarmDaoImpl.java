@@ -1,8 +1,6 @@
-/**
- * 
- */
 package com.mvc.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,48 +14,29 @@ import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.AlarmDao;
 import com.mvc.entity.Alarm;
+import com.mvc.repository.UserRepository;
 
 /**
  * 报警
  * 
- * @author zjn
- * @date 2016年10月25日
+ * @author wanghuimin
+ * @date 2016年9月26日
  */
 @Repository("alarmDaoImpl")
 public class AlarmDaoImpl implements AlarmDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
-
-	// 根据参数统计报警列表条数，alarmType是数组类型:[2,3]
-	@SuppressWarnings("unchecked")
-	@Override
-	public Integer countByParam(Integer user_id, String alarmType, String searchKey) {
-		EntityManager em = emf.createEntityManager();
-		String[] chars = alarmType.split(",");
-		ArrayList<Integer> types = new ArrayList<Integer>();
-		for (int i = 0; i < chars.length; i++) {
-			types.add(Integer.valueOf(chars[i]));
-		}
-		String countSql = " select count(*) from (select count(alar_id) from alarm a where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
-		// 判断查找关键字是否为空
-		if (null != searchKey && searchKey != " ") {
-			countSql += " and ( alar_content like '%" + searchKey + "%' )";
-		}
-		countSql += " group by task_id,reno_id,prst_id) as tmp  ";
-		Query query = em.createNativeQuery(countSql);
-		query.setParameter("receiver_id", user_id);
-		query.setParameter("alar_code", types);
-		List<Object> totalRow = query.getResultList();
-		em.close();
-		return Integer.parseInt(totalRow.get(0).toString());
-	}
+	@Autowired
+	UserRepository userRepository;
 
 	// 查找报警信息列表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Alarm> findAlarmList(Integer user_id, String searchKey, String alarmType, Integer offset, Integer end) {
+	public List<Alarm> findAlarmInformationList(Integer user_id, String searchKey, String alarmType, Integer offset,
+			Integer end) {
 		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
 		String[] chars = alarmType.split(",");
 		ArrayList<Integer> types = new ArrayList<Integer>();
 		for (int i = 0; i < chars.length; i++) {
@@ -80,9 +59,45 @@ public class AlarmDaoImpl implements AlarmDao {
 		return list;
 	}
 
-	// 王睿：根据ID及其类型解除报警
+	// 根据用户名查找报警信息
+	@SuppressWarnings("unchecked")
 	@Override
-	public boolean updateByIdType(Integer Id, Integer IdType) {
+	public List<Alarm> findAlarmByUser(String username, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		Integer userid = userRepository.findUserByUsername(username);
+		String selectSql = "select * from Alarm where receiver_id=:receiver_id ";
+		selectSql += "order by alar_id desc limit :offset,:end";
+		Query query = em.createNamedQuery(selectSql, Alarm.class);
+		query.setParameter("receiver_id", userid);
+		query.setParameter("offset", offset);
+		query.setParameter("end", end);
+		List<Alarm> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 统计报警条数
+	@Override
+	public Integer countAlarmTotalNum(String searchKey) {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		String countSql = "";
+		countSql = "select count(alar_id) from alarm  ";
+		Query query = em.createNamedQuery(countSql);
+		Integer reveiverid;
+		if (null != searchKey) {
+			reveiverid = userRepository.findUserByUsername(searchKey);
+			countSql += " where receiver_id=:receiver_id  ";
+			query.setParameter("receiver", reveiverid);
+		}
+		List<Object> totalRow = query.getResultList();
+		em.close();
+		return Integer.parseInt(totalRow.get(0).toString());
+	}
+
+	// 根据ID及其类型解除报警
+	public Boolean updateByIdType(Integer Id, Integer IdType) {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
@@ -110,4 +125,26 @@ public class AlarmDaoImpl implements AlarmDao {
 		return true;
 	}
 
+	// 张姣娜添加：统计报警列表条数，alarmType:2,3
+	public Integer countAlarmTotal(Integer user_id, String alarmType, String searchKey) {
+		EntityManager em = emf.createEntityManager();
+		String[] chars = alarmType.split(",");
+		ArrayList<Integer> types = new ArrayList<Integer>();
+		for (int i = 0; i < chars.length; i++) {
+			types.add(Integer.valueOf(chars[i]));
+		}
+		System.out.println("types:" + chars.toString());
+		String countSql = " select count(*) from (select count(alar_id) from alarm a where receiver_id=:receiver_id and alar_isremove=0 and alar_code in(:alar_code) ";
+		// 判断查找关键字是否为空
+		if (null != searchKey) {
+			countSql += " and ( alar_content like '%" + searchKey + "%' )";
+		}
+		countSql += " group by task_id,reno_id,prst_id) as tmp  ";
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("receiver_id", user_id);
+		query.setParameter("alar_code", types);
+		List<Object> totalRow = query.getResultList();
+		em.close();
+		return Integer.parseInt(totalRow.get(0).toString());
+	}
 }

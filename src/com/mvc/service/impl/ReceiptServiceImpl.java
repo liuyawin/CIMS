@@ -26,6 +26,18 @@ public class ReceiptServiceImpl implements ReceiptService {
 	@Autowired
 	ReceiptDao receiptDao;
 
+	// 根据合同ID查询该合同对应的所有收据
+	public List<Receipt> findAllByContId(Integer cont_id) {
+		return receiptRepository.findAllByContId(cont_id);
+	}
+
+	// 根据合同ID查询该合同对应的所有收据总条数
+	public Integer countTotal(Integer cont_id) {
+		Long count = receiptRepository.countTotal(cont_id);
+		Integer result = Integer.valueOf(count.toString());
+		return result;
+	}
+
 	// 根据收据Id查询该条数据的详情
 	public Receipt findByReceiptId(Integer rece_id) {
 		return receiptRepository.findByReceiptId(rece_id);
@@ -51,8 +63,8 @@ public class ReceiptServiceImpl implements ReceiptService {
 	}
 
 	// 根据合同ID查询收据总金额
-	public Float totalMoneyOfReceipt(Integer contId) {
-		return receiptDao.totalMoneyOfReceipt(contId);
+	public Float totalMoneyOfInvoice(Integer contId) {
+		return receiptDao.totalMoneyOfInvoice(contId);
 	}
 
 }
