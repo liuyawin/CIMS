@@ -11,8 +11,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.base.constants.CookieKeyConstants;
 import com.base.constants.PageNameConstants;
+import com.base.constants.PermissionConstants;
 import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.AlarmStatistic;
 import com.mvc.entity.User;
@@ -137,21 +139,47 @@ public class LoginController {
 		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
 
-		// System.out.println("权限测试开始：");
-		// String permission = user.getRole().getRole_permission();
-		// System.out.println("permission:" + permission);
-		// JSONObject jsonObject = JSONObject.fromObject(permission);
-		// String contPer = jsonObject.getString("con_per");
-		// System.out.println("contPer:" + contPer);
-		// String taskPer = jsonObject.getString("task_per");
-		// System.out.println("taskPer:" + taskPer);
-		// String billPer = jsonObject.getString("bill_per");
-		// System.out.println("billPer:" + billPer);
-		// String systemPer = jsonObject.getString("system_per");
-		// System.out.println("systemPer:" + systemPer);
-		// String alarmPer = jsonObject.getString("alarm_per");
-		// System.out.println("alarmPer:" + alarmPer);
-		// System.out.println("权限测试结束");
+		System.out.println("权限测试开始：");
+		String result = "";
+		String permission = user.getRole().getRole_permission();
+		String[] strArr = null;
+		JSONObject jsonObject = JSONObject.fromObject(permission);
+		strArr = StringToArray(jsonObject.getString("con_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("task_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("bill_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("system_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("alarm_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result + " ");
+		System.out.println("权限测试结束");
 
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
@@ -283,12 +311,53 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/getUserPermission.do")
 	public @ResponseBody String getUserPermission(HttpServletRequest request, HttpSession session) {
-		JSONObject jsonObject = new JSONObject();
+		String result = "";
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		// String permission = user.getUser_permission();
-		// 临时测试
-		String permission = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-		jsonObject = JSONObject.fromObject(permission);
-		return jsonObject.toString();
+		String permission = user.getRole().getRole_permission();
+		String[] strArr = null;
+		JSONObject jsonObject = JSONObject.fromObject(permission);
+		strArr = StringToArray(jsonObject.getString("con_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("task_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("bill_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("system_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("alarm_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result + " ");
+		return JSON.toJSONString(result + " ");
+	}
+
+	private static String[] StringToArray(String str) {
+		String subStr = str.substring(1, str.length() - 1);
+		String strArr[] = subStr.split(",");
+		return strArr;
+
 	}
 }
