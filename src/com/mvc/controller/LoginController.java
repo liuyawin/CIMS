@@ -137,21 +137,21 @@ public class LoginController {
 		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
 
-//		System.out.println("权限测试开始：");
-//		String permission = user.getUser_permission();
-//		JSONObject jsonObject = JSONObject.fromObject(permission);
-//
-//		String contPer = jsonObject.getString("con_per");
-//		System.out.println("contPer:" + contPer);
-//		String taskPer = jsonObject.getString("task_per");
-//		System.out.println("taskPer:" + taskPer);
-//		String billPer = jsonObject.getString("bill_per");
-//		System.out.println("billPer:" + billPer);
-//		String systemPer = jsonObject.getString("system_per");
-//		System.out.println("systemPer:" + systemPer);
-//		String alarmPer = jsonObject.getString("alarm_per");
-//		System.out.println("alarmPer:" + alarmPer);
-//		System.out.println("权限测试结束");
+		// System.out.println("权限测试开始：");
+		// String permission = user.getRole().getRole_permission();
+		// System.out.println("permission:" + permission);
+		// JSONObject jsonObject = JSONObject.fromObject(permission);
+		// String contPer = jsonObject.getString("con_per");
+		// System.out.println("contPer:" + contPer);
+		// String taskPer = jsonObject.getString("task_per");
+		// System.out.println("taskPer:" + taskPer);
+		// String billPer = jsonObject.getString("bill_per");
+		// System.out.println("billPer:" + billPer);
+		// String systemPer = jsonObject.getString("system_per");
+		// System.out.println("systemPer:" + systemPer);
+		// String alarmPer = jsonObject.getString("alarm_per");
+		// System.out.println("alarmPer:" + alarmPer);
+		// System.out.println("权限测试结束");
 
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
@@ -285,7 +285,8 @@ public class LoginController {
 	public @ResponseBody String getUserPermission(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		String permission = user.getUser_permission();
+		// String permission = user.getUser_permission();
+		String permission = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
 		jsonObject = JSONObject.fromObject(permission);
 		return jsonObject.toString();
 	}

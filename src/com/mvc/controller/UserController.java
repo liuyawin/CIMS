@@ -100,9 +100,7 @@ public class UserController {
 		user.setUser_email(jsonObject.getString("user_email"));
 		Role role = new Role();
 		role.setRole_id(Integer.parseInt(jsonObject.getJSONObject("role").getString("role_id")));
-		role.setRole_permission(jsonObject.getJSONObject("role").getString("role_id"));
 		user.setRole(role);
-		user.setUser_permission(role.getRole_permission());
 		user.setUser_isdelete(0);
 		boolean result;
 		if (jsonObject.containsKey("user_id")) {
