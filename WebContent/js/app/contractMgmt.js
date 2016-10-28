@@ -364,6 +364,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+
 	// 10.25zq工期完成
 	services.finishPrst = function(data) {
 		return $http({
@@ -1455,6 +1456,7 @@ app
 									});
 
 						} ]);
+
 app
 		.controller(
 				"UploadController",
@@ -1707,7 +1709,7 @@ app
 						link : function(scope, element, attr) {
 
 							var key = attr.hasPermission.trim(); // 获取页面上的权限值
-							/* console.log("获取页面上的权限值" + key); */
+							console.log("获取页面上的权限值" + key);
 							/* console.log("cookie内容" + JSON.stringify(cookie)); */
 							/*
 							 * if (sessionStorage.getItem('userRole').trim() ==
@@ -1739,7 +1741,7 @@ app
 								}
 								break;
 							case "4":
-								var keys4 = " bInvoAdd cPsFinish tContDetail ";
+								var keys4 = " bInvoAdd tContDetail ";
 								var regStr4 = "\\s" + key + "\\s";
 								var reg4 = new RegExp(regStr4);
 								if (keys4.search(reg4) < 0) {
