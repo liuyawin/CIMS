@@ -23,5 +23,7 @@ public interface ReceiveNodeService {
 
 	// 根据收款节点ID删除收款节点
 	Boolean deleteReno(Integer reno_id);
-	
+
+	// 更新收款节点状态和金额
+	Boolean updateRenoStateAndMoney(Integer cont_id, Float remoAmoney);
 }

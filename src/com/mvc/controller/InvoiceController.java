@@ -187,6 +187,7 @@ public class InvoiceController {
 	public @ResponseBody String addInvoice(HttpServletRequest request, HttpSession session) throws ParseException {
 		JSONObject result = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		String permission = user.getRole().getRole_permission();// 权限
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("invoice"));
 		Invoice invoice = new Invoice();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -209,7 +210,11 @@ public class InvoiceController {
 		invoice.setCreator(creator);
 		invoice.setInvo_isdelete(IsDelete.NO.value);
 		invoice.setInvo_ctime(new Date(time));
-		invoice.setInvo_state(InvoiceStatus.waitAudit.value);
+		if (permission.contains("tInvoAudit")) {// 审核发票权限（主任）
+			invoice.setInvo_state(InvoiceStatus.waitdealing.value);// 待处理
+		} else {
+			invoice.setInvo_state(InvoiceStatus.waitAudit.value);// 待审核
+		}
 		boolean invoiceResult = invoiceService.save(invoice);
 		if (invoiceResult)
 			result.put("result", "true");
