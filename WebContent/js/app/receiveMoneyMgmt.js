@@ -98,7 +98,7 @@ receiveMoneyApp
 								return $http({
 									method : 'post',
 									url : baseUrl
-											+ 'receiveMoney/countReceiveMoneyByContId.do',
+											+ 'receiveMoney/receiveMoneyByContId.do',
 									data : data
 								});
 							};
