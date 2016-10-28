@@ -228,9 +228,11 @@
 			<li id="rn{{$index + 1}}" ng-repeat="node in rnchat.nodes"
 				ng-mouseover="rnShowDel($index+1)" ng-mouseout="rnHideDel($index+1)"><div
 					class="stage_style">
-					<label>节点{{$index + 1}}</label><input type="text"
-						class="dfinput middle_input" id="nodeContent" name="nodeContent"
-						ng-model="node.reno_content" required />
+					<label>节点{{$index + 1}}：</label><label>工期阶段</label><select  class="dfselect middle_input"
+						ng-model="node.projectStage" value="stage.prst_id"
+						ng-options="stage.prst_id as stage.prst_content for stage in prst"><option>
+							请选择工期阶段</option>
+					</select>
 				</div>
 
 				<div class="stage_style left_length">
@@ -245,10 +247,9 @@
 						ng-click="rnchat.decrNode($index)" ng-show="!rnchat.canDescNode">
 				</div> <br>
 				<div class="stage_style top_length">
-					<label>工期阶段</label><select class="dfselect middle_input"
-						ng-model="node.projectStage"><option
-							value={{stage.prst_id}} ng-repeat="stage in prst">{{stage.prst_content}}</option>
-					</select>
+					<label>节点内容</label><input type="text"
+						class="dfinput middle_input" id="nodeContent" name="nodeContent"
+						ng-model="node.reno_content" required />
 				</div>
 				<div class="stage_style top_length left_length">
 					<label>实际应收金额</label><input type="text" class="dfinput width35"

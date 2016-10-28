@@ -319,6 +319,7 @@ receiptapp.controller('ReceiptController', [
 				$("#invoice").hide();
 				$("#receipt").show();
 				$("#contract").hide();
+				$("#receiveMoney").hide();
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/receiptList') == 0) {
 					selectReceiptByContId();// 根据合同ID查找所有收据
