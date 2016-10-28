@@ -44,14 +44,12 @@ public class UserController {
 	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Long totalRow = userService.countTotal();
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(Integer.parseInt(totalRow.toString()));
 		List<User> list = userService.findUserAllByPage(pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -65,7 +63,6 @@ public class UserController {
 	@RequestMapping(value = "/getAllUserList.do")
 	public @ResponseBody String getAllStores(HttpServletRequest request, HttpSession session) {
 		List<User> result = userService.findUserAlls();
-		System.out.println(JSON.toJSONString(result));
 		return JSON.toJSONString(result);
 	}
 
@@ -101,10 +98,11 @@ public class UserController {
 		user.setUser_sex(Integer.parseInt(jsonObject.getString("user_sex")));
 		user.setUser_tel(jsonObject.getString("user_tel"));
 		user.setUser_email(jsonObject.getString("user_email"));
-
 		Role role = new Role();
 		role.setRole_id(Integer.parseInt(jsonObject.getJSONObject("role").getString("role_id")));
+		role.setRole_permission(jsonObject.getJSONObject("role").getString("role_id"));
 		user.setRole(role);
+		user.setUser_permission(role.getRole_permission());
 		user.setUser_isdelete(0);
 		boolean result;
 		if (jsonObject.containsKey("user_id")) {
@@ -126,7 +124,6 @@ public class UserController {
 	@RequestMapping(value = "/selectUsersFromDesign.do")
 	public @ResponseBody String getUsersFromDesign(HttpServletRequest request, HttpSession session) {
 		List<UserDeptRelation> result = userService.findUserFromDesign();
-		System.out.println(JSON.toJSONString(result));
 		return JSON.toJSONString(result);
 	}
 

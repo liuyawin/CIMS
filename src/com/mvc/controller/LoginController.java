@@ -78,18 +78,17 @@ public class LoginController {
 	@RequestMapping("/checkUserName.do")
 	public @ResponseBody Long checkUserName(HttpServletRequest request, HttpSession session, ModelMap map) {
 		String userNum = request.getParameter("userName");
-		System.out.println(userNum);
 		Long result = userService.isExist(userNum);
-		System.out.println(result);
 		return result;
 	}
 
-	@RequestMapping("/getUserPermission.do")
-	public @ResponseBody JSONObject getUserPermission(HttpServletRequest request, HttpSession session, ModelMap map) {
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("permission", "zhuren");
-		return jsonObject;
-	}
+	// @RequestMapping("/getUserPermission.do")
+	// public @ResponseBody JSONObject getUserPermission(HttpServletRequest
+	// request, HttpSession session, ModelMap map) {
+	// JSONObject jsonObject = new JSONObject();
+	// jsonObject.put("permission", "zhuren");
+	// return jsonObject;
+	// }
 
 	/**
 	 * 登录验证用户名和密码是否正确
@@ -103,11 +102,9 @@ public class LoginController {
 	@RequestMapping("/loginValidate.do")
 	public @ResponseBody JSONObject loginValidate(HttpSession session, HttpServletRequest request, ModelMap model,
 			HttpServletResponse res) {
-		System.out.println("loginValidate");
 		String userNum = request.getParameter("userName");
 		String passWord = request.getParameter("password");
 		User user = userService.findByUserNum(userNum);
-
 		JSONObject jsonObject = new JSONObject();
 
 		if (user != null) {
@@ -135,11 +132,27 @@ public class LoginController {
 	@RequestMapping("/login.do")
 	public String login(HttpSession session, HttpServletRequest request, ModelMap model, HttpServletResponse res) {
 		String error_msg = "";
-		System.out.println("login");
 		String userNum = request.getParameter("userName");
 		String password = request.getParameter("password");
 		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
+
+		System.out.println("权限测试开始：");
+		String permission = user.getUser_permission();
+		JSONObject jsonObject = JSONObject.fromObject(permission);
+		
+		String contPer = jsonObject.getString("con_per");
+		System.out.println("contPer:" + contPer);
+		String taskPer = jsonObject.getString("task_per");
+		System.out.println("taskPer:" + taskPer);
+		String billPer = jsonObject.getString("bill_per");
+		System.out.println("billPer:" + billPer);
+		String systemPer = jsonObject.getString("system_per");
+		System.out.println("systemPer:" + systemPer);
+		String alarmPer = jsonObject.getString("alarm_per");
+		System.out.println("alarmPer:" + alarmPer);
+		System.out.println("权限测试结束");
+
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
 			String passwd = user.getUser_pwd();
@@ -196,7 +209,6 @@ public class LoginController {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		jsonObject.put("user", user);
-		System.out.println("返回用户:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -259,6 +271,22 @@ public class LoginController {
 				jsonObject.put("taskAlarmNum", alarmStatistic.getTask_alarm_num());
 			}
 		}
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 获取当前用户权限
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/getUserPermission.do")
+	public @ResponseBody String getUserPermission(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		String permission = user.getUser_permission();
+		jsonObject = JSONObject.fromObject(permission);
 		return jsonObject.toString();
 	}
 }

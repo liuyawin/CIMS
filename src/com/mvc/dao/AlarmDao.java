@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mvc.dao.impl;
+package com.mvc.dao;
 
 import java.util.List;
 
