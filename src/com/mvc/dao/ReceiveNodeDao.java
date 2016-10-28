@@ -18,4 +18,6 @@ public interface ReceiveNodeDao {
 	// 根据合同ID查找收款节点
 	List<ReceiveNode> selectRenoByContId(Integer cont_id);
 
+	// 根据收款节点ID删除收款节点
+	Boolean deleteReno(Integer reno_id);
 }

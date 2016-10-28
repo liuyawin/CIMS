@@ -1,0 +1,30 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="/CIMS/login/toIndex.do">首页</a></li>
+		<li>合同管理</li>
+		<li>合同操作记录</li>
+	</ul>
+</div>
+<div>
+	<div></div>
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th class="width10 text-center">操作编号</th>
+				<th class="width10 text-center">操作时间</th>
+				<th class="width20 text-center">操作记录</th>
+				<th class="width10 text-center">操作人</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="cRecord in records">
+				<td class="width10 text-center">{{$index+1}}</td>
+				<td>{{cRecord.conre_time.time |dateTimeType}}</td>
+				<td>{{cRecord.conre_content}}</td>
+				<td>{{cRecord.user.user_name}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

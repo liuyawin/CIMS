@@ -137,21 +137,21 @@ public class LoginController {
 		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
 
-		System.out.println("权限测试开始：");
-		String permission = user.getUser_permission();
-		JSONObject jsonObject = JSONObject.fromObject(permission);
-		
-		String contPer = jsonObject.getString("con_per");
-		System.out.println("contPer:" + contPer);
-		String taskPer = jsonObject.getString("task_per");
-		System.out.println("taskPer:" + taskPer);
-		String billPer = jsonObject.getString("bill_per");
-		System.out.println("billPer:" + billPer);
-		String systemPer = jsonObject.getString("system_per");
-		System.out.println("systemPer:" + systemPer);
-		String alarmPer = jsonObject.getString("alarm_per");
-		System.out.println("alarmPer:" + alarmPer);
-		System.out.println("权限测试结束");
+//		System.out.println("权限测试开始：");
+//		String permission = user.getUser_permission();
+//		JSONObject jsonObject = JSONObject.fromObject(permission);
+//
+//		String contPer = jsonObject.getString("con_per");
+//		System.out.println("contPer:" + contPer);
+//		String taskPer = jsonObject.getString("task_per");
+//		System.out.println("taskPer:" + taskPer);
+//		String billPer = jsonObject.getString("bill_per");
+//		System.out.println("billPer:" + billPer);
+//		String systemPer = jsonObject.getString("system_per");
+//		System.out.println("systemPer:" + systemPer);
+//		String alarmPer = jsonObject.getString("alarm_per");
+//		System.out.println("alarmPer:" + alarmPer);
+//		System.out.println("权限测试结束");
 
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
