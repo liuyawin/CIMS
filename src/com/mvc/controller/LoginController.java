@@ -286,6 +286,7 @@ public class LoginController {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		// String permission = user.getUser_permission();
+		// 临时测试
 		String permission = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
 		jsonObject = JSONObject.fromObject(permission);
 		return jsonObject.toString();
