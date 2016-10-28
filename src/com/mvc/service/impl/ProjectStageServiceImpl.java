@@ -52,4 +52,10 @@ public class ProjectStageServiceImpl implements ProjectStageService {
 		return projectStageDao.updatePrstState(prst_id);
 	}
 
+	// 删除工期
+	@Override
+	public Boolean deletePrstState(Integer prst_id) {
+		return projectStageDao.deletePrstState(prst_id);
+	}
+
 }

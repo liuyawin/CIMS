@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mvc.dao.impl.AlarmDao;
+import com.mvc.dao.AlarmDao;
 import com.mvc.entity.Alarm;
 import com.mvc.repository.AlarmRepositoty;
 import com.mvc.service.AlarmService;
