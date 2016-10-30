@@ -412,6 +412,13 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+	services.selectPrstById = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectStage/selectPrstById.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 
@@ -801,7 +808,7 @@ app
 								} ];
 								$(".overlayer").fadeIn(200);
 								$("#prstAdd").fadeIn(200);
-								
+
 							}
 							$("#sureAddPrst").click(
 									function() {
@@ -1002,7 +1009,6 @@ app
 							// 10.25zq删除工期和收款
 							// 10.25zq删除工期阶段
 							contract.delPrst = function() {
-
 								console.log(this.stage.prst_state);
 								if (this.stage.prst_state == 0) {
 									var prstId = this.stage.prst_id;
@@ -1076,8 +1082,25 @@ app
 							contract.modifyPrst = function() {
 								var prstId = this.stage.prst_id;
 								sessionStorage.setItem("prstId", prstId);
-								contract.prStage = this.stage;
-								contract.prStage.prst_etime = changeDateType(this.stage.prst_etime);
+
+								services
+										.selectPrstById({
+											prstId : prstId
+										})
+										.success(
+												function(data) {
+
+													contract.prStage = data.projectStage;
+													console.log(data.projectStage);
+													$scope.prStage.prst_etime = changeDateType(data.projectStage.prst_etime);
+
+												});
+
+								/*
+								 * contract.prStage = this.stage;
+								 * contract.prStage.prst_etime =
+								 * changeDateType(time);
+								 */
 								$(".overlayer").fadeIn(200);
 								$("#prstModify").fadeIn(200);
 							}
@@ -1097,6 +1120,7 @@ app
 							$("#cancelModifyPrst").click(function() {
 								$("#prstModify").fadeOut(100);
 								$(".overlayer").fadeOut(200);
+
 							});
 							// 10.25zq修改收款节点
 							contract.modifyReno = function() {
@@ -1144,16 +1168,21 @@ app
 							});
 							// 10.25zq更改时间的样式
 							function changeDateType(date) {
-								var DateTime = new Date(date.time)
-										.toLocaleDateString().replace(/\//g,
-												'-');
+								if (date != "") {
+									var DateTime = new Date(date.time)
+											.toLocaleDateString().replace(
+													/\//g, '-');
+								} else {
+									var DateTime = "";
+								}
+
 								return DateTime;
 							}
 							// 10.26zq实现选择工期时的联动
 							contract.prstChange = function(type) {
 								// 0表示添加，1表示修改
 								if (type == "0") {
-									
+
 									if ($("#nodePrstAdd").val() != "") {
 										$("#nodeContentAdd").val(
 												contract.prst[$("#nodePrstAdd")
@@ -1415,21 +1444,24 @@ app
 
 									selectContractById(); // 根据ID获取合同信息
 									addStage();// 显示工期阶段录入界面
-									
+
 								} else if ($location.path().indexOf(
 										'/contractModify') == 0) {
 									selectUsersFromDesign();// 查找设计部人员
 									selectContractById(); // 根据ID获取合同信息
 									$("#prstContainer").hide();
 									$("#renoContainer").hide();
-								} else if ($location.path().indexOf('/contractRecord') == 0) {
+								} else if ($location.path().indexOf(
+										'/contractRecord') == 0) {
 
-					services.selectContRecordByContId({
-						cont_id : sessionStorage.getItem("conId")
-					}).success(function(data) {
-						contract.records = data.list;
-					});
-				}
+									services.selectContRecordByContId(
+											{
+												cont_id : sessionStorage
+														.getItem("conId")
+											}).success(function(data) {
+										contract.records = data.list;
+									});
+								}
 							}
 
 							initData();

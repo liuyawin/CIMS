@@ -8,20 +8,21 @@
 </div>
 
 <div class="rightinfo">
-	
+
 	<div class="tools">
 		<form class="toolbar">
-			<select class="dfselect" ng-model="remoState" id="remoState" style="width: 167px">
+			<select class="dfselect" ng-model="remoState" id="remoState"
+				style="width: 167px">
 				<option value="-1">全部</option>
 				<option value="0">待核对</option>
 				<option value="1">已核对</option>
 			</select> <input class="btn" type="submit" value="查询"
 				ng-click="selectReceiveMoneysByContId()">
 		</form>
-		<div id="inmoPrompt" >
-			<label class="text_style left_length ">合同总金额 {{cont.cont_money |
-				invoFloat}} 万元！</label><label class="text_style">已到款金额 {{totalMoney
-				| invoFloat}} 万元！</label>
+		<div id="inmoPrompt">
+			<label class="text_style left_length ">合同总金额
+				{{cont.cont_money | invoFloat}} 万元！</label><label class="text_style">已到款金额
+				{{totalMoney | invoFloat}} 万元！</label>
 		</div>
 	</div>
 
@@ -42,14 +43,14 @@
 		<tbody>
 			<tr ng-repeat="remo in remos">
 				<td class="width10">{{$index + 1}}</td>
-				<td class="width10">{remo.remo_money |receFloat}</td>
-				<td class="width10">{remo.remo_time |dateType}</td>
-				<td class="width15">{remo.remo_amoney | receFloat}</td>
-				<td class="width15">{remo.contract.cont_client | cutString}</td>
-				<td class="width5">{remo.creater.user_name}</td>
-				<td class="width5">{remo.operater.user_name}</td>
-				<td class="width5">{remo.remo_state}</td>
-				<td class="width10"><a ng-click="selectInvoiceById()"
+				<td class="width10">{{remo.remo_money |receFloat}}</td>
+				<td class="width10">{{remo.remo_time.time |dateType}}</td>
+				<td class="width15">{{remo.remo_amoney | receFloat}}</td>
+				<td class="width15">{{remo.contract.cont_client | cutString}}</td>
+				<td class="width5">{{remo.creater.user_name}}</td>
+				<td class="width5">{{remo.operater.user_name}}</td>
+				<td class="width5">{{remo.remo_state |remoState}}</td>
+				<td class="width10"><a ng-click="checkRemo()"
 					class="tablelink underline">查看</a><a ng-click="auditRemo()"
 					class="tablelink underline">审核</a></td>
 
@@ -62,7 +63,7 @@
 </div>
 <!-- 派发到款通知模态框 -->
 <div class="overlayer"></div>
-<div class="tip" id="tipRemo" style="height: 420px">
+<div class="tip" id="tipRemo" style="height:450px">
 	<div class="tiptop">
 		<span>创建任务</span><a></a>
 	</div>
@@ -76,17 +77,16 @@
 					ng-model="receiveMoney.remo_time" class="dfinput dateFormat"
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span>
 				</li>
-				<li><label>审核人</label><select name="remoOperater"
-					class="dfselect" ng-model="receiveMoney.operater.uesr_id">
-						<option ng-repeat="user in users" value={{user.user_id}}>
-							<span>{{user.user_name}}</span>
-						</option>
+				<li><label>核对人</label><select name="remoOperater"
+					class="dfselect" ng-model="receiveMoney.operater.user_id"
+					ng-options="user.user_id as user.user_name for user in users">
+						<option value="">请选择用户</option>
 				</select></li>
 				<li><label>备注</label> <textarea name="" cols="" rows=""
 						class="textinput area_style" ng-model="receiveMoney.remo_remark"
 						required></textarea></li>
 				<li><label>实到款金额</label><input type="text" name="remoAmoney"
-					id="remoAmoney" class="dfinput " ng-model="remo_amoney" required>万元</li>
+					id="remoAmoney" class="dfinput " ng-model="receiveMoney.remo_amoney" required>万元</li>
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sure" id="sureRemoAudit"

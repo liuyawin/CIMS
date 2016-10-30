@@ -139,11 +139,13 @@ public class ReceiveMoneyController {
 			receiveMoney.setRemo_remark(jsonObject.getString("remo_remark"));
 		}
 		if (jsonObject.containsKey("operater")) {
-			JSONObject tmp = JSONObject.fromObject(request.getParameter("operater"));
+			JSONObject tmp = JSONObject.fromObject(jsonObject.getString("operater"));
 			User operater = new User();
-			operater.setUser_id(Integer.valueOf(tmp.getString("uesr_id")));
+			operater.setUser_id(Integer.valueOf(tmp.getString("user_id")));
+			System.out.println("张群册数"+tmp.getString("user_id"));
 		}
 		receiveMoney.setRemo_state(ReceiveMoneyStatus.waitAudit.value);
+		receiveMoney.setRemo_amoney(Float.valueOf(0));
 		boolean result = receiveMoneyService.save(receiveMoney);
 		return JSON.toJSONString(result);
 	}

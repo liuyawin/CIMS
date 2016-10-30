@@ -73,9 +73,9 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		String countSql = "";
 		if (remoState != ReceiveMoneyStatus.all.value) {
-			countSql += "select * from receive_money where  cont_id =:cont_id and remo_state=:remo_state ";
+			countSql += "select count(*) from receive_money where  cont_id =:cont_id and remo_state=:remo_state ";
 		} else {
-			countSql += "select * from receive_money where  cont_id =:cont_id  ";
+			countSql += "select count(*)  from receive_money where  cont_id =:cont_id  ";
 		}
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("cont_id", contId);
