@@ -26,14 +26,14 @@ public class ReceiveNodeDaoImpl implements ReceiveNodeDao {
 	EntityManagerFactory emf;
 
 	// 修改收款节点状态
-	public Boolean updateState(Integer id, Integer state) {
+	public Boolean updateState(Integer reno_id, Integer state, Float reno_amoney) {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			String selectSql = "update receive_node rn set rn.reno_state=:reno_state where rn.reno_id=:reno_id and rn.reno_isdelete=0";
-			Query query = em.createNativeQuery(selectSql);
+			String sql = "update receive_node rn set rn.reno_state=:reno_state,rn.reno_amoney=:reno_amoney where rn.reno_id=:reno_id and rn.reno_isdelete=0";
+			Query query = em.createNativeQuery(sql);
 			query.setParameter("reno_state", state);
-			query.setParameter("reno_id", id);
+			query.setParameter("reno_id", reno_id);
 			query.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();
