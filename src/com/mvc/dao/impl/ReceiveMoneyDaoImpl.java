@@ -93,7 +93,7 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			String selectSql = " update receive_money set  remo_amoney=:remo_amoney  where remo_id =:remo_id ";
+			String selectSql = " update receive_money set  remo_amoney=:remo_amoney and remo_state=1 where remo_id =:remo_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("remo_id", remoId);
 			query.setParameter("remo_amoney", remoAmoney);
