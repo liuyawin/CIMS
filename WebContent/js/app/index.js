@@ -1,7 +1,7 @@
 var app = angular
 		.module(
 				'index',
-				[ 'ngRoute' ],
+				[ 'ngRoute','Permission' ],
 				function($httpProvider) {// ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
 					$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -113,64 +113,3 @@ app.controller('IndexController', [ '$scope', 'services', '$location',
 			initData();
 			findRoleFromCookie();
 		} ]);
-app
-.directive(
-		'hasPermission',
-		function($timeout) {
-			return {
-				restrict : 'A',
-				link : function(scope, element, attr) {
-
-					var key = attr.hasPermission.trim(); // 获取页面上的权限值
-					console.log("获取页面上的权限值" + key);
-					/* console.log("cookie内容" + JSON.stringify(cookie)); */
-					/*
-					 * if (sessionStorage.getItem('userRole').trim() ==
-					 * "3") { element.css("display", "none"); }
-					 */
-					switch (sessionStorage.getItem('userRole').trim()) {
-					case "1":
-						var keys1 = " cBodyEdit debtAlarmNum overdueAlarmNum cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-						var regStr1 = "\\s" + key + "\\s";
-						var reg1 = new RegExp(regStr1);
-						if (keys1.search(reg1) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "2":
-						var keys2 = " tContDetail assistantTaskNum ";
-						var regStr2 = "\\s" + key + "\\s";
-						var reg2 = new RegExp(regStr2);
-						if (keys2.search(reg2) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "3":
-						var keys3 = " cBodyEdit debtAlarmNum billTaskNum overdueAlarmNum managerControlTaskNum cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
-						var regStr3 = "\\s" + key + "\\s";
-						var reg3 = new RegExp(regStr3);
-						if (keys3.search(reg3) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "4":
-						var keys4 = " bInvoAdd debtAlarmNum overdueAlarmNum tContDetail ";
-						var regStr4 = "\\s" + key + "\\s";
-						var reg4 = new RegExp(regStr4);
-						if (keys4.search(reg4) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					case "5":
-						var keys5 = " cAdd debtAlarmNum waitAuditBillTaskNum overdueAlarmNum cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-						var regStr5 = "\\s" + key + "\\s";
-						var reg5 = new RegExp(regStr5);
-						if (keys5.search(reg5) < 0) {
-							element.css("display", "none");
-						}
-						break;
-					}
-				}
-			};
-
-		});
