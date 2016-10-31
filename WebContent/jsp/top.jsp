@@ -113,11 +113,7 @@
 				initData();
 				var msgCnt;
 				var title = document.title;
-<<<<<<< HEAD
-			/* 	window.setInterval(showalert, 5000); */
-=======
 				window.setInterval(showalert, 1000*60*5);
->>>>>>> 2b8e769f0d5008a9daf270c54de589e180c58463
 				function showalert() {
 					var lastMsgCnt = sessionStorage.getItem("msgCnt");
 					$.getJSON("/CIMS/login/getInitData.do", {}, function(data) {
@@ -148,7 +144,6 @@
 				$(".user").hover(function() {
 					$("#news").show();
 				}, function() {
-					/* $("#news").hide();   */
 				})
 				$(document).click(function() {
 					$("#news").hide();
