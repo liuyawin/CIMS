@@ -125,7 +125,7 @@ receiptapp.factory('receiptservices', [ '$http', 'baseUrl',
 					data : data
 				});
 			};
-			//lwt根据合同ID添加收据
+			// lwt根据合同添加收据
 			services.addReceipt = function(data) {
 				return $http({
 					method : 'post',
@@ -157,7 +157,7 @@ receiptapp.controller('ReceiptController', [
 			receipt.getContId = function(contId) {
 				sessionStorage.setItem('conId', contId);
 			};
-			// zq查看收据节点ID，并记入sessione
+			// zq查看收据节点、合同ID，并记入sessione
 			receipt.getRenoId = function(renoId, contId) {
 				sessionStorage.setItem('renoId', renoId);
 				sessionStorage.setItem('conId', contId);
@@ -229,7 +229,6 @@ receiptapp.controller('ReceiptController', [
 				$(".overlayer").fadeOut(200);
 				receipt.receipt = "";
 			});
-			
 			// zq查看合同ID，并记入sessione
 			/*receipt.addReceipt = function(renoId, contId) {
 				var renoId = sessionStorage.getItem('renoId');

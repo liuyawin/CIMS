@@ -23,6 +23,7 @@ import com.mvc.entity.Contract;
 import com.mvc.entity.ReceiveMoney;
 import com.mvc.entity.User;
 import com.mvc.service.ReceiveMoneyService;
+import com.mvc.service.ReceiveNodeService;
 import com.utils.Pager;
 
 import net.sf.json.JSONObject;
@@ -38,7 +39,20 @@ import net.sf.json.JSONObject;
 public class ReceiveMoneyController {
 	@Autowired
 	ReceiveMoneyService receiveMoneyService;
+	@Autowired
+	ReceiveNodeService receiveNodeService;
 
+	/**
+	 * 返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toBillMngInvoicePage.do")
+	public String InvoiceReceivePage() {
+		return "billInformation/index";
+	}
+	
+	
 	/**
 	 * 获取到款列表
 	 * 
@@ -107,6 +121,13 @@ public class ReceiveMoneyController {
 		Integer remoId = Integer.valueOf(request.getParameter("remoId"));
 		Float remoAmoney = Float.valueOf(request.getParameter("remoAmoney"));
 		boolean result = receiveMoneyService.updateRemoStateById(remoId, remoAmoney);
+
+		ReceiveMoney receiveMoney = receiveMoneyService.findByRemoId(remoId);
+		int cont_id = receiveMoney.getContract().getCont_id();
+		// 更新收款节点的收款状态
+		if (remoAmoney > 0) {
+			receiveNodeService.updateRenoStateAndMoney(cont_id, remoAmoney);
+		}
 		return JSON.toJSONString(result);
 	}
 
@@ -139,11 +160,13 @@ public class ReceiveMoneyController {
 			receiveMoney.setRemo_remark(jsonObject.getString("remo_remark"));
 		}
 		if (jsonObject.containsKey("operater")) {
-			JSONObject tmp = JSONObject.fromObject(request.getParameter("operater"));
+			JSONObject tmp = JSONObject.fromObject(jsonObject.getString("operater"));
 			User operater = new User();
-			operater.setUser_id(Integer.valueOf(tmp.getString("uesr_id")));
+			operater.setUser_id(Integer.valueOf(tmp.getString("user_id")));
+			receiveMoney.setOperater(operater);
 		}
 		receiveMoney.setRemo_state(ReceiveMoneyStatus.waitAudit.value);
+		receiveMoney.setRemo_amoney(Float.valueOf(0));
 		boolean result = receiveMoneyService.save(receiveMoney);
 		return JSON.toJSONString(result);
 	}

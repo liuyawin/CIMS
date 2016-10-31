@@ -154,11 +154,11 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.addReMoneyTask = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'receiveMoney/addReMoneyTask',
+			url : baseUrl + 'receiveMoney/addReMoneyTask.do',
 			data : data
 		});
 	};
-	// lwt:开收据
+		//lwt:开收据
 	services.addReceipt = function(data) {
 		return $http({
 			method : 'post',
@@ -402,17 +402,17 @@ app.controller('ContractController', [
 				contract.receiveMoney = "";
 
 			});
-			// lwt:开收据
+					// lwt:开收据
 			contract.addReceipt = function(contId) {
 				sessionStorage.setItem("conId", contId);
 				$(".overlayer").fadeIn(200);
 				$("#tipAddReceipt").fadeIn(200);
 				// 输入时间的input默认值设置为当前时间
 				var date = new Date();
-				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
-						+ "-" + (date.getDate());
+				var timeNow = date.getFullYear() + "-"
+						+ (date.getMonth() + 1) + "-" + (date.getDate());
 				contract.receipt = {
-					receAtime : timeNow
+					receAtime  : timeNow
 				};
 
 			};

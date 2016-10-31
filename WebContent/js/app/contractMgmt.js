@@ -1,7 +1,4 @@
-var app = angular
-		.module(
-				'contract',
-				[ 'ngRoute', 'angularFileUpload' ],
+var app = angular.module('contract', [ 'ngRoute', 'angularFileUpload' ],
 				function($httpProvider) { // ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
 					$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -57,15 +54,32 @@ var app = angular
 					} ];
 				});
 // 获取权限列表
-
-/*
- * var permissionList; angular.element(document).ready(function() {
- * console.log("获取权限列表！"); permissionList = "W"; // console.log("身份是：" +
- * permissionList); angular.bootstrap(document, ['contract']);
- * $.get('/CIMS/login/getUserPermission.do', function(data) { permissionList =
- * data.permission; // console.log("身份是：" + permissionList);
- * angular.bootstrap(document, ['contract']); }); });
- */
+  var permissionList; 
+  angular.element(document).ready(function() {
+  console.log("获取权限列表！"); 
+  $.get('/CIMS/login/getUserPermission.do', function(data) { 
+	  permissionList = data; // 
+	  console.log("身份是：" + permissionList);
+	  angular.bootstrap($("#ng-section"), ['contract']); //手动加载angular模块
+	  }); 
+  });
+ 
+  app.directive('hasPermission', function($timeout) {
+		return {
+			restrict : 'ECMA',
+			link : function(scope, element, attr) {
+				var key = attr.hasPermission.trim(); // 获取页面上的权限值
+				console.log("获取页面上的权限值" + key);
+				var keys = permissionList;
+				console.log("获取后台的权限值" + keys);
+				var regStr = "\\s" + key + "\\s";
+				var reg = new RegExp(regStr);
+				if (keys.search(reg) < 0) {
+					element.css("display", "none");
+				}
+			}
+		};
+	});
 
 /*
  * app.run([ 'permissions', function(permissions) {
@@ -218,7 +232,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	};
 
 	services.selectConByName = function(data) {
-		console.log("按名字查找合同");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'contract/selectConByName.do',
@@ -227,7 +240,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	};
 	// 分页获取合同数据
 	services.selectConByPage = function(data) {
-		console.log("按页码查找合同");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'contract/selectConByPage.do',
@@ -244,7 +256,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	};
 
 	services.addContract = function(data, file) {
-		console.log(data);
 		return $http({
 			method : 'post',
 			url : baseUrl + 'contract/addContract.do',
@@ -412,6 +423,13 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+	services.selectPrstById = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectStage/selectPrstById.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 
@@ -442,7 +460,6 @@ app
 							contract.getDebtContract = function() {
 								services.getDebtContract({}).success(
 										function(data) {
-											console.log("获取欠款合同成功！");
 											contract.contracts = data;
 										});
 							};
@@ -450,7 +467,6 @@ app
 							contract.getOverdueContract = function() {
 								services.getOverdueContract({}).success(
 										function(data) {
-											console.log("获取逾期合同成功！");
 											contract.contracts = data.list;
 										});
 							};
@@ -460,7 +476,6 @@ app
 									findType : "4",
 									contName : ""
 								}).success(function(data) {
-									console.log("获取逾期合同成功！");
 									contract.contracts = data.list;
 								});
 							};
@@ -470,7 +485,6 @@ app
 									contName : $("#cName").val(),
 									page : 1
 								}).success(function(data) {
-									console.log("选择合同成功！");
 									contract.contracts = data.list;
 									contract.totalPage = data.totalPage;
 								});
@@ -479,12 +493,9 @@ app
 							contract.addContract = function() {
 								var conFormData = JSON
 										.stringify(contract.contract);
-								console.log(contract.file);
-								console.log(contract.contract.cont_cheader);
 								services.addContract({
 									contract : conFormData
 								}, contract.file).success(function(data) {
-									console.log("合同创建成功时保存的合同ID：" + data);
 									sessionStorage.setItem("conId", data);
 									alert("创建合同成功！");
 								});
@@ -492,7 +503,6 @@ app
 							// 修改合同
 							contract.updateContract = function() {
 								var conFormData = JSON.stringify(contract.cont);
-								console.log(conFormData);
 								services.updateConById({
 									contract : conFormData
 								}).success(function(data) {
@@ -573,13 +583,11 @@ app
 							// 添加文书任务
 							contract.addTask1 = function() {
 								var conId = sessionStorage.getItem("conId");
-								console.log(conId);
 								if (conId.trim() == "") {
 									alert("请先录入合同信息！");
 									return false;
 								}
 								var task1 = JSON.stringify(contract.task1);
-								console.log(task1);
 								services.addTask({
 									task : task1,
 									taskType : "1", // 1代表文书任务
@@ -591,13 +599,11 @@ app
 							// 添加执行管控任务
 							contract.addTask2 = function() {
 								var conId = sessionStorage.getItem("conId");
-								console.log(conId);
 								if (conId.trim() == "") {
 									alert("请先录入合同信息！");
 									return false;
 								}
 								var task2 = JSON.stringify(contract.task2);
-								console.log(task2);
 								services.addTask({
 									task : task2,
 									taskType : "2", // 2代表执行管控任务
@@ -610,7 +616,6 @@ app
 							// zq：读取合同的信息
 							function selectContractById() {
 								var cont_id = sessionStorage.getItem('conId');
-								console.log("合同id：" + cont_id);
 								services
 										.selectContractById({
 											cont_id : cont_id
@@ -633,9 +638,6 @@ app
 									cont_id : cont_id
 								}).success(function(data) {
 									contract.prst = data.list;
-									/* arrPrst */
-									console.log(contract.prst[0].prst_content);
-
 								});
 							}
 
@@ -660,7 +662,6 @@ app
 
 							contract.selectAllTask = function() {
 								var $selectAll = $("#selectAll");
-								console.log($selectAll.is(':checked'));
 								if ($selectAll.is(':checked')) {
 									contract.task1.print = "true";
 									contract.task1.sign = "true";
@@ -793,15 +794,13 @@ app
 							// 添加单个工期阶段
 							contract.addOneStage = function() {// 动态添加工期阶段
 								$scope.fchat = new Object();
-								console.log("工期阶段"
-										+ JSON.stringify($scope.fchat));
 								$scope.fchat.stages = [ {
 									key : 0,
 									value : ""
 								} ];
 								$(".overlayer").fadeIn(200);
 								$("#prstAdd").fadeIn(200);
-								
+
 							}
 							$("#sureAddPrst").click(
 									function() {
@@ -809,7 +808,6 @@ app
 												.getItem("conId");
 										var prstFormData = JSON
 												.stringify($scope.fchat);
-										console.log(prstFormData);
 										services.addProjectStage({
 											projectStage : prstFormData,
 											cont_id : conId
@@ -828,10 +826,8 @@ app
 							});
 							// zq：补录合同
 							contract.repeatAddContract = function() {
-								console.log(contract.contract);
 								var conFormData = JSON
 										.stringify(contract.contract);
-								console.log(conFormData);
 								services.repeatAddContract({
 									contract : conFormData,
 									cont_id : sessionStorage.getItem('conId')
@@ -879,7 +875,6 @@ app
 								var cont_id = sessionStorage.getItem("conId");
 								var renoFormData = JSON
 										.stringify($scope.rnchat);
-								console.log(renoFormData);
 								services.addReceiveNode({
 									receiveNode : renoFormData,
 									cont_id : cont_id
@@ -940,7 +935,6 @@ app
 												.getItem("conId");
 										var renoFormData = JSON
 												.stringify($scope.rnchat);
-										console.log(renoFormData);
 										services.addReceiveNode({
 											receiveNode : renoFormData,
 											cont_id : conId
@@ -973,14 +967,11 @@ app
 								var list = cookies.split(";");
 								for (var i = 0; i < list.length; i++) {
 									var cookieString = list[i];
-									/* console.log("cookie内容" + cookieString); */
 									var p = cookieString.indexOf("=");
 									var name = cookieString.substring(0, p);
 									var value = cookieString.substring(p + 1,
 											cookieString.length);
-									console.log(name);
 									cookie[name.trim()] = value;
-									console.log("进来了,已经赋值" + name);
 									if (name.trim() == "role") {
 										sessionStorage.setItem("userRole",
 												value);
@@ -1002,15 +993,12 @@ app
 							// 10.25zq删除工期和收款
 							// 10.25zq删除工期阶段
 							contract.delPrst = function() {
-
-								console.log(this.stage.prst_state);
 								if (this.stage.prst_state == 0) {
 									var prstId = this.stage.prst_id;
 									sessionStorage.setItem("delType", "prst");
 									sessionStorage.setItem("prstId", prstId);
 									$("#tipDel").fadeIn(200);
 									$(".overlayer").fadeIn(200);
-									console.log("工期阶段的ID" + prstId);
 								} else {
 									alert("该工期已完成不能删除！");
 								}
@@ -1024,7 +1012,6 @@ app
 									sessionStorage.setItem("renoId", renoId);
 									$("#tipDel").fadeIn(200);
 									$(".overlayer").fadeIn(200);
-									console.log("收款节点的ID" + renoId);
 								} else {
 									alert("该收款节点处于未收全款或已收全款，不能删除！");
 								}
@@ -1076,8 +1063,25 @@ app
 							contract.modifyPrst = function() {
 								var prstId = this.stage.prst_id;
 								sessionStorage.setItem("prstId", prstId);
-								contract.prStage = this.stage;
-								contract.prStage.prst_etime = changeDateType(this.stage.prst_etime);
+
+								services
+										.selectPrstById({
+											prstId : prstId
+										})
+										.success(
+												function(data) {
+
+													contract.prStage = data.projectStage;
+													console.log(data.projectStage);
+													$scope.prStage.prst_etime = changeDateType(data.projectStage.prst_etime);
+
+												});
+
+								/*
+								 * contract.prStage = this.stage;
+								 * contract.prStage.prst_etime =
+								 * changeDateType(time);
+								 */
 								$(".overlayer").fadeIn(200);
 								$("#prstModify").fadeIn(200);
 							}
@@ -1097,6 +1101,7 @@ app
 							$("#cancelModifyPrst").click(function() {
 								$("#prstModify").fadeOut(100);
 								$(".overlayer").fadeOut(200);
+
 							});
 							// 10.25zq修改收款节点
 							contract.modifyReno = function() {
@@ -1144,16 +1149,21 @@ app
 							});
 							// 10.25zq更改时间的样式
 							function changeDateType(date) {
-								var DateTime = new Date(date.time)
-										.toLocaleDateString().replace(/\//g,
-												'-');
+								if (date != "") {
+									var DateTime = new Date(date.time)
+											.toLocaleDateString().replace(
+													/\//g, '-');
+								} else {
+									var DateTime = "";
+								}
+
 								return DateTime;
 							}
 							// 10.26zq实现选择工期时的联动
 							contract.prstChange = function(type) {
 								// 0表示添加，1表示修改
 								if (type == "0") {
-									
+
 									if ($("#nodePrstAdd").val() != "") {
 										$("#nodeContentAdd").val(
 												contract.prst[$("#nodePrstAdd")
@@ -1176,10 +1186,8 @@ app
 							}
 							// 初始化页面信息
 							function initData() {
-								console.log("初始化页面信息");
 								// 点击创建任务时弹出模态框
 								contract.newTask = function() {
-									console.log("弹出模态框！");
 									var conId = this.con.cont_id;
 									services.getAllUsers().success(
 											function(data) {
@@ -1361,7 +1369,6 @@ app
 								} else if ($location.path().indexOf(
 										'/contractAdd') == 0) {
 									// 这里先获取人员列表
-									console.log("进入添加合同页面！");
 									services.getAllUsers().success(
 											function(data) {
 												contract.users = data;
@@ -1381,7 +1388,6 @@ app
 										task_stime : timeNow,
 										task_etime : timeNow
 									};
-									console.log("离开添加合同页面！");
 								} else if ($location.path()
 										.indexOf('/prstInfo') == 0) {
 									selectContractById(); // 根据ID获取合同信息
@@ -1415,27 +1421,29 @@ app
 
 									selectContractById(); // 根据ID获取合同信息
 									addStage();// 显示工期阶段录入界面
-									
+
 								} else if ($location.path().indexOf(
 										'/contractModify') == 0) {
 									selectUsersFromDesign();// 查找设计部人员
 									selectContractById(); // 根据ID获取合同信息
 									$("#prstContainer").hide();
 									$("#renoContainer").hide();
-								} else if ($location.path().indexOf('/contractRecord') == 0) {
+								} else if ($location.path().indexOf(
+										'/contractRecord') == 0) {
 
-					services.selectContRecordByContId({
-						cont_id : sessionStorage.getItem("conId")
-					}).success(function(data) {
-						contract.records = data.list;
-					});
-				}
+									services.selectContRecordByContId(
+											{
+												cont_id : sessionStorage
+														.getItem("conId")
+											}).success(function(data) {
+										contract.records = data.list;
+									});
+								}
 							}
 
 							initData();
 							findRoleFromCookie();
 							$scope.$on('reGetData', function() {
-								console.log("重新获取数据！");
 								initData();
 							});
 
@@ -1465,8 +1473,6 @@ app
 						'FileUploader',
 						function($scope, FileUploader) {
 							/* ！！！上传文件 */
-							console.log("上传时获得合同ID："
-									+ sessionStorage.getItem("conId"));
 							var uploader = $scope.uploader = new FileUploader({
 								url : '/CIMS/file/upload.do',
 							});
@@ -1700,7 +1706,7 @@ app.directive("dateFormat", function() {
 		}
 	}
 });
-app
+/*app
 		.directive(
 				'hasPermission',
 				function($timeout) {
@@ -1710,11 +1716,11 @@ app
 
 							var key = attr.hasPermission.trim(); // 获取页面上的权限值
 							console.log("获取页面上的权限值" + key);
-							/* console.log("cookie内容" + JSON.stringify(cookie)); */
-							/*
+							 console.log("cookie内容" + JSON.stringify(cookie)); 
+							
 							 * if (sessionStorage.getItem('userRole').trim() ==
 							 * "3") { element.css("display", "none"); }
-							 */
+							 
 							switch (sessionStorage.getItem('userRole').trim()) {
 							case "1":
 								var keys1 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
@@ -1761,7 +1767,7 @@ app
 					};
 
 				});
-
+*/
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
  * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,

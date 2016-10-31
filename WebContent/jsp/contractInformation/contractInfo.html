@@ -136,7 +136,7 @@
 			<td>{{stage.prst_state |prstType}}</td>
 			<td>{{stage.manager.user_name}}</td>
 			<td>{{stage.prst_atime.time | dateType}}</td>
-			<td has-permission='cPsEdit'><a class="tablelink" >修改</a><a class="tablelink" >删除</a></td>
+			<td has-permission='cPsEdit' ><a class="tablelink"  ng-click="modifyPrst()">修改</a><a class="tablelink" ng-click="delPrst()">删除</a></td>
 		</tr>
 
 	</table>
@@ -173,7 +173,8 @@
 			<td>{{node.reno_time.time | dateType}}</td>
 			<td>{{node.projectStage.prst_content}}</td>
 			<td>{{node.reno_state |renoType}}</td>
-			<td><a ng-click="" class="tablelink" has-permission='cRnEdit'>修改</a><a ng-click="" class="tablelink" has-permission='cRnDel'>删除</a></td>
+			<td><a ng-click="modifyReno()" class="tablelink" has-permission='cRnEdit' >修改</a><a ng-click="delReno()" class="tablelink" has-permission='cRnDel'>删除</a><a
+				ng-click="addReceipt(node.contract.cont_id,node.reno_id)" class="tablelink" has-permission='bReceAdd'>开收据</a></td>
 
 		</tr>
 
@@ -183,7 +184,7 @@
 		style="display: none" value="添加收款节点" />
 
 </div>
-<!-- 派发任务模态框  收据模态框暂时不用-->
+<!-- 派发任务模态框 -->
 <div class="overlayer"></div>
 <div class="tip" id="tipAdd" style="height: 400px">
 	<div class="tiptop">
@@ -282,3 +283,95 @@
 	</div>
 </div>
 <!-- 添加单个收款节点模态框完 -->
+<!-- 修改单个工期阶段模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="prstModify" style="height: 300px">
+	<div class="tiptop">
+		<span>修改工期阶段</span><a></a>
+		<!-- 这个a标签是模态框上的叉叉 -->
+	</div>
+	<div class="formbody">
+		<form>
+			<ul class="forminfo">
+				<li><label>内容</label><input type="text" class="dfinput"
+					id="stageContent" name="stageContent"
+					ng-model="prStage.prst_content" required /></li>
+				<li><label>预计完工时间</label><input type="text"
+					class="dfinput dateFormat" placeholder="格式：2016-09-07"
+					id="stageEtime" name="stageEtime" ng-model="prStage.prst_etime"
+					required /><span class="error-span">格式错误</span></li>
+				<li><label>提前提醒天数</label> <input type="text" class="dfinput"
+					id="stageWtime" name="stageWtime" placeholder="格式：7"
+					ng-model="prStage.prst_wday" required />天</li>
+
+			</ul>
+			<div class="tipbtn">
+				<input name="" type="submit" class="sureSend" id="sureModifyPrst"
+					value="修改" />&nbsp; <input name="" type="button"
+					id="cancelModifyPrst" class="cancelSend" value="取消" />
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 修改单个工期阶段模态框完 -->
+<!-- 修改单个收款节点模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="renoModify" style="height: 400px">
+	<div class="tiptop">
+		<span>修改收款节点</span><a></a>
+		<!-- 这个a标签是模态框上的叉叉 -->
+	</div>
+	<div class="formbody">
+		<form>
+			<ul class="forminfo">
+				<li><label>工期阶段</label> <select id="nodePrstModify" class="dfselect middle_input"
+					ng-change="prstChange(1)"
+					ng-model="reNode.projectStage.prst_id" value="stage.prst_id"
+					ng-options="stage.prst_id as stage.prst_content for stage in prst">
+						<!-- <option
+							value={{stage.prst_id}} ng-repeat="stage in prst">{{stage.prst_id}}:{{stage.prst_content}}</option> -->
+						<option value="">请选择工期阶段</option>
+				</select></li>
+				<li><label>内容</label><input id="nodeContentModify" type="text"
+					class="dfinput middle_input" ng-model="reNode.reno_content"
+					required /></li>
+				<li><label>收款时间</label><input type="text"
+					class="dfinput dateFormat" placeholder="格式：2016-09-07"
+					ng-model="reNode.reno_time" required /><span class="error-span">日期格式错误</span></li>
+				<li><label>实际应收金额</label><input type="text"
+					class="dfinput width35" ng-model="reNode.reno_money"
+					placeholder="格式：0.00" required />万元</li>
+				<li><label>提醒天数设置</label><input type="text"
+					class="dfinput width35" placeholder="格式：7"
+					ng-model="reNode.reno_wday" required />天</li>
+
+			</ul>
+			<div class="tipbtn">
+				<input name="" type="submit" class="sureSend" id="sureModifyReno"
+					value="确认" />&nbsp; <input name="" type="button"
+					id="cancelModifyReno" class="cancelSend" value="取消" />
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 修改单个收款节点模态框完 -->
+<!-- //删除任务模态框 -->
+<div class="tip" id="tipDel" style="height: 220px">
+	<div class="tiptop">
+		<span>提示信息</span><a></a>
+	</div>
+
+	<div class="tipinfo">
+		<div class="tipright">
+			<p>是否确认对信息的删除 ？</p>
+			<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+		</div>
+	</div>
+
+	<div class="tipbtn">
+		<input name="" type="button" class="sureSend" id="sureDel" value="确定" />&nbsp;
+		<input name="" type="button" class="cancelSend" id="cancelDel"
+			value="取消" />
+	</div>
+</div>
+<!-- //删除任务模态框 -->

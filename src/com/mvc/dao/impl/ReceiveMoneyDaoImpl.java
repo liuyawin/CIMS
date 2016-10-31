@@ -3,6 +3,7 @@
  */
 package com.mvc.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.base.enums.ReceiveMoneyStatus;
 import com.mvc.dao.ReceiveMoneyDao;
@@ -39,7 +41,15 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		query.setParameter("cont_id", contId);
 		List<Object> result = query.getResultList();
 		em.close();
-		return Float.valueOf(result.get(0).toString());
+		// BigInteger result = (BigInteger) query.getSingleResult();//
+		// count返回值为BigInteger类型
+		// em.close();
+		// return result.floatValue();
+		if (!result.get(0).toString().equals("")) {
+			return Float.valueOf(result.get(0).toString());
+		} else {
+			return (float) 0;
+		}
 	}
 
 	// 根据参数获取该合同的所有到款记录
@@ -73,9 +83,9 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		String countSql = "";
 		if (remoState != ReceiveMoneyStatus.all.value) {
-			countSql += "select * from receive_money where  cont_id =:cont_id and remo_state=:remo_state ";
+			countSql += "select count(*) from receive_money where  cont_id =:cont_id and remo_state=:remo_state ";
 		} else {
-			countSql += "select * from receive_money where  cont_id =:cont_id  ";
+			countSql += "select count(*)  from receive_money where  cont_id =:cont_id  ";
 		}
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("cont_id", contId);
@@ -93,10 +103,11 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			String selectSql = " update receive_money set  remo_amoney=:remo_amoney  where remo_id =:remo_id ";
+			String selectSql = " update receive_money set  remo_amoney=:remo_amoney,remo_state=:remo_state  where remo_id =:remo_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("remo_id", remoId);
 			query.setParameter("remo_amoney", remoAmoney);
+			query.setParameter("remo_state", ReceiveMoneyStatus.finish.value);
 			query.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();

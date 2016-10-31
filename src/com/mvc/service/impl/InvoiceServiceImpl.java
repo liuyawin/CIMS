@@ -89,4 +89,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.transmitInvoice(invoiceId, invoEtime, receiverId);
 	}
 
+	// 根据发票状态查找发票
+	@Override
+	public List<Invoice> selectInvoiceByState(Integer invoState, String permission, Integer user_id) {
+		return invoiceDao.findByStateAndPerm(invoState, permission, user_id);
+	}
+
 }

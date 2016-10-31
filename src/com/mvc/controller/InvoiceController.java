@@ -187,6 +187,7 @@ public class InvoiceController {
 	public @ResponseBody String addInvoice(HttpServletRequest request, HttpSession session) throws ParseException {
 		JSONObject result = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		String permission = user.getRole().getRole_permission();// 权限
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("invoice"));
 		Invoice invoice = new Invoice();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -209,7 +210,11 @@ public class InvoiceController {
 		invoice.setCreator(creator);
 		invoice.setInvo_isdelete(IsDelete.NO.value);
 		invoice.setInvo_ctime(new Date(time));
-		invoice.setInvo_state(InvoiceStatus.waitAudit.value);
+		if (permission.contains("tInvoAudit")) {// 审核发票权限（主任）
+			invoice.setInvo_state(InvoiceStatus.waitdealing.value);// 待处理
+		} else {
+			invoice.setInvo_state(InvoiceStatus.waitAudit.value);// 待审核
+		}
 		boolean invoiceResult = invoiceService.save(invoice);
 		if (invoiceResult)
 			result.put("result", "true");
@@ -244,10 +249,10 @@ public class InvoiceController {
 	@RequestMapping(value = "/updateInvoiceState.do")
 	public @ResponseBody String invoiceFinish(HttpServletRequest request, HttpSession session) throws ParseException {
 		Integer invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
-		System.out.println("发票Id"+invoiceId);
+		System.out.println("发票Id" + invoiceId);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date invoTime = format.parse(request.getParameter("invoTime"));
-		System.out.println("发票Id"+invoTime);
+		System.out.println("发票Id" + invoTime);
 		boolean result = invoiceService.invoiceFinish(invoiceId, invoTime);
 		return JSON.toJSONString(result);
 	}
@@ -269,4 +274,24 @@ public class InvoiceController {
 		boolean result = invoiceService.transmitInvoice(invoiceId, invoEtime, receiverId);
 		return JSON.toJSONString(result);
 	}
+
+	/**
+	 * 根据发票状态查找发票
+	 * 
+	 * @param request
+	 * @param session
+	 * @return list
+	 */
+	@RequestMapping(value = "/selectInvoiceByState.do")
+	public @ResponseBody String selectInvoiceByState(HttpServletRequest request, HttpSession session) {
+		Integer invoState = Integer.parseInt(request.getParameter("invoState"));// -1：全部，0：待审核，1：待处理，2：已完成
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Integer user_id = user.getUser_id();
+		String permission = user.getRole().getRole_permission();// 权限
+		List<Invoice> list = invoiceService.selectInvoiceByState(invoState, permission, user_id);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		return null;
+	}
+
 }
