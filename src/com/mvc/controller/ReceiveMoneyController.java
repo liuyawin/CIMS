@@ -40,6 +40,17 @@ public class ReceiveMoneyController {
 	ReceiveMoneyService receiveMoneyService;
 
 	/**
+	 * 返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toBillMngInvoicePage.do")
+	public String InvoiceReceivePage() {
+		return "billInformation/index";
+	}
+	
+	
+	/**
 	 * 获取到款列表
 	 * 
 	 * @param request
@@ -142,7 +153,7 @@ public class ReceiveMoneyController {
 			JSONObject tmp = JSONObject.fromObject(jsonObject.getString("operater"));
 			User operater = new User();
 			operater.setUser_id(Integer.valueOf(tmp.getString("user_id")));
-			System.out.println("张群册数"+tmp.getString("user_id"));
+			receiveMoney.setOperater(operater);
 		}
 		receiveMoney.setRemo_state(ReceiveMoneyStatus.waitAudit.value);
 		receiveMoney.setRemo_amoney(Float.valueOf(0));

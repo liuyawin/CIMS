@@ -19,7 +19,7 @@
 			</select> <input class="btn" type="submit" value="查询"
 				ng-click="selectReceiveMoneysByContId()">
 		</form>
-		<div id="inmoPrompt">
+		<div id="inmoPrompt"  is-show >
 			<label class="text_style left_length ">合同总金额
 				{{cont.cont_money | invoFloat}} 万元！</label><label class="text_style">已到款金额
 				{{totalMoney | invoFloat}} 万元！</label>

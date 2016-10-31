@@ -73,6 +73,9 @@ receiveMoneyApp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/receiveMoneyList', {
 		templateUrl : '/CIMS/jsp/billInformation/receiveMoneyList.html',
 		controller : 'ReceiveMoneyController'
+	}).when('/receiveMoneyTaskList', {
+		templateUrl : '/CIMS/jsp/billInformation/receiveMoneyList.html',
+		controller : 'ReceiveMoneyController'
 	})
 } ]);
 receiveMoneyApp.constant('baseUrl', '/CIMS/');
@@ -145,6 +148,7 @@ receiveMoneyApp
 							var reMoney = $scope;
 							var role;
 							var remoState = null;
+							var remoListType = null;// 根据类型的不同区分是查找任务列表还是普通的到款列表
 
 							// 查看到款记录
 							reMoney.checkRemo = function() {
@@ -159,7 +163,7 @@ receiveMoneyApp
 
 							// 审核到款记录
 							reMoney.auditRemo = function() {
-								
+
 								var remoId = this.remo.remo_id;
 								sessionStorage.setItem("remoId", remoId);
 								selectAllUsers();
@@ -217,7 +221,7 @@ receiveMoneyApp
 																								1);
 																					});
 																});
-												
+
 											});
 							// 根据到款ID查找到款单条记录
 							function selectReceiveMoneyById(remoId) {
@@ -366,6 +370,28 @@ receiveMoneyApp
 								console.log("初始化页面信息");
 								if ($location.path().indexOf(
 										'/receiveMoneyList') == 0) {// 如果是合同列表页
+									remoListType = "REMO";
+									sessionStorage.setItem("remoListType",
+											"REMO");
+									remoState = "-1";
+									reMoney.remoState = "-1";
+									selectContractById();
+									countReceiveMoneyByContId();
+									services.selectReceiveMoneysByContId(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : 1,
+												remoState : remoState
+											}).success(function(data) {
+										reMoney.remos = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								} else if ($location.path().indexOf(
+										'/receiveMoneyTaskList') == 0) {
+									remoListType = "REMOTASK";
+									sessionStorage.setItem("remoListType",
+											"REMOTASK");
 									remoState = "-1";
 									reMoney.remoState = "-1";
 									selectContractById();
@@ -479,11 +505,26 @@ receiveMoneyApp.filter('remoState', function() {
 			state = "待核对";
 		}
 		if (input == "1") {
-			state = "已到款";
+			state = "已核对";
 		}
 
 		return state;
 	}
+});
+// 是否显示总金额
+receiveMoneyApp.directive('isShow', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			var type = sessionStorage.getItem("remoListType");
+			if (type == "REMO") {
+				element.css("display", "inline");
+			} else if (type == "REMOTASK") {
+				element.css("display", "none");
+			}
+		}
+	};
+
 });
 receiveMoneyApp
 		.directive(
