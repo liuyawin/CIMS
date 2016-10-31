@@ -5,7 +5,7 @@
 			+ path + "/";
 %>
 <jsp:include page="/jsp/top.jsp" />
-<section class="main" ng-app="index">
+<section  id="ng-section" class="main">
 	<div class="place">
 		<span>位置：</span>
 		<ul class="placeul">

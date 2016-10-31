@@ -5,7 +5,7 @@
 			+ path + "/";
 %>
 <jsp:include page="/jsp/top.jsp" />
-<section class="main" ng-app="alarm">
+<section id="ng-section" class="main">
 	<div ng-view></div>
 </section>
 <jsp:include page="/jsp/left.jsp" />
