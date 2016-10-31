@@ -1,7 +1,7 @@
 var app = angular
 		.module(
 				'index',
-				[ 'ngRoute','Permission' ],
+				[ 'ngRoute' ],
 				function($httpProvider) {// ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
 					$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -48,6 +48,33 @@ var app = angular
 								: data;
 					} ];
 				});
+//获取权限列表
+var permissionList; 
+angular.element(document).ready(function() {
+console.log("获取权限列表！"); 
+$.get('/CIMS/login/getUserPermission.do', function(data) { 
+	  permissionList = data; // 
+	  console.log("身份是：" + permissionList);
+	  angular.bootstrap($("#ng-section"), ['index']); //手动加载angular模块
+	  }); 
+});
+
+app.directive('hasPermission', function($timeout) {
+		return {
+			restrict : 'ECMA',
+			link : function(scope, element, attr) {
+				var key = attr.hasPermission.trim(); // 获取页面上的权限值
+				console.log("获取页面上的权限值" + key);
+				var keys = permissionList;
+				console.log("获取后台的权限值" + keys);
+				var regStr = "\\s" + key + "\\s";
+				var reg = new RegExp(regStr);
+				if (keys.search(reg) < 0) {
+					element.css("display", "none");
+				}
+			}
+		};
+	});
 
 // // 路由配置
 // app.config([ '$routeProvider', function($routeProvider) {
