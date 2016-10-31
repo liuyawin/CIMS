@@ -144,7 +144,6 @@
 				$(".user").hover(function() {
 					$("#news").show();
 				}, function() {
-					/* $("#news").hide();   */
 				})
 				$(document).click(function() {
 					$("#news").hide();

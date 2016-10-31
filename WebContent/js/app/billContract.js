@@ -154,7 +154,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.addReMoneyTask = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'receiveMoney/addReMoneyTask',
+			url : baseUrl + 'receiveMoney/addReMoneyTask.do',
 			data : data
 		});
 	};
@@ -411,9 +411,8 @@ app.controller('ContractController', [
 				var date = new Date();
 				var timeNow = date.getFullYear() + "-"
 						+ (date.getMonth() + 1) + "-" + (date.getDate());
-				contract.task1 = {
-					task_stime : timeNow,
-					task_etime : timeNow
+				contract.receipt = {
+					receAtime  : timeNow
 				};
 
 			};
