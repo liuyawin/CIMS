@@ -411,9 +411,8 @@ app.controller('ContractController', [
 				var date = new Date();
 				var timeNow = date.getFullYear() + "-"
 						+ (date.getMonth() + 1) + "-" + (date.getDate());
-				contract.task1 = {
-					task_stime : timeNow,
-					task_etime : timeNow
+				contract.receipt = {
+					receAtime  : timeNow
 				};
 
 			};
