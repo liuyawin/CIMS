@@ -73,64 +73,68 @@ receiveMoneyApp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/receiveMoneyList', {
 		templateUrl : '/CIMS/jsp/billInformation/receiveMoneyList.html',
 		controller : 'ReceiveMoneyController'
+	}).when('/receiveMoneyTaskList', {
+		templateUrl : '/CIMS/jsp/billInformation/receiveMoneyList.html',
+		controller : 'ReceiveMoneyController'
 	})
 } ]);
 receiveMoneyApp.constant('baseUrl', '/CIMS/');
-receiveMoneyApp
-		.factory(
-				'receivemoneyservices',
-				[
-						'$http',
-						'baseUrl',
-						function($http, baseUrl) {
-							var services = {};
-							// zq根据ID查找合同信息
-							services.selectContractById = function(data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'contract/selectContractById.do',
-									data : data
-								});
-							};
-							// zq根据合同ID获取获取已到款钱数
-							services.countReceiveMoneyByContId = function(data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'receiveMoney/receiveMoneyByContId.do',
-									data : data
-								});
-							};
-							// 根据ID获取到款某条记录
-							services.selectReceiveMoneyById = function(data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'receiveMoney/selectReceiveMoneyById.do',
-									data : data
-								})
-							};
-							// 根据合同ID获取该合同的所有到款记录
-							services.selectReceiveMoneysByContId = function(
-									data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'receiveMoney/selectReceiveMoneyByContId.do',
-									data : data
-								})
-							};
-							services.auditReceiveMoney = function(data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'receiveMoney/auditReceiveMoney.do',
-									data : data
-								})
-							};
-							return services;
-						} ]);
+receiveMoneyApp.factory('receivemoneyservices', [
+		'$http',
+		'baseUrl',
+		function($http, baseUrl) {
+			var services = {};
+			// zq根据ID查找合同信息
+			services.selectContractById = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'contract/selectContractById.do',
+					data : data
+				});
+			};
+			// zq根据合同ID获取获取已到款钱数
+			services.countReceiveMoneyByContId = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'receiveMoney/receiveMoneyByContId.do',
+					data : data
+				});
+			};
+			// 根据ID获取到款某条记录
+			services.selectReceiveMoneyById = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'receiveMoney/selectReceiveMoneyById.do',
+					data : data
+				})
+			};
+			// 根据合同ID获取该合同的所有到款记录
+			services.selectReceiveMoneysByContId = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl
+							+ 'receiveMoney/selectReceiveMoneysByContId.do',
+					data : data
+				})
+			};
+			services.auditReceiveMoney = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'receiveMoney/auditReceiveMoney.do',
+					data : data
+				})
+			};
+			// zq选择所有用户
+			services.selectAllUsers = function(data) {
+				console.log("发送请求获取合同信息");
+				return $http({
+					method : 'post',
+					url : baseUrl + 'user/getAllUserList.do',
+					data : data
+				});
+			};
+			return services;
+		} ]);
 
 receiveMoneyApp
 		.controller(
@@ -144,10 +148,12 @@ receiveMoneyApp
 							var reMoney = $scope;
 							var role;
 							var remoState = null;
+							var remoListType = null;// 根据类型的不同区分是查找任务列表还是普通的到款列表
 
 							// 查看到款记录
 							reMoney.checkRemo = function() {
 								var remoId = this.remo.remo_id;
+								selectAllUsers();
 								selectReceiveMoneyById(remoId);
 								$(".overlayer").fadeIn(200);
 								$("#tipRemo").fadeIn(200);
@@ -157,30 +163,66 @@ receiveMoneyApp
 
 							// 审核到款记录
 							reMoney.auditRemo = function() {
+
 								var remoId = this.remo.remo_id;
 								sessionStorage.setItem("remoId", remoId);
+								selectAllUsers();
 								selectReceiveMoneyById(remoId);
+
 								$(".overlayer").fadeIn(200);
 								$("#tipRemo").fadeIn(200);
-								$(".auditE").show();
+								$(".tipbtn").show();
 							};
 							$("#cancelRemoAudit").click(function() {
 								$("#tipRemo").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 								reMoney.receiveMoney = "";
 							});
-							$("#sureRemoAudit").click(function() {
-								services.auditReceiveMoney({
-									remoId : sessionStorage.getItem("remoId"),
-									remoAmoney : $("#remoAmoney").val()
-								}).success(function(data) {
-									alert("操作成功！");
-									$("#tipRemo").fadeOut(100);
-									$(".overlayer").fadeOut(200);
-									reMoney.receiveMoney = "";
-								});
+							$("#sureRemoAudit")
+									.click(
+											function() {
+												services
+														.auditReceiveMoney(
+																{
+																	remoId : sessionStorage
+																			.getItem("remoId"),
+																	remoAmoney : $(
+																			"#remoAmoney")
+																			.val()
+																})
+														.success(
+																function(data) {
+																	alert("操作成功！");
+																	$(
+																			"#tipRemo")
+																			.fadeOut(
+																					100);
+																	$(
+																			".overlayer")
+																			.fadeOut(
+																					200);
 
-							});
+																	selectContractById();
+																	countReceiveMoneyByContId();
+																	services
+																			.selectReceiveMoneysByContId(
+																					{
+																						contId : sessionStorage
+																								.getItem("conId"),
+																						page : 1,
+																						remoState : remoState
+																					})
+																			.success(
+																					function(
+																							data) {
+																						reMoney.remos = data.list;
+																						pageTurn(
+																								data.totalPage,
+																								1);
+																					});
+																});
+
+											});
 							// 根据到款ID查找到款单条记录
 							function selectReceiveMoneyById(remoId) {
 								services
@@ -305,6 +347,15 @@ receiveMoneyApp
 								});
 
 							};
+							// zq获取所有用户
+							function selectAllUsers() {
+								services.selectAllUsers({}).success(
+										function(data) {
+											console.log("获取用户列表成功！");
+											reMoney.users = data;
+
+										});
+							}
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {
@@ -319,6 +370,9 @@ receiveMoneyApp
 								console.log("初始化页面信息");
 								if ($location.path().indexOf(
 										'/receiveMoneyList') == 0) {// 如果是合同列表页
+									remoListType = "REMO";
+									sessionStorage.setItem("remoListType",
+											"REMO");
 									remoState = "-1";
 									reMoney.remoState = "-1";
 									selectContractById();
@@ -331,7 +385,25 @@ receiveMoneyApp
 												remoState : remoState
 											}).success(function(data) {
 										reMoney.remos = data.list;
-
+										pageTurn(data.totalPage, 1);
+									});
+								} else if ($location.path().indexOf(
+										'/receiveMoneyTaskList') == 0) {
+									remoListType = "REMOTASK";
+									sessionStorage.setItem("remoListType",
+											"REMOTASK");
+									remoState = "-1";
+									reMoney.remoState = "-1";
+									selectContractById();
+									countReceiveMoneyByContId();
+									services.selectReceiveMoneysByContId(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : 1,
+												remoState : remoState
+											}).success(function(data) {
+										reMoney.remos = data.list;
 										pageTurn(data.totalPage, 1);
 									});
 								}
@@ -426,20 +498,33 @@ receiveMoneyApp.filter('cutString', function() {
 	}
 });
 // 判断发票状态
-receiveMoneyApp.filter('invoState', function() {
+receiveMoneyApp.filter('remoState', function() {
 	return function(input) {
 		var state = "";
 		if (input == "0") {
-			state = "待审核";
+			state = "待核对";
 		}
 		if (input == "1") {
-			state = "待处理";
+			state = "已核对";
 		}
-		if (input == "2") {
-			state = "已完成";
-		}
+
 		return state;
 	}
+});
+// 是否显示总金额
+receiveMoneyApp.directive('isShow', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			var type = sessionStorage.getItem("remoListType");
+			if (type == "REMO") {
+				element.css("display", "inline");
+			} else if (type == "REMOTASK") {
+				element.css("display", "none");
+			}
+		}
+	};
+
 });
 receiveMoneyApp
 		.directive(

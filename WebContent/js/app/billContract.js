@@ -154,7 +154,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.addReMoneyTask = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'receiveMoney/addReMoneyTask',
+			url : baseUrl + 'receiveMoney/addReMoneyTask.do',
 			data : data
 		});
 	};
