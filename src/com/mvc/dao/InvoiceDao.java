@@ -42,4 +42,7 @@ public interface InvoiceDao {
 
 	// 主任转发发票
 	boolean transmitInvoice(Integer invoiceId, Date invoEtime, Integer receiverId);
+
+	// 根据发票状态查找发票
+	List<Invoice> findByStateAndPerm(Integer invoState, String permission, Integer user_id);
 }

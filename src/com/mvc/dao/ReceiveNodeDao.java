@@ -13,7 +13,7 @@ import com.mvc.entity.ReceiveNode;
 public interface ReceiveNodeDao {
 
 	// 根据收款节点id修改状态
-	Boolean updateState(Integer id, Integer state);
+	Boolean updateState(Integer reno_id, Integer state, Float reno_amoney);
 
 	// 根据合同ID查找收款节点
 	List<ReceiveNode> selectRenoByContId(Integer cont_id);

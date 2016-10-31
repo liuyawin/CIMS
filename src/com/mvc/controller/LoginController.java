@@ -138,49 +138,6 @@ public class LoginController {
 		String password = request.getParameter("password");
 		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
-
-		System.out.println("权限测试开始：");
-		String result = "";
-		String permission = user.getRole().getRole_permission();
-		String[] strArr = null;
-		JSONObject jsonObject = JSONObject.fromObject(permission);
-		strArr = StringToArray(jsonObject.getString("con_per"));
-		for (int i = 0; i < strArr.length; i++) {
-			if (strArr[i].equals("1")) {
-				result += " " + PermissionConstants.contPer[i];
-			}
-		}
-		System.out.println(result);
-		strArr = StringToArray(jsonObject.getString("task_per"));
-		for (int i = 0; i < strArr.length; i++) {
-			if (strArr[i].equals("1")) {
-				result += " " + PermissionConstants.contPer[i];
-			}
-		}
-		System.out.println(result);
-		strArr = StringToArray(jsonObject.getString("bill_per"));
-		for (int i = 0; i < strArr.length; i++) {
-			if (strArr[i].equals("1")) {
-				result += " " + PermissionConstants.contPer[i];
-			}
-		}
-		System.out.println(result);
-		strArr = StringToArray(jsonObject.getString("system_per"));
-		for (int i = 0; i < strArr.length; i++) {
-			if (strArr[i].equals("1")) {
-				result += " " + PermissionConstants.contPer[i];
-			}
-		}
-		System.out.println(result);
-		strArr = StringToArray(jsonObject.getString("alarm_per"));
-		for (int i = 0; i < strArr.length; i++) {
-			if (strArr[i].equals("1")) {
-				result += " " + PermissionConstants.contPer[i];
-			}
-		}
-		System.out.println(result + " ");
-		System.out.println("权限测试结束");
-
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
 			String passwd = user.getUser_pwd();
@@ -358,6 +315,5 @@ public class LoginController {
 		String subStr = str.substring(1, str.length() - 1);
 		String strArr[] = subStr.split(",");
 		return strArr;
-
 	}
 }
