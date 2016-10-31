@@ -56,7 +56,16 @@ var app = angular
 								: data;
 					} ];
 				});
-
+//获取权限列表
+var permissionList; 
+angular.element(document).ready(function() {
+console.log("获取权限列表！"); 
+$.get('/CIMS/login/getUserPermission.do', function(data) { 
+	  permissionList = data; // 
+	  console.log("身份是：" + permissionList);
+	  angular.bootstrap($("#ng-section"), ['taskMgmt']); //手动加载angular模块
+	  }); 
+});
 app.run([ '$rootScope', '$location', function($rootScope, $location) {
 	$rootScope.$on('$routeChangeSuccess', function(evt, next, previous) {
 		console.log('路由跳转成功');
