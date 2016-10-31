@@ -104,7 +104,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		console.log("发送请求获取合同信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'task/selectTaskBySearchKey.do',
+			url : baseUrl + 'task/selectTaskByContext.do',
 			data : data
 		});
 	};
@@ -196,8 +196,9 @@ app
 							// zq根据内容查询任务列表
 							taskHtml.getTaskByKeys = function() {
 								tState = taskHtml.tState;
+
 								services.getTaskByKeys({
-									searchKey : $("#tContent").val(),
+									context : $("#tContent").val(),
 									page : 1,
 									taskState : tState,
 									sendOrReceive : sendOrReceive
@@ -215,6 +216,15 @@ app
 								selectAllUsers();
 								$("#tipAdd").fadeIn(200);
 								$(".overlayer").fadeIn(200);
+								var date = new Date();
+								var timeNow = date.getFullYear() + "-"
+										+ (date.getMonth() + 1) + "-"
+										+ (date.getDate());
+								taskHtml.task = {
+									task_stime : timeNow,
+									task_etime : timeNow
+								};
+								
 
 							};
 							$("#sureAdd").click(
@@ -377,7 +387,7 @@ app
 							// 显示提示框及删除功能的实现 删除任务
 							taskHtml.delTask = function() {
 								var taskId = this.t.task_id;
-								sessionStorage.setItem("taskId", taskId);
+								sessionStorage.setItem("taskId",taskId);
 								$("#tipDel").fadeIn(200);
 								$(".overlayer").fadeIn(200);
 
@@ -389,7 +399,7 @@ app
 									taskId : sessionStorage.getItem('taskId')
 								}).success(function(data) {
 									console.log("根据内容获取任务列表成功！");
-
+									
 									alert("删除成功！");
 									/* $("#" + taskId + "").hide(); */
 									services.getTaskList({
@@ -399,9 +409,9 @@ app
 									}).success(function(data) {
 										taskHtml.tasks = data.list;
 										pageTurn(tState, data.totalPage, 1);
-
+										
 									});
-
+									
 								});
 							});
 
@@ -474,7 +484,7 @@ app
 							// zq 获取任务列表按照内容翻页查找函数
 							function getTaskListByContent(taskState, page) {
 								services.getTaskByKeys({
-									searchKey : $("#tContent").val(),
+									context : $("#tContent").val(),
 									page : page,
 									taskState : taskState,
 									sendOrReceive : sendOrReceive

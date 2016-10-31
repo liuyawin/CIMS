@@ -173,8 +173,7 @@
 			<td>{{node.reno_time.time | dateType}}</td>
 			<td>{{node.projectStage.prst_content}}</td>
 			<td>{{node.reno_state |renoType}}</td>
-			<td><a ng-click="" class="tablelink" has-permission='cRnEdit'>修改</a><a ng-click="" class="tablelink" has-permission='cRnDel'>删除</a><a
-				ng-click="addReceipt(node.contract.cont_id,node.reno_id)" class="tablelink" has-permission='bReceAdd'>开收据</a></td>
+			<td><a ng-click="" class="tablelink" has-permission='cRnEdit'>修改</a><a ng-click="" class="tablelink" has-permission='cRnDel'>删除</a></td>
 
 		</tr>
 
@@ -184,7 +183,7 @@
 		style="display: none" value="添加收款节点" />
 
 </div>
-<!-- 派发任务模态框 -->
+<!-- 派发任务模态框  收据模态框暂时不用-->
 <div class="overlayer"></div>
 <div class="tip" id="tipAdd" style="height: 400px">
 	<div class="tiptop">
@@ -235,7 +234,6 @@
 				<li><label>提前提醒天数</label> <input type="text" class="dfinput"
 					id="stageWtime" name="stageWtime" placeholder="格式：7"
 					ng-model="stage.prst_wday" required />天</li>
-
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sureSend" id="sureAddPrst"

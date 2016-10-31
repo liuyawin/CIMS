@@ -161,22 +161,37 @@ public class ProjectStageController {
 	 * @param request
 	 * @return true、false
 	 */
-//	@RequestMapping("/modifyPrst.do")
-//	public @ResponseBody String updatePrst(HttpServletRequest request) {
-//		Integer prstId = Integer.parseInt(request.getParameter("prstId"));		
-//		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("projectStage"));//暂时先按对象获取（非数组）
-//		if (jsonObject != null) {
-//			try {
-//				if (jsonObject.containsKey("cont_onum")) {
-//					contract.setCont_onum(jsonObject.getString("cont_onum"));// 本公司编号
-//				}
-//			}catch (Exception e) {
-//				e.printStackTrace();
-//			}
-		
-		
-//		boolean flag = projectStageService.deletePrstState(prstId);
-//		alarmService.updateByIdType(prstId, RemoveType.PrstAlarm.value);
-//		return String.valueOf(flag);
-//	}
+	@RequestMapping("/modifyPrst.do")
+	public @ResponseBody String updatePrst(HttpServletRequest request) {
+		Integer prst_id = Integer.parseInt(request.getParameter("prstId"));
+		ProjectStage projectStage = projectStageService.selectPrstById(prst_id);
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("projectStage"));
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		if (jsonObject != null) {
+			try {
+				if (jsonObject.containsKey("prst_content")) {
+					projectStage.setPrst_content(jsonObject.getString("prst_content"));// 工期阶段内容
+				}
+				Date date = null;
+				if (jsonObject.containsKey("prst_etime")) {
+					date = format.parse(jsonObject.getString("prst_etime"));// 阶段截止时间
+					projectStage.setPrst_etime(date);
+				} else {
+					date = projectStage.getPrst_etime();
+				}
+				if (jsonObject.containsKey("prst_wday")) {
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(date);
+					int days = Integer.parseInt(jsonObject.getString("prst_wday"));// 完工提醒天数
+					projectStage.setPrst_wday(days);// 添加完工提醒的天数
+					calendar.add(Calendar.DAY_OF_MONTH, -days);// 工作结束提醒时间=阶段截止时间-完工提醒天数
+					projectStage.setPrst_wtime(calendar.getTime());// 工作结束提醒时间
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		boolean flag = projectStageService.addProjectStage(projectStage);
+		return String.valueOf(flag);
+	}
 }

@@ -218,7 +218,7 @@ app.controller('userController', [
 				user.selected = {};
 				for (var i = 0; i < 5; i++) {
 					user.selected[perName[i]] = new Array();
-					for (var j = 0; j < 10; j++)
+					for (var j = 0; j < 12; j++)
 						user.selected[perName[i]][j] = 0;
 				}
 			}

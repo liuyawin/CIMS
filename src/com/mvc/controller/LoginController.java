@@ -11,8 +11,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.base.constants.CookieKeyConstants;
 import com.base.constants.PageNameConstants;
+import com.base.constants.PermissionConstants;
 import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.AlarmStatistic;
 import com.mvc.entity.User;
@@ -78,18 +80,17 @@ public class LoginController {
 	@RequestMapping("/checkUserName.do")
 	public @ResponseBody Long checkUserName(HttpServletRequest request, HttpSession session, ModelMap map) {
 		String userNum = request.getParameter("userName");
-		System.out.println(userNum);
 		Long result = userService.isExist(userNum);
-		System.out.println(result);
 		return result;
 	}
 
-	@RequestMapping("/getUserPermission.do")
-	public @ResponseBody JSONObject getUserPermission(HttpServletRequest request, HttpSession session, ModelMap map) {
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("permission", "zhuren");
-		return jsonObject;
-	}
+	// @RequestMapping("/getUserPermission.do")
+	// public @ResponseBody JSONObject getUserPermission(HttpServletRequest
+	// request, HttpSession session, ModelMap map) {
+	// JSONObject jsonObject = new JSONObject();
+	// jsonObject.put("permission", "zhuren");
+	// return jsonObject;
+	// }
 
 	/**
 	 * 登录验证用户名和密码是否正确
@@ -103,11 +104,9 @@ public class LoginController {
 	@RequestMapping("/loginValidate.do")
 	public @ResponseBody JSONObject loginValidate(HttpSession session, HttpServletRequest request, ModelMap model,
 			HttpServletResponse res) {
-		System.out.println("loginValidate");
 		String userNum = request.getParameter("userName");
 		String passWord = request.getParameter("password");
 		User user = userService.findByUserNum(userNum);
-
 		JSONObject jsonObject = new JSONObject();
 
 		if (user != null) {
@@ -135,11 +134,53 @@ public class LoginController {
 	@RequestMapping("/login.do")
 	public String login(HttpSession session, HttpServletRequest request, ModelMap model, HttpServletResponse res) {
 		String error_msg = "";
-		System.out.println("login");
 		String userNum = request.getParameter("userName");
 		String password = request.getParameter("password");
 		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
+
+		System.out.println("权限测试开始：");
+		String result = "";
+		String permission = user.getRole().getRole_permission();
+		String[] strArr = null;
+		JSONObject jsonObject = JSONObject.fromObject(permission);
+		strArr = StringToArray(jsonObject.getString("con_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("task_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("bill_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("system_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("alarm_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result + " ");
+		System.out.println("权限测试结束");
+
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
 			String passwd = user.getUser_pwd();
@@ -196,7 +237,6 @@ public class LoginController {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		jsonObject.put("user", user);
-		System.out.println("返回用户:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -260,5 +300,64 @@ public class LoginController {
 			}
 		}
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 获取当前用户权限
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/getUserPermission.do")
+	public @ResponseBody String getUserPermission(HttpServletRequest request, HttpSession session) {
+		String result = "";
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		String permission = user.getRole().getRole_permission();
+		String[] strArr = null;
+		JSONObject jsonObject = JSONObject.fromObject(permission);
+		strArr = StringToArray(jsonObject.getString("con_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("task_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("bill_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("system_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result);
+		strArr = StringToArray(jsonObject.getString("alarm_per"));
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				result += " " + PermissionConstants.contPer[i];
+			}
+		}
+		System.out.println(result + " ");
+		return JSON.toJSONString(result + " ");
+	}
+
+	private static String[] StringToArray(String str) {
+		String subStr = str.substring(1, str.length() - 1);
+		String strArr[] = subStr.split(",");
+		return strArr;
+
 	}
 }

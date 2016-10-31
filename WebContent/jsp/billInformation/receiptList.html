@@ -19,8 +19,8 @@
 	<div class="tools">
 		<ul class="toolbar1"  ng-show='receAddShow'>
 			<li class="click"><a
-				href="/CIMS/contract/toContractPage.do#/renoInfo" ><span><img
-						src="../images/t01.png" /></span>开收据</a></li>
+					ng-click="addReceipt()"
+					class="tablelink" has-permission='bReceAdd'>开收据</a></li>
 		</ul>
 	</div>
 	<table class="tablelist">
@@ -61,6 +61,36 @@
 <script type="text/javascript">
 	$('.tablelist tbody tr:odd').addClass('odd');
 </script>
+<!--lwt: 开收据模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipAddReceipt" style="height: 400px">
+	<div class="tiptop">
+		<span>添加收据</span><a></a>
+		<!-- 这个a标签是模态框上的叉叉 -->
+	</div>
+	<div class="formbody">
+		<form ng-submit="addReceipt()">
+			<ul class="forminfo">
+				<li><label>金额</label><input type="text"
+					ng-model="receipt.receMoney" class="dfinput" required />万元</li>
+				<li><label>业主公司</label><input type="text"
+					ng-model="receipt.receFirm" class="dfinput" required /></li>
+				<li><label>收款时间</label><input type="text"
+					class="dfinput dateFormat" placeholder="格式：2016-09-07"
+					id="stageEtime" name="stageEtime" ng-model="receipt.receAtime"
+					required /><span class="error-span">格式错误</span></li>
+				<li><label>备注</label> <textarea name="" cols="" rows=""
+						class="textinput area_style" ng-model="receipt.receRemark"></textarea></li>
 
+			</ul>
+			<div class="tipbtn">
+				<input name="" type="submit" class="sureSend" id="sureAddReceipt"
+					value="添加" />&nbsp; <input name="" type="button" id="cancelAddReceipt"
+					class="cancelSend" value="取消" />
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 开收据模态框完 -->
 
 

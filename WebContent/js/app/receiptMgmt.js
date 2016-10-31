@@ -125,7 +125,7 @@ receiptapp.factory('receiptservices', [ '$http', 'baseUrl',
 					data : data
 				});
 			};
-			// zq根据合同和收款节点添加收据
+			//lwt根据合同ID添加收据
 			services.addReceipt = function(data) {
 				return $http({
 					method : 'post',
@@ -157,12 +157,12 @@ receiptapp.controller('ReceiptController', [
 			receipt.getContId = function(contId) {
 				sessionStorage.setItem('conId', contId);
 			};
-			// zq查看合同ID，并记入sessione
+			// zq查看收据节点ID，并记入sessione
 			receipt.getRenoId = function(renoId, contId) {
 				sessionStorage.setItem('renoId', renoId);
 				sessionStorage.setItem('conId', contId);
 			};
-			// zq查看合同ID，并记入sessione
+			// zq查看收据ID，并记入sessione
 			receipt.getReceId = function(receId) {
 				sessionStorage.setItem('receId', receId);
 
@@ -190,8 +190,48 @@ receiptapp.controller('ReceiptController', [
 				$('#prstShow').show();
 				$('#prstHide').hide();
 			}
+			// lwt:开收据
+			receipt.addReceipt = function() {
+				$(".overlayer").fadeIn(200);
+				$("#tipAddReceipt").fadeIn(200);
+				// 输入时间的input默认值设置为当前时间
+				var date = new Date();
+				var timeNow = date.getFullYear() + "-"
+						+ (date.getMonth() + 1) + "-" + (date.getDate());
+				receipt.receipt = {
+						receAtime : timeNow
+					
+				};
+
+			};
+			$(".tiptop a").click(function() {
+				$(".overlayer").fadeOut(200);
+				$(".tip").fadeOut(200);
+			});
+			$("#sureAddReceipt").click(function() {
+				var receFormData = JSON.stringify(receipt.receipt);
+				services.addReceipt({
+					receipt : receFormData,
+					contId : sessionStorage.getItem("conId")
+				}).success(function(data) {
+
+					$("#tipAddReceipt").fadeOut(100);
+					$(".overlayer").fadeOut(200);
+					alert("收据添加成功！");
+					receipt.receipt = "";
+					initData();
+
+				});
+			});
+
+			$("#cancelAddReceipt").click(function() {
+				$("#tipAddReceipt").fadeOut(100);
+				$(".overlayer").fadeOut(200);
+				receipt.receipt = "";
+			});
+			
 			// zq查看合同ID，并记入sessione
-			receipt.addReceipt = function(renoId, contId) {
+			/*receipt.addReceipt = function(renoId, contId) {
 				var renoId = sessionStorage.getItem('renoId');
 				var contId = sessionStorage.getItem('conId');
 				var receFormData = JSON.stringify(receipt.receipt);
@@ -203,7 +243,7 @@ receiptapp.controller('ReceiptController', [
 					alert("收据添加成功！");
 					window.history.back();
 				});
-			};
+			};*/
 
 			// zq：读取合同的信息
 			function selectContractById() {
@@ -319,6 +359,7 @@ receiptapp.controller('ReceiptController', [
 				$("#invoice").hide();
 				$("#receipt").show();
 				$("#contract").hide();
+				$("#receiveMoney").hide();
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/receiptList') == 0) {
 					selectReceiptByContId();// 根据合同ID查找所有收据

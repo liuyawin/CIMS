@@ -17,7 +17,7 @@ import com.mvc.entity.ProjectStage;
 public interface ProjectStageRepository extends JpaRepository<ProjectStage, Integer> {
 
 	// 查询该合同的工期阶段
-	@Query("select ps from ProjectStage ps where cont_id=:cont_id")
+	@Query("select ps from ProjectStage ps where cont_id=:cont_id and prst_isdelete=0")
 	List<ProjectStage> selectPrstByContId(@Param("cont_id") Integer cont_id);
 
 }

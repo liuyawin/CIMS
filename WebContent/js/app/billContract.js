@@ -150,6 +150,22 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// 10.27zq添加到款任务
+	services.addReMoneyTask = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receiveMoney/addReMoneyTask',
+			data : data
+		});
+	};
+	// lwt:开收据
+	services.addReceipt = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receipt/createReceipt.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 
@@ -254,10 +270,17 @@ app.controller('ContractController', [
 			// zq添加发票任务
 			contract.addInvoiceTask = function(contId) {
 				selectAllUsers();
-				/*var contId = this.con.cont_id;*/
-				sessionStorage.setItem("conId",contId);
+				/* var contId = this.con.cont_id; */
+				sessionStorage.setItem("conId", contId);
 				$("#tipAdd").fadeIn(200);
 				$(".overlayer").fadeIn(200);
+				var date = new Date();
+				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
+						+ "-" + (date.getDate());
+				contract.invoice = {
+					invoStime : timeNow,
+					invoEtime : timeNow
+				};
 
 			};
 			$("#sureAdd").click(function() {
@@ -308,11 +331,9 @@ app.controller('ContractController', [
 					console.log(name);
 					cookie[name.trim()] = value;
 					if (name.trim() == "role") {
-						sessionStorage.setItem("userRole",
-								value);
+						sessionStorage.setItem("userRole", value);
 						role = value;
-						switch (sessionStorage.getItem(
-								'userRole').trim()) {
+						switch (sessionStorage.getItem('userRole').trim()) {
 						case "1":
 							invoice.invoAddShow = true;
 							invoice.invoAuditShow = true;
@@ -345,17 +366,94 @@ app.controller('ContractController', [
 
 				}
 			}
+			// 10.27zq添加到款任务
+			contract.addReMoneyTask = function() {
+				selectAllUsers();
+				/* var contId = this.con.cont_id; */
+				sessionStorage.setItem("conId", this.con.cont_id);
+				$("#tipRemoAdd").fadeIn(200);
+				$(".overlayer").fadeIn(200);
+				var date = new Date();
+				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
+						+ "-" + (date.getDate());
+				contract.receiveMoney = {
+					remo_time : timeNow
+				};
+
+			};
+			$("#sureRemoAdd").click(function() {
+				var taskFormData = JSON.stringify(contract.receiveMoney);
+				console.log(taskFormData);
+				services.addReMoneyTask({
+					receiveMoney : taskFormData,
+					contId : sessionStorage.getItem("conId")
+				}).success(function(data) {
+					$("#tipRemoAdd").fadeOut(100);
+					$(".overlayer").fadeOut(200);
+					contract.receiveMoney = "";
+					alert("添加成功！");
+
+				});
+			});
+
+			$("#cancelRemoAdd").click(function() {
+				$("#tipRemoAdd").fadeOut(100);
+				$(".overlayer").fadeOut(200);
+				contract.receiveMoney = "";
+
+			});
+			// lwt:开收据
+			contract.addReceipt = function(contId) {
+				sessionStorage.setItem("conId", contId);
+				$(".overlayer").fadeIn(200);
+				$("#tipAddReceipt").fadeIn(200);
+				// 输入时间的input默认值设置为当前时间
+				var date = new Date();
+				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
+						+ "-" + (date.getDate());
+				contract.receipt = {
+					receAtime : timeNow
+				};
+
+			};
+			$("#sureAddReceipt").click(function() {
+				var receFormData = JSON.stringify(contract.receipt);
+				services.addReceipt({
+					receipt : receFormData,
+					contId : sessionStorage.getItem("conId")
+				}).success(function(data) {
+
+					$("#tipAddReceipt").fadeOut(100);
+					$(".overlayer").fadeOut(200);
+					alert("收据添加成功！");
+					contract.receipt = "";
+
+				});
+			});
+
+			$("#cancelAddReceipt").click(function() {
+				$("#tipAddReceipt").fadeOut(100);
+				$(".overlayer").fadeOut(200);
+				contract.receipt = "";
+			});
 			// 初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
+				$("#invoice").hide();
+				$("#receipt").hide();
+				$("#contract").show();
+				$("#receiveMoney").hide();
+				$(".tiptop a").click(function() {
+					/* sessionStorage.setItem("conId", ""); */
+					$(".overlayer").fadeOut(200);
+					$(".tip").fadeOut(200);
+				});
 				if ($location.path().indexOf('/contractList') == 0) {// 如果是合同列表页
 					contract.flag = 1;// 标志位，用于控制按钮是否显示
 					services.getContractList({
 						page : 1
 					}).success(function(data) {
-						$("#invoice").hide();
-						$("#receipt").hide();
-						$("#contract").show();
+
 						// 合同列表分页
 						contract.contracts = data.list;
 						contract.totalPage = data.totalPage;
