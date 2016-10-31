@@ -1,4 +1,11 @@
 eclipse.preferences.version=1
+<<<<<<< HEAD
 encoding//WebContent/jsp/left.jsp=UTF-8
 encoding//WebContent/jsp/top.jsp=UTF-8
+=======
+<<<<<<< HEAD
+encoding//WebContent/jsp/top.jsp=UTF-8
+=======
+>>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
+>>>>>>> 2b8e769f0d5008a9daf270c54de589e180c58463
 encoding/<project>=UTF-8

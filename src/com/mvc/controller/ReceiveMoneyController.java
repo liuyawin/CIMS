@@ -23,6 +23,7 @@ import com.mvc.entity.Contract;
 import com.mvc.entity.ReceiveMoney;
 import com.mvc.entity.User;
 import com.mvc.service.ReceiveMoneyService;
+import com.mvc.service.ReceiveNodeService;
 import com.utils.Pager;
 
 import net.sf.json.JSONObject;
@@ -38,6 +39,8 @@ import net.sf.json.JSONObject;
 public class ReceiveMoneyController {
 	@Autowired
 	ReceiveMoneyService receiveMoneyService;
+	@Autowired
+	ReceiveNodeService receiveNodeService;
 
 	/**
 	 * 返回收据界面
@@ -118,6 +121,13 @@ public class ReceiveMoneyController {
 		Integer remoId = Integer.valueOf(request.getParameter("remoId"));
 		Float remoAmoney = Float.valueOf(request.getParameter("remoAmoney"));
 		boolean result = receiveMoneyService.updateRemoStateById(remoId, remoAmoney);
+
+		ReceiveMoney receiveMoney = receiveMoneyService.findByRemoId(remoId);
+		int cont_id = receiveMoney.getContract().getCont_id();
+		// 更新收款节点的收款状态
+		if (remoAmoney > 0) {
+			receiveNodeService.updateRenoStateAndMoney(cont_id, remoAmoney);
+		}
 		return JSON.toJSONString(result);
 	}
 
