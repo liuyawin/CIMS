@@ -336,13 +336,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 
-	services.addReceipt = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'receipt/createReceipt.do',
-			data : data
-		});
-	};
 	// zq从设计部取出项目经理人选
 	services.selectUsersFromDesign = function(data) {
 		return $http({
@@ -709,46 +702,6 @@ app
 								$('#renoHide').hide();
 							}
 
-							// zq添加添加收据功能
-							// zq查看合同ID，并记入sessione
-							contract.addReceipt = function(contId, renoId) {
-								/*
-								 * var renoId = this.node.reno_id; var contId =
-								 * this.node.contract.cont_id;
-								 */
-								sessionStorage.setItem("conId", contId);
-								sessionStorage.setItem("renoId", renoId);
-								$(".overlayer").fadeIn(200);
-								$("#tipAdd").fadeIn(200);
-
-							};
-							$("#sureAdd").click(
-									function() {
-										var receFormData = JSON
-												.stringify(contract.receipt);
-										services.addReceipt(
-												{
-													receipt : receFormData,
-													renoId : sessionStorage
-															.getItem("renoId"),
-													contId : sessionStorage
-															.getItem("conId")
-												}).success(function(data) {
-
-											$("#tipAdd").fadeOut(100);
-											$(".overlayer").fadeOut(200);
-											selectRenoByContId();
-											alert("收据添加成功！");
-											contract.receipt = "";
-
-										});
-									});
-
-							$("#cancelAdd").click(function() {
-								$("#tipAdd").fadeOut(100);
-								$(".overlayer").fadeOut(200);
-								contract.receipt = "";
-							});
 							// zq：添加工期阶段的单项控件
 							function addStage() {// 动态添加工期阶段
 								$scope.fchat = new Object();
