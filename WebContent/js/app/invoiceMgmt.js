@@ -176,7 +176,7 @@ invoiceApp
 							// 合同
 							var invoice = $scope;
 							var role;
-							invoice.invoState;
+							var invoState;
 							// zq查看合同ID，并记入sessione
 							invoice.getContId = function(contId) {
 								sessionStorage.setItem('conId', contId);
@@ -397,7 +397,20 @@ invoiceApp
 
 								}
 							}
-
+							// zq换页
+							function pageTurn(totalPage, page) {
+								var $pages = $(".tcdPageCode");
+								console.log($pages.length);
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											findReceiveMoneysByContId(p)
+										}
+									});
+								}
+							}
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {
@@ -411,10 +424,18 @@ invoiceApp
 								$("#receiveMoney").hide();
 								console.log("初始化页面信息");
 								if ($location.path().indexOf('/invoiceList') == 0) {// 如果是合同列表页
-
+									sessionStorage.setItem("invoListType","INVO");
+									invoState="-1";
+									invoice.invoState="-1";
 									selectContractById();
 									countInvoiceMoneyByContId();
-									selectInvoiceByContId();
+									services.getInvoiceList({
+										page : p,
+										invoState : invoState
+									}).success(function(data) {
+										invoice.invoices = data.list;
+										pageTurn(data.totalPage, 1);
+									});
 
 								} else if ($location.path().indexOf(
 										'/invoiceDetail') == 0) {
@@ -423,6 +444,7 @@ invoiceApp
 								} else if ($location.path().indexOf(
 
 								'/invoiceTaskList') == 0) {
+									sessionStorage.setItem("invoListType","INVO");
 									$("#invoPrompt").hide();
 									// 根据权限判断显示待处理的发票
 									if (role == "5") {
