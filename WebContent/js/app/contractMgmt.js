@@ -453,7 +453,6 @@ app
 							contract.getDebtContract = function() {
 								services.getDebtContract({}).success(
 										function(data) {
-											console.log("获取欠款合同成功！");
 											contract.contracts = data;
 										});
 							};
@@ -461,7 +460,6 @@ app
 							contract.getOverdueContract = function() {
 								services.getOverdueContract({}).success(
 										function(data) {
-											console.log("获取逾期合同成功！");
 											contract.contracts = data.list;
 										});
 							};
@@ -471,7 +469,6 @@ app
 									findType : "4",
 									contName : ""
 								}).success(function(data) {
-									console.log("获取逾期合同成功！");
 									contract.contracts = data.list;
 								});
 							};
@@ -481,7 +478,6 @@ app
 									contName : $("#cName").val(),
 									page : 1
 								}).success(function(data) {
-									console.log("选择合同成功！");
 									contract.contracts = data.list;
 									contract.totalPage = data.totalPage;
 								});
@@ -493,12 +489,6 @@ app
 								services.addContract({
 									contract : conFormData
 								}, contract.file).success(function(data) {
-								console.log(contract.file);
-								console.log(contract.contract.cont_cheader);
-								services.addContract({
-									contract : conFormData
-								}, contract.file).success(function(data) {
-									console.log("合同创建成功时保存的合同ID：" + data);
 									sessionStorage.setItem("conId", data);
 									alert("创建合同成功！");
 								});
@@ -506,7 +496,6 @@ app
 							// 修改合同
 							contract.updateContract = function() {
 								var conFormData = JSON.stringify(contract.cont);
-								console.log(conFormData);
 								services.updateConById({
 									contract : conFormData
 								}).success(function(data) {
@@ -587,19 +576,11 @@ app
 							// 添加文书任务
 							contract.addTask1 = function() {
 								var conId = sessionStorage.getItem("conId");
-<<<<<<< HEAD
-=======
-								console.log(conId);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								if (conId.trim() == "") {
 									alert("请先录入合同信息！");
 									return false;
 								}
 								var task1 = JSON.stringify(contract.task1);
-<<<<<<< HEAD
-=======
-								console.log(task1);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								services.addTask({
 									task : task1,
 									taskType : "1", // 1代表文书任务
@@ -611,19 +592,11 @@ app
 							// 添加执行管控任务
 							contract.addTask2 = function() {
 								var conId = sessionStorage.getItem("conId");
-<<<<<<< HEAD
-=======
-								console.log(conId);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								if (conId.trim() == "") {
 									alert("请先录入合同信息！");
 									return false;
 								}
 								var task2 = JSON.stringify(contract.task2);
-<<<<<<< HEAD
-=======
-								console.log(task2);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								services.addTask({
 									task : task2,
 									taskType : "2", // 2代表执行管控任务
@@ -636,10 +609,6 @@ app
 							// zq：读取合同的信息
 							function selectContractById() {
 								var cont_id = sessionStorage.getItem('conId');
-<<<<<<< HEAD
-=======
-								console.log("合同id：" + cont_id);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								services
 										.selectContractById({
 											cont_id : cont_id
@@ -662,12 +631,6 @@ app
 									cont_id : cont_id
 								}).success(function(data) {
 									contract.prst = data.list;
-<<<<<<< HEAD
-=======
-									/* arrPrst */
-									console.log(contract.prst[0].prst_content);
-
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								});
 							}
 
@@ -692,10 +655,6 @@ app
 
 							contract.selectAllTask = function() {
 								var $selectAll = $("#selectAll");
-<<<<<<< HEAD
-=======
-								console.log($selectAll.is(':checked'));
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								if ($selectAll.is(':checked')) {
 									contract.task1.print = "true";
 									contract.task1.sign = "true";
@@ -828,11 +787,6 @@ app
 							// 添加单个工期阶段
 							contract.addOneStage = function() {// 动态添加工期阶段
 								$scope.fchat = new Object();
-<<<<<<< HEAD
-=======
-								console.log("工期阶段"
-										+ JSON.stringify($scope.fchat));
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								$scope.fchat.stages = [ {
 									key : 0,
 									value : ""
@@ -847,10 +801,6 @@ app
 												.getItem("conId");
 										var prstFormData = JSON
 												.stringify($scope.fchat);
-<<<<<<< HEAD
-=======
-										console.log(prstFormData);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 										services.addProjectStage({
 											projectStage : prstFormData,
 											cont_id : conId
@@ -869,15 +819,8 @@ app
 							});
 							// zq：补录合同
 							contract.repeatAddContract = function() {
-<<<<<<< HEAD
 								var conFormData = JSON
 										.stringify(contract.contract);
-=======
-								console.log(contract.contract);
-								var conFormData = JSON
-										.stringify(contract.contract);
-								console.log(conFormData);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								services.repeatAddContract({
 									contract : conFormData,
 									cont_id : sessionStorage.getItem('conId')
@@ -925,10 +868,6 @@ app
 								var cont_id = sessionStorage.getItem("conId");
 								var renoFormData = JSON
 										.stringify($scope.rnchat);
-<<<<<<< HEAD
-=======
-								console.log(renoFormData);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								services.addReceiveNode({
 									receiveNode : renoFormData,
 									cont_id : cont_id
@@ -989,10 +928,6 @@ app
 												.getItem("conId");
 										var renoFormData = JSON
 												.stringify($scope.rnchat);
-<<<<<<< HEAD
-=======
-										console.log(renoFormData);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 										services.addReceiveNode({
 											receiveNode : renoFormData,
 											cont_id : conId
@@ -1025,21 +960,11 @@ app
 								var list = cookies.split(";");
 								for (var i = 0; i < list.length; i++) {
 									var cookieString = list[i];
-<<<<<<< HEAD
-=======
-									/* console.log("cookie内容" + cookieString); */
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 									var p = cookieString.indexOf("=");
 									var name = cookieString.substring(0, p);
 									var value = cookieString.substring(p + 1,
 											cookieString.length);
-<<<<<<< HEAD
 									cookie[name.trim()] = value;
-=======
-									console.log(name);
-									cookie[name.trim()] = value;
-									console.log("进来了,已经赋值" + name);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 									if (name.trim() == "role") {
 										sessionStorage.setItem("userRole",
 												value);
@@ -1062,20 +987,12 @@ app
 							// 10.25zq删除工期阶段
 							contract.delPrst = function() {
 
-<<<<<<< HEAD
-=======
-								console.log(this.stage.prst_state);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								if (this.stage.prst_state == 0) {
 									var prstId = this.stage.prst_id;
 									sessionStorage.setItem("delType", "prst");
 									sessionStorage.setItem("prstId", prstId);
 									$("#tipDel").fadeIn(200);
 									$(".overlayer").fadeIn(200);
-<<<<<<< HEAD
-=======
-									console.log("工期阶段的ID" + prstId);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								} else {
 									alert("该工期已完成不能删除！");
 								}
@@ -1089,10 +1006,6 @@ app
 									sessionStorage.setItem("renoId", renoId);
 									$("#tipDel").fadeIn(200);
 									$(".overlayer").fadeIn(200);
-<<<<<<< HEAD
-=======
-									console.log("收款节点的ID" + renoId);
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								} else {
 									alert("该收款节点处于未收全款或已收全款，不能删除！");
 								}
@@ -1244,15 +1157,8 @@ app
 							}
 							// 初始化页面信息
 							function initData() {
-<<<<<<< HEAD
 								// 点击创建任务时弹出模态框
 								contract.newTask = function() {
-=======
-								console.log("初始化页面信息");
-								// 点击创建任务时弹出模态框
-								contract.newTask = function() {
-									console.log("弹出模态框！");
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 									var conId = this.con.cont_id;
 									services.getAllUsers().success(
 											function(data) {
@@ -1434,10 +1340,6 @@ app
 								} else if ($location.path().indexOf(
 										'/contractAdd') == 0) {
 									// 这里先获取人员列表
-<<<<<<< HEAD
-=======
-									console.log("进入添加合同页面！");
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 									services.getAllUsers().success(
 											function(data) {
 												contract.users = data;
@@ -1457,10 +1359,6 @@ app
 										task_stime : timeNow,
 										task_etime : timeNow
 									};
-<<<<<<< HEAD
-=======
-									console.log("离开添加合同页面！");
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								} else if ($location.path()
 										.indexOf('/prstInfo') == 0) {
 									selectContractById(); // 根据ID获取合同信息
@@ -1514,10 +1412,6 @@ app
 							initData();
 							findRoleFromCookie();
 							$scope.$on('reGetData', function() {
-<<<<<<< HEAD
-=======
-								console.log("重新获取数据！");
->>>>>>> 9ce2e4207196b1858165d919472b48fc8d11c1b8
 								initData();
 							});
 
