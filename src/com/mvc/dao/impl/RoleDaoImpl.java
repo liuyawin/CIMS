@@ -56,7 +56,6 @@ public class RoleDaoImpl implements RoleDao {
 	@Override
 	public List<Role> findRoleAllByPage(Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
 		String selectSql="select * from role where role_state=0";
 		selectSql +=" order by role_id desc limit :offset,:end ";
 		Query query=em.createNativeQuery(selectSql,Role.class);

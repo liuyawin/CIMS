@@ -26,4 +26,10 @@ public interface ReceiveMoneyDao {
 
 	// 审核到款记录
 	Boolean updateRemoStateById(Integer remoId, Float remoAmoney);
+
+	// 根据状态查询到款记录
+	List<ReceiveMoney> findListByState(Integer userId, Integer remoState, Integer offset, Integer end);
+
+	// 根据状态查询到款记录总条数
+	Integer countByState(Integer userId, Integer remoState);
 }

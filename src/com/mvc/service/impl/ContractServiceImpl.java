@@ -83,4 +83,16 @@ public class ContractServiceImpl implements ContractService {
 		return contractDao.updateConById(cont_id, contract);
 	}
 
+	// 张姣娜：根据合同id修改状态
+	@Override
+	public Boolean updateState(Integer contId, Integer contState) {
+		return contractDao.updateState(contId, contState);
+	}
+
+	// 张姣娜：查询所有停建合同列表
+	@Override
+	public List<Contract> findAllStopCont(String contName, Integer offset, Integer end) {
+		return contractDao.findAllStopCont(contName, offset, end);
+	}
+
 }

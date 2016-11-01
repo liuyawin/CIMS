@@ -26,46 +26,75 @@ import javax.persistence.Table;
 public class Contract implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	// 合同项目相关
 	private Integer cont_id;// 合同ID
-	private String cont_onum;// 本公司编号
-	private String cont_cnum;// 业主方编号
 	private String cont_name;// 合同名称
-	private Integer cont_initiation;// 是否立项，0:未立项，1:已立项(默认已立项)
-	private String cont_project;// 项目名称
-	private String cont_pnum;// 项目编码
-	private Integer cont_type;// 合同的类型，0:规划，1:可行性，2:施工图，3:评估，4:其他
-	private Date cont_stime;// 合同签订时间
-	private String cont_saddress;// 合同签订地点
+	private Integer cont_type;// 合同类型，0：传统光伏项目，1：分布式, 2：光热, 3：其他;
+	private Integer cont_rank;// 等级,用于报警类别的区分,0: 重要，1：一般
 	private Float cont_money;// 合同金额
+	private String cont_pnum;// 项目编码
+	private String cont_onum;// 本公司合同编号
+	private String cont_cnum;// （甲方）业主方编号
+	private String cont_project;// 项目名称
+	private String province;// 新增：项目所在省........................
+	private String city;// 新增：项目所在省............................
+	private String proStage;// 新增：项目阶段.........................
+	private Integer cont_state;// 状态,0:在建,1:竣工,2:停建
+	private Date cont_stime;// 合同签订日期
+	private User manager;// 项目设总（项目经理）
+	private User assistant_manager;// 新增：项目副设总（项目副经理），可为空......................
 	private Integer cont_hasproxy;// 是否有委托书，0表示没有，1表示有
+	private Integer cont_initiation;// 是否立项，0:未立项，1:已立项(默认已立项)
+
+	// 业主信息相关
 	private String cont_client;// 业主公司名称
-	private String cont_caddress;// 业主地址
-	private String cont_cheader;// 业主联系人
-	private String cont_cdept;// 业主联系部门
-	private String cont_ctel;// 业主联系方式
-	private String cont_cemail;// 业主邮箱
-	private String cont_cfax;// 业主传真
-	private String cont_czipcode;// 业主邮编
-	private Date cont_ctime;// 合同创建时间
-	private String cont_bank;// 开户行
-	private String cont_account;// 银行账户
-	private String cont_taxidennum;// 纳税人识别号
 	private String cont_orgcodenum;// 组织机构代码证号
+	private String company_type;// 新增：企业性质......................
+	private String cont_caddress;// 业主通讯地址
+	private String cont_czipcode;// 业主邮编编码
+	private String cont_cfax;// 业主传真
 	private Integer cont_avetaxpayer;// 增税人一般纳税人,0:否，1:是
+	private Integer invoice_type;// 新增：发票类型.......................
+	private String cont_taxidennum;// 纳税人识别号
+	private String tel;// 新增：固定电话.............................
+	private String cont_bank;// 开户行
+	private String cont_account;// 账号
+	private String com_signaddress;// 新增：公司注册地址......................
+	private String cont_remark;// 备注（其他需要说明的情况）
+
+	// 业主联系人1相关信息
+	private String cont_cheader;// 联系人姓名
+	private String cont_ctel;// 联系方式
+	private String landline_tel;// 新增：固定电话......................
+	private String post;// 新增：职务...................................
+	private String cont_cdept;// 所在部门
+	private String cont_cemail;// 电子邮箱
+
+	// 业主联系人2相关信息
+	private String cont_cheader2;// 联系人姓名.........................
+	private String cont_ctel2;// 联系方式..............................
+	private String landline_tel2;// 新增：固定电话......................
+	private String post2;// 新增：职务...................................
+	private String cont_cdept2;// 所在部门..............................
+	private String cont_cemail2;// 电子邮箱.............................
+
+	// 该字段暂时未用到
+	private String cont_saddress;// 合同签订地点
+
+	// 以下字段为统计报表所设计
+	private Date cont_ctime;// 合同创建时间
+	private User creator;// 合同创建者
+	private Integer cont_ishistory;// 0：最新，1历史
 	private Integer cont_proalanum;// 工程阶段报警次数
 	private Integer cont_payalanum;// 收款节点报警次数
-	private Integer cont_state;// 状态,0:在建,1:竣工,2:停建
-	private Integer cont_rank;// 等级,用于报警类别的区分,0: 重要，1：一般
-	private String cont_remark;// 备注
+	private String cur_prst;// 当前工期阶段
+	private String cur_reno;// 当前收款节点
 	private Integer invo_total;// 发票总数
 	private Float invo_totalmoney;// 发票总金额
 	private Integer rece_total;// 收据总数
 	private Float rece_totalmoney;// 收据总金额
-	private String cur_prst;// 当前工期阶段
-	private String cur_reno;// 当前收款节点
-	private User creator;// 合同创建者
-	private User manager;// 项目经理
-	private Integer cont_ishistory;// 0：最新，1历史
+	private Integer remo_count;// 到款次数
+	private Float remo_totalmoney;// 到款总金额
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -419,6 +448,151 @@ public class Contract implements Serializable {
 
 	public void setCont_ishistory(Integer cont_ishistory) {
 		this.cont_ishistory = cont_ishistory;
+	}
+
+	public Integer getRemo_count() {
+		return remo_count;
+	}
+
+	public void setRemo_count(Integer remo_count) {
+		this.remo_count = remo_count;
+	}
+
+	@Column(columnDefinition = "float(10,2) default '0.00'")
+	public Float getRemo_totalmoney() {
+		return remo_totalmoney;
+	}
+
+	public void setRemo_totalmoney(Float remo_totalmoney) {
+		this.remo_totalmoney = remo_totalmoney;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getProStage() {
+		return proStage;
+	}
+
+	public void setProStage(String proStage) {
+		this.proStage = proStage;
+	}
+
+	public User getAssistant_manager() {
+		return assistant_manager;
+	}
+
+	public void setAssistant_manager(User assistant_manager) {
+		this.assistant_manager = assistant_manager;
+	}
+
+	public String getCompany_type() {
+		return company_type;
+	}
+
+	public void setCompany_type(String company_type) {
+		this.company_type = company_type;
+	}
+
+	public Integer getInvoice_type() {
+		return invoice_type;
+	}
+
+	public void setInvoice_type(Integer invoice_type) {
+		this.invoice_type = invoice_type;
+	}
+
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+
+	public String getCom_signaddress() {
+		return com_signaddress;
+	}
+
+	public void setCom_signaddress(String com_signaddress) {
+		this.com_signaddress = com_signaddress;
+	}
+
+	public String getLandline_tel() {
+		return landline_tel;
+	}
+
+	public void setLandline_tel(String landline_tel) {
+		this.landline_tel = landline_tel;
+	}
+
+	public String getPost() {
+		return post;
+	}
+
+	public void setPost(String post) {
+		this.post = post;
+	}
+
+	public String getCont_cheader2() {
+		return cont_cheader2;
+	}
+
+	public void setCont_cheader2(String cont_cheader2) {
+		this.cont_cheader2 = cont_cheader2;
+	}
+
+	public String getCont_ctel2() {
+		return cont_ctel2;
+	}
+
+	public void setCont_ctel2(String cont_ctel2) {
+		this.cont_ctel2 = cont_ctel2;
+	}
+
+	public String getLandline_tel2() {
+		return landline_tel2;
+	}
+
+	public void setLandline_tel2(String landline_tel2) {
+		this.landline_tel2 = landline_tel2;
+	}
+
+	public String getPost2() {
+		return post2;
+	}
+
+	public void setPost2(String post2) {
+		this.post2 = post2;
+	}
+
+	public String getCont_cdept2() {
+		return cont_cdept2;
+	}
+
+	public void setCont_cdept2(String cont_cdept2) {
+		this.cont_cdept2 = cont_cdept2;
+	}
+
+	public String getCont_cemail2() {
+		return cont_cemail2;
+	}
+
+	public void setCont_cemail2(String cont_cemail2) {
+		this.cont_cemail2 = cont_cemail2;
 	}
 
 }
