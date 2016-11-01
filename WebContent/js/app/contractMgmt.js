@@ -423,6 +423,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	//lwt:修改项目状态
+	services.modifyStatus= function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/modifyStatus.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 
@@ -1137,6 +1145,37 @@ app
 
 								}
 							}
+							// lwt:点击项目状态时弹出模态框
+							contract.modifyStatus = function() {
+								$(".overlayer").fadeIn(200);
+								$("#tipStatus").fadeIn(200);
+								return false;
+							};
+							$("#sureStatus")
+									.click(
+											function() {
+												var conId = sessionStorage
+														.getItem("conId");
+													services
+															.modifyStatus(
+																	{
+																		taskType : contract.status.task_type,
+																		conId : conId
+																	})
+															.success(
+																	function(
+																			data) {
+																		alert("修改项目状态成功！");
+																	}); 
+												$(".overlayer").fadeOut(100);
+												$("#tipStatus").fadeOut(100);
+											});
+
+							$("#cancelStatus").click(function() {
+								$(".overlayer").fadeOut(100);
+								$("#tipStatus").fadeOut(100);
+							});
+
 							// 初始化页面信息
 							function initData() {
 								// 点击创建任务时弹出模态框
