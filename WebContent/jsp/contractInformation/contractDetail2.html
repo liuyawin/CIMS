@@ -13,7 +13,7 @@
 		<div class="formtitle">
 			<span>合同详情</span>
 		</div>
-		<table class="tbl tablelist" id="contInformation">
+		<table class="tbl tablelist">
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">合同名称</td>
 				<td colspan='6'>{{cont.cont_name}}</td>
@@ -55,32 +55,32 @@
 					class="left_length5 text_style">*</label></td>
 				<td colspan='6'>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage"  class="proStage" value="0" />规划
+						<input type="checkBox" name="proStage" value="规划" />规划
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" class="proStage" value="1" />预可研
+						<input type="checkBox" name="proStage" value="预可研" />预可研
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" class="proStage" value="2" />可研
+						<input type="checkBox" name="proStage" value="可研" />可研
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" class="proStage" value="3" />项目建议书
+						<input type="checkBox" name="proStage" value="项目建议书" />项目建议书
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" class="proStage" value="4" />初步设计
+						<input type="checkBox" name="proStage" value="初步设计" />初步设计
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" class="proStage" value="5" />发包、招标设计
+						<input type="checkBox" name="proStage" value="发包、招标设计" />发包、招标设计
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" class="proStage" value="6" />施工详图
+						<input type="checkBox" name="proStage" value="施工详图" />施工详图
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" class="proStage" value="7" />竣工图
+						<input type="checkBox" name="proStage" value="竣工图" />竣工图
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" class="proStage" value="8" />其他
-					</div>
+						<input type="checkBox" name="proStage" value="其他" />其他
+					</div> <input type="text" id="contProStage" ng-model="contract.proStage" />
 				</td>
 			</tr>
 			<tr>
@@ -90,8 +90,8 @@
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><input type="text"
 					class="dfinput dateFormat input_border" placeholder="格式：2016-09-07"
-					id="contCtime" name="contCtime" ng-model="contract.cont_stime"
-					required /><span class="error-span little">格式错误</span></td>
+					id="contCtime" name="contCtime" ng-model="contract.cont_stime"  required/><span
+					class="error-span little">格式错误</span></td>
 
 			</tr>
 			<tr>
@@ -116,7 +116,7 @@
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">项目副设总</td>
 				<td colspan='2'><select class="dfselect input_border"
-					ng-model="contract.assistant_manager.user_id">
+					ng-model="contract.assistant_manager.user_id" >
 						<option value={{userDept.user.user_id}}
 							ng-repeat="userDept in userDepts">{{userDept.user.user_name}}</option>
 				</select></td>
@@ -142,7 +142,8 @@
 			<tr>
 				<td colspan='3' class="text-center">组织机构代码证号/统一社会信用代码</td>
 				<td colspan='4'><input type="text"
-					ng-model="contract.cont_orgcodenum" class="dfinput input_border" /></td>
+					ng-model="contract.cont_orgcodenum" class="dfinput input_border"
+					/></td>
 			</tr>
 
 			<tr>
@@ -151,42 +152,44 @@
 				<td colspan='4'>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="0" />国有企业
+							ng-model="cont.company_type" value="国有企业" />国有企业
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="1" />事业单位
+							ng-model="cont.company_type" value="事业单位" />事业单位
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="2" />民营企业
+							ng-model="cont.company_type" value="民营企业" />民营企业
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="3" />国外企业
+							ng-model="cont.company_type" value="国外企业" />国外企业
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="4" />政府机关
+							ng-model="cont.company_type" value="政府机关" />政府机关
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="5" />其他
+							ng-model="cont.company_type" value="其他" />其他
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">通讯地址</td>
 				<td colspan='6'><input type="text"
-					ng-model="contract.cont_caddress" class="dfinput input_border" /></td>
+					ng-model="contract.cont_caddress" class="dfinput input_border"
+					/></td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">业主邮编</td>
 				<td colspan='1'><input type="text"
-					ng-model="contract.cont_czipcode" class="dfinput input_border" /></td>
+					ng-model="contract.cont_czipcode" class="dfinput input_border"
+				/></td>
 				<td colspan='2' class="width20 text-center">业主传真</td>
 				<td colspan='2'><input type="text"
-					ng-model="contract.cont_cfax" class="dfinput input_border" /></td>
+					ng-model="contract.cont_cfax" class="dfinput input_border"/></td>
 			</tr>
 			<tr>
 				<td colspan='3' class="width20 text-center table_title_width">联系人1</td>
@@ -199,22 +202,26 @@
 				<td colspan='1'>{{contract.cont_cheader}}</td>
 				<td colspan='2' class="width20 text-center">姓名</td>
 				<td colspan='2'><input type="text"
-					ng-model="contract.cont_cheader2" class="dfinput input_border" /></td>
+					ng-model="contract.cont_cheader2" class="dfinput input_border"
+					/></td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">手机号</td>
 				<td colspan='1'>{{contract.cont_ctel}}</td>
 				<td colspan='2' class="width20 text-center">手机号</td>
 				<td colspan='2'><input type="text"
-					ng-model="contract.cont_ctel2" class="dfinput input_border" /></td>
+					ng-model="contract.cont_ctel2" class="dfinput input_border"
+					/></td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">固定电话</td>
 				<td colspan='1'><input type="text"
-					ng-model="contract.landline_tel" class="dfinput input_border" /></td>
+					ng-model="contract.landline_tel" class="dfinput input_border"
+					/></td>
 				<td colspan='2' class="width20 text-center">固定电话</td>
 				<td colspan='2'><input type="text"
-					ng-model="contract.landline_tel2" class="dfinput input_border" /></td>
+					ng-model="contract.landline_tel2" class="dfinput input_border"
+					/></td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">职务</td>
@@ -227,63 +234,69 @@
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">所在部门</td>
 				<td colspan='1'><input type="text"
-					ng-model="contract.cont_cdept" class="dfinput input_border" /></td>
+					ng-model="contract.cont_cdept" class="dfinput input_border"
+					/></td>
 				<td colspan='2' class="width20 text-center">所在部门</td>
 				<td colspan='2'><input type="text"
-					ng-model="contract.cont_cdept2" class="dfinput input_border" /></td>
+					ng-model="contract.cont_cdept2" class="dfinput input_border"
+					/></td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">电子邮箱</td>
 				<td colspan='1'><input type="email"
-					ng-model="contract.cont_cemail" class="dfinput input_border" /></td>
+					ng-model="contract.cont_cemail" class="dfinput input_border"
+					/></td>
 				<td colspan='2' class="width20 text-center">电子邮箱</td>
 				<td colspan='2'><input type="email"
-					ng-model="contract.cont_cemail2" class="dfinput input_border" /></td>
-			</tr>
-			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">公司注册地址</td>
-				<td colspan='6'><input type="text"
-					ng-model="contract.cont_czipcode" class="dfinput input_border" /></td>
-
+					ng-model="contract.cont_cemail2" class="dfinput input_border"
+					/></td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">纳税人类型</td>
 				<td colspan='1'>
 					<div class="div-checkbox">
 						<input type="radio" name="contAvetaxpayer"
-							ng-model="cont.cont_avetaxpayer" value="0" />一般纳税人
+							ng-model="cont.cont_avetaxpayer" value="一般纳税人" />一般纳税人
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="contAvetaxpayer"
-							ng-model="cont.cont_avetaxpayer" value="1" />小规模纳税人
+							ng-model="cont.cont_avetaxpayer" value="小规模纳税人" />小规模纳税人
 					</div>
 				</td>
-
 				<td colspan='2' class="width20 text-center">发票类型</td>
 				<td colspan='2'><div class="div-checkbox">
 						<input type="radio" name="invoiceType"
-							ng-model="cont.invoice_type" value="0" />增值税专用发票
+							ng-model="cont.invoice_type" value="增值税专用发票" />增值税专用发票
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="invoiceType"
-							ng-model="cont.invoice_type" value=" 1" /> 增值税普通发票
+							ng-model="cont.invoice_type" value=" 增值税普通发票" /> 增值税普通发票
 					</div></td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">纳税人识别号</td>
 				<td colspan='1'><input type="text"
-					ng-model="contract.cont_taxidennum" class="dfinput input_border" /></td>
+					ng-model="contract.cont_taxidennum" class="dfinput input_border"
+					/></td>
 				<td colspan='2' class="width20 text-center">电话（固定）</td>
 				<td colspan='2'><input type="text" ng-model="contract.tel"
-					class="dfinput input_border" /></td>
+					class="dfinput input_border"  /></td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">开户行</td>
 				<td colspan='1'><input type="text"
-					ng-model="contract.cont_czipcode" class="dfinput input_border" /></td>
+					ng-model="contract.cont_czipcode" class="dfinput input_border"
+					 /></td>
 				<td colspan='2' class="width20 text-center">银行账号</td>
 				<td colspan='2'><input type="text"
-					ng-model="contract.cont_cfax" class="dfinput input_border" /></td>
+					ng-model="contract.cont_cfax" class="dfinput input_border"  /></td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width20 text-center table_title_width">公司注册地址</td>
+				<td colspan='6'><input type="text"
+					ng-model="contract.cont_czipcode" class="dfinput input_border"
+					 /></td>
+
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">其他需要说明的情况</td>
@@ -291,7 +304,7 @@
 						class="textinput text_border" ng-model="contract.cont_remark"></textarea></td>
 			</tr>
 		</table>
-		<input type="submit" id="addContract" class="btn"  value="确认提交" />
+		<input type="submit" id="addContract" class="btn" value="确认提交" />
 
 	</form>
 </div>
@@ -375,6 +388,6 @@
 		</ul>
 
 		<input type="submit" id="addReceiveNode" class="btn"
-			style="display: none" value="添加收款节点"/>
+			style="display: none" value="添加收款节点" />
 	</form>
 </div>

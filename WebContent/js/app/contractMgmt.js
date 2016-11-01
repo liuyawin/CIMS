@@ -1,4 +1,7 @@
-var app = angular.module('contract', [ 'ngRoute', 'angularFileUpload' ],
+var app = angular
+		.module(
+				'contract',
+				[ 'ngRoute', 'angularFileUpload' ],
 				function($httpProvider) { // ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
 					$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -54,32 +57,32 @@ var app = angular.module('contract', [ 'ngRoute', 'angularFileUpload' ],
 					} ];
 				});
 // 获取权限列表
-  var permissionList; 
-  angular.element(document).ready(function() {
-  console.log("获取权限列表！"); 
-  $.get('/CIMS/login/getUserPermission.do', function(data) { 
-	  permissionList = data; // 
-	  console.log("身份是：" + permissionList);
-	  angular.bootstrap($("#ng-section"), ['contract']); //手动加载angular模块
-	  }); 
-  });
- 
-  app.directive('hasPermission', function($timeout) {
-		return {
-			restrict : 'ECMA',
-			link : function(scope, element, attr) {
-				var key = attr.hasPermission.trim(); // 获取页面上的权限值
-				console.log("获取页面上的权限值" + key);
-				var keys = permissionList;
-				console.log("获取后台的权限值" + keys);
-				var regStr = "\\s" + key + "\\s";
-				var reg = new RegExp(regStr);
-				if (keys.search(reg) < 0) {
-					element.css("display", "none");
-				}
-			}
-		};
+var permissionList;
+angular.element(document).ready(function() {
+	console.log("获取权限列表！");
+	$.get('/CIMS/login/getUserPermission.do', function(data) {
+		permissionList = data; // 
+		console.log("身份是：" + permissionList);
+		angular.bootstrap($("#ng-section"), [ 'contract' ]); // 手动加载angular模块
 	});
+});
+
+app.directive('hasPermission', function($timeout) {
+	return {
+		restrict : 'ECMA',
+		link : function(scope, element, attr) {
+			var key = attr.hasPermission.trim(); // 获取页面上的权限值
+			console.log("获取页面上的权限值" + key);
+			var keys = permissionList;
+			console.log("获取后台的权限值" + keys);
+			var regStr = "\\s" + key + "\\s";
+			var reg = new RegExp(regStr);
+			if (keys.search(reg) < 0) {
+				element.css("display", "none");
+			}
+		}
+	};
+});
 
 /*
  * app.run([ 'permissions', function(permissions) {
@@ -189,6 +192,12 @@ app
 									'/contractRecord',
 									{
 										templateUrl : '/CIMS/jsp/contractInformation/contractRecord.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/contractDetail2',
+									{
+										templateUrl : '/CIMS/jsp/contractInformation/contractDetail2.html',
 										controller : 'ContractController'
 									});
 				} ]);
@@ -826,6 +835,15 @@ app
 							});
 							// zq：补录合同
 							contract.repeatAddContract = function() {
+								var list = document
+										.getElementsByClassName("proStage");
+								contract.contract.proStage = "";
+								for (var i = 0; i < list.length; i++) {
+									if (list[i].checked) {
+										contract.contract.proStage += ""
+												+ list[i].value + ",";
+									}
+								}
 								var conFormData = JSON
 										.stringify(contract.contract);
 								services.repeatAddContract({
@@ -833,8 +851,9 @@ app
 									cont_id : sessionStorage.getItem('conId')
 								}).success(function(data) {
 									/* window.sessionStorage.setItem("contractId",); */
-									alert("添加合同成功！");
+									alert("修改合同成功！");
 								});
+
 							};
 							// zq：添加工期阶段到数据库
 							contract.addProjectStage = function() {
@@ -1072,7 +1091,8 @@ app
 												function(data) {
 
 													contract.prStage = data.projectStage;
-													console.log(data.projectStage);
+													console
+															.log(data.projectStage);
 													$scope.prStage.prst_etime = changeDateType(data.projectStage.prst_etime);
 
 												});
@@ -1429,6 +1449,12 @@ app
 									$("#prstContainer").hide();
 									$("#renoContainer").hide();
 								} else if ($location.path().indexOf(
+										'/contractDetail2') == 0) {
+									selectUsersFromDesign();// 查找设计部人员
+									selectContractById(); // 根据ID获取合同信息
+									$("#prstContainer").hide();
+									$("#renoContainer").hide();
+								} else if ($location.path().indexOf(
 										'/contractRecord') == 0) {
 
 									services.selectContRecordByContId(
@@ -1544,7 +1570,7 @@ app
 // 小数过滤器
 app.filter('receFloat', function() {
 	return function(input) {
-		if (input == null) {
+		if (!input) {
 			var money = parseFloat('0').toFixed(2);
 		} else {
 			var money = parseFloat(input).toFixed(2);
@@ -1563,10 +1589,12 @@ app.filter('conState', function() {
 			state = "竣工";
 		else if (input == "2")
 			state = "停建";
+		else if (!input)
+			state = "";
 		return state;
 	}
 });
-// 合同立项判断
+//合同立项判断
 app.filter('conInitiation', function() {
 	return function(input) {
 		var initiation = "";
@@ -1574,6 +1602,8 @@ app.filter('conInitiation', function() {
 			initiation = "否";
 		else if (input == "1")
 			initiation = "是";
+		else if (!input)
+			initiation = "";
 
 		return initiation;
 	}
@@ -1586,6 +1616,8 @@ app.filter('conHasproxy', function() {
 			hasproxy = "否";
 		else if (input == "1")
 			hasproxy = "是";
+		else if (!input)
+			hasproxy = "";
 
 		return hasproxy;
 	}
@@ -1595,10 +1627,25 @@ app.filter('conAvetaxpayer', function() {
 	return function(input) {
 		var avetaxpayer = "";
 		if (input == "0")
-			avetaxpayer = "否";
+			avetaxpayer = "一般纳税人";
 		else if (input == "1")
-			avetaxpayer = "是";
+			avetaxpayer = "小规模纳税人";
+		else if (!input)
+			avetaxpayer = "";
 
+		return avetaxpayer;
+	}
+});
+// 发票类型的判断的判断
+app.filter('conInvoiceType', function() {
+	return function(input) {
+		var avetaxpayer = "";
+		if (input == "0")
+			avetaxpayer = "增值税专用发票";
+		else if (input == "1")
+			avetaxpayer = "增值税普通发票";
+		else if (!input)
+			avetaxpayer = "";
 		return avetaxpayer;
 	}
 });
@@ -1607,18 +1654,88 @@ app.filter('conType', function() {
 	return function(input) {
 		var type = "";
 		if (input == "0")
-			type = "规划";
+			type = "传统光伏项目";
 		else if (input == "1")
-			type = "可行性";
+			type = "分布式";
 		else if (input == "2")
-			type = "施工图";
+			type = "光热";
 		else if (input == "3")
-			type = "评估";
-		else if (input == "4")
 			type = "其他";
+		else if (!input)
+			type = "";
 		return type;
 	}
 });
+
+// 合同项目阶段的判断
+app.filter('conProStage', function() {
+	return function(input) {
+		var type = "";
+		if (input) {
+			console.log(input);
+			strs = input.split(","); // 字符分割
+			
+			for (i = 0; i < strs.length; i++) {
+				switch (strs[i]) {
+				case "0":
+					type += "规划   ";
+					break;
+				case "1":
+					type += "预可研   ";
+					break;
+				case "2":
+					type += "可研   ";
+					break;
+				case "3":
+					type += "项目建议书   ";
+					break;
+				case "4":
+					type += "初步设计   ";
+					break;
+				case "5":
+					type += "发包、招标设计   ";
+					break;
+				case "6":
+					type += "施工详图   ";
+					break;
+				case "7":
+					type += "竣工图    ";
+					break;
+				case "8":
+					type += "其他   ";
+					break;
+				default:
+					type += "";
+					break;
+				}
+			}
+			return type;
+		}
+	}
+});
+
+// 合同项目阶段的判断
+app.filter('conCompanyType', function() {
+	return function(input) {
+		var type = "";
+		if (input == "0")
+			type = "国有企业";
+		else if (input == "1")
+			type = "事业单位";
+		else if (input == "2")
+			type = "民营企业";
+		else if (input == "3")
+			type = "国外企业";
+		else if (input == "4")
+			type = "政府机关";
+		else if (input == "5")
+			type = "其他";
+		else if (!input)
+			type = "";
+		return type;
+	}
+});
+
 // 工期阶段的判断
 app.filter('prstType', function() {
 	return function(input) {
@@ -1627,6 +1744,8 @@ app.filter('prstType', function() {
 			type = "未完成";
 		else if (input == "1")
 			type = "已完成";
+		else if (!input)
+			type = "";
 
 		return type;
 	}
@@ -1643,6 +1762,8 @@ app.filter('renoType', function() {
 			type = "已付全款";
 		else if (input == "3")
 			type = "提前到款";
+		else if (!input)
+			type = "";
 		return type;
 	}
 });
@@ -1650,7 +1771,7 @@ app.filter('renoType', function() {
 app.filter('dateType', function() {
 	return function(input) {
 		var type = "";
-		if (input != null) {
+		if (input) {
 			type = new Date(input).toLocaleDateString().replace(/\//g, '-');
 		}
 
@@ -1679,6 +1800,8 @@ app.filter('conRank', function() {
 			rank = "重要";
 		else if (input == "1")
 			rank = "一般";
+		else if (!input)
+			rank = "";
 		return rank;
 	}
 });
@@ -1706,68 +1829,36 @@ app.directive("dateFormat", function() {
 		}
 	}
 });
-/*app
-		.directive(
-				'hasPermission',
-				function($timeout) {
-					return {
-						restrict : 'A',
-						link : function(scope, element, attr) {
-
-							var key = attr.hasPermission.trim(); // 获取页面上的权限值
-							console.log("获取页面上的权限值" + key);
-							 console.log("cookie内容" + JSON.stringify(cookie)); 
-							
-							 * if (sessionStorage.getItem('userRole').trim() ==
-							 * "3") { element.css("display", "none"); }
-							 
-							switch (sessionStorage.getItem('userRole').trim()) {
-							case "1":
-								var keys1 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-								var regStr1 = "\\s" + key + "\\s";
-								var reg1 = new RegExp(regStr1);
-								if (keys1.search(reg1) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							case "2":
-								var keys2 = " tContDetail ";
-								var regStr2 = "\\s" + key + "\\s";
-								var reg2 = new RegExp(regStr2);
-								if (keys2.search(reg2) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							case "3":
-								var keys3 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
-								var regStr3 = "\\s" + key + "\\s";
-								var reg3 = new RegExp(regStr3);
-								if (keys3.search(reg3) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							case "4":
-								var keys4 = " bInvoAdd tContDetail ";
-								var regStr4 = "\\s" + key + "\\s";
-								var reg4 = new RegExp(regStr4);
-								if (keys4.search(reg4) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							case "5":
-								var keys5 = " cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-								var regStr5 = "\\s" + key + "\\s";
-								var reg5 = new RegExp(regStr5);
-								if (keys5.search(reg5) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							}
-						}
-					};
-
-				});
-*/
+/*
+ * app .directive( 'hasPermission', function($timeout) { return { restrict :
+ * 'A', link : function(scope, element, attr) {
+ * 
+ * var key = attr.hasPermission.trim(); // 获取页面上的权限值 console.log("获取页面上的权限值" +
+ * key); console.log("cookie内容" + JSON.stringify(cookie));
+ * 
+ * if (sessionStorage.getItem('userRole').trim() == "3") {
+ * element.css("display", "none"); }
+ * 
+ * switch (sessionStorage.getItem('userRole').trim()) { case "1": var keys1 = "
+ * cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect
+ * tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
+ * var regStr1 = "\\s" + key + "\\s"; var reg1 = new RegExp(regStr1); if
+ * (keys1.search(reg1) < 0) { element.css("display", "none"); } break; case "2":
+ * var keys2 = " tContDetail "; var regStr2 = "\\s" + key + "\\s"; var reg2 =
+ * new RegExp(regStr2); if (keys2.search(reg2) < 0) { element.css("display",
+ * "none"); } break; case "3": var keys3 = " cBodyEdit cPsAdd cPsEdit cPsDel
+ * cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish "; var regStr3 =
+ * "\\s" + key + "\\s"; var reg3 = new RegExp(regStr3); if (keys3.search(reg3) <
+ * 0) { element.css("display", "none"); } break; case "4": var keys4 = "
+ * bInvoAdd tContDetail "; var regStr4 = "\\s" + key + "\\s"; var reg4 = new
+ * RegExp(regStr4); if (keys4.search(reg4) < 0) { element.css("display",
+ * "none"); } break; case "5": var keys5 = " cAdd cHeadEdit cDel cTaskAdd
+ * tInvoAudit tContDetail "; var regStr5 = "\\s" + key + "\\s"; var reg5 = new
+ * RegExp(regStr5); if (keys5.search(reg5) < 0) { element.css("display",
+ * "none"); } break; } } };
+ * 
+ * });
+ */
 /*
  * app.directive('minLength', function () { return { restrict: 'A', require:
  * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,

@@ -136,20 +136,20 @@ invoiceApp.factory('invoiceservices', [ '$http', 'baseUrl',
 				});
 			}
 			
-			// zq查询待审核的发票任务
+			// zq根据ID查询发票列表
 			services.getInvoiceList = function(data) {
 				return $http({
 					method : 'post',
-					url : baseUrl + 'invoice/getInvoiceList.do',
+					url : baseUrl + 'invoice/getInvoiceListByContId.do',
 					data : data
 				});
 			};
 			
-			// zq查询待处理的发票任务
+			// zq查询发票任务
 			services.getInvoTaskList = function(data) {
 				return $http({
 					method : 'post',
-					url : baseUrl + 'invoice/getInvoTaskList.do',
+					url : baseUrl + 'invoice/getInvoTaskListByState.do',
 					data : data
 				});
 			};
@@ -347,7 +347,7 @@ invoiceApp
 								}
 							}
 							//为换页提供查找函数
-							function findInvoices() {
+							function findInvoices(p) {
 								var invoListType = sessionStorage
 										.getItem("invoListType");
 								if (invoListType == "INVO") {
@@ -421,7 +421,7 @@ invoiceApp
 											{
 												contId : sessionStorage
 														.getItem('conId'),
-												page : p,
+												page : 1,
 												invoState : invoState
 											}).success(function(data) {
 										invoice.invoices = data.list;
@@ -438,7 +438,7 @@ invoiceApp
 									invoState = "-1";
 									invoice.invoState = "-1";
 									services.getInvoTaskList({
-										page : p,
+										page : 1,
 										invoState : invoState
 									}).success(function(data) {
 										invoice.invoices = data.list;
