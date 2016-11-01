@@ -142,7 +142,7 @@ app
 									{
 										templateUrl : '/CIMS/jsp/contractInformation/contractList.html',
 										controller : 'ContractController'
-									})
+									})		
 							.when(
 									'/contractAdd',
 									{
@@ -189,6 +189,12 @@ app
 									'/contractRecord',
 									{
 										templateUrl : '/CIMS/jsp/contractInformation/contractRecord.html',
+										controller : 'ContractController'
+									})
+							.when(
+									'/stopedContract',
+									{
+										templateUrl : '/CIMS/jsp/contractInformation/contractList.html',
 										controller : 'ContractController'
 									});
 				} ]);
@@ -431,6 +437,15 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	//lwt:停建合同
+	services.getStopedContract = function(data) {
+		/* console.log("发送请求获取合同信息"); */
+		return $http({
+			method : 'post',
+			url : baseUrl + 'contract/selectContract.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 
@@ -475,6 +490,15 @@ app
 							contract.getFinishedContract = function() {
 								services.getFinishedContract({
 									findType : "4",
+									contName : ""
+								}).success(function(data) {
+									contract.contracts = data.list;
+								});
+							};
+							// lwt:获取停建合同
+							contract.getStopedContract = function() {
+								services.getFinishedContract({
+									findType : "5",
 									contName : ""
 								}).success(function(data) {
 									contract.contracts = data.list;
@@ -1146,27 +1170,27 @@ app
 								}
 							}
 							// lwt:点击项目状态时弹出模态框
-							contract.modifyStatus = function() {
+							contract.modifyStatus = function(conId) {
+								sessionStorage.setItem("conId",conId);
 								$(".overlayer").fadeIn(200);
 								$("#tipStatus").fadeIn(200);
-								return false;
 							};
 							$("#sureStatus")
 									.click(
 											function() {
-												var conId = sessionStorage
-														.getItem("conId");
-													services
-															.modifyStatus(
-																	{
-																		taskType : contract.status.task_type,
-																		conId : conId
+												var conId=sessionStorage.getItem("conId");
+												services.modifyStatus({
+																		contState : contract.status.status_type,
+																		contId : sessionStorage.getItem("conId")
 																	})
-															.success(
-																	function(
-																			data) {
+															.success(function(data) {
+																if(data="true"){
 																		alert("修改项目状态成功！");
-																	}); 
+																		initData();
+																}else{
+																		alert("修改项目状态失败！");
+																	}
+																}); 
 												$(".overlayer").fadeOut(100);
 												$("#tipStatus").fadeOut(100);
 											});
@@ -1188,7 +1212,7 @@ app
 														conId);
 											});
 									$(".overlayer").fadeIn(200);
-									$(".tip").fadeIn(200);
+									$("#tipType").fadeIn(200);
 									return false;
 								};
 
@@ -1236,13 +1260,13 @@ app
 													}
 													$(".overlayer")
 															.fadeOut(100);
-													$(".tip").fadeOut(100);
+													$("#tipType").fadeOut(100);
 												});
 
 								$(".cancel").click(function() {
 									/* sessionStorage.setItem("conId", ""); */
 									$(".overlayer").fadeOut(100);
-									$(".tip").fadeOut(100);
+									$("#tipType").fadeOut(100);
 								});
 
 								$(".taskType").change(function() {
@@ -1430,6 +1454,33 @@ app
 											}).success(function(data) {
 										contract.records = data.list;
 									});
+								}else if ($location.path().indexOf(
+										'/stopedContract') == 0) { // lwt:获取停建合同信息
+									contract.flag = 0; // 标志位，用于控制按钮是否显示
+									services
+											.getFinishedContract({
+												page : 1,
+												findType : "5",
+												contName : ""
+											})
+											.success(
+													function(data) {
+														contract.contracts = data.list;
+														contract.totalPage = data.totalPage;
+														var $pages = $(".tcdPageCode");
+														if ($pages.length != 0) {
+															$pages
+																	.createPage({
+																		pageCount : contract.totalPage,
+																		current : 1,
+																		backFn : function(
+																				p) {
+																			contract
+																					.getStopedContract(p); // 点击页码时获取第p页的数据
+																		}
+																	});
+														}
+													});
 								}
 							}
 
