@@ -5,7 +5,7 @@
 			+ path + "/";
 %>
 <jsp:include page="/jsp/top.jsp" />
-<section class="main" ng-app="index" ng-controller="IndexController">
+<section  id="ng-section" class="main">
 	<div class="place">
 		<span>位置：</span>
 		<ul class="placeul">
@@ -13,7 +13,7 @@
 		</ul>
 	</div>
 
-	<div class="mainindex">
+	<div class="mainindex"  ng-controller="IndexController">
 		<div class="welinfo">
 			<span><img src="${ctx}/images/sun.png" alt="天气" /></span> <b>欢迎使用光电项目设计进度到款跟踪系统</b>
 			<!-- <a href="#">帐号设置</a> -->

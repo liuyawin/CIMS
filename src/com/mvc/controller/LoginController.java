@@ -11,8 +11,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.base.constants.CookieKeyConstants;
 import com.base.constants.PageNameConstants;
+import com.base.constants.PermissionConstants;
 import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.AlarmStatistic;
 import com.mvc.entity.User;
@@ -82,14 +84,6 @@ public class LoginController {
 		return result;
 	}
 
-	// @RequestMapping("/getUserPermission.do")
-	// public @ResponseBody JSONObject getUserPermission(HttpServletRequest
-	// request, HttpSession session, ModelMap map) {
-	// JSONObject jsonObject = new JSONObject();
-	// jsonObject.put("permission", "zhuren");
-	// return jsonObject;
-	// }
-
 	/**
 	 * 登录验证用户名和密码是否正确
 	 * 
@@ -136,23 +130,6 @@ public class LoginController {
 		String password = request.getParameter("password");
 		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
-
-		// System.out.println("权限测试开始：");
-		// String permission = user.getRole().getRole_permission();
-		// System.out.println("permission:" + permission);
-		// JSONObject jsonObject = JSONObject.fromObject(permission);
-		// String contPer = jsonObject.getString("con_per");
-		// System.out.println("contPer:" + contPer);
-		// String taskPer = jsonObject.getString("task_per");
-		// System.out.println("taskPer:" + taskPer);
-		// String billPer = jsonObject.getString("bill_per");
-		// System.out.println("billPer:" + billPer);
-		// String systemPer = jsonObject.getString("system_per");
-		// System.out.println("systemPer:" + systemPer);
-		// String alarmPer = jsonObject.getString("alarm_per");
-		// System.out.println("alarmPer:" + alarmPer);
-		// System.out.println("权限测试结束");
-
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
 			String passwd = user.getUser_pwd();
@@ -283,12 +260,47 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/getUserPermission.do")
 	public @ResponseBody String getUserPermission(HttpServletRequest request, HttpSession session) {
-		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		// String permission = user.getUser_permission();
-		// 临时测试
-		String permission = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-		jsonObject = JSONObject.fromObject(permission);
-		return jsonObject.toString();
+		String result = "";
+		String permission = "";
+		if (user.getRole().getRole_permission() != null && !user.getRole().getRole_permission().equals("")) {
+			permission = user.getRole().getRole_permission();
+			JSONObject jsonObject = JSONObject.fromObject(permission);
+			result = toPermissionStr(jsonObject.getString("con_per"), PermissionConstants.contract, result);
+			result = toPermissionStr(jsonObject.getString("task_per"), PermissionConstants.task, result);
+			result = toPermissionStr(jsonObject.getString("bill_per"), PermissionConstants.bill, result);
+			result = toPermissionStr(jsonObject.getString("system_per"), PermissionConstants.system, result);
+			result = toPermissionStr(jsonObject.getString("alarm_per"), PermissionConstants.alarm, result);
+		}
+		return JSON.toJSONString(result + " ");
+	}
+
+	private static String toPermissionStr(String str, String type, String result) {
+		String subStr = str.substring(1, str.length() - 1);
+		String strArr[] = subStr.split(",");
+		for (int i = 0; i < strArr.length; i++) {
+			if (strArr[i].equals("1")) {
+				switch (type) {
+				case "contPer":
+					result += " " + PermissionConstants.contPer[i];
+					break;
+				case "taskPer":
+					result += " " + PermissionConstants.taskPer[i];
+					break;
+				case "billPer":
+					result += " " + PermissionConstants.billPer[i];
+					break;
+				case "systemPer":
+					result += " " + PermissionConstants.systemPer[i];
+					break;
+				case "alarmPer":
+					result += " " + PermissionConstants.alarmPer[i];
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		return result;
 	}
 }

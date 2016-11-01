@@ -56,7 +56,16 @@ var app = angular
 								: data;
 					} ];
 				});
-
+//获取权限列表
+var permissionList; 
+angular.element(document).ready(function() {
+console.log("获取权限列表！"); 
+$.get('/CIMS/login/getUserPermission.do', function(data) { 
+	  permissionList = data; // 
+	  console.log("身份是：" + permissionList);
+	  angular.bootstrap($("#ng-section"), ['taskMgmt']); //手动加载angular模块
+	  }); 
+});
 app.run([ '$rootScope', '$location', function($rootScope, $location) {
 	$rootScope.$on('$routeChangeSuccess', function(evt, next, previous) {
 		console.log('路由跳转成功');
@@ -224,7 +233,6 @@ app
 									task_stime : timeNow,
 									task_etime : timeNow
 								};
-								
 
 							};
 							$("#sureAdd").click(
@@ -387,7 +395,7 @@ app
 							// 显示提示框及删除功能的实现 删除任务
 							taskHtml.delTask = function() {
 								var taskId = this.t.task_id;
-								sessionStorage.setItem("taskId",taskId);
+								sessionStorage.setItem("taskId", taskId);
 								$("#tipDel").fadeIn(200);
 								$(".overlayer").fadeIn(200);
 
@@ -399,7 +407,7 @@ app
 									taskId : sessionStorage.getItem('taskId')
 								}).success(function(data) {
 									console.log("根据内容获取任务列表成功！");
-									
+
 									alert("删除成功！");
 									/* $("#" + taskId + "").hide(); */
 									services.getTaskList({
@@ -409,9 +417,9 @@ app
 									}).success(function(data) {
 										taskHtml.tasks = data.list;
 										pageTurn(tState, data.totalPage, 1);
-										
+
 									});
-									
+
 								});
 							});
 
@@ -585,6 +593,8 @@ app
 									tState = "-1";
 									taskHtml.tState = "-1";
 									sendOrReceive = 1;
+									sessionStorage
+											.setItem("sendOrReceive", "1");
 									services.getTaskList({
 										taskState : tState,
 										page : 1,
@@ -599,6 +609,8 @@ app
 									tState = "-1";
 									taskHtml.tState = "-1";
 									sendOrReceive = 0;
+									sessionStorage
+											.setItem("sendOrReceive", "0");
 									services.getTaskList({
 										taskState : tState,
 										page : 1,
@@ -703,7 +715,55 @@ app.filter('dateType', function() {
 		return type;
 	}
 });
+app.directive('taskFinish', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			// 任务状态,0：未接收，1：执行中，2：已完成
+			// 任务类型, 0：普通任务，1：文书任务，2补录合同任务，3、其他
+			// 任务:1表示接受的任务，0表示发出的任务
+			var key = attr.taskFinish.trim(); // 获取页面上的权限值
+			var strs = new Array(); // 定义一数组
+			var sendOrReceive = sessionStorage.getItem("sendOrReceive");
+			var state = null;
+			var type = null;
+			strs = key.split(","); // 字符分割
+			state = strs[0];
+			type = strs[1];
+			if (sendOrReceive == "1") {
+				if (type == "1") {
+					element.css("display", "none");
+				} else {
+					if (state == "2") {
+						element.css("display", "none");
+					}
+				}
+			} else if (sendOrReceive == "0") {
+				element.css("display", "none");
+			}
 
+			
+		}
+	};
+
+});
+app.directive('taskDelete', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			// 任务状态,0：未接收，1：执行中，2：已完成
+			// 任务类型, 0：普通任务，1：文书任务，2补录合同任务，3、其他
+			// 任务:1表示接受的任务，0表示发出的任务
+
+			var sendOrReceive = sessionStorage.getItem("sendOrReceive");
+			if (sendOrReceive == "1") {
+				element.css("display", "none");
+			}
+			console.log("张群获取任务的状态值" + sendOrReceive);
+		}
+	};
+
+});
 app
 		.directive(
 				'hasPermission',

@@ -57,6 +57,12 @@ var receiveMoneyApp = angular
 					} ];
 				});
 
+app.run([ '$rootScope', '$location', function($rootScope, $location) {
+	$rootScope.$on('$routeChangeSuccess', function(evt, next, previous) {
+		console.log('路由跳转成功');
+		$rootScope.$broadcast('reGetData');
+	});
+} ]);
 receiveMoneyApp.run([
 		'$rootScope',
 		'$location',
@@ -73,64 +79,77 @@ receiveMoneyApp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/receiveMoneyList', {
 		templateUrl : '/CIMS/jsp/billInformation/receiveMoneyList.html',
 		controller : 'ReceiveMoneyController'
+	}).when('/receiveMoneyTaskList', {
+		templateUrl : '/CIMS/jsp/billInformation/receiveMoneyList.html',
+		controller : 'ReceiveMoneyController'
 	})
 } ]);
 receiveMoneyApp.constant('baseUrl', '/CIMS/');
-receiveMoneyApp
-		.factory(
-				'receivemoneyservices',
-				[
-						'$http',
-						'baseUrl',
-						function($http, baseUrl) {
-							var services = {};
-							// zq根据ID查找合同信息
-							services.selectContractById = function(data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'contract/selectContractById.do',
-									data : data
-								});
-							};
-							// zq根据合同ID获取获取已到款钱数
-							services.countReceiveMoneyByContId = function(data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'receiveMoney/receiveMoneyByContId.do',
-									data : data
-								});
-							};
-							// 根据ID获取到款某条记录
-							services.selectReceiveMoneyById = function(data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'receiveMoney/selectReceiveMoneyById.do',
-									data : data
-								})
-							};
-							// 根据合同ID获取该合同的所有到款记录
-							services.selectReceiveMoneysByContId = function(
-									data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'receiveMoney/selectReceiveMoneyByContId.do',
-									data : data
-								})
-							};
-							services.auditReceiveMoney = function(data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'receiveMoney/auditReceiveMoney.do',
-									data : data
-								})
-							};
-							return services;
-						} ]);
+receiveMoneyApp.factory('receivemoneyservices', [
+		'$http',
+		'baseUrl',
+		function($http, baseUrl) {
+			var services = {};
+			// zq根据ID查找合同信息
+			services.selectContractById = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'contract/selectContractById.do',
+					data : data
+				});
+			};
+			// zq根据合同ID获取获取已到款钱数
+			services.countReceiveMoneyByContId = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'receiveMoney/receiveMoneyByContId.do',
+					data : data
+				});
+			};
+			// 根据ID获取到款某条记录
+			services.selectReceiveMoneyById = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'receiveMoney/selectReceiveMoneyById.do',
+					data : data
+				})
+			};
+			// 根据合同ID获取该合同的所有到款记录
+			services.selectReceiveMoneysByContId = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl
+							+ 'receiveMoney/selectReceiveMoneysByContId.do',
+					data : data
+				})
+			};
+			// 获取到款任务
+			services.selectRemoTasksByState= function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl
+							+ 'receiveMoney/selectRemoTasksByState.do',
+					data : data
+				})
+			};
+			services.auditReceiveMoney = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'receiveMoney/auditReceiveMoney.do',
+					data : data
+				})
+			};
+			// zq选择所有用户
+			services.selectAllUsers = function(data) {
+				console.log("发送请求获取合同信息");
+				return $http({
+					method : 'post',
+					url : baseUrl + 'user/getAllUserList.do',
+					data : data
+				});
+			};
+			return services;
+		} ]);
 
 receiveMoneyApp
 		.controller(
@@ -144,10 +163,12 @@ receiveMoneyApp
 							var reMoney = $scope;
 							var role;
 							var remoState = null;
+							var remoListType = null;// 根据类型的不同区分是查找任务列表还是普通的到款列表
 
 							// 查看到款记录
 							reMoney.checkRemo = function() {
 								var remoId = this.remo.remo_id;
+								selectAllUsers();
 								selectReceiveMoneyById(remoId);
 								$(".overlayer").fadeIn(200);
 								$("#tipRemo").fadeIn(200);
@@ -157,30 +178,66 @@ receiveMoneyApp
 
 							// 审核到款记录
 							reMoney.auditRemo = function() {
+
 								var remoId = this.remo.remo_id;
 								sessionStorage.setItem("remoId", remoId);
+								selectAllUsers();
 								selectReceiveMoneyById(remoId);
+
 								$(".overlayer").fadeIn(200);
 								$("#tipRemo").fadeIn(200);
-								$(".auditE").show();
+								$(".tipbtn").show();
 							};
 							$("#cancelRemoAudit").click(function() {
 								$("#tipRemo").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 								reMoney.receiveMoney = "";
 							});
-							$("#sureRemoAudit").click(function() {
-								services.auditReceiveMoney({
-									remoId : sessionStorage.getItem("remoId"),
-									remoAmoney : $("#remoAmoney").val()
-								}).success(function(data) {
-									alert("操作成功！");
-									$("#tipRemo").fadeOut(100);
-									$(".overlayer").fadeOut(200);
-									reMoney.receiveMoney = "";
-								});
+							$("#sureRemoAudit")
+									.click(
+											function() {
+												services
+														.auditReceiveMoney(
+																{
+																	remoId : sessionStorage
+																			.getItem("remoId"),
+																	remoAmoney : $(
+																			"#remoAmoney")
+																			.val()
+																})
+														.success(
+																function(data) {
+																	alert("操作成功！");
+																	$(
+																			"#tipRemo")
+																			.fadeOut(
+																					100);
+																	$(
+																			".overlayer")
+																			.fadeOut(
+																					200);
 
-							});
+																	selectContractById();
+																	countReceiveMoneyByContId();
+																	services
+																			.selectReceiveMoneysByContId(
+																					{
+																						contId : sessionStorage
+																								.getItem("conId"),
+																						page : 1,
+																						remoState : remoState
+																					})
+																			.success(
+																					function(
+																							data) {
+																						reMoney.remos = data.list;
+																						pageTurn(
+																								data.totalPage,
+																								1);
+																					});
+																});
+
+											});
 							// 根据到款ID查找到款单条记录
 							function selectReceiveMoneyById(remoId) {
 								services
@@ -245,24 +302,7 @@ receiveMoneyApp
 										sessionStorage.setItem("userRole",
 												value);
 										role = value;
-										switch (sessionStorage.getItem(
-												'userRole').trim()) {
-										case "1":
-
-											break;
-										case "2":
-
-											break;
-										case "3":
-
-											break;
-										case "4":
-
-											break;
-										case "5":
-
-											break;
-										}
+										
 									}
 
 								}
@@ -276,35 +316,72 @@ receiveMoneyApp
 										pageCount : totalPage,
 										current : page,
 										backFn : function(p) {
-											findReceiveMoneysByContId(p)
+											findReceiveMoneys(p);
 										}
 									});
 								}
 							}
 							// 用于翻页时调用查找函数
-							function findReceiveMoneysByContId(p) {
-								services.selectReceiveMoneysByContId({
-									contId : sessionStorage.getItem("conId"),
-									page : p,
-									remoState : remoState
-								}).success(function(data) {
-									reMoney.remos = data.list;
-									pageTurn(data.totalPage, 1);
-								});
+							function findReceiveMoneys(p) {
+
+								var remoListType = sessionStorage
+										.getItem("remoListType");
+								if (remoListType == "REMO") {
+									services.selectReceiveMoneysByContId(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : p,
+												remoState : remoState
+											}).success(function(data) {
+										reMoney.remos = data.list;
+									});
+								} else if (remoListType == "REMOTASK") {
+									services.selectRemoTasksByState({
+										page : p,
+										remoState : remoState
+									}).success(function(data) {
+										reMoney.remos = data.list;
+									});
+								}
+
 							}
 							// 用于前台的查找
 							reMoney.selectReceiveMoneysByContId = function() {
 								remoState = $("#remoState").val();
-								services.selectReceiveMoneysByContId({
-									contId : sessionStorage.getItem("conId"),
-									page : 1,
-									remoState : remoState
-								}).success(function(data) {
-									reMoney.remos = data.list;
-									pageTurn(data.totalPage, 1);
-								});
+								var remoListType = sessionStorage
+										.getItem("remoListType");
+								if (remoListType == "REMO") {
+									services.selectReceiveMoneysByContId(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : 1,
+												remoState : remoState
+											}).success(function(data) {
+										reMoney.remos = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								} else if (remoListType == "REMOTASK") {
+									services.selectRemoTasksByState({
+										page : 1,
+										remoState : remoState
+									}).success(function(data) {
+										reMoney.remos = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								}
 
 							};
+							// zq获取所有用户
+							function selectAllUsers() {
+								services.selectAllUsers({}).success(
+										function(data) {
+											console.log("获取用户列表成功！");
+											reMoney.users = data;
+
+										});
+							}
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {
@@ -319,6 +396,9 @@ receiveMoneyApp
 								console.log("初始化页面信息");
 								if ($location.path().indexOf(
 										'/receiveMoneyList') == 0) {// 如果是合同列表页
+									remoListType = "REMO";
+									sessionStorage.setItem("remoListType",
+											"REMO");
 									remoState = "-1";
 									reMoney.remoState = "-1";
 									selectContractById();
@@ -331,7 +411,21 @@ receiveMoneyApp
 												remoState : remoState
 											}).success(function(data) {
 										reMoney.remos = data.list;
-
+										pageTurn(data.totalPage, 1);
+									});
+								} else if ($location.path().indexOf(
+										'/receiveMoneyTaskList') == 0) {
+									remoListType = "REMOTASK";
+									sessionStorage.setItem("remoListType",
+											"REMOTASK");
+									remoState = "-1";
+									reMoney.remoState = "-1";
+									services.selectRemoTasksByState(
+											{
+												page : 1,
+												remoState : remoState
+											}).success(function(data) {
+										reMoney.remos = data.list;
 										pageTurn(data.totalPage, 1);
 									});
 								}
@@ -426,88 +520,48 @@ receiveMoneyApp.filter('cutString', function() {
 	}
 });
 // 判断发票状态
-receiveMoneyApp.filter('invoState', function() {
+receiveMoneyApp.filter('remoState', function() {
 	return function(input) {
 		var state = "";
 		if (input == "0") {
-			state = "待审核";
+			state = "待核对";
 		}
 		if (input == "1") {
-			state = "待处理";
+			state = "已核对";
 		}
-		if (input == "2") {
-			state = "已完成";
-		}
+
 		return state;
 	}
 });
-receiveMoneyApp
-		.directive(
-				'hasPermission',
-				function($timeout) {
-					return {
-						restrict : 'A',
-						link : function(scope, element, attr) {
+// 是否显示总金额
+receiveMoneyApp.directive('isShow', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			var type = sessionStorage.getItem("remoListType");
+			if (type == "REMO") {
+				element.css("display", "inline");
+			} else if (type == "REMOTASK") {
+				element.css("display", "none");
+			}
+		}
+	};
 
-							var key = attr.hasPermission.trim(); // 获取页面上的权限值
-							console.log("获取页面上的权限值" + key);
-							/* console.log("cookie内容" + JSON.stringify(cookie)); */
-							/*
-							 * if (sessionStorage.getItem('userRole').trim() ==
-							 * "3") { element.css("display", "none"); }
-							 */
-							switch (sessionStorage.getItem('userRole').trim()) {
-							case "1":
-								var keys1 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish bInvoAdd cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-								var regStr1 = "\\s" + key + "\\s";
-								var reg1 = new RegExp(regStr1);
-								if (keys1.search(reg1) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							case "2":
-								var keys2 = " tContDetail ";
-								var regStr2 = "\\s" + key + "\\s";
-								var reg2 = new RegExp(regStr2);
-								if (keys2.search(reg2) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							case "3":
-								var keys3 = " cBodyEdit cPsAdd cPsEdit cPsDel cRnAdd cRnEdit cRnDel bReceAdd tContCollect tInvoFinish ";
-								var regStr3 = "\\s" + key + "\\s";
-								var reg3 = new RegExp(regStr3);
-								if (keys3.search(reg3) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							case "4":
-								var keys4 = " bInvoAdd tContDetail ";
-								var regStr4 = "\\s" + key + "\\s";
-								var reg4 = new RegExp(regStr4);
-								if (keys4.search(reg4) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							case "5":
-								var keys5 = " cAdd cHeadEdit cDel cTaskAdd tInvoAudit tContDetail ";
-								var regStr5 = "\\s" + key + "\\s";
-								var reg5 = new RegExp(regStr5);
+});
 
-								if (keys5.search(reg5) < 0) {
-									element.css("display", "none");
-								}
-								break;
-							}
-						}
-					};
-
-				});
-/*
- * app.directive('minLength', function () { return { restrict: 'A', require:
- * 'ngModel', scope: { 'min': '@' }, link: function (scope, ele, attrs,
- * controller) { scope.$watch(attrs.ngModel, function (val) { if (!val) {
- * return; } console.log(val); if (val.length <= scope.min) {
- * controller.$setValidity('minlength', false); } else {
- * controller.$setValidity('minlength', true); } }); } } });
- */
+receiveMoneyApp.directive('hasPermission', function($timeout) {
+	return {
+		restrict : 'ECMA',
+		link : function(scope, element, attr) {
+			var key = attr.hasPermission.trim(); // 获取页面上的权限值
+			console.log("获取页面上的权限值" + key);
+			var keys = permissionList;
+			console.log("获取后台的权限值" + keys);
+			var regStr = "\\s" + key + "\\s";
+			var reg = new RegExp(regStr);
+			if (keys.search(reg) < 0) {
+				element.css("display", "none");
+			}
+		}
+	};
+});

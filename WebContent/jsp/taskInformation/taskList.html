@@ -85,8 +85,8 @@
 					</div></td>
 
 				<td><a ng-click="checkTask()" class="tablelink">查看</a><a
-					ng-click="finishTask()" class="tablelink finishLabel">完成</a><a
-					ng-click="delTask()" class="tablelink delLabel">删除</a></td>
+					ng-click="finishTask()" class="tablelink finishLabel" task-finish='{{t.task_state}},{{t.task_type}}'>完成</a><a
+					ng-click="delTask()" class="tablelink delLabel" task-delete>删除</a></td>
 			</tr>
 		</tbody>
 	</table>

@@ -8,17 +8,27 @@
 </div>
 
 <div class="rightinfo">
-	<div class="formtitle">
-		<span>发票详情</span>
-	</div>
-	<div id="invoPrompt">
-		<label class="text_style">合同总金额 {{cont.cont_money |
-			invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
-			| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
-			次发票！</label>
+	<div class="tools">
+		<form class="toolbar">
+			<select class="dfselect" ng-model="invoState" id="invoState"
+				style="width: 167px">
+				<option value="-1">全部</option>
+				<option value="0">待审核</option>
+				<option value="1">待执行</option>
+				<option value="2">已完成</option>
+			</select> <input class="btn" type="submit" value="查询"
+				ng-click="selectInvoicesByState()">
+		</form>
+		<div id="invoPrompt">
+			<label class="text_style">合同总金额 {{cont.cont_money |
+				invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
+				| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
+				次发票！</label>
+		</div>
 	</div>
 
-	<ul class="toolbar1" ng-show="invoAddShow">
+
+	<ul class="toolbar1" has-permission='bInvoAdd'>
 		<li class="click"><a
 			href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img
 					src="../images/t01.png" /></span>开发票</a></li>
@@ -37,7 +47,7 @@
 				<th>执行者</th>
 				<th>状态</th>
 
-				<th >操作</th>
+				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -54,9 +64,9 @@
 
 				<td class="width10"><a ng-click="selectInvoiceById()"
 					class="tablelink underline">查看</a><a ng-click="invoiceInfo()"
-					class="tablelink underline" ng-show="invoAuditShow">审核</a><a
-					ng-click="updateInvoiceState()" class="tablelink underline" ng-show="invoFinishShow">完成</a></td>
-
+					class="tablelink underline" has-permission='bInvoAudit'>审核</a><a
+					ng-click="updateInvoiceState()" class="tablelink underline"
+					has-permission='bInvoFinish'>完成</a></td>
 			</tr>
 		</tbody>
 	</table>

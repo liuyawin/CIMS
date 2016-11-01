@@ -19,7 +19,7 @@
 					href="${ctx}/contract/toContractPage.do#/contractList">所有合同</a><i></i></li>
 			</ul>
 		</dd>
-	<!-- 任务管理 -->
+		<!-- 任务管理 -->
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico01.png" /></span>任务管理
@@ -30,11 +30,13 @@
 				<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
 				<li id="invoiceTask"><cite></cite> <a
 					href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
+				<li id="receiveMoneyTask"><cite></cite> <a
+					href="${ctx}/receiveMoney/toBillMngInvoicePage.do#/receiveMoneyTaskList">到款任务</a><i></i></li>
 			</ul>
 		</dd>
-	
-	<!-- 票据管理 -->
-		<dd  id="billInformation">
+
+		<!-- 票据管理 -->
+		<dd id="billInformation">
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>票据管理
 			</div>
@@ -44,7 +46,7 @@
 			</ul>
 
 		</dd>
-	<!-- 报警信息-->
+		<!-- 报警信息-->
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
@@ -58,7 +60,7 @@
 					href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList">任务超时</a><i></i></li>
 			</ul>
 		</dd>
-	<!-- 基础信息管理 -->
+		<!-- 基础信息管理 -->
 		<dd id="userManagement">
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
@@ -72,7 +74,7 @@
 					href="${ctx}/alarmLevel/toAlarmSetPage.do#/alarmSet">报警设置</a><i></i></li>
 			</ul>
 		</dd>
-		</dl>
+	</dl>
 </section>
 <script>
 	$(document).ready(function() {
@@ -88,18 +90,20 @@
 			var p = cookieString.indexOf("=");
 			var name = cookieString.substring(0, p);
 			var value = cookieString.substring(p + 1, cookieString.length);
-		
+
 			cookie[name.trim()] = value;
-			
+
 			if (name.trim() == "role") {
-				if(value.trim()=="2"){}
+				if (value.trim() == "2") {
+				}
 				switch (value.trim()) {
 				case "1":
-				
+
 					break;
 				case "2":
 					$("#contract").hide();
 					$("#invoiceTask").hide();
+					$("#receiveMoneyTask").hide();
 					$("#userManagement").hide();
 					$("#billInformation").hide();
 					$("#overdueAlarm").hide();
@@ -116,7 +120,7 @@
 					$("#userManagement").hide();
 					break;
 				}
-				
+
 			}
 
 		}

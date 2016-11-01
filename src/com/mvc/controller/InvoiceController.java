@@ -37,25 +37,7 @@ public class InvoiceController {
 	@Autowired
 	InvoiceService invoiceService;
 
-	/**
-	 * 文书二返回收据界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toAssistant2InvoicePage.do")
-	public String invoiceReceivePage() {
-		return "assistant2/invoiceInformation/index";
-	}
-
-	/**
-	 * 主任返回收据界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toZhurenInvoicePage.do")
-	public String zhurenInvoiceReceivePage() {
-		return "zhuren/invoiceInformation/index";
-	}
+	
 
 	/**
 	 * 返回收据界面

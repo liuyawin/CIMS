@@ -43,6 +43,17 @@ public class ReceiveMoneyController {
 	ReceiveNodeService receiveNodeService;
 
 	/**
+	 * 返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toBillMngInvoicePage.do")
+	public String InvoiceReceivePage() {
+		return "billInformation/index";
+	}
+	
+	
+	/**
 	 * 获取到款列表
 	 * 
 	 * @param request
@@ -149,13 +160,14 @@ public class ReceiveMoneyController {
 			receiveMoney.setRemo_remark(jsonObject.getString("remo_remark"));
 		}
 		if (jsonObject.containsKey("operater")) {
-			JSONObject tmp = JSONObject.fromObject(request.getParameter("operater"));
+			JSONObject tmp = JSONObject.fromObject(jsonObject.getString("operater"));
 			User operater = new User();
-			operater.setUser_id(Integer.valueOf(tmp.getString("uesr_id")));
+			operater.setUser_id(Integer.valueOf(tmp.getString("user_id")));
+			receiveMoney.setOperater(operater);
 		}
 		receiveMoney.setRemo_state(ReceiveMoneyStatus.waitAudit.value);
+		receiveMoney.setRemo_amoney(Float.valueOf(0));
 		boolean result = receiveMoneyService.save(receiveMoney);
 		return JSON.toJSONString(result);
 	}
-
 }
