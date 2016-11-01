@@ -96,6 +96,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 			Integer offset, Integer end) {
 		List<Invoice> list;
 		permission = LoginController.numToPermissionStr(permission);
+		System.out.println("per:" + permission);
 		if (invoState == -1) {// -1：全部，0：待审核，1：待处理，2：已完成
 			list = invoiceDao.findByAllAndPerm(permission, user_id, cont_id, offset, end);
 		} else {

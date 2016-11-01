@@ -93,11 +93,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	@SuppressWarnings("unchecked")
 	public Float totalMoneyOfInvoice(Integer contId) {
 		EntityManager em = emf.createEntityManager();
-<<<<<<< HEAD
 		String countSql = " select coalesce(sum(invo_money),0) from invoice i where contract_id=:contract_id and invo_state=:invo_state";
-=======
-		String countSql = " select coalesce(sum(invo_money),0) from invoice i where contract_id=:contract_id ";
->>>>>>> 3efde56aed096a1c39cfbb65dbfc594a83871e71
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("contract_id", contId);
 		query.setParameter("invo_state", InvoiceStatus.finish.value);
@@ -192,8 +188,10 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from invoice where invo_isdelete=0");
-		if (permission.contains("tInvoAdd")) {// 开发票权限（主任、设总）
-			if (!permission.contains("tInvoAudit")) {// 无审核发票权限（设总）
+		if (permission.contains("bInvoAdd")) {// 开发票权限（主任、设总）
+			if (permission.contains("tInvoAudit")) {// 审核发票权限（主任）
+				sql.append(" and audit_id=:user_id");
+			} else {
 				sql.append(" and creator_id=:user_id");
 			}
 			sql.append(" and invo_state in(0,1,2)");
@@ -223,8 +221,10 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from invoice where invo_isdelete=0 and invo_state=:invoState");
-		if (permission.contains("tInvoAdd")) {// 开发票权限（主任、设总）
-			if (!permission.contains("tInvoAudit")) {// 无审核发票权限（设总）
+		if (permission.contains("bInvoAdd")) {// 开发票权限（主任、设总）
+			if (permission.contains("tInvoAudit")) {// 审核发票权限（主任）
+				sql.append(" and audit_id=:user_id");
+			} else {
 				sql.append(" and creator_id=:user_id");
 			}
 		} else {// 执行人(文书)
@@ -251,8 +251,10 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(invo_id) from invoice where invo_isdelete=0");
-		if (permission.contains("tInvoAdd")) {// 开发票权限（主任、设总）
-			if (!permission.contains("tInvoAudit")) {// 无审核发票权限（设总）
+		if (permission.contains("bInvoAdd")) {// 开发票权限（主任、设总）
+			if (permission.contains("tInvoAudit")) {// 审核发票权限（主任）
+				sql.append(" and audit_id=:user_id");
+			} else {
 				sql.append(" and creator_id=:user_id");
 			}
 			sql.append(" and invo_state in(0,1,2)");
@@ -279,8 +281,10 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(invo_id) from invoice where invo_isdelete=0 and invo_state=:invoState");
-		if (permission.contains("tInvoAdd")) {// 开发票权限（主任、设总）
-			if (!permission.contains("tInvoAudit")) {// 无审核发票权限（设总）
+		if (permission.contains("bInvoAdd")) {// 开发票权限（主任、设总）
+			if (permission.contains("tInvoAudit")) {// 审核发票权限（主任）
+				sql.append(" and audit_id=:user_id");
+			} else {
 				sql.append(" and creator_id=:user_id");
 			}
 		} else {// 执行人(文书)

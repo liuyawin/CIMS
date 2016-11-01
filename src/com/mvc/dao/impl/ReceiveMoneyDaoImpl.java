@@ -35,11 +35,7 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 	@Override
 	public Float receiveMoneyByContId(Integer contId) {
 		EntityManager em = emf.createEntityManager();
-<<<<<<< HEAD
 		String countSql = " select coalesce(sum(remo_amoney),0) from receive_money r where cont_id=:cont_id and remo_state=:remo_state";
-=======
-		String countSql = " select coalesce(sum(remo_amoney),0) from receive_money r where cont_id=:cont_id ";
->>>>>>> 3efde56aed096a1c39cfbb65dbfc594a83871e71
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("cont_id", contId);
 		query.setParameter("remo_state", RemoStatus.finish.value);
