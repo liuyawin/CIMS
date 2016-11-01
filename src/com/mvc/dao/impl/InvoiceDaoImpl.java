@@ -93,7 +93,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	@SuppressWarnings("unchecked")
 	public Float totalMoneyOfInvoice(Integer contId) {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select sum(invo_money) from invoice i where contract_id=:contract_id ";
+		String countSql = " select coalesce(sum(invo_money),0) from invoice i where contract_id=:contract_id ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("contract_id", contId);
 		List<Object> totalRow = query.getResultList();

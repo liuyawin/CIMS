@@ -3,7 +3,6 @@
  */
 package com.mvc.dao.impl;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,7 +12,6 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.base.enums.ReceiveMoneyStatus;
 import com.mvc.dao.ReceiveMoneyDao;
@@ -36,20 +34,12 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 	@Override
 	public Float receiveMoneyByContId(Integer contId) {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select sum(remo_amoney) from receive_money r where cont_id=:cont_id ";
+		String countSql = " select coalesce(sum(remo_amoney),0) from receive_money r where cont_id=:cont_id ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("cont_id", contId);
 		List<Object> result = query.getResultList();
 		em.close();
-		// BigInteger result = (BigInteger) query.getSingleResult();//
-		// count返回值为BigInteger类型
-		// em.close();
-		// return result.floatValue();
-		if (!result.get(0).toString().equals("")) {
-			return Float.valueOf(result.get(0).toString());
-		} else {
-			return (float) 0;
-		}
+		return Float.valueOf(result.get(0).toString());
 	}
 
 	// 根据参数获取该合同的所有到款记录
@@ -115,5 +105,52 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 			em.close();
 		}
 		return true;
+	}
+
+	// 根据状态查询到款记录
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ReceiveMoney> findListByState(Integer userId, Integer remoState, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		String selectSql = "";
+		if (remoState != ReceiveMoneyStatus.all.value) {
+			selectSql += "select * from receive_money where  (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state ";
+		} else {
+			selectSql += "select * from receive_money where  operater_id =:operater_id or creater_id=:creater_id  ";
+		}
+		selectSql += " order by remo_id desc limit :offset, :end";
+		Query query = em.createNativeQuery(selectSql, ReceiveMoney.class);
+		query.setParameter("operater_id", userId);
+		query.setParameter("creater_id", userId);
+		if (remoState != ReceiveMoneyStatus.all.value) {
+			query.setParameter("remo_state", remoState);
+		}
+		query.setParameter("offset", offset);
+		query.setParameter("end", end);
+		List<ReceiveMoney> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 根据状态查询到款记录总条数
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer countByState(Integer userId, Integer remoState) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = "";
+		if (remoState != ReceiveMoneyStatus.all.value) {
+			countSql += "select count(*) from receive_money where  (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state ";
+		} else {
+			countSql += "select count(*)  from receive_money where operater_id =:operater_id or creater_id=:creater_id ";
+		}
+		Query query = em.createNativeQuery(countSql);
+		query.setParameter("operater_id", userId);
+		query.setParameter("creater_id", userId);
+		if (remoState != ReceiveMoneyStatus.all.value) {
+			query.setParameter("remo_state", remoState);
+		}
+		List<Object> result = query.getResultList();
+		em.close();
+		return Integer.parseInt(result.get(0).toString());
 	}
 }
