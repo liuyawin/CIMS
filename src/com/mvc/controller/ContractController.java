@@ -321,7 +321,7 @@ public class ContractController {
 	@RequestMapping("/selectContract.do")
 	public @ResponseBody String selectContract(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
-		int methodType = Integer.parseInt(request.getParameter("findType"));// 合同方法类别：1-合同信息管理，2-欠款合同信息，3-工程逾期合同，4-终结合同信息
+		int methodType = Integer.parseInt(request.getParameter("findType"));// 合同方法类别：1-合同信息管理，2-欠款合同信息，3-工程逾期合同，4-终结合同信息，张姣娜增加：5-停建合同
 		String contName = request.getParameter("contName");
 		int totalRow = Integer.parseInt(contractService.countTotal(contName, methodType).toString());
 		Pager pager = new Pager();
@@ -340,6 +340,9 @@ public class ContractController {
 			break;
 		case 4:
 			list = contractService.findAllEndCont(contName, pager.getOffset(), pager.getPageSize());
+			break;
+		case 5:
+			list = contractService.findAllStopCont(contName, pager.getOffset(), pager.getPageSize());
 			break;
 		default:
 			break;
