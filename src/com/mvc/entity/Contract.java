@@ -57,15 +57,17 @@ public class Contract implements Serializable {
 	private Integer cont_state;// 状态,0:在建,1:竣工,2:停建
 	private Integer cont_rank;// 等级,用于报警类别的区分,0: 重要，1：一般
 	private String cont_remark;// 备注
-	private Integer invo_total;// 发票总数
-	private Float invo_totalmoney;// 发票总金额
-	private Integer rece_total;// 收据总数
-	private Float rece_totalmoney;// 收据总金额
 	private String cur_prst;// 当前工期阶段
 	private String cur_reno;// 当前收款节点
 	private User creator;// 合同创建者
 	private User manager;// 项目经理
 	private Integer cont_ishistory;// 0：最新，1历史
+	private Integer invo_total;// 发票总数
+	private Float invo_totalmoney;// 发票总金额
+	private Integer rece_total;// 收据总数
+	private Float rece_totalmoney;// 收据总金额
+	private Integer remo_count;// 到款次数
+	private Float remo_totalmoney;// 到款总金额
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -419,6 +421,23 @@ public class Contract implements Serializable {
 
 	public void setCont_ishistory(Integer cont_ishistory) {
 		this.cont_ishistory = cont_ishistory;
+	}
+
+	public Integer getRemo_count() {
+		return remo_count;
+	}
+
+	public void setRemo_count(Integer remo_count) {
+		this.remo_count = remo_count;
+	}
+
+	@Column(columnDefinition = "float(10,2) default '0.00'")
+	public Float getRemo_totalmoney() {
+		return remo_totalmoney;
+	}
+
+	public void setRemo_totalmoney(Float remo_totalmoney) {
+		this.remo_totalmoney = remo_totalmoney;
 	}
 
 }

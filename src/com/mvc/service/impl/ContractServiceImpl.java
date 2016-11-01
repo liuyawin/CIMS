@@ -84,4 +84,11 @@ public class ContractServiceImpl implements ContractService {
 		return contractDao.updateConById(cont_id, contract);
 	}
 
+	// 张姣娜：根据合同id修改状态
+	@Override
+	public Boolean updateState(Integer contId, Integer contState) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

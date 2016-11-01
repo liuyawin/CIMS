@@ -6,9 +6,6 @@ import com.mvc.entity.Contract;
 
 public interface ContractDao {
 
-	// 根据合同id修改状态
-	Boolean updateState(Integer cont_id, Integer cont_state);
-
 	// 查询所有欠款合同列表
 	List<Contract> findAllDebtCont(String contName, Integer offset, Integer end);
 
@@ -30,4 +27,6 @@ public interface ContractDao {
 	// 修改合同基本信息
 	Boolean updateConById(Integer cont_id, Contract contract);
 
+	// 张姣娜：根据合同id修改状态
+	Boolean updateState(Integer contId, Integer contState);
 }
