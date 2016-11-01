@@ -123,6 +123,7 @@ receiveMoneyApp.factory('receivemoneyservices', [
 					data : data
 				})
 			};
+<<<<<<< HEAD
 			// 获取到款任务
 			services.selectRemoTasksByState= function(data) {
 				return $http({
@@ -132,6 +133,8 @@ receiveMoneyApp.factory('receivemoneyservices', [
 					data : data
 				})
 			};
+=======
+>>>>>>> d38049fad4c1a48e4280bcbf0aac2460747621d7
 			services.auditReceiveMoney = function(data) {
 				return $http({
 					method : 'post',
@@ -399,6 +402,8 @@ receiveMoneyApp
 									remoListType = "REMO";
 									sessionStorage.setItem("remoListType",
 											"REMO");
+<<<<<<< HEAD
+=======
 									remoState = "-1";
 									reMoney.remoState = "-1";
 									selectContractById();
@@ -418,6 +423,27 @@ receiveMoneyApp
 									remoListType = "REMOTASK";
 									sessionStorage.setItem("remoListType",
 											"REMOTASK");
+>>>>>>> d38049fad4c1a48e4280bcbf0aac2460747621d7
+									remoState = "-1";
+									reMoney.remoState = "-1";
+									selectContractById();
+									countReceiveMoneyByContId();
+									services.selectReceiveMoneysByContId(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : 1,
+												remoState : remoState
+											}).success(function(data) {
+										reMoney.remos = data.list;
+<<<<<<< HEAD
+										pageTurn(data.totalPage, 1);
+									});
+								} else if ($location.path().indexOf(
+										'/receiveMoneyTaskList') == 0) {
+									remoListType = "REMOTASK";
+									sessionStorage.setItem("remoListType",
+											"REMOTASK");
 									remoState = "-1";
 									reMoney.remoState = "-1";
 									services.selectRemoTasksByState(
@@ -426,6 +452,8 @@ receiveMoneyApp
 												remoState : remoState
 											}).success(function(data) {
 										reMoney.remos = data.list;
+=======
+>>>>>>> d38049fad4c1a48e4280bcbf0aac2460747621d7
 										pageTurn(data.totalPage, 1);
 									});
 								}

@@ -10,14 +10,22 @@
 <div class="rightinfo">
 	<div class="tools">
 		<form class="toolbar">
+<<<<<<< HEAD
 			<select class="dfselect" ng-model="invoState" id="invoState"
+=======
+			<select class="dfselect" ng-model="remoState" id="remoState"
+>>>>>>> d38049fad4c1a48e4280bcbf0aac2460747621d7
 				style="width: 167px">
 				<option value="-1">全部</option>
 				<option value="0">待审核</option>
 				<option value="1">待执行</option>
 				<option value="2">已完成</option>
 			</select> <input class="btn" type="submit" value="查询"
+<<<<<<< HEAD
 				ng-click="selectInvoicesByState()">
+=======
+				ng-click="selectReceiveMoneysByContId()">
+>>>>>>> d38049fad4c1a48e4280bcbf0aac2460747621d7
 		</form>
 		<div id="invoPrompt">
 			<label class="text_style">合同总金额 {{cont.cont_money |
@@ -28,7 +36,11 @@
 	</div>
 
 
+<<<<<<< HEAD
 	<ul class="toolbar1" has-permission='bInvoAdd'>
+=======
+	<ul class="toolbar1" ng-show="invoAddShow">
+>>>>>>> d38049fad4c1a48e4280bcbf0aac2460747621d7
 		<li class="click"><a
 			href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img
 					src="../images/t01.png" /></span>开发票</a></li>
@@ -64,9 +76,16 @@
 
 				<td class="width10"><a ng-click="selectInvoiceById()"
 					class="tablelink underline">查看</a><a ng-click="invoiceInfo()"
+<<<<<<< HEAD
 					class="tablelink underline" has-permission='bInvoAudit'>审核</a><a
 					ng-click="updateInvoiceState()" class="tablelink underline"
 					has-permission='bInvoFinish'>完成</a></td>
+=======
+					class="tablelink underline" ng-show="invoAuditShow">审核</a><a
+					ng-click="updateInvoiceState()" class="tablelink underline"
+					ng-show="invoFinishShow">完成</a></td>
+
+>>>>>>> d38049fad4c1a48e4280bcbf0aac2460747621d7
 			</tr>
 		</tbody>
 	</table>
