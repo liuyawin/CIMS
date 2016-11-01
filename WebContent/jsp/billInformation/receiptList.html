@@ -29,8 +29,8 @@
 				<th class="width10">收据编号</th>
 				<th class="width10">金额（万元）</th>
 				<th class="width10">实际收款时间</th>
-				<th class="width10">应收款时间</th>
-				<th>收款节点</th>
+				<!-- <th class="width10">应收款时间</th>
+				<th>收款节点</th> -->
 				<th>交款业主公司</th>
 				<th class="width10">录入人员</th>
 				<th>备注</th>
@@ -42,10 +42,10 @@
 				<td class="width10">收据{{$index + 1}}</td>
 				<td class="width5">{{rece.rece_money | receFloat}}</td>
 				<td class="width10">{{rece.rece_atime.time | dateType}}</td>
-				<td class="width10">{{rece.receiveNode.reno_time.time |
+				<!-- <td class="width10">{{rece.receiveNode.reno_time.time |
 					dateType}}</td>
 				<td class="width10">{{rece.receiveNode.reno_content |
-					cutString}}</td>
+					cutString}}</td> -->
 				<td class="width15">{{rece.rece_firm}}</td>
 				<td class="width10">{{rece.user.user_name}}</td>
 				<td class="width15">{{rece.rece_remark | cutString}}</td>
