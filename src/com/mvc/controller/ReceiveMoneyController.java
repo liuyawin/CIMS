@@ -51,17 +51,39 @@ public class ReceiveMoneyController {
 	public String InvoiceReceivePage() {
 		return "billInformation/index";
 	}
-	
-	
+
 	/**
-	 * 获取到款列表
+	 * 根据状态获取到款列表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/selectRemoTasksByState.do")
+	public @ResponseBody String getReceiveMoneyList(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Integer remoState = Integer.valueOf(request.getParameter("remoState"));
+		Integer totalRow = receiveMoneyService.countByState(user.getUser_id(), remoState);// -1表示全部，0表示未核对，1表示已核对
+		Pager pager = new Pager();
+		pager.setPage(Integer.valueOf(request.getParameter("page")));
+		pager.setTotalRow(totalRow);
+		List<ReceiveMoney> list = receiveMoneyService.findListByState(user.getUser_id(), remoState, pager.getOffset(),
+				pager.getLimit());
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 根据合同ID获取到款列表
 	 * 
 	 * @param request
 	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = "/selectReceiveMoneysByContId.do")
-	public @ResponseBody String getReceiveMoneyList(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String getReceiveMoneyListByContId(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
 		Integer remoState = Integer.valueOf(request.getParameter("remoState"));

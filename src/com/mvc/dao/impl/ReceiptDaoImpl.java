@@ -65,7 +65,7 @@ public class ReceiptDaoImpl implements ReceiptDao {
 	@SuppressWarnings("unchecked")
 	public Float totalMoneyOfReceipt(Integer contId) {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select sum(rece_money) from receipt r where cont_id=:cont_id ";
+		String countSql = " select coalesce(sum(rece_money),0) from receipt r where cont_id=:cont_id ";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("cont_id", contId);
 		List<Object> result = query.getResultList();
