@@ -26,25 +26,6 @@ public class ContractDaoImpl implements ContractDao {
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
-	// 根据合同id修改状态
-	public Boolean updateState(Integer cont_id, Integer cont_state) {
-		EntityManager em = emf.createEntityManager();
-		StringBuilder sql = new StringBuilder();
-		try {
-			em.getTransaction().begin();
-			sql.append("update contract c set c.cont_state=:cont_state where c.cont_id=:cont_id");
-			Query query = em.createNativeQuery(sql.toString());
-			query.setParameter("cont_state", cont_state);
-			query.setParameter("cont_id", cont_id);
-			query.executeUpdate();
-			em.flush();
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-		return true;
-	}
-
 	// 返回欠款合同信息
 	@SuppressWarnings("unchecked")
 	@Override
@@ -175,6 +156,25 @@ public class ContractDaoImpl implements ContractDao {
 		try {
 			em.getTransaction().begin();
 			em.merge(contract);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+		return true;
+	}
+
+	// 张姣娜：根据合同id修改状态
+	public Boolean updateState(Integer contId, Integer contState) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		try {
+			em.getTransaction().begin();
+			sql.append("update contract c set c.cont_state=:cont_state where c.cont_id=:cont_id");
+			Query query = em.createNativeQuery(sql.toString());
+			query.setParameter("cont_state", contState);
+			query.setParameter("cont_id", contId);
+			query.executeUpdate();
+			em.flush();
 			em.getTransaction().commit();
 		} finally {
 			em.close();
