@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
 import com.mvc.repository.ContractRepository;
 import com.mvc.service.ContractService;
+import com.utils.ContractServiceLog;
 
 /**
  * 合同业务实现
@@ -18,7 +18,6 @@ import com.mvc.service.ContractService;
  * @date 2016-09-10
  */
 @Service("contractServiceImpl")
-@Transactional
 public class ContractServiceImpl implements ContractService {
 
 	@Autowired

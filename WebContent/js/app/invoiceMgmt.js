@@ -140,7 +140,7 @@ invoiceApp.factory('invoiceservices', [ '$http', 'baseUrl',
 			services.getInvoiceList = function(data) {
 				return $http({
 					method : 'post',
-					url : baseUrl + 'invoice/getInvoiceListById.do',
+					url : baseUrl + 'invoice/getInvoiceListByContId.do',
 					data : data
 				});
 			};
@@ -347,7 +347,7 @@ invoiceApp
 								}
 							}
 							//为换页提供查找函数
-							function findInvoices() {
+							function findInvoices(p) {
 								var invoListType = sessionStorage
 										.getItem("invoListType");
 								if (invoListType == "INVO") {
@@ -421,7 +421,7 @@ invoiceApp
 											{
 												contId : sessionStorage
 														.getItem('conId'),
-												page : p,
+												page : 1,
 												invoState : invoState
 											}).success(function(data) {
 										invoice.invoices = data.list;
@@ -438,7 +438,7 @@ invoiceApp
 									invoState = "-1";
 									invoice.invoState = "-1";
 									services.getInvoTaskList({
-										page : p,
+										page : 1,
 										invoState : invoState
 									}).success(function(data) {
 										invoice.invoices = data.list;

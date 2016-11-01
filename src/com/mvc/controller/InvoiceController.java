@@ -37,8 +37,6 @@ public class InvoiceController {
 	@Autowired
 	InvoiceService invoiceService;
 
-	
-
 	/**
 	 * 返回收据界面
 	 * 
@@ -258,22 +256,54 @@ public class InvoiceController {
 	}
 
 	/**
-	 * 根据发票状态查找发票
+	 * 根据合同ID，权限，状态，页码 查找发票
 	 * 
 	 * @param request
 	 * @param session
 	 * @return list
 	 */
-	@RequestMapping(value = "/selectInvoiceByState.do")
-	public @ResponseBody String selectInvoiceByState(HttpServletRequest request, HttpSession session) {
+	@RequestMapping(value = "/getInvoiceListByContId.do")
+	public @ResponseBody String selectInvoiceByContId(HttpServletRequest request, HttpSession session) {
+		Integer invoState = Integer.parseInt(request.getParameter("invoState"));// -1：全部，0：待审核，1：待处理，2：已完成
+		Integer cont_id = Integer.parseInt(request.getParameter("contId"));
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Integer user_id = user.getUser_id();
+		String permission = user.getRole().getRole_permission();// 权限
+		Integer totalRow = invoiceService.countByStateAndPerm(invoState, permission, user_id, cont_id);
+		Pager pager = new Pager();
+		pager.setPage(Integer.valueOf(request.getParameter("page")));
+		pager.setTotalRow(totalRow);
+
+		List<Invoice> list = invoiceService.selectInvoiceByState(invoState, permission, user_id, cont_id,
+				pager.getOffset(), pager.getLimit());
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 根据合同ID，权限，状态，页码 查找发票
+	 * 
+	 * @param request
+	 * @param session
+	 * @return list
+	 */
+	@RequestMapping(value = "/getInvoTaskListByState.do")
+	public @ResponseBody String selectInvoTaskByState(HttpServletRequest request, HttpSession session) {
 		Integer invoState = Integer.parseInt(request.getParameter("invoState"));// -1：全部，0：待审核，1：待处理，2：已完成
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer user_id = user.getUser_id();
 		String permission = user.getRole().getRole_permission();// 权限
-		List<Invoice> list = invoiceService.selectInvoiceByState(invoState, permission, user_id);
+		Integer totalRow = invoiceService.countByStateAndPerm(invoState, permission, user_id, null);
+		Pager pager = new Pager();
+		pager.setPage(Integer.valueOf(request.getParameter("page")));
+		pager.setTotalRow(totalRow);
+
+		List<Invoice> list = invoiceService.selectInvoiceByState(invoState, permission, user_id, null,
+				pager.getOffset(), pager.getLimit());
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", list);
-		return null;
+		return jsonObject.toString();
 	}
 
 }
