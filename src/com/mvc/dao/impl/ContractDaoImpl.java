@@ -182,4 +182,22 @@ public class ContractDaoImpl implements ContractDao {
 		return true;
 	}
 
+	// 张姣娜：查询所有停建合同列表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Contract> findAllStopCont(String contName, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from contract c where c.cont_state=2 and c.cont_ishistory=0");
+		if (contName != null) {
+			sql.append(" and c.cont_name like '%" + contName + "%'");
+		}
+		sql.append(" order by cont_id desc limit :offset,:end");
+		Query query = em.createNativeQuery(sql.toString(), Contract.class);
+		query.setParameter("offset", offset).setParameter("end", end);
+		List<Contract> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
 }
