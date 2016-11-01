@@ -67,4 +67,16 @@ public class ReceiveMoneyServiceImpl implements ReceiveMoneyService {
 		}
 	}
 
+	// 根据状态查询到款记录
+	@Override
+	public List<ReceiveMoney> findListByState(Integer userId, Integer remoState, Integer offset, Integer end) {
+		return receiveMoneyDao.findListByState(userId, remoState, offset, end);
+	}
+
+	// 根据状态查询到款记录总条数
+	@Override
+	public Integer countByState(Integer userId, Integer remoState) {
+		return receiveMoneyDao.countByState(userId, remoState);
+	}
+
 }
