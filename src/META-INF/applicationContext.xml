@@ -15,6 +15,7 @@
 
 	<context:component-scan base-package="com.mvc.dao" />
 	<context:component-scan base-package="com.mvc.service" />
+	<aop:aspectj-autoproxy />
 
 	<bean id="configProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -74,6 +75,33 @@
 	<!-- Spring Data Jpa配置 -->
 	<jpa:repositories base-package="com.mvc.repository"
 		entity-manager-factory-ref="entityManagerFactory"></jpa:repositories>
+
+	<!-- 配置事务属性 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="count*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 配置事务切点 -->
+	<aop:config>
+		<aop:pointcut id="bussinessService" expression="execution(* com.mvc.service..*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="bussinessService" />
+	</aop:config>
+
+	<!-- <bean id="xmlHandler" class="com.mvc.controller.ContractRecordController" />
+	<aop:config>
+		<aop:aspect id="aspect" ref="xmlHandler">
+			<aop:pointcut id="pointUserMgr"
+				expression="execution(* com.mvc.service.ContractService.addContract(..))" />
+			<aop:before method="doBefore" pointcut-ref="pointUserMgr" />
+		</aop:aspect>
+	</aop:config> -->
 </beans>
 
 

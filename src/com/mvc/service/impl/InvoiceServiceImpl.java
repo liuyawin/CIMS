@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mvc.controller.LoginController;
 import com.mvc.dao.InvoiceDao;
 import com.mvc.entity.Invoice;
 import com.mvc.repository.InvoiceRepository;
@@ -89,10 +90,32 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.transmitInvoice(invoiceId, invoEtime, receiverId);
 	}
 
-	// 根据发票状态查找发票
+	// 根据合同ID，权限，状态，页码 查找发票
 	@Override
-	public List<Invoice> selectInvoiceByState(Integer invoState, String permission, Integer user_id) {
-		return invoiceDao.findByStateAndPerm(invoState, permission, user_id);
+	public List<Invoice> selectInvoiceByState(Integer invoState, String permission, Integer user_id, Integer cont_id,
+			Integer offset, Integer end) {
+		List<Invoice> list;
+		permission = LoginController.numToPermissionStr(permission);
+		System.out.println("per:" + permission);
+		if (invoState == -1) {// -1：全部，0：待审核，1：待处理，2：已完成
+			list = invoiceDao.findByAllAndPerm(permission, user_id, cont_id, offset, end);
+		} else {
+			list = invoiceDao.findByStateAndPerm(invoState, permission, user_id, cont_id, offset, end);
+		}
+		return list;
+	}
+
+	// 根据合同ID，权限，状态 查询发票总条数
+	@Override
+	public Integer countByStateAndPerm(Integer invoState, String permission, Integer user_id, Integer cont_id) {
+		Integer totalRow;
+		permission = LoginController.numToPermissionStr(permission);
+		if (invoState == -1) {// -1：全部，0：待审核，1：待处理，2：已完成
+			totalRow = invoiceDao.countByAllAndPerm(permission, user_id, cont_id);
+		} else {
+			totalRow = invoiceDao.countByStateAndPerm(invoState, permission, user_id, cont_id);
+		}
+		return totalRow;
 	}
 
 }

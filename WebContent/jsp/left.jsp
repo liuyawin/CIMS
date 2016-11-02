@@ -14,9 +14,11 @@
 				<li><cite></cite> <a
 					href="${ctx}/contract/toContractPage.do#/overdueContract">逾期合同</a><i></i></li>
 				<li><cite></cite> <a
-					href="${ctx}/contract/toContractPage.do#/finishedContract">终结合同</a><i></i></li>
+					href="${ctx}/contract/toContractPage.do#/finishedContract">竣工合同</a><i></i></li>
 				<li><cite></cite> <a
-					href="${ctx}/contract/toContractPage.do#/contractList">所有合同</a><i></i></li>
+					href="${ctx}/contract/toContractPage.do#/contractList">在建合同</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/contract/toContractPage.do#/stopedContract">停建合同</a><i></i></li>
 			</ul>
 		</dd>
 		<!-- 任务管理 -->
@@ -103,6 +105,7 @@
 				case "2":
 					$("#contract").hide();
 					$("#invoiceTask").hide();
+					$("#receiveMoneyTask").hide();
 					$("#userManagement").hide();
 					$("#billInformation").hide();
 					$("#overdueAlarm").hide();

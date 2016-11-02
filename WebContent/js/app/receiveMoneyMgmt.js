@@ -123,6 +123,17 @@ receiveMoneyApp.factory('receivemoneyservices', [
 					data : data
 				})
 			};
+
+			// 获取到款任务
+			services.selectRemoTasksByState= function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl
+							+ 'receiveMoney/selectRemoTasksByState.do',
+					data : data
+				})
+			};
+
 			services.auditReceiveMoney = function(data) {
 				return $http({
 					method : 'post',
@@ -293,24 +304,7 @@ receiveMoneyApp
 										sessionStorage.setItem("userRole",
 												value);
 										role = value;
-										switch (sessionStorage.getItem(
-												'userRole').trim()) {
-										case "1":
-
-											break;
-										case "2":
-
-											break;
-										case "3":
-
-											break;
-										case "4":
-
-											break;
-										case "5":
-
-											break;
-										}
+										
 									}
 
 								}
@@ -324,33 +318,61 @@ receiveMoneyApp
 										pageCount : totalPage,
 										current : page,
 										backFn : function(p) {
-											findReceiveMoneysByContId(p)
+											findReceiveMoneys(p);
 										}
 									});
 								}
 							}
 							// 用于翻页时调用查找函数
-							function findReceiveMoneysByContId(p) {
-								services.selectReceiveMoneysByContId({
-									contId : sessionStorage.getItem("conId"),
-									page : p,
-									remoState : remoState
-								}).success(function(data) {
-									reMoney.remos = data.list;
-									pageTurn(data.totalPage, 1);
-								});
+							function findReceiveMoneys(p) {
+
+								var remoListType = sessionStorage
+										.getItem("remoListType");
+								if (remoListType == "REMO") {
+									services.selectReceiveMoneysByContId(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : p,
+												remoState : remoState
+											}).success(function(data) {
+										reMoney.remos = data.list;
+									});
+								} else if (remoListType == "REMOTASK") {
+									services.selectRemoTasksByState({
+										page : p,
+										remoState : remoState
+									}).success(function(data) {
+										reMoney.remos = data.list;
+									});
+								}
+
 							}
 							// 用于前台的查找
 							reMoney.selectReceiveMoneysByContId = function() {
 								remoState = $("#remoState").val();
-								services.selectReceiveMoneysByContId({
-									contId : sessionStorage.getItem("conId"),
-									page : 1,
-									remoState : remoState
-								}).success(function(data) {
-									reMoney.remos = data.list;
-									pageTurn(data.totalPage, 1);
-								});
+								var remoListType = sessionStorage
+										.getItem("remoListType");
+								if (remoListType == "REMO") {
+									services.selectReceiveMoneysByContId(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : 1,
+												remoState : remoState
+											}).success(function(data) {
+										reMoney.remos = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								} else if (remoListType == "REMOTASK") {
+									services.selectRemoTasksByState({
+										page : 1,
+										remoState : remoState
+									}).success(function(data) {
+										reMoney.remos = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								}
 
 							};
 							// zq获取所有用户
@@ -400,12 +422,8 @@ receiveMoneyApp
 											"REMOTASK");
 									remoState = "-1";
 									reMoney.remoState = "-1";
-									selectContractById();
-									countReceiveMoneyByContId();
-									services.selectReceiveMoneysByContId(
+									services.selectRemoTasksByState(
 											{
-												contId : sessionStorage
-														.getItem("conId"),
 												page : 1,
 												remoState : remoState
 											}).success(function(data) {
