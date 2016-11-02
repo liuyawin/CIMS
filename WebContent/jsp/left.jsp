@@ -105,6 +105,7 @@
 				case "2":
 					$("#contract").hide();
 					$("#invoiceTask").hide();
+					$("#receiveMoneyTask").hide();
 					$("#userManagement").hide();
 					$("#billInformation").hide();
 					$("#overdueAlarm").hide();

@@ -265,14 +265,20 @@ public class LoginController {
 		String permission = "";
 		if (user.getRole().getRole_permission() != null && !user.getRole().getRole_permission().equals("")) {
 			permission = user.getRole().getRole_permission();
-			JSONObject jsonObject = JSONObject.fromObject(permission);
-			result = toPermissionStr(jsonObject.getString("con_per"), PermissionConstants.contract, result);
-			result = toPermissionStr(jsonObject.getString("task_per"), PermissionConstants.task, result);
-			result = toPermissionStr(jsonObject.getString("bill_per"), PermissionConstants.bill, result);
-			result = toPermissionStr(jsonObject.getString("system_per"), PermissionConstants.system, result);
-			result = toPermissionStr(jsonObject.getString("alarm_per"), PermissionConstants.alarm, result);
+			result = numToPermissionStr(permission);
 		}
 		return JSON.toJSONString(result + " ");
+	}
+
+	public static String numToPermissionStr(String permissionNum) {
+		String result = "";
+		JSONObject jsonObject = JSONObject.fromObject(permissionNum);
+		result = toPermissionStr(jsonObject.getString("con_per"), PermissionConstants.contract, result);
+		result = toPermissionStr(jsonObject.getString("task_per"), PermissionConstants.task, result);
+		result = toPermissionStr(jsonObject.getString("bill_per"), PermissionConstants.bill, result);
+		result = toPermissionStr(jsonObject.getString("system_per"), PermissionConstants.system, result);
+		result = toPermissionStr(jsonObject.getString("alarm_per"), PermissionConstants.alarm, result);
+		return result + " ";
 	}
 
 	private static String toPermissionStr(String str, String type, String result) {

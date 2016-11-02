@@ -720,7 +720,8 @@ app.directive('taskFinish', function($timeout) {
 		restrict : 'A',
 		link : function(scope, element, attr) {
 			// 任务状态,0：未接收，1：执行中，2：已完成
-			// 任务类型, 0：普通任务，1：文书任务，2其他
+			// 任务类型, 0：普通任务，1：文书任务，2补录合同任务，3、其他
+			// 任务:1表示接受的任务，0表示发出的任务
 			var key = attr.taskFinish.trim(); // 获取页面上的权限值
 			var strs = new Array(); // 定义一数组
 			var sendOrReceive = sessionStorage.getItem("sendOrReceive");
@@ -730,12 +731,35 @@ app.directive('taskFinish', function($timeout) {
 			state = strs[0];
 			type = strs[1];
 			if (sendOrReceive == "1") {
-
+				if (type == "1") {
+					element.css("display", "none");
+				} else {
+					if (state == "2") {
+						element.css("display", "none");
+					}
+				}
 			} else if (sendOrReceive == "0") {
 				element.css("display", "none");
 			}
 
-			console.log("张群获取任务的状态值" + sendOrReceive);
+			
+		}
+	};
+
+});
+app.directive('taskDelete', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			// 任务状态,0：未接收，1：执行中，2：已完成
+			// 任务类型, 0：普通任务，1：文书任务，2补录合同任务，3、其他
+			// 任务:1表示接受的任务，0表示发出的任务
+
+			var sendOrReceive = sessionStorage.getItem("sendOrReceive");
+			if (sendOrReceive == "1") {
+				element.css("display", "none");
+			} 
+			
 		}
 	};
 

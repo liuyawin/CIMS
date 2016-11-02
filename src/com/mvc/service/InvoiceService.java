@@ -52,6 +52,10 @@ public interface InvoiceService {
 	// 主任转发发票
 	boolean transmitInvoice(Integer invoiceId, Date invoEtime, Integer receiverId);
 
-	// 根据发票状态查找发票
-	List<Invoice> selectInvoiceByState(Integer invoState, String permission, Integer user_id);
+	// 根据合同ID，权限，状态，页码 查找发票
+	List<Invoice> selectInvoiceByState(Integer invoState, String permission, Integer user_id, Integer cont_id,
+			Integer offset, Integer end);
+
+	// 根据合同ID，权限，状态 查询发票总条数
+	Integer countByStateAndPerm(Integer invoState, String permission, Integer user_id, Integer cont_id);
 }

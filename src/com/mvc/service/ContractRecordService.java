@@ -14,4 +14,7 @@ public interface ContractRecordService {
 
 	// 根据合同ID获取合同操作日志
 	List<ContractRecord> selectContRecordByContId(Integer cont_id);
+
+	// 添加合同操作日志
+	Boolean addContRecord(ContractRecord contractRecord);
 }

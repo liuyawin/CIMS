@@ -194,4 +194,19 @@ public class ProjectStageController {
 		boolean flag = projectStageService.addProjectStage(projectStage);
 		return String.valueOf(flag);
 	}
+
+	/**
+	 * 根据ID查找工期阶段
+	 * 
+	 * @param request
+	 * @return projectStage对象
+	 */
+	@RequestMapping("/selectPrstById.do")
+	public @ResponseBody String selectPrstById(HttpServletRequest request) {
+		Integer prstId = Integer.parseInt(request.getParameter("prstId"));
+		JSONObject jsonObject = new JSONObject();
+		ProjectStage projectStage = projectStageService.selectPrstById(prstId);
+		jsonObject.put("projectStage", projectStage);
+		return jsonObject.toString();
+	}
 }
