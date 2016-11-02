@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
@@ -18,7 +17,6 @@ import com.mvc.service.ContractService;
  * @date 2016-09-10
  */
 @Service("contractServiceImpl")
-@Transactional
 public class ContractServiceImpl implements ContractService {
 
 	@Autowired
@@ -82,6 +80,18 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public Boolean updateConById(Integer cont_id, Contract contract) {
 		return contractDao.updateConById(cont_id, contract);
+	}
+
+	// 张姣娜：根据合同id修改状态
+	@Override
+	public Boolean updateState(Integer contId, Integer contState) {
+		return contractDao.updateState(contId, contState);
+	}
+
+	// 张姣娜：查询所有停建合同列表
+	@Override
+	public List<Contract> findAllStopCont(String contName, Integer offset, Integer end) {
+		return contractDao.findAllStopCont(contName, offset, end);
 	}
 
 }

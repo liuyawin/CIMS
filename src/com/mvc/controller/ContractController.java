@@ -41,26 +41,6 @@ public class ContractController {
 	UserService userService;
 
 	/**
-	 * 返回设总合同界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toManagerContractPage.do")
-	public String managerContractPage() {
-		return "manager/contractInformation/index";
-	}
-
-	/**
-	 * 返回文书2合同界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toAssistant2ContractPage.do")
-	public String assistant2ContractPage() {
-		return "assistant2/contractInformation/index";
-	}
-
-	/**
 	 * 返回主任合同界面
 	 * 
 	 * @return
@@ -326,7 +306,7 @@ public class ContractController {
 			}
 			jsonObject.put("list", list);
 			jsonObject.put("totalPage", pager.getTotalPage());
-			System.out.println("的手机"+list);
+			System.out.println("的手机" + list);
 			System.out.println(pager.getTotalPage());
 		}
 		return jsonObject.toString();
@@ -341,7 +321,7 @@ public class ContractController {
 	@RequestMapping("/selectContract.do")
 	public @ResponseBody String selectContract(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
-		int methodType = Integer.parseInt(request.getParameter("findType"));// 合同方法类别：1-合同信息管理，2-欠款合同信息，3-工程逾期合同，4-终结合同信息
+		int methodType = Integer.parseInt(request.getParameter("findType"));// 合同方法类别：1-合同信息管理，2-欠款合同信息，3-工程逾期合同，4-终结合同信息，张姣娜增加：5-停建合同
 		String contName = request.getParameter("contName");
 		int totalRow = Integer.parseInt(contractService.countTotal(contName, methodType).toString());
 		Pager pager = new Pager();
@@ -360,6 +340,9 @@ public class ContractController {
 			break;
 		case 4:
 			list = contractService.findAllEndCont(contName, pager.getOffset(), pager.getPageSize());
+			break;
+		case 5:
+			list = contractService.findAllStopCont(contName, pager.getOffset(), pager.getPageSize());
 			break;
 		default:
 			break;
@@ -419,4 +402,19 @@ public class ContractController {
 			return 0;
 	}
 
+	/**
+	 * 设总更新合同状态
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/modifyStatus.do")
+	public @ResponseBody String updateState(HttpServletRequest request, HttpSession session) throws ParseException {
+		Integer contId = Integer.valueOf(request.getParameter("contId"));
+		Integer contState = Integer.valueOf(request.getParameter("contState"));
+		boolean result = contractService.updateState(contId, contState);
+		return JSON.toJSONString(result);
+	}
 }

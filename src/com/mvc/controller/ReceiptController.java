@@ -129,6 +129,7 @@ public class ReceiptController {
 		boolean result = receiptService.save(receipt);
 		return JSON.toJSONString(result);
 	}
+
 	// /**
 	// * 创建收据
 	// *
@@ -136,9 +137,10 @@ public class ReceiptController {
 	// * @param session
 	// * @return
 	// */
-	// @RequestMapping(value = "/createReceipt.do")
-	// public @ResponseBody String addReceipt(HttpServletRequest request,
-	// HttpSession session) throws ParseException {
+	// @RequestMapping(value = "/addReceipt.do")
+	// public @ResponseBody String addReceiptBefore(HttpServletRequest request,
+	// HttpSession session)
+	// throws ParseException {
 	// JSONObject result = new JSONObject();
 	// User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 	// JSONObject jsonObject =

@@ -45,7 +45,6 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	@Override
 	public List<Department> findDepartmentAllByPage(Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
 		String selectSql = "select * from department where dept_state=0";		
 		selectSql += " order by dept_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, Department.class);
@@ -59,7 +58,6 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	@Override
 	public List<Department> findDepartmentAll() {		
 		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
 		String selectSql = "select * from department where dept_state=0";		
 		Query query = em.createNativeQuery(selectSql, Department.class);
 		List<Department> list = query.getResultList();

@@ -56,15 +56,15 @@ var app = angular
 								: data;
 					} ];
 				});
-//获取权限列表
-var permissionList; 
+// 获取权限列表
+var permissionList;
 angular.element(document).ready(function() {
-console.log("获取权限列表！"); 
-$.get('/CIMS/login/getUserPermission.do', function(data) { 
-	  permissionList = data; // 
-	  console.log("身份是：" + permissionList);
-	  angular.bootstrap($("#contract"), ['contract']); //手动加载angular模块
-	  }); 
+	console.log("获取权限列表！");
+	$.get('/CIMS/login/getUserPermission.do', function(data) {
+		permissionList = data; // 
+		console.log("身份是：" + permissionList);
+		angular.bootstrap($("#contract"), [ 'contract' ]); // 手动加载angular模块
+	});
 });
 
 app.directive('hasPermission', function($timeout) {
@@ -191,7 +191,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-		//lwt:开收据
+	// lwt:开收据
 	services.addReceipt = function(data) {
 		return $http({
 			method : 'post',
@@ -435,17 +435,17 @@ app.controller('ContractController', [
 				contract.receiveMoney = "";
 
 			});
-					// lwt:开收据
+			// lwt:开收据
 			contract.addReceipt = function(contId) {
 				sessionStorage.setItem("conId", contId);
 				$(".overlayer").fadeIn(200);
 				$("#tipAddReceipt").fadeIn(200);
 				// 输入时间的input默认值设置为当前时间
 				var date = new Date();
-				var timeNow = date.getFullYear() + "-"
-						+ (date.getMonth() + 1) + "-" + (date.getDate());
+				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
+						+ "-" + (date.getDate());
 				contract.receipt = {
-					receAtime  : timeNow
+					receAtime : timeNow
 				};
 
 			};
@@ -506,8 +506,8 @@ app.controller('ContractController', [
 				} else if ($location.path().indexOf('/contractInfo') == 0) {
 					// zq添加查找合同详情
 					selectContractById(); // 根据ID获取合同信息
-					// selectPrstByContId();// 根据合同ID获取该合同的工期阶段
-					// selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
 					$("#renoInformation").hide();
 					$("#prstInformation").hide();
 				}

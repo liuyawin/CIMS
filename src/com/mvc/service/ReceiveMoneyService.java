@@ -33,4 +33,10 @@ public interface ReceiveMoneyService {
 	// 新增到款
 	Boolean save(ReceiveMoney receiveMoney);
 
+	// 根据状态查询到款记录
+	List<ReceiveMoney> findListByState(Integer userId, Integer remoState, Integer offset, Integer end);
+
+	// 根据状态查询到款记录总条数
+	Integer countByState(Integer userId, Integer remoState);
+
 }

@@ -9,16 +9,15 @@
 
 <div class="rightinfo">
 	<div class="tools">
-		<form class="toolbar">
+		<div class="toolbar">
 			<select class="dfselect" ng-model="invoState" id="invoState"
 				style="width: 167px">
 				<option value="-1">全部</option>
 				<option value="0">待审核</option>
 				<option value="1">待执行</option>
 				<option value="2">已完成</option>
-			</select> <input class="btn" type="submit" value="查询"
-				ng-click="selectInvoicesByState()">
-		</form>
+			</select> <input class="btn" type="submit" value="查询" ng-click="selectInvoicesByState()"/>
+		</div>
 		<div id="invoPrompt">
 			<label class="text_style">合同总金额 {{cont.cont_money |
 				invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
@@ -26,8 +25,6 @@
 				次发票！</label>
 		</div>
 	</div>
-
-
 	<ul class="toolbar1" has-permission='bInvoAdd'>
 		<li class="click"><a
 			href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img

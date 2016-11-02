@@ -124,11 +124,10 @@ receiveMoneyApp.factory('receivemoneyservices', [
 				})
 			};
 			// 获取到款任务
-			services.selectRemoTasksByState= function(data) {
+			services.selectRemoTasksByState = function(data) {
 				return $http({
 					method : 'post',
-					url : baseUrl
-							+ 'receiveMoney/selectRemoTasksByState.do',
+					url : baseUrl + 'receiveMoney/selectRemoTasksByState.do',
 					data : data
 				})
 			};
@@ -302,7 +301,7 @@ receiveMoneyApp
 										sessionStorage.setItem("userRole",
 												value);
 										role = value;
-										
+
 									}
 
 								}
@@ -420,11 +419,10 @@ receiveMoneyApp
 											"REMOTASK");
 									remoState = "-1";
 									reMoney.remoState = "-1";
-									services.selectRemoTasksByState(
-											{
-												page : 1,
-												remoState : remoState
-											}).success(function(data) {
+									services.selectRemoTasksByState({
+										page : 1,
+										remoState : remoState
+									}).success(function(data) {
 										reMoney.remos = data.list;
 										pageTurn(data.totalPage, 1);
 									});

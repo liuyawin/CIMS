@@ -29,6 +29,7 @@
 				<th>合同名称</th>
 				<th>应收金额</th>
 				<th>实收金额</th>
+				<th>到款次数</th>
 				<th>工期阶段</th>
 				<th>收款节点</th>
 				<th>合同状态</th>
@@ -41,14 +42,16 @@
 				<td><a class="underline" href="#contractInfo" ng-click="getConId(con.cont_id)">{{con.cont_name}}</a></td>
 				<td>{{con.cont_money}}</td>
 				<td>{{con.rece_totalmoney}}</td>
+				<td>{{con.remo_count}}</td>
 				<td>{{con.cur_prst}}</td>
 				<td>{{con.cur_reno}}</td>
-				<td>{{con.cont_state}}</td>
+				<td>{{con.cont_state|conState}}</td>
 				<td>
 				    <a href="#contractInfo" class="tablelink underline" ng-click="getConId(con.cont_id)">查看</a>
 					<a ng-show="flag==1" ng-click="deleteContract()" class="tablelink underline" has-permission='cDel'> 删除</a> 
 					<a ng-show="flag==1" ng-click="newTask()" class="tablelink underline" has-permission='cTaskAdd'>新建任务</a> 
 					<a href="#contractRecord" ng-click="getConId(con.cont_id)" class="tablelink underline">操作记录</a>
+					<a ng-show="flag==1" ng-click="modifyStatus(con.cont_id)" class="tablelink underline">项目状态</a>
 				</td>
 			</tr>
 		</tbody>
@@ -60,7 +63,7 @@
 </div>
 <!-- 新建任务模态框 -->
 <div class="overlayer"></div>
-<div class="tip">
+<div class="tip" id="tipType">
 	<div class="tiptop">
 		<span>新建任务</span><a></a><!-- 这个a标签是模态框上的叉叉 -->
 	</div>
@@ -146,5 +149,36 @@
 </div>
 <!-- 新建任务模态框完 -->
 
+<!-- 项目状态模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipStatus" style="height:200px;width:440px">
+	<div class="tiptop">
+		<span>项目状态</span><a></a><!-- 这个a标签是模态框上的叉叉 -->
+	</div>
+	<!-- 选择项目状态 -->
+	<div class="tipinfo">
+		<div class="statusType-div" style="margin-left:auto;margin-right:auto;overflow:hidden;width:190px">
+			<div class="radio-div">
+				<input class="statusType" type="radio" value="0" ng-model="status.status_type">在建
+			</div>
+			<div class="radio-div">
+				<input class="statusType" type="radio" value="1" ng-model="status.status_type">竣工
+			</div>
+			<div class="radio-div">
+				<input class="statusType" type="radio" value="2" ng-model="status.status_type">停建
+			</div>
+		</div>
+	</div>
+	<div class="formbody">
+	<form id="modifyStatus-form" ng-submit="modifyStatus()">
+		<!-- 按钮 -->
+	<div class="tipbtn" style="margin-left:112px">
+		<input name="" type="button" class="sureSend" value="确定" id="sureStatus"/>&nbsp; <input
+			name="" type="button" class="cancelSend" value="取消" id="cancelStatus"/>
+	</div>
+	</form>	 
+	</div>
+</div>
+<!-- 项目状态模态框完 -->
 
 
