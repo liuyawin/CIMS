@@ -500,6 +500,9 @@ app
 							};
 							// 添加合同
 							contract.addContract = function() {
+								contract.contract.province = $("#province")
+										.val();
+								contract.contract.city = $("#city").val();
 								var conFormData = JSON
 										.stringify(contract.contract);
 								services.addContract({
@@ -1408,6 +1411,7 @@ app
 										task_stime : timeNow,
 										task_etime : timeNow
 									};
+									contract.contract.cont_type="0";
 								} else if ($location.path()
 										.indexOf('/prstInfo') == 0) {
 									selectContractById(); // 根据ID获取合同信息
@@ -1594,7 +1598,7 @@ app.filter('conState', function() {
 		return state;
 	}
 });
-//合同立项判断
+// 合同立项判断
 app.filter('conInitiation', function() {
 	return function(input) {
 		var initiation = "";
@@ -1674,7 +1678,7 @@ app.filter('conProStage', function() {
 		if (input) {
 			console.log(input);
 			strs = input.split(","); // 字符分割
-			
+
 			for (i = 0; i < strs.length; i++) {
 				switch (strs[i]) {
 				case "0":

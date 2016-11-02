@@ -12,5 +12,8 @@
 <jsp:include page="/jsp/footer.jsp" />
 <script src="${ctx}/js/app/contractMgmt.js"></script>
 <script src="${ctx}/js/lib/angular-file-upload.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/lib/distpicker/bootstrap.js"></script>
+<script type="text/javascript" src="${ctx}/js/lib/distpicker/distpicker.data.js"></script>
+<script type="text/javascript" src="${ctx}/js/lib/distpicker/distpicker.js"></script>
 </body>
 </html>
