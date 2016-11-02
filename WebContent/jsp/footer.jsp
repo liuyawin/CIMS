@@ -8,7 +8,7 @@
 <script type="text/javascript" src="${ctx}/js/lib/angular/angular-route.js"></script>
 <script type="text/javascript">
 	$(function() {
-		//é¡¶é¨å¯¼èªåæ¢
+		//Ã©Â¡Â¶Ã©ÂÂ¨Ã¥Â¯Â¼Ã¨ÂÂªÃ¥ÂÂÃ¦ÂÂ¢
 		$(".nav li a").click(function() {
 			$(".nav li a.selected").removeClass("selected");
 			$(this).addClass("selected");
@@ -16,7 +16,7 @@
 	});
 	
 	$(function() {
-		//å¯¼èªåæ¢
+		//Ã¥Â¯Â¼Ã¨ÂÂªÃ¥ÂÂÃ¦ÂÂ¢
 		$(".menuson li").click(function() {
 			$(".menuson li.active").removeClass("active");
 			$(this).addClass("active");
@@ -34,7 +34,7 @@
 	});
 
 	/* $(function() {
-		//é¡¶é¨å¯¼èªåæ¢
+		//Ã©Â¡Â¶Ã©ÂÂ¨Ã¥Â¯Â¼Ã¨ÂÂªÃ¥ÂÂÃ¦ÂÂ¢
 		var $pages = $(".tcdPageCode");
 		var $tablelist = $(".tablelist");
 		console.log($pages.length);
@@ -44,7 +44,7 @@
 		        pageCount:10,
 		        current:1,
 		        backFn:function(p){
-		            console.log("分页！");
+		            console.log("åé¡µï¼");
 		        }
 		    });
 		}

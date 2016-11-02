@@ -34,6 +34,7 @@ public class ReceiveNodeDaoImpl implements ReceiveNodeDao {
 			Query query = em.createNativeQuery(sql);
 			query.setParameter("reno_state", state);
 			query.setParameter("reno_id", reno_id);
+			query.setParameter("reno_amoney", reno_amoney);
 			query.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();
