@@ -538,7 +538,7 @@ app.filter('receFloat', function() {
 		return money;
 	}
 });
-// 合同状态过滤器
+//合同状态过滤器
 app.filter('conState', function() {
 	return function(input) {
 		var state = "";
@@ -548,10 +548,12 @@ app.filter('conState', function() {
 			state = "竣工";
 		else if (input == "2")
 			state = "停建";
+		else if (!input)
+			state = "";
 		return state;
 	}
 });
-// 合同立项判断
+//合同立项判断
 app.filter('conInitiation', function() {
 	return function(input) {
 		var initiation = "";
@@ -559,11 +561,13 @@ app.filter('conInitiation', function() {
 			initiation = "否";
 		else if (input == "1")
 			initiation = "是";
+		else if (!input)
+			initiation = "";
 
 		return initiation;
 	}
 });
-// 合同是否有委托书判断
+//合同是否有委托书判断
 app.filter('conHasproxy', function() {
 	return function(input) {
 		var hasproxy = "";
@@ -571,19 +575,37 @@ app.filter('conHasproxy', function() {
 			hasproxy = "否";
 		else if (input == "1")
 			hasproxy = "是";
+		else if (!input)
+			hasproxy = "";
 
 		return hasproxy;
 	}
 });
-// 合同一般纳税人判断
+//合同一般纳税人判断
 app.filter('conAvetaxpayer', function() {
 	return function(input) {
 		var avetaxpayer = "";
 		if (input == "0")
-			avetaxpayer = "否";
+			avetaxpayer = "一般纳税人";
 		else if (input == "1")
-			avetaxpayer = "是";
+			avetaxpayer = "小规模纳税人";
+		else if (!input)
+			avetaxpayer = "";
 
+		return avetaxpayer;
+	}
+});
+
+// 发票类型的判断的判断
+app.filter('conInvoiceType', function() {
+	return function(input) {
+		var avetaxpayer = "";
+		if (input == "0")
+			avetaxpayer = "增值税专用发票";
+		else if (input == "1")
+			avetaxpayer = "增值税普通发票";
+		else if (!input)
+			avetaxpayer = "";
 		return avetaxpayer;
 	}
 });
@@ -592,18 +614,88 @@ app.filter('conType', function() {
 	return function(input) {
 		var type = "";
 		if (input == "0")
-			type = "规划";
+			type = "传统光伏项目";
 		else if (input == "1")
-			type = "可行性";
+			type = "分布式";
 		else if (input == "2")
-			type = "施工图";
+			type = "光热";
 		else if (input == "3")
-			type = "评估";
-		else if (input == "4")
 			type = "其他";
+		else if (!input)
+			type = "";
 		return type;
 	}
 });
+
+// 合同项目阶段的判断
+app.filter('conProStage', function() {
+	return function(input) {
+		var type = "";
+		if (input) {
+			console.log(input);
+			strs = input.split(","); // 字符分割
+			
+			for (i = 0; i < strs.length; i++) {
+				switch (strs[i]) {
+				case "0":
+					type += "规划   ";
+					break;
+				case "1":
+					type += "预可研   ";
+					break;
+				case "2":
+					type += "可研   ";
+					break;
+				case "3":
+					type += "项目建议书   ";
+					break;
+				case "4":
+					type += "初步设计   ";
+					break;
+				case "5":
+					type += "发包、招标设计   ";
+					break;
+				case "6":
+					type += "施工详图   ";
+					break;
+				case "7":
+					type += "竣工图    ";
+					break;
+				case "8":
+					type += "其他   ";
+					break;
+				default:
+					type += "";
+					break;
+				}
+			}
+			return type;
+		}
+	}
+});
+
+// 合同项目阶段的判断
+app.filter('conCompanyType', function() {
+	return function(input) {
+		var type = "";
+		if (input == "0")
+			type = "国有企业";
+		else if (input == "1")
+			type = "事业单位";
+		else if (input == "2")
+			type = "民营企业";
+		else if (input == "3")
+			type = "国外企业";
+		else if (input == "4")
+			type = "政府机关";
+		else if (input == "5")
+			type = "其他";
+		else if (!input)
+			type = "";
+		return type;
+	}
+});
+
 // 工期阶段的判断
 app.filter('prstType', function() {
 	return function(input) {
