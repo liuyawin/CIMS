@@ -182,6 +182,7 @@ public class ContractController {
 		int cont_id = Integer.parseInt(request.getParameter("cont_id"));
 		session.setAttribute("cont_id", cont_id);// 将cont_id放入session
 		Contract contract = contractService.selectContById(cont_id);
+		System.out.println("合同详情："+JSON.toJSONString(contract));
 		return JSON.toJSONString(contract);
 	}
 
