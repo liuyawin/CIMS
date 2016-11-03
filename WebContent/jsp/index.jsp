@@ -5,7 +5,7 @@
 			+ path + "/";
 %>
 <jsp:include page="/jsp/top.jsp" />
-<section  id="ng-section" class="main">
+<section id="ng-section" class="main">
 	<div class="place">
 		<span>位置：</span>
 		<ul class="placeul">
@@ -13,7 +13,7 @@
 		</ul>
 	</div>
 
-	<div class="mainindex"  ng-controller="IndexController">
+	<div class="mainindex" ng-controller="IndexController">
 		<div class="welinfo">
 			<span><img src="${ctx}/images/sun.png" alt="天气" /></span> <b>欢迎使用光电项目设计进度到款跟踪系统</b>
 			<!-- <a href="#">帐号设置</a> -->
@@ -29,11 +29,16 @@
 			<li has-permission='waitAuditBillTaskNum'><a
 				href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList"
 				class="">待审核发票任务：{{waitAuditBillTaskNum}}</a></li>
-			<li has-permission='assistantTaskNum'><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">文书任务：{{assistantTaskNum}}</a></li>
-			<li has-permission='managerControlTaskNum'><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">补录合同任务：{{managerControlTaskNum}}</a></li>
+			<li has-permission='assistantTaskNum'><a
+				href="${ctx}/task/toTaskPage.do#/receiveTask" class="">文书任务：{{assistantTaskNum}}</a></li>
+			<li has-permission='managerControlTaskNum'><a
+				href="${ctx}/task/toTaskPage.do#/receiveTask" class="">补录合同任务：{{managerControlTaskNum}}</a></li>
 			<li has-permission='billTaskNum'><a
 				href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList"
 				class="">发票任务： {{billTaskNum}}</a></li>
+			<li><a
+				href="${ctx}/receiveMoney/toBillMngInvoicePage.do#/receiveMoneyTaskList"
+				class="">核对到款任务： {{remoTaskNum}}</a></li>
 			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">普通任务：{{otherTaskNum}}</a></li>
 		</ul>
 
@@ -42,10 +47,10 @@
 		</div>
 
 		<ul class="infolist">
-			<li has-permission='debtAlarmNum'><a href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList"
-				class="">收款超时：{{debtAlarmNum}}</a></li>
-			<li has-permission='overdueAlarmNum'><a href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList"
-				class="">工程逾期：{{overdueAlarmNum}}</a></li>
+			<li has-permission='debtAlarmNum'><a
+				href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList" class="">收款超时：{{debtAlarmNum}}</a></li>
+			<li has-permission='overdueAlarmNum'><a
+				href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList" class="">工程逾期：{{overdueAlarmNum}}</a></li>
 			<li><a href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList"
 				class="">任务超时：{{taskAlarmNum}}</a></li>
 		</ul>

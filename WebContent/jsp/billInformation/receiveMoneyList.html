@@ -19,7 +19,7 @@
 			</select> <input class="btn" type="submit" value="查询"
 				ng-click="selectReceiveMoneysByContId()">
 		</form>
-		<div id="inmoPrompt"  is-show >
+		<div id="inmoPrompt" is-show>
 			<label class="text_style left_length ">合同总金额
 				{{cont.cont_money | invoFloat}} 万元！</label><label class="text_style">已到款金额
 				{{totalMoney | invoFloat}} 万元！</label>
@@ -30,9 +30,10 @@
 		<thead>
 			<tr>
 				<th>序号</th>
+				<th>合同名称</th>
 				<th>应到款（万元）</th>
-				<th>应到款时间</th>
 				<th>实到款（万元）</th>
+				<th>到款时间</th>
 				<th>业主公司</th>
 				<th>发起者</th>
 				<th>审核者</th>
@@ -42,11 +43,14 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="remo in remos">
-				<td class="width10">{{$index + 1}}</td>
+				<td class="width5">{{$index + 1}}</td>
+				<td class="width15"><a 
+								href="/CIMS/contract/toContractPage.do#/contractInfo"
+								ng-click="getConId(t.contract.cont_id)">{{remo.contract.cont_name}}</a></td>
 				<td class="width10">{{remo.remo_money |receFloat}}</td>
+				<td class="width10">{{remo.remo_amoney | receFloat}}</td>
 				<td class="width10">{{remo.remo_time.time |dateType}}</td>
-				<td class="width15">{{remo.remo_amoney | receFloat}}</td>
-				<td class="width15">{{remo.contract.cont_client | cutString}}</td>
+				<td class="width10">{{remo.contract.cont_client | cutString}}</td>
 				<td class="width5">{{remo.creater.user_name}}</td>
 				<td class="width5">{{remo.operater.user_name}}</td>
 				<td class="width5">{{remo.remo_state |remoState}}</td>
@@ -63,7 +67,7 @@
 </div>
 <!-- 派发到款通知模态框 -->
 <div class="overlayer"></div>
-<div class="tip" id="tipRemo" style="height:450px">
+<div class="tip" id="tipRemo" style="height: 450px">
 	<div class="tiptop">
 		<span>创建任务</span><a></a>
 	</div>
@@ -86,7 +90,8 @@
 						class="textinput area_style" ng-model="receiveMoney.remo_remark"
 						required></textarea></li>
 				<li><label>实到款金额</label><input type="text" name="remoAmoney"
-					id="remoAmoney" class="dfinput " ng-model="receiveMoney.remo_amoney" required>万元</li>
+					id="remoAmoney" class="dfinput "
+					ng-model="receiveMoney.remo_amoney" required>万元</li>
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sure" id="sureRemoAudit"

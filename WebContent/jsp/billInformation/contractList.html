@@ -22,10 +22,12 @@
 			<tr>
 				<th>合同名称</th>
 				<th>合同金额(万元)</th>
-				<th>开发票次数</th>
+				<th>到款金额(万元)</th>
+				<th>到款次数</th>
 				<th>已开发票金额(万元)</th>
-				<th>开收据次数</th>
+				<th>开发票次数</th>
 				<th>已开收据金额(万元)</th>
+				<th>开收据次数</th>
 				<th>到款</th>
 				<th>发票</th>
 				<th>收据</th>
@@ -36,10 +38,12 @@
 				<td><a class="underline" href="#contractInfo"
 					ng-click="getConId(con.cont_id)">{{con.cont_name}}</a></td>
 				<td>{{con.cont_money}}</td>
-				<td>{{con.invo_total}}</td>
+				<td>{{con.remo_totalmoney}}</td>
+				<td>{{con.remo_count}}</td>
 				<td>{{con.invo_totalmoney}}</td>
-				<td>{{con.rece_total}}</td>
+				<td>{{con.invo_total}}</td>
 				<td>{{con.rece_totalmoney}}</td>
+				<td>{{con.rece_total}}</td>
 				<td><a
 					href="/CIMS/invoice/toBillMngInvoicePage.do#/receiveMoneyList"
 					class="tablelink" ng-click="getConId(con.cont_id)">详情</a> <a
