@@ -2,9 +2,12 @@
 <<<<<<<=HEAD
 >>>>>>>=1d9b269c8e1e774fc8bd99560361d9755d5a08d1
 eclipse.preferences.version=1
+encoding//WebContent/jsp/billInformation/contractInfo.html=UTF-8
 encoding//WebContent/jsp/billInformation/contractList.html=UTF-8
 encoding//WebContent/jsp/billInformation/invoiceList.html=UTF-8
 encoding//WebContent/jsp/billInformation/receiveMoneyList.html=UTF-8
+encoding//WebContent/jsp/contractInformation/contractInfo.html=UTF-8
+encoding//WebContent/jsp/contractInformation/contractList.html=UTF-8
 encoding//WebContent/jsp/footer.jsp=UTF-8
 encoding//WebContent/jsp/left.jsp=UTF-8
 encoding//WebContent/jsp/taskInformation/taskList.html=UTF-8

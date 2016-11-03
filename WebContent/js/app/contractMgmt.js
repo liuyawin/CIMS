@@ -655,12 +655,8 @@ app
 												function(data) {
 													contract.cont = data.contract;
 													contract.contract = data.contract;
-													if (data.cont_stime) {
-														contract.contract.cont_stime = new Date(
-																data.cont_stime)
-																.toLocaleDateString()
-																.replace(/\//g,
-																		'-');
+													if (data.contract.cont_stime) {
+														contract.contract.cont_stime =changeDateType(data.contract.cont_stime.time); 
 													}
 
 												});
@@ -671,37 +667,37 @@ app
 								services.selectContractById({
 									cont_id : cont_id
 								}).success(function(data) {
-									contract.cont = data;
-									var strs = data.proStage.split(",");
+									contract.cont = data.contract;
+									var strs = data.contract.proStage.split(",");
 									for (var i = 0; i < strs.length; i++) {
 
 										switch (strs[i]) {
 										case "0":
-											contract.proStage0="true";
+											contract.proStage0 = "true";
 											break;
 										case "1":
-											contract.proStage1="true";
+											contract.proStage1 = "true";
 											break;
 										case "2":
-											contract.proStage2="true";
+											contract.proStage2 = "true";
 											break;
 										case "3":
-											contract.proStage3="true";
+											contract.proStage3 = "true";
 											break;
 										case "4":
-											contract.proStage4="true";
+											contract.proStage4 = "true";
 											break;
 										case "5":
-											contract.proStage5="true";
+											contract.proStage5 = "true";
 											break;
 										case "6":
-											contract.proStage6="true";
+											contract.proStage6 = "true";
 											break;
 										case "7":
-											contract.proStage7="true";
+											contract.proStage7 = "true";
 											break;
-										case "7":
-											contract.proStage8="true";
+										case "8":
+											contract.proStage8 = "true";
 											break;
 										}
 									}
@@ -1255,7 +1251,13 @@ app
 								$(".overlayer").fadeOut(100);
 								$("#tipStatus").fadeOut(100);
 							});
+							// 更改任务时间的格式
+							function changeDateType(time) {
 
+								newDate = new Date(time).toLocaleDateString()
+										.replace(/\//g, '-');
+								return newDate;
+							}
 							// 初始化页面信息
 							function initData() {
 								// 点击创建任务时弹出模态框
@@ -1501,7 +1503,7 @@ app
 									getContProStage();
 									$("#prstContainer").hide();
 									$("#renoContainer").hide();
-								
+
 								} else if ($location.path().indexOf(
 										'/contractRecord') == 0) {
 

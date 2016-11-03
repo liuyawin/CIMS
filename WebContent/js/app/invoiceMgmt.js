@@ -409,6 +409,10 @@ invoiceApp
 									});
 								}
 							}
+							// zq查看合同ID，并记入sessionStorage
+							contract.getConId = function(conId) {
+								sessionStorage.setItem('conId', conId);
+							};
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {

@@ -192,37 +192,22 @@ receiveMoneyApp
 								$(".overlayer").fadeOut(200);
 								reMoney.receiveMoney = "";
 							});
-							$("#sureRemoAudit")
-									.click(
-											function() {
-												services
-														.auditReceiveMoney(
-																{
-																	remoId : sessionStorage
-																			.getItem("remoId"),
-																	remoAmoney : $(
-																			"#remoAmoney")
-																			.val()
-																})
-														.success(
-																function(data) {
-																	alert("操作成功！");
-																	$(
-																			"#tipRemo")
-																			.fadeOut(
-																					100);
-																	$(
-																			".overlayer")
-																			.fadeOut(
-																					200);
+							$("#sureRemoAudit").click(function() {
+								services.auditReceiveMoney({
+									remoId : sessionStorage.getItem("remoId"),
+									remoAmoney : $("#remoAmoney").val()
+								}).success(function(data) {
+									alert("操作成功！");
+									$("#tipRemo").fadeOut(100);
+									$(".overlayer").fadeOut(200);
 
-																	selectContractById();
-																	countReceiveMoneyByContId();
-																	findReceiveMoneys(remoPage);
-																	
-																});
+									selectContractById();
+									countReceiveMoneyByContId();
+									findReceiveMoneys(remoPage);
 
-											});
+								});
+
+							});
 							// 根据到款ID查找到款单条记录
 							function selectReceiveMoneyById(remoId) {
 								services
@@ -301,7 +286,7 @@ receiveMoneyApp
 										pageCount : totalPage,
 										current : page,
 										backFn : function(p) {
-											remoPage=p;
+											remoPage = p;
 											findReceiveMoneys(p);
 										}
 									});
@@ -368,6 +353,10 @@ receiveMoneyApp
 
 										});
 							}
+							// zq查看合同ID，并记入sessionStorage
+							contract.getConId = function(conId) {
+								sessionStorage.setItem('conId', conId);
+							};
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {

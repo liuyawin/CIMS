@@ -44,7 +44,9 @@
 		<tbody>
 			<tr ng-repeat="remo in remos">
 				<td class="width5">{{$index + 1}}</td>
-				<td class="width15">{{remo.contract.cont_name}}</td>
+				<td class="width15"><a 
+								href="/CIMS/contract/toContractPage.do#/contractInfo"
+								ng-click="getConId(t.contract.cont_id)">{{remo.contract.cont_name}}</a></td>
 				<td class="width10">{{remo.remo_money |receFloat}}</td>
 				<td class="width10">{{remo.remo_amoney | receFloat}}</td>
 				<td class="width10">{{remo.remo_time.time |dateType}}</td>
