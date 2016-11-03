@@ -203,7 +203,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			sql.append(" and contract_id=:cont_id");
 		}
 		sql.append(" order by invo_id desc limit :offset,:end");
-		Query query = em.createNativeQuery(sql.toString());
+		Query query = em.createNativeQuery(sql.toString(), Invoice.class);
 		query.setParameter("user_id", user_id).setParameter("offset", offset).setParameter("end", end);
 		if (cont_id != null) {
 			query.setParameter("cont_id", cont_id);
@@ -234,7 +234,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			sql.append(" and contract_id=:cont_id");
 		}
 		sql.append(" order by invo_id desc limit :offset,:end");
-		Query query = em.createNativeQuery(sql.toString());
+		Query query = em.createNativeQuery(sql.toString(), Invoice.class);
 		query.setParameter("user_id", user_id).setParameter("invoState", invoState);
 		query.setParameter("offset", offset).setParameter("end", end);
 		if (cont_id != null) {
