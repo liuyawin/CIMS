@@ -665,6 +665,48 @@ app
 
 												});
 							}
+							// 在修改合同的时候将已选的项目阶段勾选
+							function getContProStage() {
+								var cont_id = sessionStorage.getItem('conId');
+								services.selectContractById({
+									cont_id : cont_id
+								}).success(function(data) {
+									contract.cont = data;
+									var strs = data.proStage.split(",");
+									for (var i = 0; i < strs.length; i++) {
+
+										switch (strs[i]) {
+										case "0":
+											contract.proStage0="true";
+											break;
+										case "1":
+											contract.proStage1="true";
+											break;
+										case "2":
+											contract.proStage2="true";
+											break;
+										case "3":
+											contract.proStage3="true";
+											break;
+										case "4":
+											contract.proStage4="true";
+											break;
+										case "5":
+											contract.proStage5="true";
+											break;
+										case "6":
+											contract.proStage6="true";
+											break;
+										case "7":
+											contract.proStage7="true";
+											break;
+										case "7":
+											contract.proStage8="true";
+											break;
+										}
+									}
+								});
+							}
 							// zq：根据合同ID查询工期阶段的内容
 							function selectPrstByContId() {
 								var cont_id = sessionStorage.getItem('conId');
@@ -995,7 +1037,6 @@ app
 								});
 							}
 							// 10.25zq删除工期和收款
-							// 10.25zq删除工期阶段
 							contract.delPrst = function() {
 								if (this.stage.prst_state == 0) {
 									var prstId = this.stage.prst_id;
@@ -1112,7 +1153,6 @@ app
 							contract.modifyReno = function() {
 								var renoId = this.node.reno_id;
 								contract.reNode = null;
-
 								services
 										.selectRenoById({
 											renoId : renoId
@@ -1161,7 +1201,6 @@ app
 								} else {
 									var DateTime = "";
 								}
-
 								return DateTime;
 							}
 							// 10.26zq实现选择工期时的联动
@@ -1452,7 +1491,6 @@ app
 								} else if ($location.path().indexOf(
 										'/contractDetail') == 0) {
 									selectUsersFromDesign();// 查找设计部人员
-
 									selectContractById(); // 根据ID获取合同信息
 									addStage();// 显示工期阶段录入界面
 
@@ -1460,8 +1498,10 @@ app
 										'/contractModify') == 0) {
 									selectUsersFromDesign();// 查找设计部人员
 									selectContractById(); // 根据ID获取合同信息
+									getContProStage();
 									$("#prstContainer").hide();
 									$("#renoContainer").hide();
+								
 								} else if ($location.path().indexOf(
 										'/contractRecord') == 0) {
 
@@ -1709,38 +1749,39 @@ app.filter('conProStage', function() {
 		if (input) {
 			console.log(input);
 			strs = input.split(","); // 字符分割
-
+			console.log("项目阶段" + strs);
 			for (i = 0; i < strs.length; i++) {
+				var j = i + 1;
 				switch (strs[i]) {
 				case "0":
-					type += "规划   ";
+					type += "  " + j + "、规划  ;  ";
 					break;
 				case "1":
-					type += "预可研   ";
+					type += "  " + j + "、预可研  ;      ";
 					break;
 				case "2":
-					type += "可研   ";
+					type += "  " + j + "、可研  ;      ";
 					break;
 				case "3":
-					type += "项目建议书   ";
+					type += "  " + j + "、项目建议书  ;      ";
 					break;
 				case "4":
-					type += "初步设计   ";
+					type += "  " + j + "、初步设计  ;      ";
 					break;
 				case "5":
-					type += "发包、招标设计   ";
+					type += "  " + j + "、发包、招标设计  ;      ";
 					break;
 				case "6":
-					type += "施工详图   ";
+					type += "  " + j + "、施工详图  ;      ";
 					break;
 				case "7":
-					type += "竣工图    ";
+					type += "  " + j + "、竣工图  ;       ";
 					break;
 				case "8":
-					type += "其他   ";
+					type += "  " + j + "、其他   ;   ";
 					break;
 				default:
-					type += "";
+					type += " ";
 					break;
 				}
 			}

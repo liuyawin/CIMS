@@ -163,7 +163,7 @@ receiveMoneyApp
 							var role;
 							var remoState = null;
 							var remoListType = null;// 根据类型的不同区分是查找任务列表还是普通的到款列表
-
+							var remoPage = 1;
 							// 查看到款记录
 							reMoney.checkRemo = function() {
 								var remoId = this.remo.remo_id;
@@ -218,22 +218,8 @@ receiveMoneyApp
 
 																	selectContractById();
 																	countReceiveMoneyByContId();
-																	services
-																			.selectReceiveMoneysByContId(
-																					{
-																						contId : sessionStorage
-																								.getItem("conId"),
-																						page : 1,
-																						remoState : remoState
-																					})
-																			.success(
-																					function(
-																							data) {
-																						reMoney.remos = data.list;
-																						pageTurn(
-																								data.totalPage,
-																								1);
-																					});
+																	findReceiveMoneys(remoPage);
+																	
 																});
 
 											});
@@ -315,6 +301,7 @@ receiveMoneyApp
 										pageCount : totalPage,
 										current : page,
 										backFn : function(p) {
+											remoPage=p;
 											findReceiveMoneys(p);
 										}
 									});
