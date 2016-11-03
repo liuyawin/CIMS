@@ -491,6 +491,8 @@ public class Contract implements Serializable {
 		this.proStage = proStage;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "assmana_id")
 	public User getAssistant_manager() {
 		return assistant_manager;
 	}
