@@ -29,16 +29,6 @@ public class DepartmentController {
 	@Autowired
 	DepartmentService departmentService;
 	
-	
-	/**
-	 * 设置进入部门起始页
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toDepartmentPage.do")
-	public String departmentReceivePage() {
-		return "userManagement/departInformation/index";
-	}
 	/**
 	 * 根据页数筛选部门列表
 	 * 
@@ -50,15 +40,12 @@ public class DepartmentController {
 	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Long totalRow = departmentService.countTotal();
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(Integer.parseInt(totalRow.toString()));
 		List<Department> list = departmentService.findDepartmentAllByPage(pager.getOffset(), pager.getLimit());
-		System.out.println(list.toString());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -72,7 +59,6 @@ public class DepartmentController {
 	@RequestMapping(value = "/getAllDepartmentList.do")
 	public @ResponseBody String getAllStores(HttpServletRequest request, HttpSession session) {
 		List<Department> result = departmentService.findDepartmentAlls();
-		System.out.println(JSON.toJSONString(result));
 		return JSON.toJSONString(result);
 	}
 
@@ -100,8 +86,6 @@ public class DepartmentController {
 	 */
 	@RequestMapping(value = "/addDepart.do")
 	public @ResponseBody String addDepart(HttpServletRequest request, HttpSession session) {
-		System.out.println("pid:" + request.getParameter("dept_name") + request.getParameter("dept_pid")
-				+ request.getParameter("dept_remark"));
 		Department department = new Department();
 		department.setDept_name(request.getParameter("dept_name"));
 		Department pId = new Department();

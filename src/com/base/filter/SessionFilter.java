@@ -1,4 +1,4 @@
-package com.base;
+package com.base.filter;
 
 import java.io.IOException;
 
@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.User;
 
 public class SessionFilter implements Filter {
@@ -28,10 +29,10 @@ public class SessionFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) arg0;
 		HttpServletResponse response = (HttpServletResponse) arg1;
 		HttpSession session = request.getSession();
-		if ((User) session.getAttribute("user") == null) {
+		if ((User) session.getAttribute(SessionKeyConstants.LOGIN) == null) {
 			String errors = "您还没有登录，或者session已过期。请先登陆!";
 			request.setAttribute("Message", errors);
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
 		} else {
 			arg2.doFilter(request, response);
 		}

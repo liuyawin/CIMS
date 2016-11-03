@@ -56,15 +56,15 @@ var app = angular
 								: data;
 					} ];
 				});
-//获取权限列表
-var permissionList; 
+// 获取权限列表
+var permissionList;
 angular.element(document).ready(function() {
-console.log("获取权限列表！"); 
-$.get('/CIMS/login/getUserPermission.do', function(data) { 
-	  permissionList = data; // 
-	  console.log("身份是：" + permissionList);
-	  angular.bootstrap($("#ng-section"), ['taskMgmt']); //手动加载angular模块
-	  }); 
+	console.log("获取权限列表！");
+	$.get('/CIMS/login/getUserPermission.do', function(data) {
+		permissionList = data; // 
+		console.log("身份是：" + permissionList);
+		angular.bootstrap($("#ng-section"), [ 'taskMgmt' ]); // 手动加载angular模块
+	});
 });
 app.run([ '$rootScope', '$location', function($rootScope, $location) {
 	$rootScope.$on('$routeChangeSuccess', function(evt, next, previous) {
@@ -294,6 +294,22 @@ app
 										taskHtml.task = "";
 									});
 								} else if (taskType == 1) {
+									services
+											.checkTask({
+												ID : taskId
+											})
+											.success(
+													function(data) {
+
+														taskHtml.task = data.task;
+
+														if (data.task.task_stime != null) {
+															taskHtml.task.task_stime = changeDateType(data.task.task_stime.time);
+														}
+														if (data.task.task_etime != null) {
+															taskHtml.task.task_etime = changeDateType(data.task.task_etime.time);
+														}
+													});
 									services
 											.selectSubTask({
 												taskId : taskId
@@ -742,7 +758,6 @@ app.directive('taskFinish', function($timeout) {
 				element.css("display", "none");
 			}
 
-			
 		}
 	};
 
@@ -758,8 +773,7 @@ app.directive('taskDelete', function($timeout) {
 			var sendOrReceive = sessionStorage.getItem("sendOrReceive");
 			if (sendOrReceive == "1") {
 				element.css("display", "none");
-			} 
-			
+			}
 		}
 	};
 
