@@ -271,6 +271,7 @@ public class InvoiceController {
 				pager.getOffset(), pager.getLimit());
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+		System.out.println("发票列表详情："+jsonObject.toString());
 		return jsonObject.toString();
 	}
 
