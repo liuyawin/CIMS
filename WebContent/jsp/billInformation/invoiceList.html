@@ -18,7 +18,7 @@
 				<option value="2">已完成</option>
 			</select> <input class="btn" type="submit" value="查询" ng-click="selectInvoicesByState()"/>
 		</div>
-		<div id="invoPrompt">
+		<div id="invoPrompt" invo-is-show>
 			<label class="text_style">合同总金额 {{cont.cont_money |
 				invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
 				| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
@@ -50,24 +50,25 @@
 		<tbody>
 			<tr ng-repeat="invo in invoices">
 				<td class="width10">发票{{$index + 1}}</td>
-				<td class="width10">{{invo.invo_id}}{{invo.invo_money | invoFloat}}</td>
+				<td class="width10">{{invo.invo_money | invoFloat}}</td>
 				<td class="width10">{{invo.invo_time.time | dateType}}</td>
-				<td class="width15">{{invo.contract.cont_name}}</td>
-				<td class="width15">{{invo.invo_firm}}</td>
+				<td class="width15">{{invo.contract.cont_name }}</td>
+				<td class="width15">{{invo.invo_firm |cutString}}</td>
 				<td class="width5">{{invo.creator.user_name}}</td>
 				<td class="width5">{{invo.audit.user_name}}</td>
 				<td class="width5">{{invo.receiver.user_name}}</td>
 				<td class="width10">{{invo.invo_state | invoState}}</td>
 				<td class="width10"><a ng-click="selectInvoiceById()"
 					class="tablelink underline">查看</a><a ng-click="invoiceInfo()"
-					class="tablelink underline" has-permission='bInvoAudit'>审核</a><a
-					ng-click="updateInvoiceState()" class="tablelink underline"
-					has-permission='bInvoFinish'>完成</a></td>
+					class="tablelink underline" has-permission='tInvoAudit'>审核</a><a
+					ng-click="updateInvoiceState()" class="tablelink underline"   has-permission='tInvoFinish'
+					>完成</a></td>
 			</tr>
 		</tbody>
 	</table>
 
 	<div class="tcdPageCode">页码容器</div>
+
 
 </div>
 
@@ -116,9 +117,8 @@
 				<li><label>应开票时间：</label>{{invoice.invo_etime.time |dateType}}
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>金额：</label>{{invoice.invo_money
 					| receFloat}} &nbsp;&nbsp;万元</li>
-
 				<li><label>业主公司名称：</label>{{invoice.invo_firm}}</li>
-				<li><label>实开票时间：</label>{{invoice.invo_time}}</li>
+				<li><label>实开票时间：</label>{{invoice.invo_time.time | dateType}}</li>
 				<!-- <li><label>开始时间：</label></li>
 			<li><label>截止时间：</label></li> -->
 				<li><div class="remark-div">备注：{{invoice.invo_remark}}</div></li>

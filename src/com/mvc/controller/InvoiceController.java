@@ -271,7 +271,8 @@ public class InvoiceController {
 				pager.getOffset(), pager.getLimit());
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", list);
-		System.out.println("发票列表详情："+jsonObject.toString());
+		jsonObject.put("totalRow", totalRow);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
 
@@ -297,6 +298,8 @@ public class InvoiceController {
 				pager.getOffset(), pager.getLimit());
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+		jsonObject.put("totalRow", totalRow);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
 

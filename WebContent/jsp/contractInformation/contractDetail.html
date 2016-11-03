@@ -151,27 +151,27 @@
 				<td colspan='4'>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="0" />国有企业
+							ng-model="contract.company_type" value="0" />国有企业
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="1" />事业单位
+							ng-model="contract.company_type" value="1" />事业单位
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="2" />民营企业
+							ng-model="contract.company_type" value="2" />民营企业
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="3" />国外企业
+							ng-model="contract.company_type" value="3" />国外企业
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="4" />政府机关
+							ng-model="contract.company_type" value="4" />政府机关
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="companyType"
-							ng-model="cont.company_type" value="5" />其他
+							ng-model="contract.company_type" value="5" />其他
 					</div>
 				</td>
 			</tr>
@@ -243,7 +243,7 @@
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">公司注册地址</td>
 				<td colspan='6'><input type="text"
-					ng-model="contract.cont_czipcode" class="dfinput input_border" /></td>
+					ng-model="contract.com_signaddress" class="dfinput input_border" /></td>
 
 			</tr>
 			<tr>
@@ -251,22 +251,22 @@
 				<td colspan='1'>
 					<div class="div-checkbox">
 						<input type="radio" name="contAvetaxpayer"
-							ng-model="cont.cont_avetaxpayer" value="0" />一般纳税人
+							ng-model="contract.cont_avetaxpayer" value="0" />一般纳税人
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="contAvetaxpayer"
-							ng-model="cont.cont_avetaxpayer" value="1" />小规模纳税人
+							ng-model="contract.cont_avetaxpayer" value="1" />小规模纳税人
 					</div>
 				</td>
 
 				<td colspan='2' class="width20 text-center">发票类型</td>
 				<td colspan='2'><div class="div-checkbox">
 						<input type="radio" name="invoiceType"
-							ng-model="cont.invoice_type" value="0" />增值税专用发票
+							ng-model="contract.invoice_type" value="0" />增值税专用发票
 					</div>
 					<div class="div-checkbox">
 						<input type="radio" name="invoiceType"
-							ng-model="cont.invoice_type" value=" 1" /> 增值税普通发票
+							ng-model="contract.invoice_type" value=" 1" /> 增值税普通发票
 					</div></td>
 			</tr>
 			<tr>
@@ -283,7 +283,7 @@
 					ng-model="contract.cont_czipcode" class="dfinput input_border" /></td>
 				<td colspan='2' class="width20 text-center">银行账号</td>
 				<td colspan='2'><input type="text"
-					ng-model="contract.cont_cfax" class="dfinput input_border" /></td>
+					ng-model="contract.cont_account" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">其他需要说明的情况</td>
