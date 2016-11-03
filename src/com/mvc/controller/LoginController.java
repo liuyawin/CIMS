@@ -144,8 +144,8 @@ public class LoginController {
 				}
 				model.addAttribute("password", password);
 				Cookie cookie = new Cookie("userNum", userNum);
-//				cookie.setMaxAge(30 * 60);
-				cookie.setMaxAge(60);
+				cookie.setMaxAge(30 * 60);
+//				cookie.setMaxAge(60);
 				cookie.setPath("/");
 				res.addCookie(cookie);
 				cookie = new Cookie("role", user.getRole().getRole_id().toString());

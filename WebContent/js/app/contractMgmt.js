@@ -145,7 +145,7 @@ app
 									{
 										templateUrl : '/CIMS/jsp/contractInformation/contractList.html',
 										controller : 'ContractController'
-									})		
+									})
 							.when(
 									'/contractAdd',
 									{
@@ -432,15 +432,15 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	//lwt:修改项目状态
-	services.modifyStatus= function(data) {
+	// lwt:修改项目状态
+	services.modifyStatus = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'contract/modifyStatus.do',
 			data : data
 		});
 	};
-	//lwt:停建合同
+	// lwt:停建合同
 	services.getStopedContract = function(data) {
 		/* console.log("发送请求获取合同信息"); */
 		return $http({
@@ -655,10 +655,13 @@ app
 												function(data) {
 													contract.cont = data;
 													contract.contract = data;
-													contract.contract.cont_stime = new Date(
-															data.cont_stime)
-															.toLocaleDateString()
-															.replace(/\//g, '-');
+													if (data.cont_stime) {
+														contract.contract.cont_stime = new Date(
+																data.cont_stime)
+																.toLocaleDateString()
+																.replace(/\//g,
+																		'-');
+													}
 
 												});
 							}
@@ -1188,29 +1191,26 @@ app
 							}
 							// lwt:点击项目状态时弹出模态框
 							contract.modifyStatus = function(conId) {
-								sessionStorage.setItem("conId",conId);
+								sessionStorage.setItem("conId", conId);
 								$(".overlayer").fadeIn(200);
 								$("#tipStatus").fadeIn(200);
 							};
-							$("#sureStatus")
-									.click(
-											function() {
-												var conId=sessionStorage.getItem("conId");
-												services.modifyStatus({
-																		contState : contract.status.status_type,
-																		contId : sessionStorage.getItem("conId")
-																	})
-															.success(function(data) {
-																if(data="true"){
-																		alert("修改项目状态成功！");
-																		initData();
-																}else{
-																		alert("修改项目状态失败！");
-																	}
-																}); 
-												$(".overlayer").fadeOut(100);
-												$("#tipStatus").fadeOut(100);
-											});
+							$("#sureStatus").click(function() {
+								var conId = sessionStorage.getItem("conId");
+								services.modifyStatus({
+									contState : contract.status.status_type,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
+									if (data = "true") {
+										alert("修改项目状态成功！");
+										initData();
+									} else {
+										alert("修改项目状态失败！");
+									}
+								});
+								$(".overlayer").fadeOut(100);
+								$("#tipStatus").fadeOut(100);
+							});
 
 							$("#cancelStatus").click(function() {
 								$(".overlayer").fadeOut(100);
@@ -1421,7 +1421,7 @@ app
 										task_stime : timeNow,
 										task_etime : timeNow
 									};
-									contract.contract.cont_type="0";
+									/* contract.contract.cont_type="0"; */
 								} else if ($location.path()
 										.indexOf('/prstInfo') == 0) {
 									selectContractById(); // 根据ID获取合同信息
@@ -1472,7 +1472,7 @@ app
 											}).success(function(data) {
 										contract.records = data.list;
 									});
-								}else if ($location.path().indexOf(
+								} else if ($location.path().indexOf(
 										'/stopedContract') == 0) { // lwt:获取停建合同信息
 									contract.flag = 0; // 标志位，用于控制按钮是否显示
 									services
