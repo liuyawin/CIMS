@@ -49,7 +49,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="invo in invoices">
-				<td class="width10">发票{{$index + 1}}</td>
+				<td class="width10">{{$index + 1}}</td>
 				<td class="width10">{{invo.invo_money | invoFloat}}</td>
 				<td class="width10">{{invo.invo_time.time | dateType}}</td>
 				<td class="width15">{{invo.contract.cont_name }}</td>

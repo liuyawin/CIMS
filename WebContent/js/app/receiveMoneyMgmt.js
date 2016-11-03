@@ -510,7 +510,7 @@ receiveMoneyApp.filter('cutString', function() {
 	return function(input) {
 		var content = "";
 		if (input != "") {
-			var shortInput = input.substr(0, 6);
+			var shortInput = input.substr(0, 8);
 			content = shortInput + "……";
 		}
 
