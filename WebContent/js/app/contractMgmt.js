@@ -653,8 +653,8 @@ app
 										})
 										.success(
 												function(data) {
-													contract.cont = data;
-													contract.contract = data;
+													contract.cont = data.contract;
+													contract.contract = data.contract;
 													if (data.cont_stime) {
 														contract.contract.cont_stime = new Date(
 																data.cont_stime)
