@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.mvc.entity.Invoice;
+import com.utils.Pager;
 
 /**
  * 发票
@@ -52,10 +53,18 @@ public interface InvoiceService {
 	// 主任转发发票
 	boolean transmitInvoice(Integer invoiceId, Date invoEtime, Integer receiverId);
 
-	// 根据合同ID，权限，状态，页码 查找发票
-	List<Invoice> selectInvoiceByState(Integer invoState, String permission, Integer user_id, Integer cont_id,
-			Integer offset, Integer end);
+	// 根据权限，状态，页码 查找发票
+	List<Invoice> selectInvoByStateAndPerm(Integer invoState, String permission, Integer user_id, Pager pager);
 
-	// 根据合同ID，权限，状态 查询发票总条数
-	Integer countByStateAndPerm(Integer invoState, String permission, Integer user_id, Integer cont_id);
+	// 根据权限，状态 查询发票总条数
+	Integer countByStateAndPerm(Integer invoState, String permission, Integer user_id);
+
+	// 根据合同ID，状态，页码 查找发票
+	List<Invoice> selectInvoByStateAndContId(Integer invoState, Integer cont_id, Pager pager);
+
+	// 根据合同ID，状态 查询发票总条数
+	Integer countByStateAndContId(Integer invoState, Integer cont_id);
+
+	// 根据合同ID获取已完成发票总条数
+	Integer countTotalRow(Integer cont_id);
 }

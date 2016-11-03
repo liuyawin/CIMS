@@ -201,6 +201,7 @@ invoiceApp
 									contId : contId
 								}).success(function(data) {
 									invoice.totalMoney = data.totalMoney;
+									invoice.totalRow = data.totalRow;
 								});
 							}
 							// 更改任务时间的格式
@@ -272,9 +273,10 @@ invoiceApp
 								}).success(function(data) {
 									alert("操作成功！");
 									findInvoices(nowPage);
-									invoice.invoiceId="";
-									invoice.invoEtime="";
-									invoice.receiverId="";
+									countInvoiceMoneyByContId();
+									invoice.invoiceId = "";
+									invoice.invoEtime = "";
+									invoice.receiverId = "";
 								});
 								$(".overlayer").fadeOut(100);
 								$("#sendInvoTask").fadeOut(100);
@@ -286,14 +288,19 @@ invoiceApp
 							});
 							// 完成发票任务
 							invoice.updateInvoiceState = function() {
-								var invoId = this.invo.invo_id;
-								selectInvoiceById(invoId);
-								invoice.invoiceId = invoId;
-								$(".auditInfo").hide();
-								$(".finishInfo").show();
-								$(".overlayer").fadeIn(200);
-								$("#sendInvoTask").fadeIn(200);
-								return false;
+								if (this.invo.invo_state == "1") {
+									var invoId = this.invo.invo_id;
+									selectInvoiceById(invoId);
+									invoice.invoiceId = invoId;
+									$(".auditInfo").hide();
+									$(".finishInfo").show();
+									$(".overlayer").fadeIn(200);
+									$("#sendInvoTask").fadeIn(200);
+								} else if (this.invo.invo_state == "0") {
+									alert("该发票处于待审核状态，不能进行当前操作！");
+								} else if (this.invo.invo_state == "2") {
+									alert("该发票已开！不能重复操作！");
+								}
 							}
 							$("#sureFinishSend").click(function() {
 
@@ -303,9 +310,10 @@ invoiceApp
 								}).success(function(data) {
 									alert("操作成功！");
 									findInvoices(nowPage);
-									invoice.invoiceId="";
-									invoice.invoEtime="";
-									invoice.receiverId="";
+									countInvoiceMoneyByContId();
+									invoice.invoiceId = "";
+									invoice.invoEtime = "";
+									invoice.receiverId = "";
 								});
 								$(".overlayer").fadeOut(100);
 								$("#sendInvoTask").fadeOut(100);
@@ -374,7 +382,6 @@ invoiceApp
 								}
 
 							}
-							
 
 							// 页面的查找函数
 							invoice.selectInvoicesByState = function() {
@@ -429,8 +436,6 @@ invoiceApp
 												invoState : invoState
 											}).success(function(data) {
 										invoice.invoices = data.list;
-										invoice.totalRow = data.totalRow;
-										console.log("发票列表详情" + data.list);
 										pageTurn(data.totalPage, 1);
 									});
 

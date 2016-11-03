@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.base.enums.InvoiceStatus;
 import com.mvc.dao.InvoiceDao;
 import com.mvc.entity.Invoice;
+import com.utils.Pager;
 
 /**
  * 发票
@@ -180,11 +181,10 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		return true;
 	}
 
-	// 根据合同ID，权限，全部状态，页码 查找发票
+	// 根据权限，全部状态，页码 查找发票
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Invoice> findByAllAndPerm(String permission, Integer user_id, Integer cont_id, Integer offset,
-			Integer end) {
+	public List<Invoice> findByAllAndPerm(String permission, Integer user_id, Pager pager) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from invoice where invo_isdelete=0");
@@ -199,25 +199,19 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			sql.append(" and receiver_id=:user_id");
 			sql.append(" and invo_state in(1,2)");
 		}
-		if (cont_id != null) {
-			sql.append(" and contract_id=:cont_id");
-		}
 		sql.append(" order by invo_id desc limit :offset,:end");
 		Query query = em.createNativeQuery(sql.toString(), Invoice.class);
-		query.setParameter("user_id", user_id).setParameter("offset", offset).setParameter("end", end);
-		if (cont_id != null) {
-			query.setParameter("cont_id", cont_id);
-		}
+		query.setParameter("user_id", user_id);
+		query.setParameter("offset", pager.getOffset()).setParameter("end", pager.getLimit());
 		List<Invoice> list = query.getResultList();
 		em.close();
 		return list;
 	}
 
-	// 根据合同ID，权限，状态，页码 查找发票
+	// 根据权限，状态，页码 查找发票
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Invoice> findByStateAndPerm(Integer invoState, String permission, Integer user_id, Integer cont_id,
-			Integer offset, Integer end) {
+	public List<Invoice> findByStateAndPerm(Integer invoState, String permission, Integer user_id, Pager pager) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from invoice where invo_isdelete=0 and invo_state=:invoState");
@@ -230,24 +224,18 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		} else {// 执行人(文书)
 			sql.append(" and receiver_id=:user_id");
 		}
-		if (cont_id != null) {
-			sql.append(" and contract_id=:cont_id");
-		}
 		sql.append(" order by invo_id desc limit :offset,:end");
 		Query query = em.createNativeQuery(sql.toString(), Invoice.class);
 		query.setParameter("user_id", user_id).setParameter("invoState", invoState);
-		query.setParameter("offset", offset).setParameter("end", end);
-		if (cont_id != null) {
-			query.setParameter("cont_id", cont_id);
-		}
+		query.setParameter("offset", pager.getOffset()).setParameter("end", pager.getLimit());
 		List<Invoice> list = query.getResultList();
 		em.close();
 		return list;
 	}
 
-	// 根据合同ID，权限，全部状态，页码 查找发票总条数
+	// 根据权限，全部状态，页码 查找发票总条数
 	@Override
-	public Integer countByAllAndPerm(String permission, Integer user_id, Integer cont_id) {
+	public Integer countByAllAndPerm(String permission, Integer user_id) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(invo_id) from invoice where invo_isdelete=0");
@@ -262,22 +250,16 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			sql.append(" and receiver_id=:user_id");
 			sql.append(" and invo_state in(1,2)");
 		}
-		if (cont_id != null) {
-			sql.append(" and contract_id=:cont_id");
-		}
 		Query query = em.createNativeQuery(sql.toString());
 		query.setParameter("user_id", user_id);
-		if (cont_id != null) {
-			query.setParameter("cont_id", cont_id);
-		}
-		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
 		em.close();
 		return totalRow.intValue();
 	}
 
-	// 根据合同ID，权限，状态，页码 查找发票总条数
+	// 根据权限，状态，页码 查找发票总条数
 	@Override
-	public Integer countByStateAndPerm(Integer invoState, String permission, Integer user_id, Integer cont_id) {
+	public Integer countByStateAndPerm(Integer invoState, String permission, Integer user_id) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(invo_id) from invoice where invo_isdelete=0 and invo_state=:invoState");
@@ -290,15 +272,82 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		} else {// 执行人(文书)
 			sql.append(" and receiver_id=:user_id");
 		}
-		if (cont_id != null) {
-			sql.append(" and contract_id=:cont_id");
-		}
 		Query query = em.createNativeQuery(sql.toString());
 		query.setParameter("user_id", user_id).setParameter("invoState", invoState);
-		if (cont_id != null) {
-			query.setParameter("cont_id", cont_id);
-		}
-		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
+		em.close();
+		return totalRow.intValue();
+	}
+
+	// 根据合同ID，全部状态，页码 查找发票
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Invoice> findByAllAndContId(Integer cont_id, Pager pager) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from invoice where invo_isdelete=0 and contract_id=:cont_id");
+		sql.append(" order by invo_id desc limit :offset,:end");
+		Query query = em.createNativeQuery(sql.toString(), Invoice.class);
+		query.setParameter("cont_id", cont_id);
+		query.setParameter("offset", pager.getOffset()).setParameter("end", pager.getLimit());
+		List<Invoice> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 根据合同ID，状态，页码 查找发票
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Invoice> findByStateAndContId(Integer invoState, Integer cont_id, Pager pager) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from invoice where invo_isdelete=0 and invo_state=:invoState and contract_id=:cont_id");
+		sql.append(" order by invo_id desc limit :offset,:end");
+		Query query = em.createNativeQuery(sql.toString(), Invoice.class);
+		query.setParameter("invoState", invoState).setParameter("cont_id", cont_id);
+		query.setParameter("offset", pager.getOffset()).setParameter("end", pager.getLimit());
+		List<Invoice> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 根据合同ID，全部状态，页码 查找发票总条数
+	@Override
+	public Integer countByAllAndContId(Integer cont_id) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select count(invo_id) from invoice where invo_isdelete=0 and contract_id=:cont_id");
+		Query query = em.createNativeQuery(sql.toString());
+		query.setParameter("cont_id", cont_id);
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
+		em.close();
+		return totalRow.intValue();
+	}
+
+	// 根据合同ID，状态，页码 查找发票总条数
+	@Override
+	public Integer countByStateAndContId(Integer invoState, Integer cont_id) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append(
+				"select count(invo_id) from invoice where invo_isdelete=0 and invo_state=:invoState and contract_id=:cont_id");
+		Query query = em.createNativeQuery(sql.toString());
+		query.setParameter("invoState", invoState).setParameter("cont_id", cont_id);
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
+		em.close();
+		return totalRow.intValue();
+	}
+
+	// 根据合同ID获取已完成发票总条数
+	@Override
+	public Integer countTotalRow(Integer cont_id) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append(
+				"select count(invo_id) from invoice where invo_isdelete=0 and invo_state=:invo_state and contract_id=:cont_id");
+		Query query = em.createNativeQuery(sql.toString());
+		query.setParameter("cont_id", cont_id).setParameter("invo_state", InvoiceStatus.finish.value);
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
 		em.close();
 		return totalRow.intValue();
 	}
