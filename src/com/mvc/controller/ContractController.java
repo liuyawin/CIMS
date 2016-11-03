@@ -48,7 +48,7 @@ public class ContractController {
 	}
 
 	/**
-	 * 返回票据管理合同界面 包 20161013
+	 * 返回票据管理合同界面
 	 * 
 	 * @return
 	 */
@@ -171,7 +171,9 @@ public class ContractController {
 		int cont_id = Integer.parseInt(request.getParameter("cont_id"));
 		session.setAttribute("cont_id", cont_id);// 将cont_id放入session
 		Contract contract = contractService.selectContById(cont_id);
-		return JSON.toJSONString(contract);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("contract", contract);
+		return jsonObject.toString();
 	}
 
 	/**
@@ -182,22 +184,25 @@ public class ContractController {
 	 * @return Contract对象
 	 */
 	@RequestMapping("/repeatAddContract.do")
-	public @ResponseBody String repeatAddContract(HttpServletRequest request) {
+	public @ResponseBody String repeatAddContract(HttpServletRequest request, HttpSession session) {
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer cont_id = Integer.valueOf(request.getParameter("cont_id"));
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("contract"));
-		Contract contract = contractService.updateContract(cont_id, jsonObject);
-		return JSON.toJSONString(contract);
+		Contract contract = contractService.updateContract(cont_id, jsonObject, user);
+		jsonObject.put("contract", contract);
+		return jsonObject.toString();
 	}
 
 	/**
 	 * 删除合同
 	 * 
 	 * @param request
-	 *            conId
+	 * @param session
 	 * @return 前十条合同信息，总页数
 	 */
 	@RequestMapping("/deleteContract.do")
-	public @ResponseBody String deleteContract(HttpServletRequest request) {
+	public @ResponseBody String deleteContract(HttpServletRequest request, HttpSession session) {
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		JSONObject jsonObject = new JSONObject();
 		Integer cont_id = Integer.valueOf(request.getParameter("conId"));
 		String contName = request.getParameter("contName");
@@ -207,7 +212,7 @@ public class ContractController {
 		pager.setPage(1);// 返回前十条
 		pager.setTotalRow(totalRow);
 
-		List<Contract> list = contractService.deleteContract(cont_id, contName, pageType, pager);
+		List<Contract> list = contractService.deleteContract(cont_id, contName, pageType, pager, user);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -244,12 +249,13 @@ public class ContractController {
 	 */
 	@RequestMapping("/updateConById.do")
 	public @ResponseBody Integer updateConById(HttpServletRequest request, HttpSession session) {
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("contract"));
 		Integer cont_id = null;
 		if (jsonObject.containsKey("cont_id")) {
 			cont_id = Integer.parseInt(jsonObject.getString("cont_id"));
 		}
-		Boolean flag = contractService.updateContBase(cont_id, jsonObject);
+		Boolean flag = contractService.updateContBase(cont_id, jsonObject, user);
 		if (flag == true)
 			return 1;
 		else

@@ -35,13 +35,13 @@ public interface ContractService {
 	Contract selectContById(Integer cont_id);
 
 	// 根据合同ID删除合同
-	List<Contract> deleteContract(Integer cont_id, String contName, String methodType, Pager pager);
+	List<Contract> deleteContract(Integer cont_id, String contName, String methodType, Pager pager, User user);
 
 	// 查询所有终结合同列表
 	List<Contract> findAllEndCont(String contName, Integer offset, Integer end);
 
 	// 修改合同基本信息
-	Boolean updateContBase(Integer cont_id, JSONObject jsonObject);
+	Boolean updateContBase(Integer cont_id, JSONObject jsonObject, User user);
 
 	// 张姣娜：根据合同id修改状态
 	Boolean updateState(Integer contId, Integer contState);
@@ -50,7 +50,7 @@ public interface ContractService {
 	List<Contract> findAllStopCont(String contName, Integer offset, Integer end);
 
 	// 合同信息补录
-	Contract updateContract(Integer cont_id, JSONObject jsonObject);
+	Contract updateContract(Integer cont_id, JSONObject jsonObject, User user);
 
 	// 根据合同名和方法类别获取合同列表
 	List<Contract> findConByNameAndMType(String contName, Integer methodType, Pager pager);

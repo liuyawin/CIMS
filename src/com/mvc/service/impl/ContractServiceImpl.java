@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import com.base.enums.MethodType;
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
+import com.mvc.entity.ContractRecord;
 import com.mvc.entity.User;
+import com.mvc.repository.ContractRecordRepository;
 import com.mvc.repository.ContractRepository;
 import com.mvc.repository.UserRepository;
 import com.mvc.service.ContractService;
@@ -36,6 +38,8 @@ public class ContractServiceImpl implements ContractService {
 	ContractRepository contractRepository;
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	ContractRecordRepository contractRecordRepository;
 
 	// 查询所有欠款合同
 	@Override
@@ -65,17 +69,27 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public Contract addContract(User user, JSONObject jsonObject) {
 		long time = System.currentTimeMillis();
+		Date date = new Date(time);
 		Contract contract = new Contract();
 		contract = (Contract) JSONUtil.JSONToObj(jsonObject.toString(), Contract.class);// 将json对象转换成实体对象，注意必须和实体类型一致
 		contract.setCont_initiation(1);// 已立项
 		contract.setCont_ishistory(0);// 未删除
 		contract.setCont_state(0);// 合同状态
-		contract.setCont_ctime(new Date(time));// 合同创建时间
+		contract.setCont_ctime(date);// 合同创建时间
 		contract.setCreator(user);// 合同创建者
 		contract.setCur_prst("未录入工期阶段");// 当前工期阶段
 		contract.setCur_reno("未录入收款节点");// 当前收款节点
+		contract = contractRepository.saveAndFlush(contract);
 
-		return contractRepository.saveAndFlush(contract);
+		// 合同日志
+		ContractRecord contractRecord = new ContractRecord();
+		contractRecord.setConre_content(user.getUser_name() + "---新建合同---" + contract.getCont_name());
+		contractRecord.setConre_time(date);
+		contractRecord.setContract(contract);
+		contractRecord.setUser(user);
+		contractRecordRepository.saveAndFlush(contractRecord);
+
+		return contract;
 	}
 
 	// 根据合同ID获取合同
@@ -86,8 +100,9 @@ public class ContractServiceImpl implements ContractService {
 
 	// 根据合同ID删除合同
 	@Override
-	public List<Contract> deleteContract(Integer cont_id, String contName, String methodType, Pager pager) {
+	public List<Contract> deleteContract(Integer cont_id, String contName, String methodType, Pager pager, User user) {
 		List<Contract> list = null;
+		Contract contract = contractRepository.selectContById(cont_id);
 		boolean isdelete = contractDao.delete(cont_id);
 		if (isdelete) {// 删除成功
 			int methodTypeInt = MethodType.valueOf(methodType).value;
@@ -110,6 +125,16 @@ public class ContractServiceImpl implements ContractService {
 			default:
 				break;
 			}
+
+			// 合同日志
+			ContractRecord contractRecord = new ContractRecord();
+			long time = System.currentTimeMillis();
+			Date date = new Date(time);
+			contractRecord.setConre_content(user.getUser_name() + "---删除合同---" + contract.getCont_name());
+			contractRecord.setConre_time(date);
+			contractRecord.setContract(contract);
+			contractRecord.setUser(user);
+			contractRecordRepository.saveAndFlush(contractRecord);
 		}
 		return list;
 	}
@@ -122,7 +147,7 @@ public class ContractServiceImpl implements ContractService {
 
 	// 修改合同基本信息
 	@Override
-	public Boolean updateContBase(Integer cont_id, JSONObject jsonObject) {
+	public Boolean updateContBase(Integer cont_id, JSONObject jsonObject, User user) {
 		Contract contract = contractRepository.selectContById(cont_id);
 		if (contract != null) {
 			if (jsonObject.containsKey("cont_name")) {
@@ -149,8 +174,19 @@ public class ContractServiceImpl implements ContractService {
 		}
 
 		// return contractDao.updateConById(cont_id, contract);
-		Contract result = contractRepository.saveAndFlush(contract);
-		if (result.getCont_id() != null)
+		contract = contractRepository.saveAndFlush(contract);
+
+		// 合同日志
+		ContractRecord contractRecord = new ContractRecord();
+		long time = System.currentTimeMillis();
+		Date date = new Date(time);
+		contractRecord.setConre_content(user.getUser_name() + "---修改合同基本信息---" + contract.getCont_name());
+		contractRecord.setConre_time(date);
+		contractRecord.setContract(contract);
+		contractRecord.setUser(user);
+		contractRecordRepository.saveAndFlush(contractRecord);
+
+		if (contract.getCont_id() != null)
 			return true;
 		else
 			return false;
@@ -170,9 +206,11 @@ public class ContractServiceImpl implements ContractService {
 
 	// 合同信息补录
 	@Override
-	public Contract updateContract(Integer cont_id, JSONObject jsonObject) {
+	public Contract updateContract(Integer cont_id, JSONObject jsonObject, User user) {
 		Contract contract = contractRepository.selectContById(cont_id);
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		boolean flag_shezong = false;
+		String shezong = null;
 		if (jsonObject != null) {
 			try {
 				if (jsonObject.containsKey("cont_money")) {
@@ -196,6 +234,10 @@ public class ContractServiceImpl implements ContractService {
 				if (jsonObject.containsKey("manager")) {
 					JSONObject json = JSONObject.fromObject(jsonObject.getString("manager"));
 					User manager = userRepository.findById(Integer.valueOf(json.getString("user_id")));// 项目设总
+					if (contract.getManager() != manager) {// 修改设总
+						flag_shezong = true;
+						shezong = contract.getManager().getUser_name();
+					}
 					contract.setManager(manager);
 				}
 				if (jsonObject.containsKey("cont_hasproxy")) {
@@ -284,6 +326,28 @@ public class ContractServiceImpl implements ContractService {
 				contract.setCont_state(0);// 状态,初始默认为在建 0:在建,1:竣工,2:停建
 				// 存入数据库
 				contract = contractRepository.saveAndFlush(contract);
+
+				// 合同日志
+				ContractRecord contractRecord = new ContractRecord();
+				long time = System.currentTimeMillis();
+				Date date = new Date(time);
+				contractRecord.setConre_content(user.getUser_name() + "---补录合同---" + contract.getCont_name());
+				contractRecord.setConre_time(date);
+				contractRecord.setContract(contract);
+				contractRecord.setUser(user);
+				contractRecordRepository.saveAndFlush(contractRecord);
+
+				if (flag_shezong) {// 修改设总
+					// 合同日志
+					contractRecord = new ContractRecord();
+					contractRecord.setConre_content(
+							user.getUser_name() + "---修改设总---" + shezong + ">>" + contract.getManager().getUser_name());
+					contractRecord.setConre_time(date);
+					contractRecord.setContract(contract);
+					contractRecord.setUser(user);
+					contractRecordRepository.saveAndFlush(contractRecord);
+				}
+
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

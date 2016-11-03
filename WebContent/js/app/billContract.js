@@ -243,8 +243,7 @@ app.controller('ContractController', [
 				services.selectContractById({
 					cont_id : cont_id
 				}).success(function(data) {
-					contract.cont = data;
-
+					contract.cont = data.contract;
 				});
 			}
 			// zq：根据合同ID查询工期阶段的内容
