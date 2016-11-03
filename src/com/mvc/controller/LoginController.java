@@ -278,7 +278,7 @@ public class LoginController {
 		result = toPermissionStr(jsonObject.getString("task_per"), PermissionConstants.task, result);
 		result = toPermissionStr(jsonObject.getString("bill_per"), PermissionConstants.bill, result);
 		result = toPermissionStr(jsonObject.getString("system_per"), PermissionConstants.system, result);
-		result = toPermissionStr(jsonObject.getString("alarm_per"), PermissionConstants.alarm, result);
+		result = toPermissionStr(jsonObject.getString("index_per"), PermissionConstants.index, result);
 		return result + " ";
 	}
 
@@ -300,8 +300,8 @@ public class LoginController {
 				case "systemPer":
 					result += " " + PermissionConstants.systemPer[i];
 					break;
-				case "alarmPer":
-					result += " " + PermissionConstants.alarmPer[i];
+				case "indexPer":
+					result += " " + PermissionConstants.indexPer[i];
 					break;
 				default:
 					break;
