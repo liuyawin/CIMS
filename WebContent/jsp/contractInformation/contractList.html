@@ -51,7 +51,7 @@
 					<a ng-show="flag==1" ng-click="deleteContract()" class="tablelink underline" has-permission='cDel'> 删除</a> 
 					<a ng-show="flag==1" ng-click="newTask()" class="tablelink underline" has-permission='cTaskAdd'>新建任务</a> 
 					<a href="#contractRecord" ng-click="getConId(con.cont_id)" class="tablelink underline">操作记录</a>
-					<a ng-show="flag==1" ng-click="modifyStatus(con.cont_id)" class="tablelink underline">项目状态</a>
+					<a ng-show="flag==1" ng-click="modifyStatus(con.cont_id)" class="tablelink underline" has-permission='cStateEdit'>项目状态</a>
 				</td>
 			</tr>
 		</tbody>
