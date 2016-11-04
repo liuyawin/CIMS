@@ -569,6 +569,7 @@ app
 									selectContractById(); // 根据ID获取合同信息
 									selectPrstByContId();// 根据合同ID获取该合同的工期阶段
 									selectRenoByContId();// 根据合同ID获取该合同的收款节点
+									$("#contInformation").hide();
 									$("#renoInformation").hide();
 									$("#prstInformation").hide();
 								}

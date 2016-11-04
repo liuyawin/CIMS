@@ -43,5 +43,15 @@
 	});
 	});
 </script>
+<script>
+	$(function(){
+		$('dd').find('ul').css("display","none");
+		$('#bill-ul').css("display","block");
+		var currentPage = sessionStorage.getItem("currentPage");
+		if(currentPage){
+			$("#"+currentPage).addClass("active");
+		}
+	})
+</script>
 </body>
 </html>

@@ -519,21 +519,29 @@ app
 							};
 							// 添加合同
 							contract.addContract = function() {
-								contract.contract.province = $("#province")
-										.val();
-								contract.contract.city = $("#city").val();
+								var province=$("#province").val();
+								var city=$("#city").val();
+								contract.contract.province = province;
+								contract.contract.city = city;
 								var conFormData = JSON
 										.stringify(contract.contract);
 								services.addContract({
 									contract : conFormData
 								}, contract.file).success(function(data) {
 									sessionStorage.setItem("conId", data);
+									contract.contract.cont_id=data;
+									$("#addContract").hide();
+									$("#updateContract").show();
 									alert("创建合同成功！");
 								});
 							};
 							// 修改合同
 							contract.updateContract = function() {
-								var conFormData = JSON.stringify(contract.cont);
+								var province=$("#province").val();
+								var city=$("#city").val();
+								contract.contract.province = province;
+								contract.contract.city = city;
+								var conFormData = JSON.stringify(contract.contract);
 								services.updateConById({
 									contract : conFormData
 								}).success(function(data) {
@@ -1484,6 +1492,7 @@ app
 									selectContractById(); // 根据ID获取合同信息
 									selectPrstByContId(); // 根据合同ID获取该合同的工期阶段
 									selectRenoByContId(); // 根据合同ID获取该合同的收款节点
+									$("#contInformation").hide();
 									$("#renoInformation").hide();
 									$("#prstInformation").hide();
 								} else if ($location.path().indexOf(

@@ -173,6 +173,15 @@ public class ContractServiceImpl implements ContractService {
 			if (jsonObject.containsKey("cont_rank")) {
 				contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
 			}
+			if (jsonObject.containsKey("cont_client")) {
+				contract.setCont_client(jsonObject.getString("cont_client"));// 业主公司
+			}
+			if (jsonObject.containsKey("province")) {
+				contract.setProvince(jsonObject.getString("province"));// 省
+			}
+			if (jsonObject.containsKey("city")) {
+				contract.setCity(jsonObject.getString("city"));// 市
+			}
 		}
 
 		// return contractDao.updateConById(cont_id, contract);

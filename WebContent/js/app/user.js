@@ -252,10 +252,10 @@ app.controller('userController', [
 
 			}
 			// 根据用户选择更新权限数据容器
-			user.updateSelection = function($event, clazz) {
-				var checkbox = $event.target;
+			user.updateSelection = function(e,clazz,name) {
+				var checkbox = e.target;		
 				var action = (checkbox.checked ? 'add' : 'remove');
-				updateSelected(action, checkbox.clazz, checkbox.name);
+				updateSelected(action, clazz, name);
 			}
 			// 控件内容初始化
 			user.isSelected = function(clazz, name) {
@@ -394,7 +394,7 @@ app.controller('userController', [
 			$(".roleEdit").click(function() {
 				var EditRole = JSON.stringify(user.editRole);
 				var EditRolePermission = JSON.stringify(user.selected);
-
+				console.log(EditRolePermission);
 				services.addRole({
 					role_name : user.editRole.role_name,
 					role_id : user.editRole.role_id,
