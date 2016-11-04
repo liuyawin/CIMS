@@ -22,14 +22,14 @@ public class PermissionConstants {
 			"cPsEdit", "cPsDel", "cRnAdd", "cRnEdit", "cRnDel", "cTaskAdd" };
 
 	// 任务所有权限
-	public static final String[] taskPer = { "tContCollect", "tInvoAudit", "tInvoFinish", "tRemoAudit" };
+	public static final String[] taskPer = { "tContCollect", "tInvoAudit", "tInvoFinish" };
 
 	// 票据所有权限
-	public static final String[] billPer = { "bInvoAdd", "bReceAdd", "bRemoAdd" };
+	public static final String[] billPer = { "bInvoAdd", "bReceAdd", "bRemoAdd", "tRemoAudit" };
 
 	// 用户管理所有权限
 	public static final String[] systemPer = { "uRoleAdd", "uRoleDel", "uRoleEdit", "uUserAdd", "uUserDel", "uUserEdit",
-			"uAlarmAdd", "uAlarmDel", "uAlarmDel" };
+			"uAlarmAdd", "uAlarmDel", "uAlarmEdit" };
 
 	// 首页显示所有权限
 	public static final String[] indexPer = { "iAssiTask", "iEditTask", "iAudiInvoTask", "iFiniInvoTask",

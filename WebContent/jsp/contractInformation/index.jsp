@@ -15,5 +15,15 @@
 <script type="text/javascript" src="${ctx}/js/lib/distpicker/bootstrap.js"></script>
 <script type="text/javascript" src="${ctx}/js/lib/distpicker/distpicker.data.js"></script>
 <script type="text/javascript" src="${ctx}/js/lib/distpicker/distpicker.js"></script>
+<script>
+	$(function(){
+		$('dd').find('ul').css("display","none");
+		$('#contract-ul').css("display","block");
+		var currentPage = sessionStorage.getItem("currentPage");
+		if(currentPage){
+			$("#"+currentPage).addClass("active");
+		}
+	})
+</script>
 </body>
 </html>
