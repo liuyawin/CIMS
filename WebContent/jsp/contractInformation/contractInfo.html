@@ -204,6 +204,7 @@
 			<td class="width10 text-center">项目经理</td>
 			<td class="width10 text-center">实完工时间</td>
 			<td class="width10 text-center" has-permission='cPsEdit'>操作</td>
+			<td class="width10 text-center" has-permission='cPsFinish'>操作</td>
 		</tr>
 		<tr ng-repeat="stage in prst">
 			<td class="width10 text-center">阶段{{$index+1}}</td>
@@ -214,7 +215,9 @@
 			<td>{{stage.prst_atime.time | dateType}}</td>
 			<td has-permission='cPsEdit'><a class="tablelink"
 				ng-click="modifyPrst()">修改</a><a class="tablelink"
-				ng-click="delPrst()">删除</a></td>
+				ng-click="delPrst()">删除</a><a class="tablelink"
+				ng-click="finishPrst()">完工</a></td>
+			<td has-permission='cPsFinish'><a class="tablelink" ng-click="finishPrst()">完工</a></td>
 		</tr>
 
 	</table>
