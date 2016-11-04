@@ -56,15 +56,15 @@ var app = angular
 								: data;
 					} ];
 				});
-//获取权限列表
-var permissionList; 
+// 获取权限列表
+var permissionList;
 angular.element(document).ready(function() {
-console.log("获取权限列表！"); 
-$.get('/CIMS/login/getUserPermission.do', function(data) { 
-	  permissionList = data; // 
-	  console.log("身份是：" + permissionList);
-	  angular.bootstrap($("#contract"), ['contract']); //手动加载angular模块
-	  }); 
+	console.log("获取权限列表！");
+	$.get('/CIMS/login/getUserPermission.do', function(data) {
+		permissionList = data; // 
+		console.log("身份是：" + permissionList);
+		angular.bootstrap($("#contract"), [ 'contract' ]); // 手动加载angular模块
+	});
 });
 
 app.directive('hasPermission', function($timeout) {
@@ -191,7 +191,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-		//lwt:开收据
+	// lwt:开收据
 	services.addReceipt = function(data) {
 		return $http({
 			method : 'post',
@@ -242,10 +242,13 @@ app.controller('ContractController', [
 
 				services.selectContractById({
 					cont_id : cont_id
-				}).success(function(data) {
-					contract.cont = data;
-
-				});
+				}).success(
+						function(data) {
+							contract.cont = data.contract;
+							if (data.contract.cont_stime) {
+								contract.cont.cont_stime =changeDateType(data.contract.cont_stime.time); 
+							}
+						});
 			}
 			// zq：根据合同ID查询工期阶段的内容
 			function selectPrstByContId() {
@@ -435,17 +438,17 @@ app.controller('ContractController', [
 				contract.receiveMoney = "";
 
 			});
-					// lwt:开收据
+			// lwt:开收据
 			contract.addReceipt = function(contId) {
 				sessionStorage.setItem("conId", contId);
 				$(".overlayer").fadeIn(200);
 				$("#tipAddReceipt").fadeIn(200);
 				// 输入时间的input默认值设置为当前时间
 				var date = new Date();
-				var timeNow = date.getFullYear() + "-"
-						+ (date.getMonth() + 1) + "-" + (date.getDate());
+				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
+						+ "-" + (date.getDate());
 				contract.receipt = {
-					receAtime  : timeNow
+					receAtime : timeNow
 				};
 
 			};
@@ -469,6 +472,13 @@ app.controller('ContractController', [
 				$(".overlayer").fadeOut(200);
 				contract.receipt = "";
 			});
+			// 更改任务时间的格式
+			function changeDateType(time) {
+
+				newDate = new Date(time).toLocaleDateString().replace(/\//g,
+						'-');
+				return newDate;
+			}
 			// 初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
@@ -506,8 +516,8 @@ app.controller('ContractController', [
 				} else if ($location.path().indexOf('/contractInfo') == 0) {
 					// zq添加查找合同详情
 					selectContractById(); // 根据ID获取合同信息
-					// selectPrstByContId();// 根据合同ID获取该合同的工期阶段
-					// selectRenoByContId();// 根据合同ID获取该合同的收款节点
+					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+					selectRenoByContId();// 根据合同ID获取该合同的收款节点
 					$("#renoInformation").hide();
 					$("#prstInformation").hide();
 				}
@@ -548,6 +558,8 @@ app.filter('conState', function() {
 			state = "竣工";
 		else if (input == "2")
 			state = "停建";
+		else if (!input)
+			state = "";
 		return state;
 	}
 });
@@ -559,6 +571,8 @@ app.filter('conInitiation', function() {
 			initiation = "否";
 		else if (input == "1")
 			initiation = "是";
+		else if (!input)
+			initiation = "";
 
 		return initiation;
 	}
@@ -571,6 +585,8 @@ app.filter('conHasproxy', function() {
 			hasproxy = "否";
 		else if (input == "1")
 			hasproxy = "是";
+		else if (!input)
+			hasproxy = "";
 
 		return hasproxy;
 	}
@@ -580,10 +596,26 @@ app.filter('conAvetaxpayer', function() {
 	return function(input) {
 		var avetaxpayer = "";
 		if (input == "0")
-			avetaxpayer = "否";
+			avetaxpayer = "一般纳税人";
 		else if (input == "1")
-			avetaxpayer = "是";
+			avetaxpayer = "小规模纳税人";
+		else if (!input)
+			avetaxpayer = "";
 
+		return avetaxpayer;
+	}
+});
+
+// 发票类型的判断的判断
+app.filter('conInvoiceType', function() {
+	return function(input) {
+		var avetaxpayer = "";
+		if (input == "0")
+			avetaxpayer = "增值税专用发票";
+		else if (input == "1")
+			avetaxpayer = "增值税普通发票";
+		else if (!input)
+			avetaxpayer = "";
 		return avetaxpayer;
 	}
 });
@@ -592,18 +624,88 @@ app.filter('conType', function() {
 	return function(input) {
 		var type = "";
 		if (input == "0")
-			type = "规划";
+			type = "传统光伏项目";
 		else if (input == "1")
-			type = "可行性";
+			type = "分布式";
 		else if (input == "2")
-			type = "施工图";
+			type = "光热";
 		else if (input == "3")
-			type = "评估";
-		else if (input == "4")
 			type = "其他";
+		else if (!input)
+			type = "";
 		return type;
 	}
 });
+
+// 合同项目阶段的判断
+app.filter('conProStage', function() {
+	return function(input) {
+		var type = "";
+		if (input) {
+			console.log(input);
+			strs = input.split(","); // 字符分割
+
+			for (i = 0; i < strs.length; i++) {
+				switch (strs[i]) {
+				case "0":
+					type += "规划   ";
+					break;
+				case "1":
+					type += "预可研   ";
+					break;
+				case "2":
+					type += "可研   ";
+					break;
+				case "3":
+					type += "项目建议书   ";
+					break;
+				case "4":
+					type += "初步设计   ";
+					break;
+				case "5":
+					type += "发包、招标设计   ";
+					break;
+				case "6":
+					type += "施工详图   ";
+					break;
+				case "7":
+					type += "竣工图    ";
+					break;
+				case "8":
+					type += "其他   ";
+					break;
+				default:
+					type += "";
+					break;
+				}
+			}
+			return type;
+		}
+	}
+});
+
+// 合同项目阶段的判断
+app.filter('conCompanyType', function() {
+	return function(input) {
+		var type = "";
+		if (input == "0")
+			type = "国有企业";
+		else if (input == "1")
+			type = "事业单位";
+		else if (input == "2")
+			type = "民营企业";
+		else if (input == "3")
+			type = "国外企业";
+		else if (input == "4")
+			type = "政府机关";
+		else if (input == "5")
+			type = "其他";
+		else if (!input)
+			type = "";
+		return type;
+	}
+});
+
 // 工期阶段的判断
 app.filter('prstType', function() {
 	return function(input) {

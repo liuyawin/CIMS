@@ -9,26 +9,23 @@
 
 <div class="rightinfo">
 	<div class="tools">
-		<form class="toolbar">
-			<select class="dfselect" ng-model="remoState" id="remoState"
+		<div class="toolbar">
+			<select class="dfselect" ng-model="invoState" id="invoState"
 				style="width: 167px">
 				<option value="-1">全部</option>
 				<option value="0">待审核</option>
 				<option value="1">待执行</option>
 				<option value="2">已完成</option>
-			</select> <input class="btn" type="submit" value="查询"
-				ng-click="selectReceiveMoneysByContId()">
-		</form>
-		<div id="invoPrompt">
+			</select> <input class="btn" type="submit" value="查询" ng-click="selectInvoicesByState()"/>
+		</div>
+		<div id="invoPrompt" invo-is-show>
 			<label class="text_style">合同总金额 {{cont.cont_money |
 				invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
 				| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
 				次发票！</label>
 		</div>
 	</div>
-
-
-	<ul class="toolbar1" ng-show="invoAddShow">
+	<ul class="toolbar1" has-permission='bInvoAdd'>
 		<li class="click"><a
 			href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img
 					src="../images/t01.png" /></span>开发票</a></li>
@@ -52,27 +49,28 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="invo in invoices">
-				<td class="width10">发票{{$index + 1}}</td>
+				<td class="width10">{{$index + 1}}</td>
 				<td class="width10">{{invo.invo_money | invoFloat}}</td>
 				<td class="width10">{{invo.invo_time.time | dateType}}</td>
-				<td class="width15">{{invo.contract.cont_name}}</td>
-				<td class="width15">{{invo.invo_firm}}</td>
+				<td class="width15"><a 
+								href="/CIMS/contract/toContractPage.do#/contractInfo"
+								ng-click="getConId(t.contract.cont_id)">{{invo.contract.cont_name }}</a></td>
+				<td class="width15">{{invo.invo_firm | cutString}}</td>
 				<td class="width5">{{invo.creator.user_name}}</td>
 				<td class="width5">{{invo.audit.user_name}}</td>
 				<td class="width5">{{invo.receiver.user_name}}</td>
 				<td class="width10">{{invo.invo_state | invoState}}</td>
-
 				<td class="width10"><a ng-click="selectInvoiceById()"
 					class="tablelink underline">查看</a><a ng-click="invoiceInfo()"
-					class="tablelink underline" ng-show="invoAuditShow">审核</a><a
-					ng-click="updateInvoiceState()" class="tablelink underline"
-					ng-show="invoFinishShow">完成</a></td>
-
+					class="tablelink underline" has-permission='tInvoAudit'>审核</a><a
+					ng-click="updateInvoiceState()" class="tablelink underline"   has-permission='tInvoFinish'
+					>完成</a></td>
 			</tr>
 		</tbody>
 	</table>
 
 	<div class="tcdPageCode">页码容器</div>
+
 
 </div>
 
@@ -121,9 +119,8 @@
 				<li><label>应开票时间：</label>{{invoice.invo_etime.time |dateType}}
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>金额：</label>{{invoice.invo_money
 					| receFloat}} &nbsp;&nbsp;万元</li>
-
 				<li><label>业主公司名称：</label>{{invoice.invo_firm}}</li>
-				<li><label>实开票时间：</label>{{invoice.invo_time}}</li>
+				<li><label>实开票时间：</label>{{invoice.invo_time.time | dateType}}</li>
 				<!-- <li><label>开始时间：</label></li>
 			<li><label>截止时间：</label></li> -->
 				<li><div class="remark-div">备注：{{invoice.invo_remark}}</div></li>

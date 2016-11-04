@@ -135,22 +135,21 @@ invoiceApp.factory('invoiceservices', [ '$http', 'baseUrl',
 					data : data
 				});
 			}
-			// <<<<<<< HEAD
-			// =======
-			// zq查询待审核的发票任务
-			services.getZRInvoice = function(data) {
+
+			// zq根据ID查询发票列表
+			services.getInvoiceList = function(data) {
 				return $http({
 					method : 'post',
-					url : baseUrl + 'invoice/getZRInvoice.do',
+					url : baseUrl + 'invoice/getInvoiceListByContId.do',
 					data : data
 				});
 			};
-			// >>>>>>> 9bf826fe5b107b5a9e22479ecc6b7d8ac1f1bfdc
-			// zq查询待处理的发票任务
-			services.getWaitingDealInvoice = function(data) {
+
+			// zq查询发票任务
+			services.getInvoTaskList = function(data) {
 				return $http({
 					method : 'post',
-					url : baseUrl + 'invoice/getWaitingDealInvoice.do',
+					url : baseUrl + 'invoice/getInvoTaskListByState.do',
 					data : data
 				});
 			};
@@ -176,7 +175,8 @@ invoiceApp
 							// 合同
 							var invoice = $scope;
 							var role;
-							invoice.invoState;
+							var invoState = null;
+							var nowPage = 1;
 							// zq查看合同ID，并记入sessione
 							invoice.getContId = function(contId) {
 								sessionStorage.setItem('conId', contId);
@@ -184,17 +184,6 @@ invoiceApp
 							invoice.getInvoId = function(invoId) {
 								sessionStorage.setItem('invoId', invoId);
 							};
-							// zq：根据合同ID查找所有的发票信息
-							function selectInvoiceByContId() {
-								var contId = sessionStorage.getItem('conId');
-								services.selectInvoiceByContId({
-									page : 1,
-									contId : contId
-								}).success(function(data) {
-									invoice.invoices = data.list;
-									invoice.totalRow = data.totalRow;
-								});
-							}
 							// zq：读取合同的信息
 							function selectContractById() {
 								var cont_id = sessionStorage.getItem('conId');
@@ -212,6 +201,7 @@ invoiceApp
 									contId : contId
 								}).success(function(data) {
 									invoice.totalMoney = data.totalMoney;
+									invoice.totalRow = data.totalRow;
 								});
 							}
 							// 更改任务时间的格式
@@ -223,10 +213,7 @@ invoiceApp
 							}
 							// 根据发票ID查找发票
 							function selectInvoiceById(invoId) {
-								/*
-								 * var invoId =
-								 * sessionStorage.getItem('invoId');
-								 */
+								/* var invoId = this.invo.invo_id; */
 								services.selectInvoiceById({
 									invoiceId : invoId
 								}).success(function(data) {
@@ -251,34 +238,13 @@ invoiceApp
 													$(".overlayer").fadeIn(200);
 													$("#tipCheck").fadeIn(200);
 												});
-								$("#cancelCheck").click(function() {
-									$("#tipCheck").fadeOut(100);
-									$(".overlayer").fadeOut(200);
-									invoice.task = "";
-								});
-							}
-
-							// 查询待审核发票任务
-							function getZRInvoice(p, invoState) {
-								services.getZRInvoice({
-									page : p,
-									invoState : invoState
-								}).success(function(data) {
-									invoice.invoices = data.list;
-								});
 
 							}
-							// 查询待处理发票任务
-							function getWaitingDealInvoice(p, invoState) {
-								services.getWaitingDealInvoice({
-									page : p,
-									invoState : invoState
-								}).success(function(data) {
-									invoice.invoices = data.list;
-								});
-
-							}
-
+							$("#cancelCheck").click(function() {
+								$("#tipCheck").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								invoice.task = "";
+							});
 							// 审核发票任务
 							invoice.invoiceInfo = function() {
 								var invoId = this.invo.invo_id;
@@ -288,7 +254,6 @@ invoiceApp
 								selectInvoiceById(invoId);
 								invoice.invoiceId = invoId;
 								$(".auditInfo").show();
-
 								$(".finishInfo").hide();
 								$(".overlayer").fadeIn(200);
 								$("#sendInvoTask").fadeIn(200);
@@ -307,44 +272,54 @@ invoiceApp
 									receiverId : invoice.receiverId
 								}).success(function(data) {
 									alert("操作成功！");
-									getZRInvoice(1, invoState);
+									findInvoices(nowPage);
+									countInvoiceMoneyByContId();
+									invoice.invoiceId = "";
+									invoice.invoEtime = "";
+									invoice.receiverId = "";
 								});
 								$(".overlayer").fadeOut(100);
 								$("#sendInvoTask").fadeOut(100);
 							});
-
 							$("#cancelSend").click(function() {
 								sessionStorage.setItem("contractId", "");
 								$(".overlayer").fadeOut(100);
 								$("#sendInvoTask").fadeOut(100);
 							});
-
 							// 完成发票任务
 							invoice.updateInvoiceState = function() {
-								var invoId = this.invo.invo_id;
-								invoice.invoiceId = invoId;
-								$(".auditInfo").hide();
-								$(".finishInfo").show();
-								$(".overlayer").fadeIn(200);
-								$("#sendInvoTask").fadeIn(200);
-								return false;
+								if (this.invo.invo_state == "1") {
+									var invoId = this.invo.invo_id;
+									selectInvoiceById(invoId);
+									invoice.invoiceId = invoId;
+									$(".auditInfo").hide();
+									$(".finishInfo").show();
+									$(".overlayer").fadeIn(200);
+									$("#sendInvoTask").fadeIn(200);
+								} else if (this.invo.invo_state == "0") {
+									alert("该发票处于待审核状态，不能进行当前操作！");
+								} else if (this.invo.invo_state == "2") {
+									alert("该发票已开！不能重复操作！");
+								}
 							}
-
 							$("#sureFinishSend").click(function() {
-								
+
 								services.updateInvoiceState({
 									invoiceId : invoice.invoiceId,
 									invoTime : invoice.invoTime
 								}).success(function(data) {
 									alert("操作成功！");
-									getWaitingDealInvoice(1, invoState);
+									findInvoices(nowPage);
+									countInvoiceMoneyByContId();
+									invoice.invoiceId = "";
+									invoice.invoEtime = "";
+									invoice.receiverId = "";
 								});
 								$(".overlayer").fadeOut(100);
 								$("#sendInvoTask").fadeOut(100);
 							});
 							function findRoleFromCookie() {
 								var cookie = {};
-
 								var cookies = document.cookie;
 								if (cookies === "")
 									return cookie;
@@ -363,45 +338,85 @@ invoiceApp
 										sessionStorage.setItem("userRole",
 												value);
 										role = value;
-										switch (sessionStorage.getItem(
-												'userRole').trim()) {
-										case "1":
-											invoice.invoAddShow = true;
-											invoice.invoAuditShow = true;
-											invoice.invoFinishShow = true;
-											break;
-										case "2":
-											invoice.invoAddShow = false;
-											invoice.invoAuditShow = false;
-											invoice.invoFinishShow = false;
-
-											break;
-										case "3":
-											invoice.invoAddShow = false;
-											invoice.invoAuditShow = false;
-											invoice.invoFinishShow = true;
-
-											break;
-										case "4":
-											invoice.invoAddShow = true;
-											invoice.invoAuditShow = false;
-											invoice.invoFinishShow = false;
-											break;
-										case "5":
-											invoice.invoAddShow = false;
-											invoice.invoAuditShow = true;
-											invoice.invoFinishShow = false;
-											break;
-										}
 									}
 
 								}
 							}
+							// zq换页
+							function pageTurn(totalPage, page) {
+								var $pages = $(".tcdPageCode");
 
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											nowPage = p;
+											findInvoices(p);
+										}
+									});
+								}
+							}
+							// 为换页提供查找函数
+							function findInvoices(p) {
+								var invoListType = sessionStorage
+										.getItem("invoListType");
+								if (invoListType == "INVO") {
+									services.getInvoiceList(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : p,
+												invoState : invoState
+											}).success(function(data) {
+										invoice.invoices = data.list;
+
+									});
+								} else if (invoListType == "INVOTASK") {
+									services.getInvoTaskList({
+										page : p,
+										invoState : invoState
+									}).success(function(data) {
+										invoice.invoices = data.list;
+									});
+								}
+
+							}
+
+							// 页面的查找函数
+							invoice.selectInvoicesByState = function() {
+								invoState = $("#invoState").val();
+								var invoListType = sessionStorage
+										.getItem("invoListType");
+								if (invoListType == "INVO") {
+									services.getInvoiceList(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : 1,
+												invoState : invoState
+											}).success(function(data) {
+										invoice.invoices = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								} else if (invoListType == "INVOTASK") {
+									services.getInvoTaskList({
+										page : 1,
+										invoState : invoState
+									}).success(function(data) {
+										invoice.invoices = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								}
+							}
+							// zq查看合同ID，并记入sessionStorage
+							contract.getConId = function(conId) {
+								sessionStorage.setItem('conId', conId);
+							};
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {
-									
+
 									$(".overlayer").fadeOut(200);
 									$(".tip").fadeOut(200);
 								});
@@ -411,76 +426,36 @@ invoiceApp
 								$("#receiveMoney").hide();
 								console.log("初始化页面信息");
 								if ($location.path().indexOf('/invoiceList') == 0) {// 如果是合同列表页
-
+									sessionStorage.setItem("invoListType",
+											"INVO");
+									invoState = "-1";
+									invoice.invoState = "-1";
 									selectContractById();
 									countInvoiceMoneyByContId();
-									selectInvoiceByContId();
+									services.getInvoiceList(
+											{
+												contId : sessionStorage
+														.getItem('conId'),
+												page : 1,
+												invoState : invoState
+											}).success(function(data) {
+										invoice.invoices = data.list;
+										pageTurn(data.totalPage, 1);
+									});
 
 								} else if ($location.path().indexOf(
-										'/invoiceDetail') == 0) {
-
-									selectInvoiceById();
-								} else if ($location.path().indexOf(
-
-								'/invoiceTaskList') == 0) {
-									$("#invoPrompt").hide();
-									// 根据权限判断显示待处理的发票
-									if (role == "5") {
-										invoState = 0;
-										services
-												.getZRInvoice({
-													page : 1,
-													invoState : invoState
-												})
-												.success(
-														function(data) {
-															invoice.invoices = data.list;
-															var $pages = $(".tcdPageCode");
-															if ($pages.length != 0) {
-																$(
-																		".tcdPageCode")
-																		.createPage(
-																				{
-																					pageCount : data.totalPage,
-																					current : 1,
-																					backFn : function(
-																							p) {
-
-																						getZRInvoice(
-																								p,
-																								invoState);
-																					}
-																				});
-															}
-														});
-									} else if (role == "3") {
-										invoState = 1;
-										services
-												.getWaitingDealInvoice({
-													page : 1,
-													invoState : invoState
-												})
-												.success(
-														function(data) {
-															invoice.invoices = data.list;
-															var $pages = $(".tcdPageCode");
-															if ($pages.length != 0) {
-																$(
-																		".tcdPageCode")
-																		.createPage(
-																				{
-																					pageCount : data.totalPage,
-																					current : 1,
-																					backFn : function(
-																							p) {
-																						getWaitingDealInvoice(
-																								p,
-																								invoState);
-																					}
-																				});
-															}
-														});
-									}
+										'/invoiceTaskList') == 0) {
+									sessionStorage.setItem("invoListType",
+											"INVOTASK");
+									invoState = "-1";
+									invoice.invoState = "-1";
+									services.getInvoTaskList({
+										page : 1,
+										invoState : invoState
+									}).success(function(data) {
+										invoice.invoices = data.list;
+										pageTurn(data.totalPage, 1);
+									});
 
 								}
 							}
@@ -581,7 +556,7 @@ invoiceApp.filter('invoState', function() {
 			state = "待审核";
 		}
 		if (input == "1") {
-			state = "待处理";
+			state = "已审，待执行";
 		}
 		if (input == "2") {
 			state = "已完成";
@@ -589,7 +564,21 @@ invoiceApp.filter('invoState', function() {
 		return state;
 	}
 });
+// 是否显示总金额
+invoiceApp.directive('invoIsShow', function($timeout) {
+	return {
+		restrict : 'A',
+		link : function(scope, element, attr) {
+			var type = sessionStorage.getItem("invoListType");
+			if (type == "INVO") {
+				element.css("display", "inline");
+			} else if (type == "INVOTASK") {
+				element.css("display", "none");
+			}
+		}
+	};
 
+});
 invoiceApp.directive('hasPermission', function($timeout) {
 	return {
 		restrict : 'ECMA',

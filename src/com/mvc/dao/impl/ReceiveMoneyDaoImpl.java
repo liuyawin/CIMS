@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.base.enums.ReceiveMoneyStatus;
+import com.base.enums.RemoStatus;
 import com.mvc.dao.ReceiveMoneyDao;
 import com.mvc.entity.ReceiveMoney;
 
@@ -34,9 +35,10 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 	@Override
 	public Float receiveMoneyByContId(Integer contId) {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select coalesce(sum(remo_amoney),0) from receive_money r where cont_id=:cont_id ";
+		String countSql = " select coalesce(sum(remo_amoney),0) from receive_money r where cont_id=:cont_id and remo_state=:remo_state";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("cont_id", contId);
+		query.setParameter("remo_state", RemoStatus.finish.value);
 		List<Object> result = query.getResultList();
 		em.close();
 		return Float.valueOf(result.get(0).toString());

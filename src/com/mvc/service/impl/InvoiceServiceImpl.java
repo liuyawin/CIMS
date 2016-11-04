@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mvc.controller.LoginController;
 import com.mvc.dao.InvoiceDao;
 import com.mvc.entity.Invoice;
 import com.mvc.repository.InvoiceRepository;
 import com.mvc.service.InvoiceService;
+import com.utils.Pager;
 
 /**
  * 发票
@@ -89,10 +91,60 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.transmitInvoice(invoiceId, invoEtime, receiverId);
 	}
 
-	// 根据发票状态查找发票
+	// 根据权限，状态，页码 查找发票
 	@Override
-	public List<Invoice> selectInvoiceByState(Integer invoState, String permission, Integer user_id) {
-		return invoiceDao.findByStateAndPerm(invoState, permission, user_id);
+	public List<Invoice> selectInvoByStateAndPerm(Integer invoState, String permission, Integer user_id, Pager pager) {
+		List<Invoice> list;
+		permission = LoginController.numToPermissionStr(permission);
+		if (invoState == -1) {// -1：全部，0：待审核，1：待处理，2：已完成
+			list = invoiceDao.findByAllAndPerm(permission, user_id, pager);
+		} else {
+			list = invoiceDao.findByStateAndPerm(invoState, permission, user_id, pager);
+		}
+		return list;
+	}
+
+	// 根据权限，状态 查询发票总条数
+	@Override
+	public Integer countByStateAndPerm(Integer invoState, String permission, Integer user_id) {
+		Integer totalRow;
+		permission = LoginController.numToPermissionStr(permission);
+		if (invoState == -1) {// -1：全部，0：待审核，1：待处理，2：已完成
+			totalRow = invoiceDao.countByAllAndPerm(permission, user_id);
+		} else {
+			totalRow = invoiceDao.countByStateAndPerm(invoState, permission, user_id);
+		}
+		return totalRow;
+	}
+
+	// 根据合同ID，状态，页码 查找发票
+	@Override
+	public List<Invoice> selectInvoByStateAndContId(Integer invoState, Integer cont_id, Pager pager) {
+		List<Invoice> list;
+		if (invoState == -1) {// -1：全部，0：待审核，1：待处理，2：已完成
+			list = invoiceDao.findByAllAndContId(cont_id, pager);
+		} else {
+			list = invoiceDao.findByStateAndContId(invoState, cont_id, pager);
+		}
+		return list;
+	}
+
+	// 根据合同ID，状态 查询发票总条数
+	@Override
+	public Integer countByStateAndContId(Integer invoState, Integer cont_id) {
+		Integer totalRow;
+		if (invoState == -1) {// -1：全部，0：待审核，1：待处理，2：已完成
+			totalRow = invoiceDao.countByAllAndContId(cont_id);
+		} else {
+			totalRow = invoiceDao.countByStateAndContId(invoState, cont_id);
+		}
+		return totalRow;
+	}
+
+	// 根据合同ID获取已完成发票总条数
+	@Override
+	public Integer countTotalRow(Integer cont_id) {
+		return invoiceDao.countTotalRow(cont_id);
 	}
 
 }

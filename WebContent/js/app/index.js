@@ -48,33 +48,33 @@ var app = angular
 								: data;
 					} ];
 				});
-//获取权限列表
-var permissionList; 
+// 获取权限列表
+var permissionList;
 angular.element(document).ready(function() {
-console.log("获取权限列表！"); 
-$.get('/CIMS/login/getUserPermission.do', function(data) { 
-	  permissionList = data; // 
-	  console.log("身份是：" + permissionList);
-	  angular.bootstrap($("#ng-section"), ['index']); //手动加载angular模块
-	  }); 
+	console.log("获取权限列表！");
+	$.get('/CIMS/login/getUserPermission.do', function(data) {
+		permissionList = data; // 
+		console.log("身份是：" + permissionList);
+		angular.bootstrap($("#ng-section"), [ 'index' ]); // 手动加载angular模块
+	});
 });
 
 app.directive('hasPermission', function($timeout) {
-		return {
-			restrict : 'ECMA',
-			link : function(scope, element, attr) {
-				var key = attr.hasPermission.trim(); // 获取页面上的权限值
-				console.log("获取页面上的权限值" + key);
-				var keys = permissionList;
-				console.log("获取后台的权限值" + keys);
-				var regStr = "\\s" + key + "\\s";
-				var reg = new RegExp(regStr);
-				if (keys.search(reg) < 0) {
-					element.css("display", "none");
-				}
+	return {
+		restrict : 'ECMA',
+		link : function(scope, element, attr) {
+			var key = attr.hasPermission.trim(); // 获取页面上的权限值
+			console.log("获取页面上的权限值" + key);
+			var keys = permissionList;
+			console.log("获取后台的权限值" + keys);
+			var regStr = "\\s" + key + "\\s";
+			var reg = new RegExp(regStr);
+			if (keys.search(reg) < 0) {
+				element.css("display", "none");
 			}
-		};
-	});
+		}
+	};
+});
 
 // // 路由配置
 // app.config([ '$routeProvider', function($routeProvider) {
@@ -96,7 +96,10 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	return services;
 } ]);
 
-app.controller('IndexController', [ '$scope', 'services', '$location',
+app.controller('IndexController', [
+		'$scope',
+		'services',
+		'$location',
 		function($scope, services, $location) {
 			var index = $scope;
 			function findRoleFromCookie() {
@@ -117,8 +120,7 @@ app.controller('IndexController', [ '$scope', 'services', '$location',
 					cookie[name.trim()] = value;
 					console.log("进来了,已经赋值" + name);
 					if (name.trim() == "role") {
-						sessionStorage.setItem("userRole",
-								value);
+						sessionStorage.setItem("userRole", value);
 					}
 
 				}
@@ -135,6 +137,7 @@ app.controller('IndexController', [ '$scope', 'services', '$location',
 					index.debtAlarmNum = data.debtAlarmNum;
 					index.overdueAlarmNum = data.overdueAlarmNum;
 					index.taskAlarmNum = data.taskAlarmNum;
+					index.remoTaskNum = data.remoTaskNum;
 				});
 			}
 			initData();

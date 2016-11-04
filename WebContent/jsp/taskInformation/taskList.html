@@ -59,34 +59,44 @@
 					</div></td>
 				<td>{{t.creator.user_name}}</td>
 				<td>{{t.task_alarmnum}}</td>
-				<td has-permission='tContCollect'><div ng-switch={{t.task_type}}>
+				<td has-permission='tContCollect'><div
+						ng-switch={{t.task_type}}>
 						<div ng-switch-when="0"></div>
-						<div ng-switch-when="1"><a class="tablelink"
-					href="/CIMS/contract/toContractPage.do#/contractDetail"
-					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></div>
-						<div ng-switch-when="2"><a class="tablelink"
-					href="/CIMS/contract/toContractPage.do#/contractDetail"
-					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></div>
-						
+						<div ng-switch-when="1">
+							<a class="tablelink"
+								href="/CIMS/contract/toContractPage.do#/contractInfo"
+								ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+								|cutString}}</a>
+						</div>
+						<div ng-switch-when="2">
+							<a class="tablelink"
+								href="/CIMS/contract/toContractPage.do#/contractInfo"
+								ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+								|cutString}}</a>
+						</div>
+
 					</div></td>
 				<td has-permission='tContDetail'><div ng-switch={{t.task_type}}>
 						<div ng-switch-when="0"></div>
-						<div ng-switch-when="1"><a class="tablelink"
-					href="/CIMS/contract/toContractPage.do#/contractInfo"
-					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></div>
-						<div ng-switch-when="2"><a class="tablelink"
-					href="/CIMS/contract/toContractPage.do#/contractInfo"
-					ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
-						|cutString}}</a></div>
-						
+						<div ng-switch-when="1">
+							<a class="tablelink"
+								href="/CIMS/contract/toContractPage.do#/contractInfo"
+								ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+								|cutString}}</a>
+						</div>
+						<div ng-switch-when="2">
+							<a class="tablelink"
+								href="/CIMS/contract/toContractPage.do#/contractInfo"
+								ng-click="getConId(t.contract.cont_id)">{{t.contract.cont_name
+								|cutString}}</a>
+						</div>
+
 					</div></td>
 
 				<td><a ng-click="checkTask()" class="tablelink">查看</a><a
-					ng-click="finishTask()" class="tablelink finishLabel" task-finish='{{t.task_state}},{{t.task_type}}'>完成</a><a
-					ng-click="delTask()" class="tablelink delLabel">删除</a></td>
+					ng-click="finishTask()" class="tablelink finishLabel"
+					task-finish='{{t.task_state}},{{t.task_type}}'>完成</a><a
+					ng-click="delTask()" class="tablelink delLabel" task-delete>删除</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -95,7 +105,7 @@
 
 </div>
 <!-- //删除任务模态框 -->
-<div class="tip" id="tipDel" style="height:220px">
+<div class="tip" id="tipDel" style="height: 220px">
 	<div class="tiptop">
 		<span>提示信息</span>
 	</div>
@@ -175,12 +185,21 @@
 <!-- 查看任务模态框完 -->
 <!-- 文书任务模态框 -->
 <div class="overlayer"></div>
-<div class="tip1">
+<div class="tip1" style="height: 400px">
 	<div class="tiptop">
 		<span>任务内容</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
-
+	<div class="invorkInfo-div" style>
+		<fieldset>
+			<legend>任务信息</legend>
+			<ul class="forminfo">
+				<li><label>开始时间：</label>{{task.task_stime}}</li>
+				<li><label>截止时间：</label>{{task.task_etime}}</li>
+				<li><div class="remark-div">备注：{{task.task_remark}}</div></li>
+			</ul>
+		</fieldset>
+	</div>
 	<!-- 文书任务具体内容 -->
 	<div class="formbody">
 		<form id="assistant1TaskList" ng-submit="finishTask1()">

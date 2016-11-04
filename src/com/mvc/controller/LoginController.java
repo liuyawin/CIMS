@@ -145,10 +145,11 @@ public class LoginController {
 				model.addAttribute("password", password);
 				Cookie cookie = new Cookie("userNum", userNum);
 				cookie.setMaxAge(30 * 60);
+				// cookie.setMaxAge(60);
 				cookie.setPath("/");
 				res.addCookie(cookie);
 				cookie = new Cookie("role", user.getRole().getRole_id().toString());
-				cookie.setMaxAge(30 * 60);
+				cookie.setMaxAge(60);
 				cookie.setPath("/");
 				res.addCookie(cookie);
 				return "index";// 返回到index主页
@@ -202,51 +203,16 @@ public class LoginController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		if (user != null) {
 			AlarmStatistic alarmStatistic = alarmStatisticService.findAlst(user.getUser_id());
-			if (alarmStatistic.getTotal_receive_task_num() == null) {
-				jsonObject.put("totalReceiveTaskNum", 0);
-			} else {
-				jsonObject.put("totalReceiveTaskNum", alarmStatistic.getTotal_receive_task_num());
-			}
-			if (alarmStatistic.getWait_audit_bill_task_num() == null) {
-				jsonObject.put("waitAuditBillTaskNum", 0);
-			} else {
-				jsonObject.put("waitAuditBillTaskNum", alarmStatistic.getWait_audit_bill_task_num());
-			}
-			if (alarmStatistic.getAssistant_task_num() == null) {
-				jsonObject.put("assistantTaskNum", 0);
-			} else {
-				jsonObject.put("assistantTaskNum", alarmStatistic.getAssistant_task_num());
-			}
-			if (alarmStatistic.getManager_control_task_num() == null) {
-				jsonObject.put("managerControlTaskNum", 0);
-			} else {
-				jsonObject.put("managerControlTaskNum", alarmStatistic.getManager_control_task_num());
-			}
-			if (alarmStatistic.getBill_task_num() == null) {
-				jsonObject.put("billTaskNum", 0);
-			} else {
-				jsonObject.put("billTaskNum", alarmStatistic.getBill_task_num());
-			}
-			if (alarmStatistic.getOther_task_num() == null) {
-				jsonObject.put("otherTaskNum", 0);
-			} else {
-				jsonObject.put("otherTaskNum", alarmStatistic.getOther_task_num());
-			}
-			if (alarmStatistic.getDebt_alarm_num() == null) {
-				jsonObject.put("debtAlarmNum", 0);
-			} else {
-				jsonObject.put("debtAlarmNum", alarmStatistic.getDebt_alarm_num());
-			}
-			if (alarmStatistic.getOverdue_alarm_num() == null) {
-				jsonObject.put("overdueAlarmNum", 0);
-			} else {
-				jsonObject.put("overdueAlarmNum", alarmStatistic.getOverdue_alarm_num());
-			}
-			if (alarmStatistic.getTask_alarm_num() == null) {
-				jsonObject.put("taskAlarmNum", 0);
-			} else {
-				jsonObject.put("taskAlarmNum", alarmStatistic.getTask_alarm_num());
-			}
+			jsonObject.put("totalReceiveTaskNum", alarmStatistic.getTotal_receive_task_num());
+			jsonObject.put("waitAuditBillTaskNum", alarmStatistic.getWait_audit_bill_task_num());
+			jsonObject.put("assistantTaskNum", alarmStatistic.getAssistant_task_num());
+			jsonObject.put("managerControlTaskNum", alarmStatistic.getManager_control_task_num());
+			jsonObject.put("billTaskNum", alarmStatistic.getBill_task_num());
+			jsonObject.put("otherTaskNum", alarmStatistic.getOther_task_num());
+			jsonObject.put("debtAlarmNum", alarmStatistic.getDebt_alarm_num());
+			jsonObject.put("overdueAlarmNum", alarmStatistic.getOverdue_alarm_num());
+			jsonObject.put("taskAlarmNum", alarmStatistic.getTask_alarm_num());
+			jsonObject.put("remoTaskNum", alarmStatistic.getRemo_task_num());
 		}
 		return jsonObject.toString();
 	}
@@ -265,14 +231,25 @@ public class LoginController {
 		String permission = "";
 		if (user.getRole().getRole_permission() != null && !user.getRole().getRole_permission().equals("")) {
 			permission = user.getRole().getRole_permission();
-			JSONObject jsonObject = JSONObject.fromObject(permission);
-			result = toPermissionStr(jsonObject.getString("con_per"), PermissionConstants.contract, result);
-			result = toPermissionStr(jsonObject.getString("task_per"), PermissionConstants.task, result);
-			result = toPermissionStr(jsonObject.getString("bill_per"), PermissionConstants.bill, result);
-			result = toPermissionStr(jsonObject.getString("system_per"), PermissionConstants.system, result);
-			result = toPermissionStr(jsonObject.getString("alarm_per"), PermissionConstants.alarm, result);
+			result = numToPermissionStr(permission);
 		}
 		return JSON.toJSONString(result + " ");
+	}
+
+	public static String numToPermissionStr(String permissionNum) {
+		String result = "";
+		JSONObject jsonObject = JSONObject.fromObject(permissionNum);
+		if (jsonObject.containsKey("con_per"))
+			result = toPermissionStr(jsonObject.getString("con_per"), PermissionConstants.contract, result);
+		if (jsonObject.containsKey("task_per"))
+			result = toPermissionStr(jsonObject.getString("task_per"), PermissionConstants.task, result);
+		if (jsonObject.containsKey("bill_per"))
+			result = toPermissionStr(jsonObject.getString("bill_per"), PermissionConstants.bill, result);
+		if (jsonObject.containsKey("system_per"))
+			result = toPermissionStr(jsonObject.getString("system_per"), PermissionConstants.system, result);
+		if (jsonObject.containsKey("index_per"))
+			result = toPermissionStr(jsonObject.getString("index_per"), PermissionConstants.index, result);
+		return result + " ";
 	}
 
 	private static String toPermissionStr(String str, String type, String result) {
@@ -293,8 +270,8 @@ public class LoginController {
 				case "systemPer":
 					result += " " + PermissionConstants.systemPer[i];
 					break;
-				case "alarmPer":
-					result += " " + PermissionConstants.alarmPer[i];
+				case "indexPer":
+					result += " " + PermissionConstants.indexPer[i];
 					break;
 				default:
 					break;

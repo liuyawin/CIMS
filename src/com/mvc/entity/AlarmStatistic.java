@@ -30,6 +30,7 @@ public class AlarmStatistic implements Serializable {
 	private Integer debt_alarm_num;// 收款超时
 	private Integer overdue_alarm_num;// 工程逾期
 	private Integer task_alarm_num;// 任务超时
+	private Integer remo_task_num;// 到款任务
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -111,6 +112,14 @@ public class AlarmStatistic implements Serializable {
 
 	public void setTask_alarm_num(Integer task_alarm_num) {
 		this.task_alarm_num = task_alarm_num;
+	}
+
+	public Integer getRemo_task_num() {
+		return remo_task_num;
+	}
+
+	public void setRemo_task_num(Integer remo_task_num) {
+		this.remo_task_num = remo_task_num;
 	}
 
 }
