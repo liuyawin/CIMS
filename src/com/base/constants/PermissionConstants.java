@@ -28,11 +28,11 @@ public class PermissionConstants {
 	public static final String[] billPer = { "bInvoAdd", "bReceAdd", "bRemoAdd" };
 
 	// 用户管理所有权限
-	public static final String[] systemPer = { "uRoleAdd", "uRoleDel", "uRoleEdit", "uUserAdd",  "uUserDel", "uUserEdit",
+	public static final String[] systemPer = { "uRoleAdd", "uRoleDel", "uRoleEdit", "uUserAdd", "uUserDel", "uUserEdit",
 			"uAlarmAdd", "uAlarmDel", "uAlarmDel" };
 
 	// 首页显示所有权限
-	public static final String[] indexPer = { "iAssiTask", "iEditTask", "iCommTask", "iAudiInvoTask", "iFiniInvoTask",
-			"iFiniRemoTask", "iDebtAlarm", "iOverdueAlarm", "iTaskAlarm" };
+	public static final String[] indexPer = { "iAssiTask", "iEditTask", "iAudiInvoTask", "iFiniInvoTask",
+			"iFiniRemoTask", "iDebtAlarm", "iOverdueAlarm" };
 
 }
