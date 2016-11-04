@@ -133,7 +133,7 @@ public class Contract implements Serializable {
 		this.cont_name = cont_name;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getCont_initiation() {
 		return cont_initiation;
 	}
@@ -351,6 +351,7 @@ public class Contract implements Serializable {
 		this.cont_state = cont_state;
 	}
 
+	@Column(columnDefinition = "INT not null default 1")
 	public Integer getCont_rank() {
 		return cont_rank;
 	}
@@ -441,7 +442,7 @@ public class Contract implements Serializable {
 		this.manager = manager;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getCont_ishistory() {
 		return cont_ishistory;
 	}
@@ -501,6 +502,7 @@ public class Contract implements Serializable {
 		this.assistant_manager = assistant_manager;
 	}
 
+	@Column(columnDefinition = "INT not null default 0")
 	public String getCompany_type() {
 		return company_type;
 	}
