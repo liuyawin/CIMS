@@ -8,7 +8,7 @@
 			<div class="title ">
 				<span><img src="${ctx}/images/leftico01.png" /></span>合同管理
 			</div>
-			<ul class="menuson">
+			<ul id="contract-ul" class="menuson">
 				<li id="debtContract"><cite></cite> <a
 					href="${ctx}/contract/toContractPage.do#/debtContract">欠款合同</a><i></i></li>
 				<li id="overdueContract"><cite></cite> <a
@@ -26,7 +26,7 @@
 			<div class="title">
 				<span><img src="${ctx}/images/leftico01.png" /></span>任务管理
 			</div>
-			<ul class="menuson">
+			<ul id="task-ul" class="menuson">
 				<li id="receiveTask"><cite></cite> <a
 					href="${ctx}/task/toTaskPage.do#/receiveTask">接收的任务</a><i></i></li>
 				<li id="sendTask"><cite></cite> <a href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
@@ -42,7 +42,7 @@
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>票据管理
 			</div>
-			<ul class="menuson">
+			<ul id="bill-ul" class="menuson">
 				<li id="billMgmt"><cite></cite> <a
 					href="${ctx}/contract/toBillMngContractPage.do#/contractList">票据管理</a><i></i></li>
 			</ul>
@@ -53,7 +53,7 @@
 			<div class="title">
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
 			</div>
-			<ul class="menuson">
+			<ul id="alarm-ul" class="menuson">
 				<li id="debtAlarm"><cite></cite> <a
 					href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款超时</a><i></i></li>
 				<li id="overdueAlarm"><cite></cite> <a
@@ -67,7 +67,7 @@
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
 			</div>
-			<ul class="menuson">
+			<ul id="system-ul" class="menuson">
 				<li id="roleList"><cite></cite> <a
 					href="${ctx}/role/toUserManagePage.do#/roleList">角色列表</a><i></i></li>
 				<li id="userList"><cite></cite> <a
@@ -126,5 +126,10 @@
 			}
 
 		}
+		
+		var $li = $('.leftmenu li');
+		$li.click(function(){
+			sessionStorage.setItem("currentPage", $(this).attr('id'));
+		});
 	});
 </script>

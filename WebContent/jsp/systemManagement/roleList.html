@@ -67,112 +67,145 @@
 			<ul class="forminfo">
 				<li><label>角色名称<b>*</b></label><input type="text"
 					class="dfinput" ng-model="addingRole.role_name" id="mustInput" /></li>
+				<!-- ！！！下面这段代码别乱动 -->
+				<!-- ！！！下面这段代码别乱动 -->
+				<!-- ！！！下面这段代码别乱动 -->
 				<li><table class="tablelist" style="width: 430px">
 						<tr>
-							<td style="width:72px">合同<td>
+							<td style="width: 72px">合同
+							<td>
 							<td><input class="con_per" name="0"
 								ng-checked="isSelected('con_per',0)"
-								ng-click="updateSelection($event,'con_per',0)" type="checkbox" />新建合同<input
+								ng-click="updateSelection($event,'con_per',0)" type="checkbox" />新建&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="1" ng-checked="isSelected('con_per',1)"
-								ng-click="updateSelection($event,'con_per',1)" type="checkbox" />修改合同（主任）<input
+								ng-click="updateSelection($event,'con_per',1)" type="checkbox" />修改（主任）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="2" ng-checked="isSelected('con_per',2)"
-								ng-click="updateSelection($event,'con_per',2)" type="checkbox" />修改合同（文书）<input
+								ng-click="updateSelection($event,'con_per',2)" type="checkbox" />修改（文书）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="3" ng-checked="isSelected('con_per',3)"
-								ng-click="updateSelection($event,'con_per',3)" type="checkbox" />删除合同<input
+								ng-click="updateSelection($event,'con_per',3)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="4" ng-checked="isSelected('con_per',4)"
-								ng-click="updateSelection($event,'con_per',4)" type="checkbox" />修改合同状态<input
+								ng-click="updateSelection($event,'con_per',4)" type="checkbox" />修改状态&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="11" ng-checked="isSelected('con_per',11)"
-								ng-click="updateSelection($event,'con_per',11)" type="checkbox" />新建合同相关任务<input
+								ng-click="updateSelection($event,'con_per',11)" type="checkbox" />新建任务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="task_per" name="0" ng-checked="isSelected('task_per',0)"
-								ng-click="updateSelection($event,'task_per',0)" type="checkbox" />补录合同</td>
+								ng-click="updateSelection($event,'task_per',0)" type="checkbox" />补录合同&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>工期<td>
-							<td><input class="con_per"
-								name="5" ng-checked="isSelected('con_per',5)"
-								ng-click="updateSelection($event,'con_per',5)" type="checkbox" />添加工期<input
+							<td>工期阶段
+							<td>
+							<td><input class="con_per" name="5"
+								ng-checked="isSelected('con_per',5)"
+								ng-click="updateSelection($event,'con_per',5)" type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="6" ng-checked="isSelected('con_per',6)"
-								ng-click="updateSelection($event,'con_per',6)" type="checkbox" />修改工期<input
+								ng-click="updateSelection($event,'con_per',6)" type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="7" ng-checked="isSelected('con_per',7)"
-								ng-click="updateSelection($event,'con_per',7)" type="checkbox" />删除工期</td>
+								ng-click="updateSelection($event,'con_per',7)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>收款节点<td>
-							<td><input
-								class="con_per" name="8" ng-checked="isSelected('con_per',8)"
-								ng-click="updateSelection($event,'con_per',8)" type="checkbox" />添加收款节点<input
+							<td>收款节点
+							<td>
+							<td><input class="con_per" name="8"
+								ng-checked="isSelected('con_per',8)"
+								ng-click="updateSelection($event,'con_per',8)" type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="9" ng-checked="isSelected('con_per',9)"
-								ng-click="updateSelection($event,'con_per',9)" type="checkbox" />修改收款节点<input
+								ng-click="updateSelection($event,'con_per',9)" type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="10" ng-checked="isSelected('con_per',10)"
-								ng-click="updateSelection($event,'con_per',10)" type="checkbox" />删除收款节点</td>
+								ng-click="updateSelection($event,'con_per',10)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>发票<td>
-							<td><input
-								class="task_per" name="1" ng-checked="isSelected('task_per',1)"
-								ng-click="updateSelection($event,'task_per',1)" type="checkbox" />审核发票任务<input
+							<td>票据
+							<td>
+							<td><input class="task_per" name="1"
+								ng-checked="isSelected('task_per',1)"
+								ng-click="updateSelection($event,'task_per',1)" type="checkbox" />审核发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="task_per" name="2" ng-checked="isSelected('task_per',2)"
-								ng-click="updateSelection($event,'task_per',2)" type="checkbox" />完成发票任务<input
-								class="task_per" name="3" ng-checked="isSelected('task_per',3)"
-								ng-click="updateSelection($event,'task_per',3)" type="checkbox" />审核到款</td>
-						</tr>
-						<tr>
-							<td>票据<td>
-							<td><input
+								ng-click="updateSelection($event,'task_per',2)" type="checkbox" />完成发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="bill_per" name="0" ng-checked="isSelected('bill_per',0)"
-								ng-click="updateSelection($event,'bill_per',0)" type="checkbox" />开发票<input
+								ng-click="updateSelection($event,'bill_per',0)" type="checkbox" />开发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="bill_per" name="1" ng-checked="isSelected('bill_per',1)"
-								ng-click="updateSelection($event,'bill_per',1)" type="checkbox" />开收据<input
-								class="bill_per" name="2" ng-checked="isSelected('bill_per',2)"
-								ng-click="updateSelection($event,'bill_per',2)" type="checkbox" />到款</td>
+								ng-click="updateSelection($event,'bill_per',1)" type="checkbox" />开收据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>角色<td>
-							<td><input
-								class="system_per" name="0" ng-checked="isSelected('system_per',0)"
-								ng-click="updateSelection($event,'system_per',0)" type="checkbox" />添加角色<input
-								class="system_per" name="1" ng-checked="isSelected('system_per',1)"
-								ng-click="updateSelection($event,'system_per',1)" type="checkbox" />删除角色<input
-								class="system_per" name="2" ng-checked="isSelected('system_per',2)"
-								ng-click="updateSelection($event,'system_per',2)" type="checkbox" />修改角色</td>
+							<td>到款
+							<td>
+							<td><input class="bill_per" name="2"
+								ng-checked="isSelected('bill_per',2)"
+								ng-click="updateSelection($event,'bill_per',2)" type="checkbox" />到款&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="task_per" name="3" ng-checked="isSelected('bill_per',3)"
+								ng-click="updateSelection($event,'bill_per',3)" type="checkbox" />审核到款&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>用户<td>
-							<td><input
-								class="system_per" name="3" ng-checked="isSelected('system_per',3)"
-								ng-click="updateSelection($event,'system_per',3)" type="checkbox" />添加用户<input
-								class="system_per" name="4" ng-checked="isSelected('system_per',4)"
-								ng-click="updateSelection($event,'system_per',4)" type="checkbox" />删除用户<input
-								class="system_per" name="5" ng-checked="isSelected('system_per',5)"
-								ng-click="updateSelection($event,'system_per',5)" type="checkbox" />修改用户</td>
+							<td>角色
+							<td>
+							<td><input class="system_per" name="0"
+								ng-checked="isSelected('system_per',0)"
+								ng-click="updateSelection($event,'system_per',0)"
+								type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="1"
+								ng-checked="isSelected('system_per',1)"
+								ng-click="updateSelection($event,'system_per',1)"
+								type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="2"
+								ng-checked="isSelected('system_per',2)"
+								ng-click="updateSelection($event,'system_per',2)"
+								type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>报警设置<td>
-							<td><input
-								class="system_per" name="6" ng-checked="isSelected('system_per',6)"
-								ng-click="updateSelection($event,'system_per',6)" type="checkbox" />添加报警设置<input
-								class="system_per" name="7" ng-checked="isSelected('system_per',7)"
-								ng-click="updateSelection($event,'system_per',7)" type="checkbox" />删除报警设置<input
-								class="system_per" name="8" ng-checked="isSelected('system_per',8)"
-								ng-click="updateSelection($event,'system_per',8)" type="checkbox" />修改报警设置</td>
+							<td>用户
+							<td>
+							<td><input class="system_per" name="3"
+								ng-checked="isSelected('system_per',3)"
+								ng-click="updateSelection($event,'system_per',3)"
+								type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="4"
+								ng-checked="isSelected('system_per',4)"
+								ng-click="updateSelection($event,'system_per',4)"
+								type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="5"
+								ng-checked="isSelected('system_per',5)"
+								ng-click="updateSelection($event,'system_per',5)"
+								type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>首页显示<td>
-							<td><input
-								class="index_per" name="0" ng-checked="isSelected('index_per',0)"
-								ng-click="updateSelection($event,'index_per',0)" type="checkbox" />文书任务<input
-								class="index_per" name="1" ng-checked="isSelected('index_per',1)"
-								ng-click="updateSelection($event,'index_per',1)" type="checkbox" />补录合同<input
-								class="index_per" name="2" ng-checked="isSelected('index_per',2)"
-								ng-click="updateSelection($event,'index_per',2)" type="checkbox" />审核发票<input
-								class="index_per" name="3" ng-checked="isSelected('index_per',3)"
-								ng-click="updateSelection($event,'index_per',3)" type="checkbox" />完成发票<input
-								class="index_per" name="4" ng-checked="isSelected('index_per',4)"
-								ng-click="updateSelection($event,'index_per',4)" type="checkbox" />核对到款<input
-								class="index_per" name="5" ng-checked="isSelected('index_per',5)"
-								ng-click="updateSelection($event,'index_per',5)" type="checkbox" />收款超时<input
-								class="index_per" name="6" ng-checked="isSelected('index_per',6)"
-								ng-click="updateSelection($event,'index_per',6)" type="checkbox" />工期超时</td>
+							<td>报警设置
+							<td>
+							<td><input class="system_per" name="6"
+								ng-checked="isSelected('system_per',6)"
+								ng-click="updateSelection($event,'system_per',6)"
+								type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="7"
+								ng-checked="isSelected('system_per',7)"
+								ng-click="updateSelection($event,'system_per',7)"
+								type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="8"
+								ng-checked="isSelected('system_per',8)"
+								ng-click="updateSelection($event,'system_per',8)"
+								type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						</tr>
+						<tr>
+							<td>首页显示
+							<td>
+							<td><input class="index_per" name="0"
+								ng-checked="isSelected('index_per',0)"
+								ng-click="updateSelection($event,'index_per',0)" type="checkbox" />文书任务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="1"
+								ng-checked="isSelected('index_per',1)"
+								ng-click="updateSelection($event,'index_per',1)" type="checkbox" />补录合同&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="2"
+								ng-checked="isSelected('index_per',2)"
+								ng-click="updateSelection($event,'index_per',2)" type="checkbox" />审核发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="3"
+								ng-checked="isSelected('index_per',3)"
+								ng-click="updateSelection($event,'index_per',3)" type="checkbox" />完成发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="4"
+								ng-checked="isSelected('index_per',4)"
+								ng-click="updateSelection($event,'index_per',4)" type="checkbox" />核对到款&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="5"
+								ng-checked="isSelected('index_per',5)"
+								ng-click="updateSelection($event,'index_per',5)" type="checkbox" />收款超时&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="6"
+								ng-checked="isSelected('index_per',6)"
+								ng-click="updateSelection($event,'index_per',6)" type="checkbox" />工期超时&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 					</table></li>
 			</ul>
@@ -190,219 +223,143 @@
 				<li><label>角色名称<b>*</b></label><input type="text"
 					class="dfinput" ng-model="editRole.role_name" id="mustInput" /></li>
 				<li>
-					<!-- <table class="tablelist" style="width: 430px">
-						<tr>
-							<th>合同权限</th>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="selectAllChkBx"
-								ng-click="selectAll($event,'con_per')" />全选 <input id="con_per"
-								name="0" ng-checked="isSelected('con_per',0)"
-								ng-click="updateSelection($event)" type="checkbox" />新建合同<input
-								id="con_per" name="1" ng-checked="isSelected('con_per',1)"
-								ng-click="updateSelection($event)" type="checkbox" />修改合同（主任）<input
-								id="con_per" name="2" ng-checked="isSelected('con_per',2)"
-								ng-click="updateSelection($event)" type="checkbox" />修改合同（文书）<input
-								id="con_per" name="3" ng-checked="isSelected('con_per',3)"
-								ng-click="updateSelection($event)" type="checkbox" />删除合同<input
-								id="con_per" name="4" ng-checked="isSelected('con_per',4)"
-								ng-click="updateSelection($event)" type="checkbox" />修改合同状态<input
-								id="con_per" name="5" ng-checked="isSelected('con_per',5)"
-								ng-click="updateSelection($event)" type="checkbox" />添加工期<input
-								id="con_per" name="6" ng-checked="isSelected('con_per',6)"
-								ng-click="updateSelection($event)" type="checkbox" />修改工期<input
-								id="con_per" name="7" ng-checked="isSelected('con_per',7)"
-								ng-click="updateSelection($event)" type="checkbox" />删除工期<input
-								id="con_per" name="8" ng-checked="isSelected('con_per',8)"
-								ng-click="updateSelection($event)" type="checkbox" />添加收款节点<input
-								id="con_per" name="9" ng-checked="isSelected('con_per',9)"
-								ng-click="updateSelection($event)" type="checkbox" />修改收款节点<input
-								id="con_per" name="10" ng-checked="isSelected('con_per',10)"
-								ng-click="updateSelection($event)" type="checkbox" />删除收款节点<input
-								id="con_per" name="11" ng-checked="isSelected('con_per',11)"
-								ng-click="updateSelection($event)" type="checkbox" />新建合同相关任务</td>
-						</tr>
-						<tr>
-							<th>任务权限</th>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="selectAllChkBx"
-								ng-click="selectAll($event,'task_per')" />全选 <input
-								id="task_per" name="0" ng-checked="isSelected('task_per',0)"
-								ng-click="updateSelection($event)" type="checkbox" />补录合同<input
-								id="task_per" name="1" ng-checked="isSelected('task_per',1)"
-								ng-click="updateSelection($event)" type="checkbox" />审核发票任务<input
-								id="task_per" name="2" ng-checked="isSelected('task_per',2)"
-								ng-click="updateSelection($event)" type="checkbox" />完成发票任务<input
-								id="task_per" name="3" ng-checked="isSelected('task_per',3)"
-								ng-click="updateSelection($event)" type="checkbox" />审核到款</td>
-
-						</tr>
-						<tr>
-							<th>票据权限</th>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="selectAllChkBx"
-								ng-click="selectAll($event,'bill_per')" />全选 <input
-								id="bill_per" name="0" ng-checked="isSelected('bill_per',0)"
-								ng-click="updateSelection($event)" type="checkbox" />开发票<input
-								id="bill_per" name="1" ng-checked="isSelected('bill_per',1)"
-								ng-click="updateSelection($event)" type="checkbox" />开收据<input
-								id="bill_per" name="2" ng-checked="isSelected('bill_per',2)"
-								ng-click="updateSelection($event)" type="checkbox" />到款</td>
-						</tr>
-						<tr>
-							<th>系统管理权限</th>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="selectAllChkBx"
-								ng-click="selectAll($event,'system_per')" />全选 <input
-								id="system_per" name="0" ng-checked="isSelected('system_per',0)"
-								ng-click="updateSelection($event)" type="checkbox" />添加角色<input
-								id="system_per" name="1" ng-checked="isSelected('system_per',1)"
-								ng-click="updateSelection($event)" type="checkbox" />删除角色<input
-								id="system_per" name="2" ng-checked="isSelected('system_per',2)"
-								ng-click="updateSelection($event)" type="checkbox" />修改角色<input
-								id="system_per" name="3" ng-checked="isSelected('system_per',3)"
-								ng-click="updateSelection($event)" type="checkbox" />添加用户<input
-								id="system_per" name="4" ng-checked="isSelected('system_per',4)"
-								ng-click="updateSelection($event)" type="checkbox" />删除用户<input
-								id="system_per" name="5" ng-checked="isSelected('system_per',5)"
-								ng-click="updateSelection($event)" type="checkbox" />修改用户<input
-								id="system_per" name="6" ng-checked="isSelected('system_per',6)"
-								ng-click="updateSelection($event)" type="checkbox" />添加报警设置<input
-								id="system_per" name="7" ng-checked="isSelected('system_per',7)"
-								ng-click="updateSelection($event)" type="checkbox" />删除报警设置<input
-								id="system_per" name="8" ng-checked="isSelected('system_per',8)"
-								ng-click="updateSelection($event)" type="checkbox" />修改报警设置</td>
-						</tr>
-						<tr>
-							<th>报警权限</th>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="selectAllChkBx"
-								ng-click="selectAll($event,'index_per')" />全选 <input
-								id="index_per" name="0" ng-checked="isSelected('index_per',0)"
-								ng-click="updateSelection($event)" type="checkbox" />权限1 <input
-								id="index_per" name="1" ng-checked="isSelected('index_per',1)"
-								ng-click="updateSelection($event)" type="checkbox" />权限2 <input
-								id="index_per" name="2" ng-checked="isSelected('index_per',2)"
-								ng-click="updateSelection($event)" type="checkbox" />权限3 <input
-								id="index_per" name="3" ng-checked="isSelected('index_per',3)"
-								ng-click="updateSelection($event)" type="checkbox" />权限4 <input
-								id="index_per" name="4" ng-checked="isSelected('index_per',4)"
-								ng-click="updateSelection($event)" type="checkbox" />权限5</td>
-						</tr>
-					</table> -->
-					<!-- ！！！下面这段代码别乱动 -->
-					<!-- ！！！下面这段代码别乱动 -->
-					<!-- ！！！下面这段代码别乱动 -->
+					<!-- ！！！下面这段代码别乱动 --> <!-- ！！！下面这段代码别乱动 --> <!-- ！！！下面这段代码别乱动 -->
 					<table class="tablelist" style="width: 430px">
 						<tr>
-							<td style="width:72px">合同<td>
+							<td style="width: 72px">合同
+							<td>
 							<td><input class="con_per" name="0"
 								ng-checked="isSelected('con_per',0)"
-								ng-click="updateSelection($event,'con_per',0)" type="checkbox" />新建合同<input
+								ng-click="updateSelection($event,'con_per',0)" type="checkbox" />新建&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="1" ng-checked="isSelected('con_per',1)"
-								ng-click="updateSelection($event,'con_per',1)" type="checkbox" />修改合同（主任）<input
+								ng-click="updateSelection($event,'con_per',1)" type="checkbox" />修改（主任）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="2" ng-checked="isSelected('con_per',2)"
-								ng-click="updateSelection($event,'con_per',2)" type="checkbox" />修改合同（文书）<input
+								ng-click="updateSelection($event,'con_per',2)" type="checkbox" />修改（文书）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="3" ng-checked="isSelected('con_per',3)"
-								ng-click="updateSelection($event,'con_per',3)" type="checkbox" />删除合同<input
+								ng-click="updateSelection($event,'con_per',3)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="4" ng-checked="isSelected('con_per',4)"
-								ng-click="updateSelection($event,'con_per',4)" type="checkbox" />修改合同状态<input
+								ng-click="updateSelection($event,'con_per',4)" type="checkbox" />修改状态&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="11" ng-checked="isSelected('con_per',11)"
-								ng-click="updateSelection($event,'con_per',11)" type="checkbox" />新建合同相关任务<input
+								ng-click="updateSelection($event,'con_per',11)" type="checkbox" />新建任务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="task_per" name="0" ng-checked="isSelected('task_per',0)"
-								ng-click="updateSelection($event,'task_per',0)" type="checkbox" />补录合同</td>
+								ng-click="updateSelection($event,'task_per',0)" type="checkbox" />补录合同&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>工期<td>
-							<td><input class="con_per"
-								name="5" ng-checked="isSelected('con_per',5)"
-								ng-click="updateSelection($event,'con_per',5)" type="checkbox" />添加工期<input
+							<td>工期阶段
+							<td>
+							<td><input class="con_per" name="5"
+								ng-checked="isSelected('con_per',5)"
+								ng-click="updateSelection($event,'con_per',5)" type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="6" ng-checked="isSelected('con_per',6)"
-								ng-click="updateSelection($event,'con_per',6)" type="checkbox" />修改工期<input
+								ng-click="updateSelection($event,'con_per',6)" type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="7" ng-checked="isSelected('con_per',7)"
-								ng-click="updateSelection($event,'con_per',7)" type="checkbox" />删除工期</td>
+								ng-click="updateSelection($event,'con_per',7)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>收款节点<td>
-							<td><input
-								class="con_per" name="8" ng-checked="isSelected('con_per',8)"
-								ng-click="updateSelection($event,'con_per',8)" type="checkbox" />添加收款节点<input
+							<td>收款节点
+							<td>
+							<td><input class="con_per" name="8"
+								ng-checked="isSelected('con_per',8)"
+								ng-click="updateSelection($event,'con_per',8)" type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="9" ng-checked="isSelected('con_per',9)"
-								ng-click="updateSelection($event,'con_per',9)" type="checkbox" />修改收款节点<input
+								ng-click="updateSelection($event,'con_per',9)" type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="10" ng-checked="isSelected('con_per',10)"
-								ng-click="updateSelection($event,'con_per',10)" type="checkbox" />删除收款节点</td>
+								ng-click="updateSelection($event,'con_per',10)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>发票<td>
-							<td><input
-								class="task_per" name="1" ng-checked="isSelected('task_per',1)"
-								ng-click="updateSelection($event,'task_per',1)" type="checkbox" />审核发票任务<input
+							<td>票据
+							<td>
+							<td><input class="task_per" name="1"
+								ng-checked="isSelected('task_per',1)"
+								ng-click="updateSelection($event,'task_per',1)" type="checkbox" />审核发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="task_per" name="2" ng-checked="isSelected('task_per',2)"
-								ng-click="updateSelection($event,'task_per',2)" type="checkbox" />完成发票任务<input
-								class="task_per" name="3" ng-checked="isSelected('task_per',3)"
-								ng-click="updateSelection($event,'task_per',3)" type="checkbox" />审核到款</td>
-						</tr>
-						<tr>
-							<td>票据<td>
-							<td><input
+								ng-click="updateSelection($event,'task_per',2)" type="checkbox" />完成发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="bill_per" name="0" ng-checked="isSelected('bill_per',0)"
-								ng-click="updateSelection($event,'bill_per',0)" type="checkbox" />开发票<input
+								ng-click="updateSelection($event,'bill_per',0)" type="checkbox" />开发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="bill_per" name="1" ng-checked="isSelected('bill_per',1)"
-								ng-click="updateSelection($event,'bill_per',1)" type="checkbox" />开收据<input
-								class="bill_per" name="2" ng-checked="isSelected('bill_per',2)"
-								ng-click="updateSelection($event,'bill_per',2)" type="checkbox" />到款</td>
+								ng-click="updateSelection($event,'bill_per',1)" type="checkbox" />开收据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>角色<td>
-							<td><input
-								class="system_per" name="0" ng-checked="isSelected('system_per',0)"
-								ng-click="updateSelection($event,'system_per',0)" type="checkbox" />添加角色<input
-								class="system_per" name="1" ng-checked="isSelected('system_per',1)"
-								ng-click="updateSelection($event,'system_per',1)" type="checkbox" />删除角色<input
-								class="system_per" name="2" ng-checked="isSelected('system_per',2)"
-								ng-click="updateSelection($event,'system_per',2)" type="checkbox" />修改角色</td>
+							<td>到款
+							<td>
+							<td><input class="bill_per" name="2"
+								ng-checked="isSelected('bill_per',2)"
+								ng-click="updateSelection($event,'bill_per',2)" type="checkbox" />到款&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="task_per" name="3" ng-checked="isSelected('bill_per',3)"
+								ng-click="updateSelection($event,'bill_per',3)" type="checkbox" />审核到款&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>用户<td>
-							<td><input
-								class="system_per" name="3" ng-checked="isSelected('system_per',3)"
-								ng-click="updateSelection($event,'system_per',3)" type="checkbox" />添加用户<input
-								class="system_per" name="4" ng-checked="isSelected('system_per',4)"
-								ng-click="updateSelection($event,'system_per',4)" type="checkbox" />删除用户<input
-								class="system_per" name="5" ng-checked="isSelected('system_per',5)"
-								ng-click="updateSelection($event,'system_per',5)" type="checkbox" />修改用户</td>
+							<td>角色
+							<td>
+							<td><input class="system_per" name="0"
+								ng-checked="isSelected('system_per',0)"
+								ng-click="updateSelection($event,'system_per',0)"
+								type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="1"
+								ng-checked="isSelected('system_per',1)"
+								ng-click="updateSelection($event,'system_per',1)"
+								type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="2"
+								ng-checked="isSelected('system_per',2)"
+								ng-click="updateSelection($event,'system_per',2)"
+								type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>报警设置<td>
-							<td><input
-								class="system_per" name="6" ng-checked="isSelected('system_per',6)"
-								ng-click="updateSelection($event,'system_per',6)" type="checkbox" />添加报警设置<input
-								class="system_per" name="7" ng-checked="isSelected('system_per',7)"
-								ng-click="updateSelection($event,'system_per',7)" type="checkbox" />删除报警设置<input
-								class="system_per" name="8" ng-checked="isSelected('system_per',8)"
-								ng-click="updateSelection($event,'system_per',8)" type="checkbox" />修改报警设置</td>
+							<td>用户
+							<td>
+							<td><input class="system_per" name="3"
+								ng-checked="isSelected('system_per',3)"
+								ng-click="updateSelection($event,'system_per',3)"
+								type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="4"
+								ng-checked="isSelected('system_per',4)"
+								ng-click="updateSelection($event,'system_per',4)"
+								type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="5"
+								ng-checked="isSelected('system_per',5)"
+								ng-click="updateSelection($event,'system_per',5)"
+								type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
-							<td>首页显示<td>
-							<td><input
-								class="index_per" name="0" ng-checked="isSelected('index_per',0)"
-								ng-click="updateSelection($event,'index_per',0)" type="checkbox" />文书任务<input
-								class="index_per" name="1" ng-checked="isSelected('index_per',1)"
-								ng-click="updateSelection($event,'index_per',1)" type="checkbox" />补录合同<input
-								class="index_per" name="2" ng-checked="isSelected('index_per',2)"
-								ng-click="updateSelection($event,'index_per',2)" type="checkbox" />审核发票<input
-								class="index_per" name="3" ng-checked="isSelected('index_per',3)"
-								ng-click="updateSelection($event,'index_per',3)" type="checkbox" />完成发票<input
-								class="index_per" name="4" ng-checked="isSelected('index_per',4)"
-								ng-click="updateSelection($event,'index_per',4)" type="checkbox" />核对到款<input
-								class="index_per" name="5" ng-checked="isSelected('index_per',5)"
-								ng-click="updateSelection($event,'index_per',5)" type="checkbox" />收款超时<input
-								class="index_per" name="6" ng-checked="isSelected('index_per',6)"
-								ng-click="updateSelection($event,'index_per',6)" type="checkbox" />工期超时</td>
+							<td>报警设置
+							<td>
+							<td><input class="system_per" name="6"
+								ng-checked="isSelected('system_per',6)"
+								ng-click="updateSelection($event,'system_per',6)"
+								type="checkbox" />添加&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="7"
+								ng-checked="isSelected('system_per',7)"
+								ng-click="updateSelection($event,'system_per',7)"
+								type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="system_per" name="8"
+								ng-checked="isSelected('system_per',8)"
+								ng-click="updateSelection($event,'system_per',8)"
+								type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						</tr>
+						<tr>
+							<td>首页显示
+							<td>
+							<td><input class="index_per" name="0"
+								ng-checked="isSelected('index_per',0)"
+								ng-click="updateSelection($event,'index_per',0)" type="checkbox" />文书任务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="1"
+								ng-checked="isSelected('index_per',1)"
+								ng-click="updateSelection($event,'index_per',1)" type="checkbox" />补录合同&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="2"
+								ng-checked="isSelected('index_per',2)"
+								ng-click="updateSelection($event,'index_per',2)" type="checkbox" />审核发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="3"
+								ng-checked="isSelected('index_per',3)"
+								ng-click="updateSelection($event,'index_per',3)" type="checkbox" />完成发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="4"
+								ng-checked="isSelected('index_per',4)"
+								ng-click="updateSelection($event,'index_per',4)" type="checkbox" />核对到款&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="5"
+								ng-checked="isSelected('index_per',5)"
+								ng-click="updateSelection($event,'index_per',5)" type="checkbox" />收款超时&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="index_per" name="6"
+								ng-checked="isSelected('index_per',6)"
+								ng-click="updateSelection($event,'index_per',6)" type="checkbox" />工期超时&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 					</table>
 				</li>
