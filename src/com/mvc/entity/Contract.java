@@ -37,7 +37,7 @@ public class Contract implements Serializable {
 	private String cont_cnum;// （甲方）业主方编号
 	private String cont_project;// 项目名称
 	private String province;// 新增：项目所在省........................
-	private String city;// 新增：项目所在省............................
+	private String city;// 新增：项目所在市............................
 	private String proStage;// 新增：项目阶段(0=规划,1=预可研,2=可研,3=项目建议书,4=初步设计,5=发包、招标设计,6=施工详图,7=竣工图,8=其他).........................
 	private Integer cont_state;// 状态,0:在建,1:竣工,2:停建
 	private Date cont_stime;// 合同签订日期
@@ -133,7 +133,7 @@ public class Contract implements Serializable {
 		this.cont_name = cont_name;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getCont_initiation() {
 		return cont_initiation;
 	}
@@ -351,6 +351,7 @@ public class Contract implements Serializable {
 		this.cont_state = cont_state;
 	}
 
+	@Column(columnDefinition = "INT not null default 1")
 	public Integer getCont_rank() {
 		return cont_rank;
 	}
@@ -441,7 +442,7 @@ public class Contract implements Serializable {
 		this.manager = manager;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getCont_ishistory() {
 		return cont_ishistory;
 	}
@@ -501,6 +502,7 @@ public class Contract implements Serializable {
 		this.assistant_manager = assistant_manager;
 	}
 
+	@Column(columnDefinition = "INT not null default 0")
 	public String getCompany_type() {
 		return company_type;
 	}

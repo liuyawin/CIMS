@@ -75,6 +75,8 @@ public class ContractServiceImpl implements ContractService {
 		contract.setCont_initiation(1);// 已立项
 		contract.setCont_ishistory(0);// 未删除
 		contract.setCont_state(0);// 合同状态
+		contract.setCont_rank(1);//合同等级
+		contract.setCompany_type("0");//公司类型
 		contract.setCont_ctime(date);// 合同创建时间
 		contract.setCreator(user);// 合同创建者
 		contract.setCur_prst("未录入工期阶段");// 当前工期阶段
@@ -170,6 +172,15 @@ public class ContractServiceImpl implements ContractService {
 			}
 			if (jsonObject.containsKey("cont_rank")) {
 				contract.setCont_rank(jsonObject.getInt("cont_rank"));// 等级
+			}
+			if (jsonObject.containsKey("cont_client")) {
+				contract.setCont_client(jsonObject.getString("cont_client"));// 业主公司
+			}
+			if (jsonObject.containsKey("province")) {
+				contract.setProvince(jsonObject.getString("province"));// 省
+			}
+			if (jsonObject.containsKey("city")) {
+				contract.setCity(jsonObject.getString("city"));// 市
 			}
 		}
 

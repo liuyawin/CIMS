@@ -13,7 +13,7 @@
 <body style="background:url(${ctx}/images/topbg.gif) repeat-x;">
 	<header>
 		<div class="topleft">
-			<a href="main.html" target="_parent"><img class="img-logo"
+			<a href="/CIMS/login/toIndex.do" target="_parent"><img class="img-logo"
 				src="${ctx}/images/logo1.png" title="系统首页" /></a>
 		</div>
 

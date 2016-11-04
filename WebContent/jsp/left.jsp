@@ -9,15 +9,15 @@
 				<span><img src="${ctx}/images/leftico01.png" /></span>合同管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a
+				<li id="debtContract"><cite></cite> <a
 					href="${ctx}/contract/toContractPage.do#/debtContract">欠款合同</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="overdueContract"><cite></cite> <a
 					href="${ctx}/contract/toContractPage.do#/overdueContract">逾期合同</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="finishedContract"><cite></cite> <a
 					href="${ctx}/contract/toContractPage.do#/finishedContract">竣工合同</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="buildContract"><cite></cite> <a
 					href="${ctx}/contract/toContractPage.do#/contractList">在建合同</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="stopedContract"><cite></cite> <a
 					href="${ctx}/contract/toContractPage.do#/stopedContract">停建合同</a><i></i></li>
 			</ul>
 		</dd>
@@ -27,9 +27,9 @@
 				<span><img src="${ctx}/images/leftico01.png" /></span>任务管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a
+				<li id="receiveTask"><cite></cite> <a
 					href="${ctx}/task/toTaskPage.do#/receiveTask">接收的任务</a><i></i></li>
-				<li><cite></cite> <a href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
+				<li id="sendTask"><cite></cite> <a href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
 				<li id="invoiceTask"><cite></cite> <a
 					href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
 				<li id="receiveMoneyTask"><cite></cite> <a
@@ -43,7 +43,7 @@
 				<span><img src="${ctx}/images/leftico04.png" /></span>票据管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a
+				<li id="billMgmt"><cite></cite> <a
 					href="${ctx}/contract/toBillMngContractPage.do#/contractList">票据管理</a><i></i></li>
 			</ul>
 
@@ -58,7 +58,7 @@
 					href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款超时</a><i></i></li>
 				<li id="overdueAlarm"><cite></cite> <a
 					href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList">工程逾期</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="overtimeAlarm"><cite></cite> <a
 					href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList">任务超时</a><i></i></li>
 			</ul>
 		</dd>
@@ -68,11 +68,11 @@
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a
+				<li id="roleList"><cite></cite> <a
 					href="${ctx}/role/toUserManagePage.do#/roleList">角色列表</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="userList"><cite></cite> <a
 					href="${ctx}/role/toUserManagePage.do#/userList">用户列表</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="alarmSet"><cite></cite> <a
 					href="${ctx}/alarmLevel/toAlarmSetPage.do#/alarmSet">报警设置</a><i></i></li>
 			</ul>
 		</dd>
@@ -126,5 +126,10 @@
 			}
 
 		}
+		
+		var $li = $('.leftmenu li');
+		$li.click(function(){
+			sessionStorage.setItem("currentPage", $(this).attr('id'));
+		});
 	});
 </script>

@@ -202,340 +202,396 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	return services;
 } ]);
 
-app.controller('ContractController', [
-		'$scope',
-		'services',
-		'$location',
-		function($scope, services, $location) {
-			// 合同
-			var contract = $scope;
-			contract.flag = 0;// 标志位，用于控制按钮是否显示
-			// 获取合同列表
-			contract.getContractList = function(page) {
-				services.getContractList({
-					page : page
-				}).success(function(data) {
-					contract.contracts = data.list;
-					contract.totalPage = data.totalPage;
-				});
-			};
+app
+		.controller(
+				'ContractController',
+				[
+						'$scope',
+						'services',
+						'$location',
+						function($scope, services, $location) {
+							// 合同
+							var contract = $scope;
+							contract.flag = 0;// 标志位，用于控制按钮是否显示
+							// 获取合同列表
+							contract.getContractList = function(page) {
+								services.getContractList({
+									page : page
+								}).success(function(data) {
+									contract.contracts = data.list;
+									contract.totalPage = data.totalPage;
+								});
+							};
 
-			// 通过合同名获取合同信息
-			contract.selectConByName = function() {
-				services.selectConByName({
-					contName : $("#cName").val(),
-					page : 1
-				}).success(function(data) {
-					console.log("选择合同成功！");
-					contract.contracts = data.list;
-					contract.totalPage = data.totalPage;
-				});
-			};
+							// 通过合同名获取合同信息
+							contract.selectConByName = function() {
+								services.selectConByName({
+									contName : $("#cName").val(),
+									page : 1
+								}).success(function(data) {
+									console.log("选择合同成功！");
+									contract.contracts = data.list;
+									contract.totalPage = data.totalPage;
+								});
+							};
 
-			// zq查看合同ID，并记入sessione
-			contract.getConId = function(conId) {
-				sessionStorage.setItem('conId', conId);
-			};
-			// zq：读取合同的信息
-			function selectContractById() {
-				var cont_id = sessionStorage.getItem('conId');
+							// zq查看合同ID，并记入sessione
+							contract.getConId = function(conId) {
+								sessionStorage.setItem('conId', conId);
+							};
+							// zq：读取合同的信息
+							function selectContractById() {
+								var cont_id = sessionStorage.getItem('conId');
 
-				services.selectContractById({
-					cont_id : cont_id
-				}).success(
-						function(data) {
-							contract.cont = data.contract;
-							if (data.contract.cont_stime) {
-								contract.cont.cont_stime =changeDateType(data.contract.cont_stime.time); 
+								services
+										.selectContractById({
+											cont_id : cont_id
+										})
+										.success(
+												function(data) {
+													contract.cont = data.contract;
+													if (data.contract.cont_stime) {
+														contract.cont.cont_stime = changeDateType(data.contract.cont_stime.time);
+													}
+												});
 							}
-						});
-			}
-			// zq：根据合同ID查询工期阶段的内容
-			function selectPrstByContId() {
-				var cont_id = sessionStorage.getItem('conId');
-				services.selectPrstByContId({
-					cont_id : cont_id
-				}).success(function(data) {
-					contract.prst = data.list;
-				});
-			}
-			// zq：根据合同ID查询收款节点的内容
-			function selectRenoByContId() {
-				var cont_id = sessionStorage.getItem('conId');
-				services.selectRenoByContId({
-					cont_id : cont_id
-				}).success(function(data) {
-					contract.reno = data.list;
-				});
-			}
+							// zq：根据合同ID查询工期阶段的内容
+							function selectPrstByContId() {
+								var cont_id = sessionStorage.getItem('conId');
+								services.selectPrstByContId({
+									cont_id : cont_id
+								}).success(function(data) {
+									contract.prst = data.list;
+								});
+							}
+							// zq：根据合同ID查询收款节点的内容
+							function selectRenoByContId() {
+								var cont_id = sessionStorage.getItem('conId');
+								services.selectRenoByContId({
+									cont_id : cont_id
+								}).success(function(data) {
+									contract.reno = data.list;
+								});
+							}
 
-			// 合同，收款节点，工期阶段的详情
-			contract.showContInfo = function() {
-				$('#contInformation').show();
-				$('#contShow').hide();
-				$('#contHide').show();
-			}
-			contract.hideContInfo = function() {
+							// 合同，收款节点，工期阶段的详情
+							contract.showContInfo = function() {
+								$('#contInformation').show();
+								$('#contShow').hide();
+								$('#contHide').show();
+							}
+							contract.hideContInfo = function() {
 
-				$('#contInformation').hide();
-				$('#contShow').show();
-				$('#contHide').hide();
-			}
-			contract.showPrstInfo = function() {
-				$('#prstInformation').show();
-				$('#prstShow').hide();
-				$('#prstHide').show();
-			}
-			contract.hidePrstInfo = function() {
+								$('#contInformation').hide();
+								$('#contShow').show();
+								$('#contHide').hide();
+							}
+							contract.showPrstInfo = function() {
+								$('#prstInformation').show();
+								$('#prstShow').hide();
+								$('#prstHide').show();
+							}
+							contract.hidePrstInfo = function() {
 
-				$('#prstInformation').hide();
-				$('#prstShow').show();
-				$('#prstHide').hide();
-			}
-			contract.showRenoInfo = function() {
-				$('#renoInformation').show();
-				$('#renoShow').hide();
-				$('#renoHide').show();
-			}
-			contract.hideRenoInfo = function() {
+								$('#prstInformation').hide();
+								$('#prstShow').show();
+								$('#prstHide').hide();
+							}
+							contract.showRenoInfo = function() {
+								$('#renoInformation').show();
+								$('#renoShow').hide();
+								$('#renoHide').show();
+							}
+							contract.hideRenoInfo = function() {
 
-				$('#renoInformation').hide();
-				$('#renoShow').show();
-				$('#renoHide').hide();
-			}
-			// zq添加发票任务
-			contract.addInvoiceTask = function(contId) {
-				selectAllUsers();
-				/* var contId = this.con.cont_id; */
-				sessionStorage.setItem("conId", contId);
-				$("#tipAdd").fadeIn(200);
-				$(".overlayer").fadeIn(200);
-				var date = new Date();
-				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
-						+ "-" + (date.getDate());
-				contract.invoice = {
-					invoStime : timeNow,
-					invoEtime : timeNow
-				};
-
-			};
-			$("#sureAdd").click(function() {
-
-				var taskFormData = JSON.stringify(contract.invoice);
-				services.addInvoiceTask({
-					invoice : taskFormData,
-					contId : sessionStorage.getItem("conId")
-				}).success(function(data) {
-
-					$("#tipAdd").fadeOut(100);
-					$(".overlayer").fadeOut(200);
-					contract.invoice = "";
-					alert("添加成功！");
-
-				});
-			});
-
-			$("#cancelAdd").click(function() {
-				$("#tipAdd").fadeOut(100);
-				$(".overlayer").fadeOut(200);
-				contract.invoice = "";
-
-			});
-
-			// zq获取所有用户
-			function selectAllUsers() {
-				services.selectAllUsers({}).success(function(data) {
-					console.log("获取用户列表成功！");
-					contract.users = data;
-
-				});
-			}
-			function findRoleFromCookie() {
-				var cookie = {};
-
-				var cookies = document.cookie;
-				if (cookies === "")
-					return cookie;
-				var list = cookies.split(";");
-				for (var i = 0; i < list.length; i++) {
-					var cookieString = list[i];
-					/* console.log("cookie内容" + cookieString); */
-					var p = cookieString.indexOf("=");
-					var name = cookieString.substring(0, p);
-					var value = cookieString.substring(p + 1,
-							cookieString.length);
-					console.log(name);
-					cookie[name.trim()] = value;
-					if (name.trim() == "role") {
-						sessionStorage.setItem("userRole", value);
-						role = value;
-						switch (sessionStorage.getItem('userRole').trim()) {
-						case "1":
-							invoice.invoAddShow = true;
-							invoice.invoAuditShow = true;
-							invoice.invoFinishShow = true;
-							break;
-						case "2":
-							invoice.invoAddShow = false;
-							invoice.invoAuditShow = false;
-							invoice.invoFinishShow = false;
-
-							break;
-						case "3":
-							invoice.invoAddShow = false;
-							invoice.invoAuditShow = false;
-							invoice.invoFinishShow = true;
-
-							break;
-						case "4":
-							invoice.invoAddShow = true;
-							invoice.invoAuditShow = false;
-							invoice.invoFinishShow = false;
-							break;
-						case "5":
-							invoice.invoAddShow = false;
-							invoice.invoAuditShow = true;
-							invoice.invoFinishShow = false;
-							break;
-						}
-					}
-
-				}
-			}
-			// 10.27zq添加到款任务
-			contract.addReMoneyTask = function() {
-				selectAllUsers();
-				/* var contId = this.con.cont_id; */
-				sessionStorage.setItem("conId", this.con.cont_id);
-				$("#tipRemoAdd").fadeIn(200);
-				$(".overlayer").fadeIn(200);
-				var date = new Date();
-				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
-						+ "-" + (date.getDate());
-				contract.receiveMoney = {
-					remo_time : timeNow
-				};
-
-			};
-			$("#sureRemoAdd").click(function() {
-				var taskFormData = JSON.stringify(contract.receiveMoney);
-				console.log(taskFormData);
-				services.addReMoneyTask({
-					receiveMoney : taskFormData,
-					contId : sessionStorage.getItem("conId")
-				}).success(function(data) {
-					$("#tipRemoAdd").fadeOut(100);
-					$(".overlayer").fadeOut(200);
-					contract.receiveMoney = "";
-					alert("添加成功！");
-
-				});
-			});
-
-			$("#cancelRemoAdd").click(function() {
-				$("#tipRemoAdd").fadeOut(100);
-				$(".overlayer").fadeOut(200);
-				contract.receiveMoney = "";
-
-			});
-			// lwt:开收据
-			contract.addReceipt = function(contId) {
-				sessionStorage.setItem("conId", contId);
-				$(".overlayer").fadeIn(200);
-				$("#tipAddReceipt").fadeIn(200);
-				// 输入时间的input默认值设置为当前时间
-				var date = new Date();
-				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
-						+ "-" + (date.getDate());
-				contract.receipt = {
-					receAtime : timeNow
-				};
-
-			};
-			$("#sureAddReceipt").click(function() {
-				var receFormData = JSON.stringify(contract.receipt);
-				services.addReceipt({
-					receipt : receFormData,
-					contId : sessionStorage.getItem("conId")
-				}).success(function(data) {
-
-					$("#tipAddReceipt").fadeOut(100);
-					$(".overlayer").fadeOut(200);
-					alert("收据添加成功！");
-					contract.receipt = "";
-
-				});
-			});
-
-			$("#cancelAddReceipt").click(function() {
-				$("#tipAddReceipt").fadeOut(100);
-				$(".overlayer").fadeOut(200);
-				contract.receipt = "";
-			});
-			// 更改任务时间的格式
-			function changeDateType(time) {
-
-				newDate = new Date(time).toLocaleDateString().replace(/\//g,
-						'-');
-				return newDate;
-			}
-			// 初始化页面信息
-			function initData() {
-				console.log("初始化页面信息");
-				$("#invoice").hide();
-				$("#receipt").hide();
-				$("#contract").show();
-				$("#receiveMoney").hide();
-				$(".tiptop a").click(function() {
-					/* sessionStorage.setItem("conId", ""); */
-					$(".overlayer").fadeOut(200);
-					$(".tip").fadeOut(200);
-				});
-				if ($location.path().indexOf('/contractList') == 0) {// 如果是合同列表页
-					contract.flag = 1;// 标志位，用于控制按钮是否显示
-					services.getContractList({
-						page : 1
-					}).success(function(data) {
-
-						// 合同列表分页
-						contract.contracts = data.list;
-						contract.totalPage = data.totalPage;
-						var $pages = $(".tcdPageCode");
-						console.log(contract.totalPage);
-						if ($pages.length != 0) {
-							$pages.createPage({
-								pageCount : contract.totalPage,
-								current : 1,
-								backFn : function(p) {
-									contract.getContractList(p);// 点击页码时获取第p页的数据
+								$('#renoInformation').hide();
+								$('#renoShow').show();
+								$('#renoHide').hide();
+							}
+							// zq添加发票任务
+							contract.addInvoiceTask = function(contId) {
+								var regStr = "\\s" + 'tInvoAudit' + "\\s";
+								var reg = new RegExp(regStr);
+								if (permissionList.search(reg) < 0) {
+									$("#selectAudit").show();
+									$("#selectReceiver").hide();
+								}else{
+									$("#selectAudit").hide();
+									$("#selectReceiver").show();
 								}
-							});
-						}
-					});
+								selectAllUsers();
+								/* var contId = this.con.cont_id; */
+								sessionStorage.setItem("conId", contId);
+								$("#tipAdd").fadeIn(200);
+								$(".overlayer").fadeIn(200);
+								var date = new Date();
+								var timeNow = date.getFullYear() + "-"
+										+ (date.getMonth() + 1) + "-"
+										+ (date.getDate());
+								contract.invoice = {
+									invoStime : timeNow,
+									invoEtime : timeNow
+								};
 
-				} else if ($location.path().indexOf('/contractInfo') == 0) {
-					// zq添加查找合同详情
-					selectContractById(); // 根据ID获取合同信息
-					selectPrstByContId();// 根据合同ID获取该合同的工期阶段
-					selectRenoByContId();// 根据合同ID获取该合同的收款节点
-					$("#renoInformation").hide();
-					$("#prstInformation").hide();
-				}
-			}
-			findRoleFromCookie();
-			initData();
-			// 验证日期输入格式
-			var $dateFormat = $(".dateFormat");
-			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
-			$(".dateFormat").blur(function() {
-				if (!dateRegexp.test(this.value)) {
-					$(this).parent().children("span").css('display', 'inline');
-				}
-			});
-			$(".dateFormat").click(function() {
-				$(this).parent().children("span").css('display', 'none');
-			});
-		} ]);
+							};
+							$("#sureAdd").click(
+									function() {
+
+										var taskFormData = JSON
+												.stringify(contract.invoice);
+										services.addInvoiceTask(
+												{
+													invoice : taskFormData,
+													contId : sessionStorage
+															.getItem("conId")
+												}).success(function(data) {
+
+											$("#tipAdd").fadeOut(100);
+											$(".overlayer").fadeOut(200);
+											contract.invoice = "";
+											alert("添加成功！");
+
+										});
+									});
+
+							$("#cancelAdd").click(function() {
+								$("#tipAdd").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								contract.invoice = "";
+
+							});
+
+							// zq获取所有用户
+							function selectAllUsers() {
+								services.selectAllUsers({}).success(
+										function(data) {
+											console.log("获取用户列表成功！");
+											contract.users = data;
+
+										});
+							}
+							function findRoleFromCookie() {
+								var cookie = {};
+
+								var cookies = document.cookie;
+								if (cookies === "")
+									return cookie;
+								var list = cookies.split(";");
+								for (var i = 0; i < list.length; i++) {
+									var cookieString = list[i];
+									/* console.log("cookie内容" + cookieString); */
+									var p = cookieString.indexOf("=");
+									var name = cookieString.substring(0, p);
+									var value = cookieString.substring(p + 1,
+											cookieString.length);
+									console.log(name);
+									cookie[name.trim()] = value;
+									if (name.trim() == "role") {
+										sessionStorage.setItem("userRole",
+												value);
+										role = value;
+										switch (sessionStorage.getItem(
+												'userRole').trim()) {
+										case "1":
+											invoice.invoAddShow = true;
+											invoice.invoAuditShow = true;
+											invoice.invoFinishShow = true;
+											break;
+										case "2":
+											invoice.invoAddShow = false;
+											invoice.invoAuditShow = false;
+											invoice.invoFinishShow = false;
+
+											break;
+										case "3":
+											invoice.invoAddShow = false;
+											invoice.invoAuditShow = false;
+											invoice.invoFinishShow = true;
+
+											break;
+										case "4":
+											invoice.invoAddShow = true;
+											invoice.invoAuditShow = false;
+											invoice.invoFinishShow = false;
+											break;
+										case "5":
+											invoice.invoAddShow = false;
+											invoice.invoAuditShow = true;
+											invoice.invoFinishShow = false;
+											break;
+										}
+									}
+
+								}
+							}
+							// 10.27zq添加到款任务
+							contract.addReMoneyTask = function() {
+								selectAllUsers();
+								/* var contId = this.con.cont_id; */
+								sessionStorage.setItem("conId",
+										this.con.cont_id);
+								$("#tipRemoAdd").fadeIn(200);
+								$(".overlayer").fadeIn(200);
+								var date = new Date();
+								var timeNow = date.getFullYear() + "-"
+										+ (date.getMonth() + 1) + "-"
+										+ (date.getDate());
+								contract.receiveMoney = {
+									remo_time : timeNow
+								};
+
+							};
+							$("#sureRemoAdd")
+									.click(
+											function() {
+												var taskFormData = JSON
+														.stringify(contract.receiveMoney);
+												console.log(taskFormData);
+												services
+														.addReMoneyTask(
+																{
+																	receiveMoney : taskFormData,
+																	contId : sessionStorage
+																			.getItem("conId")
+																})
+														.success(
+																function(data) {
+																	$(
+																			"#tipRemoAdd")
+																			.fadeOut(
+																					100);
+																	$(
+																			".overlayer")
+																			.fadeOut(
+																					200);
+																	contract.receiveMoney = "";
+																	alert("添加成功！");
+
+																});
+											});
+
+							$("#cancelRemoAdd").click(function() {
+								$("#tipRemoAdd").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								contract.receiveMoney = "";
+
+							});
+							// lwt:开收据
+							contract.addReceipt = function(contId) {
+								sessionStorage.setItem("conId", contId);
+								$(".overlayer").fadeIn(200);
+								$("#tipAddReceipt").fadeIn(200);
+								// 输入时间的input默认值设置为当前时间
+								var date = new Date();
+								var timeNow = date.getFullYear() + "-"
+										+ (date.getMonth() + 1) + "-"
+										+ (date.getDate());
+								contract.receipt = {
+									receAtime : timeNow
+								};
+
+							};
+							$("#sureAddReceipt").click(
+									function() {
+										var receFormData = JSON
+												.stringify(contract.receipt);
+										services.addReceipt(
+												{
+													receipt : receFormData,
+													contId : sessionStorage
+															.getItem("conId")
+												}).success(function(data) {
+
+											$("#tipAddReceipt").fadeOut(100);
+											$(".overlayer").fadeOut(200);
+											alert("收据添加成功！");
+											contract.receipt = "";
+
+										});
+									});
+
+							$("#cancelAddReceipt").click(function() {
+								$("#tipAddReceipt").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								contract.receipt = "";
+							});
+							// 更改任务时间的格式
+							function changeDateType(time) {
+
+								newDate = new Date(time).toLocaleDateString()
+										.replace(/\//g, '-');
+								return newDate;
+							}
+							// 初始化页面信息
+							function initData() {
+								console.log("初始化页面信息");
+								$("#invoice").hide();
+								$("#receipt").hide();
+								$("#contract").show();
+								$("#receiveMoney").hide();
+								$(".tiptop a").click(function() {
+									/* sessionStorage.setItem("conId", ""); */
+									$(".overlayer").fadeOut(200);
+									$(".tip").fadeOut(200);
+								});
+								if ($location.path().indexOf('/contractList') == 0) {// 如果是合同列表页
+									contract.flag = 1;// 标志位，用于控制按钮是否显示
+									services
+											.getContractList({
+												page : 1
+											})
+											.success(
+													function(data) {
+
+														// 合同列表分页
+														contract.contracts = data.list;
+														contract.totalPage = data.totalPage;
+														var $pages = $(".tcdPageCode");
+														console
+																.log(contract.totalPage);
+														if ($pages.length != 0) {
+															$pages
+																	.createPage({
+																		pageCount : contract.totalPage,
+																		current : 1,
+																		backFn : function(
+																				p) {
+																			contract
+																					.getContractList(p);// 点击页码时获取第p页的数据
+																		}
+																	});
+														}
+													});
+
+								} else if ($location.path().indexOf(
+										'/contractInfo') == 0) {
+									// zq添加查找合同详情
+									selectContractById(); // 根据ID获取合同信息
+									selectPrstByContId();// 根据合同ID获取该合同的工期阶段
+									selectRenoByContId();// 根据合同ID获取该合同的收款节点
+									$("#contInformation").hide();
+									$("#renoInformation").hide();
+									$("#prstInformation").hide();
+								}
+							}
+							findRoleFromCookie();
+							initData();
+							// 验证日期输入格式
+							var $dateFormat = $(".dateFormat");
+							var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
+							$(".dateFormat").blur(
+									function() {
+										if (!dateRegexp.test(this.value)) {
+											$(this).parent().children("span")
+													.css('display', 'inline');
+										}
+									});
+							$(".dateFormat").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
+						} ]);
 // 小数过滤器
 app.filter('receFloat', function() {
 	return function(input) {
@@ -762,7 +818,7 @@ app.directive("dateFormat", function() {
 		require : 'ngModel',
 		scope : true,
 		link : function(scope, elem, attrs, controller) {
-			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+			var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
 
 			// Model变化时执行
 			// 初始化指令时BU执行
