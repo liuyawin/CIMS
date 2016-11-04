@@ -32,25 +32,4 @@
 			}
 		});
 	});
-<<<<<<< HEAD
-=======
-
-	/* $(function() {
-		//Ã©Â¡Â¶Ã©ÂÂ¨Ã¥Â¯Â¼Ã¨ÂÂªÃ¥ÂÂÃ¦ÂÂ¢
-		var $pages = $(".tcdPageCode");
-		var $tablelist = $(".tablelist");
-		console.log($pages.length);
-		console.log($tablelist.length);
-		if($pages.length != 0){
-			$(".tcdPageCode").createPage({
-		        pageCount:10,
-		        current:1,
-		        backFn:function(p){
-		            console.log("åé¡µï¼");
-		        }
-		    });
-		}
-	}); */
->>>>>>> 7a98ed058cc041041019b17bf4cdec3c8953ee43
-	
 </script>
