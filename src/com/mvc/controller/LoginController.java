@@ -130,6 +130,16 @@ public class LoginController {
 		String password = request.getParameter("password");
 		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
+		System.out.println("权限测试开始：");
+		String result = "";
+		String permission = "";
+		if (user.getRole().getRole_permission() != null && !user.getRole().getRole_permission().equals("")) {
+			permission = user.getRole().getRole_permission();
+			result = numToPermissionStr(permission);
+		}
+		System.out.println("权限result：" + result);
+		System.out.println("权限测试结束");
+
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
 			String passwd = user.getUser_pwd();

@@ -15,7 +15,7 @@ public class PermissionConstants {
 	public static final String task = "taskPer";
 	public static final String bill = "billPer";
 	public static final String system = "systemPer";
-	public static final String index = "alarmPer";
+	public static final String index = "indexPer";
 
 	// 合同所有权限
 	public static final String[] contPer = { "cAdd", "cHeadEdit", "cBodyEdit", "cDel", "cStateEdit", "cPsAdd",
