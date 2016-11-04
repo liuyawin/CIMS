@@ -19,6 +19,7 @@ import net.sf.json.JSONObject;
 
 /**
  * 角色
+ * 
  * @author wanghuimin
  * @date 2016年9月18日
  */
@@ -27,26 +28,17 @@ import net.sf.json.JSONObject;
 public class RoleController {
 	@Autowired
 	RoleService roleService;
-	
-	
+
 	/**
-	 * 设置进入角色起始页
+	 * 设置进入用户管理起始页 包 20161014
 	 * 
-	 * @return
-	 */
-	@RequestMapping("/toRolePage.do")
-	public String roleReceivePage() {
-		return "userManagement/userInformation/index";
-	}
-	/**
-	 * 设置进入用户管理起始页
-	 * 包 20161014
 	 * @return
 	 */
 	@RequestMapping("/toUserManagePage.do")
 	public String userManagePage() {
 		return "systemManagement/index";
 	}
+
 	/**
 	 * 删除角色列表状态
 	 * 
@@ -56,7 +48,6 @@ public class RoleController {
 	 */
 	@RequestMapping(value = "/deleteRole.do")
 	public @ResponseBody String deleteUser(HttpServletRequest request, HttpSession session) {
-		System.out.println("进来了");
 		Integer roleid = Integer.valueOf(request.getParameter("roleId"));
 		boolean result = roleService.deleteState(roleid);
 		return JSON.toJSONString(result);
@@ -72,7 +63,6 @@ public class RoleController {
 	@RequestMapping(value = "/getAllRoleList.do")
 	public @ResponseBody String getAllStores(HttpServletRequest request, HttpSession session) {
 		List<Role> result = roleService.findRoleAlls();
-		System.out.println(JSON.toJSONString(result));
 		return JSON.toJSONString(result);
 	}
 
@@ -87,14 +77,12 @@ public class RoleController {
 	public @ResponseBody String getRoleList(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Long totalRow = roleService.countTotal();
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(Integer.parseInt(totalRow.toString()));
 		List<Role> list = roleService.findUserAllByPage(pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -111,22 +99,17 @@ public class RoleController {
 		role.setRole_name(request.getParameter("role_name"));
 		role.setRole_state(0);
 		role.setRole_permission(request.getParameter("role_permission"));
-		// if(permission!=null){
-		// for(String permissions : permission){
-		// permissions.split(",");
-		// role.setRole_permission(permissions);
-		// }
-		// }
+		System.out.println("role_permission:"+request.getParameter("role_permission"));
 		boolean result;
-		if(request.getParameter("role_id") !=null){
+		if (request.getParameter("role_id") != null) {
 			role.setRole_id(Integer.valueOf(request.getParameter("role_id")));
-			result = roleService.save(role);//修改角色信息
+			result = roleService.save(role);// 修改角色信息
+		} else {
+			result = roleService.save(role);// 添加角色信息
 		}
-		else {
-			result = roleService.save(role);//添加角色信息
-		}		
 		return JSON.toJSONString(result);
 	}
+
 	/**
 	 * 根据ID查看角色详情
 	 * 
@@ -134,13 +117,13 @@ public class RoleController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value="/selectRoleById.do")
-	public @ResponseBody String getRoleContentById(HttpServletRequest request,HttpSession session){
-		JSONObject jsonObject=new JSONObject();
-		Integer roleid=Integer.valueOf(request.getParameter("roleid"));
-		Role role=roleService.findRoleContentById(roleid);
+	@RequestMapping(value = "/selectRoleById.do")
+	public @ResponseBody String getRoleContentById(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		Integer roleid = Integer.valueOf(request.getParameter("roleid"));
+		Role role = roleService.findRoleContentById(roleid);
 		jsonObject.put("role", role);
 		return jsonObject.toString();
-		}
+	}
 
 }
