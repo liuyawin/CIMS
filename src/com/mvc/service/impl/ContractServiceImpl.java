@@ -234,7 +234,7 @@ public class ContractServiceImpl implements ContractService {
 				if (jsonObject.containsKey("manager")) {
 					JSONObject json = JSONObject.fromObject(jsonObject.getString("manager"));
 					User manager = userRepository.findById(Integer.valueOf(json.getString("user_id")));// 项目设总
-					if (contract.getManager() != manager) {// 修改设总
+					if (contract.getManager() != null && contract.getManager() != manager) {// 修改设总
 						flag_shezong = true;
 						shezong = contract.getManager().getUser_name();
 					}
@@ -245,8 +245,10 @@ public class ContractServiceImpl implements ContractService {
 				}
 				if (jsonObject.containsKey("assistant_manager")) {
 					JSONObject json = JSONObject.fromObject(jsonObject.getString("assistant_manager"));
-					User assistant_manager = userRepository.findById(Integer.valueOf(json.getString("user_id")));// 项目副设总
-					contract.setAssistant_manager(assistant_manager);
+					if (!json.isNullObject() && json != null) {// JSONObject为空判断
+						User assistant_manager = userRepository.findById(Integer.valueOf(json.getString("user_id")));// 项目副设总
+						contract.setAssistant_manager(assistant_manager);
+					}
 				}
 				if (jsonObject.containsKey("cont_initiation")) {
 					contract.setCont_initiation(jsonObject.getInt("cont_initiation"));// 是否立项

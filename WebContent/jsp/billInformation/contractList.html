@@ -82,7 +82,13 @@
 					ng-model="invoice.invoMoney" required>万元</li>
 				<li><label>业主公司</label><input type="text" name="invoFirm"
 					class="dfinput" ng-model="invoice.invoFirm" required></li>
-				<li><label>审核人</label><select name="tReceiver" class="dfselect"
+				<li id="selectReceiver"><label>执行人</label><select name="tReceiver" class="dfselect"
+					ng-model="invoice.receiverId">
+						<option ng-repeat="user in users" value={{user.user_id}}>
+							<span>{{user.user_name}}</span>
+						</option>
+				</select></li>
+				<li id="selectAudit"><label>审核人</label><select name="tAudit" class="dfselect"
 					ng-model="invoice.auditId">
 						<option ng-repeat="user in users" value={{user.user_id}}>
 							<span>{{user.user_name}}</span>

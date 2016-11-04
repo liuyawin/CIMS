@@ -461,7 +461,7 @@ invoiceApp
 							}
 							function dateformat() {
 								var $dateFormat = $(".dateFormat");
-								var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+								var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
 								$(".dateFormat").blur(
 										function() {
 											if (!dateRegexp.test(this.value)) {
@@ -520,7 +520,7 @@ invoiceApp.directive("dateFormat", function() {
 		require : 'ngModel',
 		scope : true,
 		link : function(scope, elem, attrs, controller) {
-			var dateRegexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+			var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
 			// Model变化时执行
 			// 初始化指令时BU执行
 			scope.$watch(attrs.ngModel, function(val) {
