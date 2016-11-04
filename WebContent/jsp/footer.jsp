@@ -32,22 +32,5 @@
 			}
 		});
 	});
-
-	/* $(function() {
-		//é¡¶é¨å¯¼èªåæ¢
-		var $pages = $(".tcdPageCode");
-		var $tablelist = $(".tablelist");
-		console.log($pages.length);
-		console.log($tablelist.length);
-		if($pages.length != 0){
-			$(".tcdPageCode").createPage({
-		        pageCount:10,
-		        current:1,
-		        backFn:function(p){
-		            console.log("分页！");
-		        }
-		    });
-		}
-	}); */
 	
 </script>
