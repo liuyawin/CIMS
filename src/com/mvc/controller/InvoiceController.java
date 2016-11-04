@@ -135,15 +135,16 @@ public class InvoiceController {
 	 * 根据合同ID查询发票总金额
 	 * 
 	 * @param request
-	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = "/countInvoiceMoneyByContId.do")
-	public @ResponseBody String totalMoney(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String totalMoney(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
 		Float totalMoney = invoiceService.totalMoneyOfInvoice(contId);
+		Integer totalRow = invoiceService.countTotalRow(contId);
 		jsonObject.put("totalMoney", totalMoney);
+		jsonObject.put("totalRow", totalRow);
 		return jsonObject.toString();
 	}
 
@@ -249,35 +250,7 @@ public class InvoiceController {
 	}
 
 	/**
-	 * 根据合同ID，权限，状态，页码 查找发票
-	 * 
-	 * @param request
-	 * @param session
-	 * @return list
-	 */
-	@RequestMapping(value = "/getInvoiceListByContId.do")
-	public @ResponseBody String selectInvoiceByContId(HttpServletRequest request, HttpSession session) {
-		Integer invoState = Integer.parseInt(request.getParameter("invoState"));// -1：全部，0：待审核，1：待处理，2：已完成
-		Integer cont_id = Integer.parseInt(request.getParameter("contId"));
-		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		Integer user_id = user.getUser_id();
-		String permission = user.getRole().getRole_permission();// 权限
-		Integer totalRow = invoiceService.countByStateAndPerm(invoState, permission, user_id, cont_id);
-		Pager pager = new Pager();
-		pager.setPage(Integer.valueOf(request.getParameter("page")));
-		pager.setTotalRow(totalRow);
-
-		List<Invoice> list = invoiceService.selectInvoiceByState(invoState, permission, user_id, cont_id,
-				pager.getOffset(), pager.getLimit());
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		jsonObject.put("totalRow", totalRow);
-		jsonObject.put("totalPage", pager.getTotalPage());
-		return jsonObject.toString();
-	}
-
-	/**
-	 * 根据合同ID，权限，状态，页码 查找发票
+	 * 根据权限，状态，页码 查找发票
 	 * 
 	 * @param request
 	 * @param session
@@ -289,16 +262,36 @@ public class InvoiceController {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer user_id = user.getUser_id();
 		String permission = user.getRole().getRole_permission();// 权限
-		Integer totalRow = invoiceService.countByStateAndPerm(invoState, permission, user_id, null);
+		Integer totalRow = invoiceService.countByStateAndPerm(invoState, permission, user_id);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
 
-		List<Invoice> list = invoiceService.selectInvoiceByState(invoState, permission, user_id, null,
-				pager.getOffset(), pager.getLimit());
+		List<Invoice> list = invoiceService.selectInvoByStateAndPerm(invoState, permission, user_id, pager);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", list);
-		jsonObject.put("totalRow", totalRow);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 根据合同ID，状态，页码 查找发票
+	 * 
+	 * @param request
+	 * @return list
+	 */
+	@RequestMapping(value = "/getInvoiceListByContId.do")
+	public @ResponseBody String selectInvoiceByContId(HttpServletRequest request) {
+		Integer invoState = Integer.parseInt(request.getParameter("invoState"));// -1：全部，0：待审核，1：待处理，2：已完成
+		Integer cont_id = Integer.parseInt(request.getParameter("contId"));
+		Integer totalRow = invoiceService.countByStateAndContId(invoState, cont_id);
+		Pager pager = new Pager();
+		pager.setPage(Integer.valueOf(request.getParameter("page")));
+		pager.setTotalRow(totalRow);
+
+		List<Invoice> list = invoiceService.selectInvoByStateAndContId(invoState, cont_id, pager);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}

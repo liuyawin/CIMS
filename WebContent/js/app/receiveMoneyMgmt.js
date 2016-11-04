@@ -163,7 +163,7 @@ receiveMoneyApp
 							var role;
 							var remoState = null;
 							var remoListType = null;// 根据类型的不同区分是查找任务列表还是普通的到款列表
-
+							var remoPage = 1;
 							// 查看到款记录
 							reMoney.checkRemo = function() {
 								var remoId = this.remo.remo_id;
@@ -192,51 +192,22 @@ receiveMoneyApp
 								$(".overlayer").fadeOut(200);
 								reMoney.receiveMoney = "";
 							});
-							$("#sureRemoAudit")
-									.click(
-											function() {
-												services
-														.auditReceiveMoney(
-																{
-																	remoId : sessionStorage
-																			.getItem("remoId"),
-																	remoAmoney : $(
-																			"#remoAmoney")
-																			.val()
-																})
-														.success(
-																function(data) {
-																	alert("操作成功！");
-																	$(
-																			"#tipRemo")
-																			.fadeOut(
-																					100);
-																	$(
-																			".overlayer")
-																			.fadeOut(
-																					200);
+							$("#sureRemoAudit").click(function() {
+								services.auditReceiveMoney({
+									remoId : sessionStorage.getItem("remoId"),
+									remoAmoney : $("#remoAmoney").val()
+								}).success(function(data) {
+									alert("操作成功！");
+									$("#tipRemo").fadeOut(100);
+									$(".overlayer").fadeOut(200);
 
-																	selectContractById();
-																	countReceiveMoneyByContId();
-																	services
-																			.selectReceiveMoneysByContId(
-																					{
-																						contId : sessionStorage
-																								.getItem("conId"),
-																						page : 1,
-																						remoState : remoState
-																					})
-																			.success(
-																					function(
-																							data) {
-																						reMoney.remos = data.list;
-																						pageTurn(
-																								data.totalPage,
-																								1);
-																					});
-																});
+									selectContractById();
+									countReceiveMoneyByContId();
+									findReceiveMoneys(remoPage);
 
-											});
+								});
+
+							});
 							// 根据到款ID查找到款单条记录
 							function selectReceiveMoneyById(remoId) {
 								services
@@ -315,6 +286,7 @@ receiveMoneyApp
 										pageCount : totalPage,
 										current : page,
 										backFn : function(p) {
+											remoPage = p;
 											findReceiveMoneys(p);
 										}
 									});
@@ -381,6 +353,10 @@ receiveMoneyApp
 
 										});
 							}
+							// zq查看合同ID，并记入sessionStorage
+							contract.getConId = function(conId) {
+								sessionStorage.setItem('conId', conId);
+							};
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {
@@ -510,7 +486,7 @@ receiveMoneyApp.filter('cutString', function() {
 	return function(input) {
 		var content = "";
 		if (input != "") {
-			var shortInput = input.substr(0, 6);
+			var shortInput = input.substr(0, 8);
 			content = shortInput + "……";
 		}
 

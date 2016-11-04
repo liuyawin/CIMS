@@ -21,13 +21,16 @@
 	<form ng-submit="repeatAddContract()" name="staff">
 	<table class="tbl tablelist" id="contInformation">
 		<tr>
-			<td colspan='2' class="width15 text-center">合同名称</td>
+			<td colspan='2' class="width15 text-center">合同名称<label
+				class="left_length5 text_style">*</label></td>
 			<td colspan='6'>{{cont.cont_name}}</td>
 		</tr>
 		<tr>
-			<td colspan='2' class="width15 text-center">合同类别</td>
+			<td colspan='2' class="width15 text-center">合同类别<label
+				class="left_length5 text_style">*</label></td>
 			<td colspan='2'>{{cont.cont_type |conType}}</td>
-			<td colspan='2' class=" text-center">合同等级</td>
+			<td colspan='2' class=" text-center">合同等级<label
+				class="left_length5 text_style">*</label></td>
 			<td colspan='2'>{{cont.cont_rank | conRank}}
 			<td>
 		</tr>
@@ -46,9 +49,11 @@
 			<td colspan='2'>{{cont.cont_cnum}}</td>
 		</tr>
 		<tr>
-			<td colspan='2' class="width15 text-center">项目名称</td>
+			<td colspan='2' class="width15 text-center">项目名称<label
+				class="left_length5 text_style">*</label></td>
 			<td colspan='2'>{{cont.cont_project}}</td>
-			<td colspan='2' class="width15 text-center">项目所在省市</td>
+			<td colspan='2' class="width15 text-center">项目所在省市<label
+				class="left_length5 text_style">*</label></td>
 			<td colspan='2'>{{cont.province}}&nbsp;&nbsp;{{cont.city}}</td>
 		</tr>
 		<tr>
@@ -57,7 +62,8 @@
 			<td colspan='6'>{{cont.proStage | conProStage}}</td>
 		</tr>
 		<tr>
-			<td colspan='2' class="width15 text-center">项目状态</td>
+			<td colspan='2' class="width15 text-center">项目状态<label
+				class="left_length5 text_style">*</label></td>
 			<td colspan='2'>{{cont.cont_state |conState}}</td>
 			<td colspan='2' class="width15 text-center">合同签订时间<label
 				class="left_length5 text_style">*</label></td>
@@ -80,7 +86,8 @@
 		</tr>
 		<tr>
 			<td rowspan='16' colspan='1' class="text-center">业主信息</td>
-			<td colspan='2' class="width15 text-center">公司全称</td>
+			<td colspan='2' class="width15 text-center">公司全称<label
+				class="left_length5 text_style">*</label></td>
 			<td colspan='6'>{{cont.cont_client}}</td>
 		</tr>
 
@@ -157,7 +164,7 @@
 				{{cont.cont_avetaxpayer | conAvetaxpayer}}
 			</td>
 			<td colspan='2' class="width15 text-center">发票类型</td>
-			<td colspan='2'>{{cont.invoice_type}}</td>
+			<td colspan='2'>{{cont.invoice_type | conInvoiceType}}</td>
 		</tr>
 		<tr>
 			<td colspan='2' class="width15 text-center ">纳税人识别号</td>

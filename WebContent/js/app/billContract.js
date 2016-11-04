@@ -242,10 +242,13 @@ app.controller('ContractController', [
 
 				services.selectContractById({
 					cont_id : cont_id
-				}).success(function(data) {
-					contract.cont = data;
-
-				});
+				}).success(
+						function(data) {
+							contract.cont = data.contract;
+							if (data.contract.cont_stime) {
+								contract.cont.cont_stime =changeDateType(data.contract.cont_stime.time); 
+							}
+						});
 			}
 			// zq：根据合同ID查询工期阶段的内容
 			function selectPrstByContId() {
@@ -469,6 +472,13 @@ app.controller('ContractController', [
 				$(".overlayer").fadeOut(200);
 				contract.receipt = "";
 			});
+			// 更改任务时间的格式
+			function changeDateType(time) {
+
+				newDate = new Date(time).toLocaleDateString().replace(/\//g,
+						'-');
+				return newDate;
+			}
 			// 初始化页面信息
 			function initData() {
 				console.log("初始化页面信息");
@@ -538,7 +548,7 @@ app.filter('receFloat', function() {
 		return money;
 	}
 });
-//合同状态过滤器
+// 合同状态过滤器
 app.filter('conState', function() {
 	return function(input) {
 		var state = "";
@@ -553,7 +563,7 @@ app.filter('conState', function() {
 		return state;
 	}
 });
-//合同立项判断
+// 合同立项判断
 app.filter('conInitiation', function() {
 	return function(input) {
 		var initiation = "";
@@ -567,7 +577,7 @@ app.filter('conInitiation', function() {
 		return initiation;
 	}
 });
-//合同是否有委托书判断
+// 合同是否有委托书判断
 app.filter('conHasproxy', function() {
 	return function(input) {
 		var hasproxy = "";
@@ -581,7 +591,7 @@ app.filter('conHasproxy', function() {
 		return hasproxy;
 	}
 });
-//合同一般纳税人判断
+// 合同一般纳税人判断
 app.filter('conAvetaxpayer', function() {
 	return function(input) {
 		var avetaxpayer = "";
@@ -634,7 +644,7 @@ app.filter('conProStage', function() {
 		if (input) {
 			console.log(input);
 			strs = input.split(","); // 字符分割
-			
+
 			for (i = 0; i < strs.length; i++) {
 				switch (strs[i]) {
 				case "0":
