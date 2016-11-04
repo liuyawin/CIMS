@@ -22,8 +22,8 @@
 	angular.element(document).ready(function() {
 		$.get('/CIMS/login/getUserPermission.do', function(data) { 
 			  permissionList = data; // 
-			  console.log("身份是：" + permissionList);
-		angular.bootstrap(document.getElementById("alarm"), [ "alarm" ]);
+			  //console.log("身份是：" + permissionList);
+			  angular.bootstrap(document.getElementById("alarm"), [ "alarm" ]);
 	});
 	});
 </script>

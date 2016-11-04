@@ -62,7 +62,6 @@ angular.element(document).ready(function() {
 console.log("获取权限列表！"); 
 $.get('/CIMS/login/getUserPermission.do', function(data) { 
 	  permissionList = data; // 
-	  console.log("身份是：" + permissionList);
 	  angular.bootstrap($("#user"), ['user']); //手动加载angular模块
 	  }); 
 });
@@ -72,9 +71,7 @@ app.directive('hasPermission', function($timeout) {
 			restrict : 'ECMA',
 			link : function(scope, element, attr) {
 				var key = attr.hasPermission.trim(); // 获取页面上的权限值
-				console.log("获取页面上的权限值" + key);
 				var keys = permissionList;
-				console.log("获取后台的权限值" + keys);
 				var regStr = "\\s" + key + "\\s";
 				var reg = new RegExp(regStr);
 				if (keys.search(reg) < 0) {
@@ -107,7 +104,6 @@ app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
 	services.getUserListByPage = function(data) {
-		console.log("发送请求根据页数获取用户信息");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'user/getUserListByPage.do',
@@ -116,7 +112,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	};
 
 	services.getAllDepartmentList = function(data) {
-		console.log("发送请求获取所有部门信息");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'department/getAllDepartmentList.do',
@@ -125,8 +120,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	};
 
 	services.addUser = function(data) {
-		console.log("发送请求增加用户信息");
-
 		return $http({
 			method : 'post',
 			url : baseUrl + 'user/addUser.do',
@@ -134,7 +127,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 	services.deleteUser = function(data) {
-		console.log("发送请求删除用户信息");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'user/deleteUser.do',
@@ -143,7 +135,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	};
 
 	services.selectUserByName = function(data) {
-		console.log("按名字查找用户");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'user/selectUserByName.do',
@@ -151,7 +142,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 	services.selectUserById = function(data) {
-		console.log("按名字查找用户");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'user/selectUserById.do',
@@ -159,7 +149,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 	services.getRoleListByPage = function(data) {
-		console.log("发送请求根据页数获取角色信息");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'role/getRoleListByPage.do',
@@ -168,7 +157,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	};
 
 	services.deleteRole = function(data) {
-		console.log("发送请求删除角色信息");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'role/deleteRole.do',
@@ -176,7 +164,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 	services.getAllRoleList = function(data) {
-		console.log("发送请求获取所有角色信息");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'role/getAllRoleList.do',
@@ -184,7 +171,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 	services.addRole = function(data) {
-		console.log("发送请求添加角色");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'role/addRole.do',
@@ -193,7 +179,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 
 	};
 	services.selectRoleById = function(data) {
-		console.log("发送请求获取role");
 		return $http({
 			method : 'post',
 			url : baseUrl + 'role/selectRoleById.do',
@@ -214,7 +199,6 @@ app.controller('userController', [
 			function pageTurn(totalPage, page) {
 
 				var $pages = $(".tcdPageCode");
-				console.log($pages.length);
 				if ($pages.length != 0) {
 					$(".tcdPageCode").createPage({
 						pageCount : totalPage,
@@ -235,7 +219,7 @@ app.controller('userController', [
 			}
 			// 功能模块权限字段名
 			var perName = [ "con_per", "task_per", "bill_per", "system_per",
-					"alarm_per" ];
+					"index_per" ];
 			// 初始化权限数据容器
 			function initCheckBoxData() {
 				$("input:checkbox[name='selectAllChkBx']").attr("checked",
@@ -249,12 +233,12 @@ app.controller('userController', [
 				}
 			}
 			// 根据用户选择更新权限数据容器
-			var updateSelected = function(action, id, name) {
+			var updateSelected = function(action, clazz, name) {
 				if (action == 'add') {
-					user.selected[id][name] = 1;
+					user.selected[clazz][name] = 1;
 				}
 				if (action == 'remove') {
-					user.selected[id][name] = 0;
+					user.selected[clazz][name] = 0;
 				}
 			}
 			user.selectAll = function($event, subPerName) {
@@ -268,14 +252,14 @@ app.controller('userController', [
 
 			}
 			// 根据用户选择更新权限数据容器
-			user.updateSelection = function($event, id) {
+			user.updateSelection = function($event, clazz) {
 				var checkbox = $event.target;
 				var action = (checkbox.checked ? 'add' : 'remove');
-				updateSelected(action, checkbox.id, checkbox.name);
+				updateSelected(action, checkbox.clazz, checkbox.name);
 			}
 			// 控件内容初始化
-			user.isSelected = function(id, name) {
-				var t = user.selected[id][name];
+			user.isSelected = function(clazz, name) {
+				var t = user.selected[clazz][name];
 				return t;
 			}
 
@@ -284,7 +268,6 @@ app.controller('userController', [
 			user.addNewUser = function() {
 				services.getAllRoleList().success(function(data) {
 					user.roles = data;
-					console.log(data);
 				});
 				$(".overlayer").fadeIn(200);
 				$(".tip").fadeIn(200);
@@ -297,12 +280,10 @@ app.controller('userController', [
 				var user_id = this.user.user_id;
 				services.getAllRoleList().success(function(data) {
 					user.roles2 = data;
-					console.log(data);
 					services.selectUserById({
 						userid : user_id
 					}).success(function(data) {
 						user.editUser = data.user;
-						console.log(user_id);
 					});
 				});
 
@@ -316,7 +297,6 @@ app.controller('userController', [
 			// 修改报用户
 			$(".sure2").click(function() {
 				var EditUser = JSON.stringify(user.editUser);
-				console.log(EditUser);
 				services.addUser({
 					user : EditUser
 				}).success(function(data) {
@@ -342,7 +322,6 @@ app.controller('userController', [
 			// 添加用户
 			$(".sure1").click(function() {
 				var AddUser = JSON.stringify(user.addinguser);
-				console.log(AddUser);
 				services.addUser({
 					user : AddUser
 				}).success(function(data) {
@@ -357,14 +336,25 @@ app.controller('userController', [
 
 			// 角色模态框开始
 			// 点击新建按钮事件
-			user.addNewRole = function() {
+			user.addNewRole = function(e) {
+				preventDefault(e);
 				initCheckBoxData();
 				$(".overlayer").fadeIn(200);
 				$(".tip").fadeIn(200);
 				$("#addRole-form").slideDown(200);
 				$("#editRole-form").hide();
+				
 			};
-
+			function preventDefault(e) {
+				if (e && e.preventDefault) {
+					// 阻止默认浏览器动作(W3C)
+					e.preventDefault();
+				} else {
+					// IE中阻止函数器默认动作的方式
+					window.event.returnValue = false;
+					return false;
+				}
+			}
 			// 点击修改时弹出模态框
 			user.editRoleBtn = function(obj) {
 				var roleID = this.role.role_id;
@@ -373,8 +363,8 @@ app.controller('userController', [
 					roleid : roleID
 				}).success(function(data) {
 					user.editRole = data.role;
+					var obj = $.parseJSON(data.role.role_permission);
 					user.selected = $.parseJSON(data.role.role_permission);
-					console.log(roleID);
 				});
 				$(".overlayer").fadeIn(200);
 				$(".tip").fadeIn(200);
@@ -392,7 +382,6 @@ app.controller('userController', [
 				}).success(function(data) {
 					user.editRole = data.role;
 					user.selected = $.parseJSON(data.role.role_permission);
-					console.log(roleID);
 				});
 				$(".overlayer").fadeIn(200);
 				$(".tip").fadeIn(200);
@@ -405,7 +394,6 @@ app.controller('userController', [
 			$(".roleEdit").click(function() {
 				var EditRole = JSON.stringify(user.editRole);
 				var EditRolePermission = JSON.stringify(user.selected);
-				console.log(EditRole);
 
 				services.addRole({
 					role_name : user.editRole.role_name,
@@ -435,7 +423,6 @@ app.controller('userController', [
 			$(".roleAdd").click(function() {
 				var AddUser = JSON.stringify(user.addinguser);
 				var rolePermission = JSON.stringify(user.selected);
-				console.log(AddUser);
 				services.addRole({
 					role_name : user.addingRole.role_name,
 					role_permission : rolePermission
@@ -494,14 +481,12 @@ app.controller('userController', [
 			// 获取部门列表
 			function getAllDepartmentList() {
 				services.getAllDepartmentList({}).success(function(data) {
-					console.log("获取部门列表成功！");
 					user.departs = data;
 				});
 			}
 			// 获取角色列表
 			function getAllRoleList() {
 				services.getAllRoleList({}).success(function(data) {
-					console.log("获取角色列表成功！");
 					user.roles = data;
 				});
 			}
@@ -523,14 +508,11 @@ app.controller('userController', [
 				var list = cookies.split(";");
 				for (var i = 0; i < list.length; i++) {
 					var cookieString = list[i];
-					/* console.log("cookie内容" + cookieString); */
 					var p = cookieString.indexOf("=");
 					var name = cookieString.substring(0, p);
 					var value = cookieString.substring(p + 1,
 							cookieString.length);
-					console.log(name);
 					cookie[name.trim()] = value;
-					console.log("进来了,已经赋值" + name);
 					if (name.trim() == "role") {
 						sessionStorage.setItem("userRole", value);
 					}
@@ -550,8 +532,6 @@ app.controller('userController', [
 						pageTurn(data.totalPage, 1)
 					});
 				} else if ($location.path().indexOf('/userAdd') == 0) {
-					console.log("初始化用户新增信息");
-
 					getAllDepartmentList();
 					getAllRoleList();
 

@@ -75,6 +75,8 @@ public class ContractServiceImpl implements ContractService {
 		contract.setCont_initiation(1);// 已立项
 		contract.setCont_ishistory(0);// 未删除
 		contract.setCont_state(0);// 合同状态
+		contract.setCont_rank(1);//合同等级
+		contract.setCompany_type("0");//公司类型
 		contract.setCont_ctime(date);// 合同创建时间
 		contract.setCreator(user);// 合同创建者
 		contract.setCur_prst("未录入工期阶段");// 当前工期阶段
@@ -234,7 +236,7 @@ public class ContractServiceImpl implements ContractService {
 				if (jsonObject.containsKey("manager")) {
 					JSONObject json = JSONObject.fromObject(jsonObject.getString("manager"));
 					User manager = userRepository.findById(Integer.valueOf(json.getString("user_id")));// 项目设总
-					if (contract.getManager() != manager) {// 修改设总
+					if (contract.getManager() != null && contract.getManager() != manager) {// 修改设总
 						flag_shezong = true;
 						shezong = contract.getManager().getUser_name();
 					}
@@ -245,8 +247,10 @@ public class ContractServiceImpl implements ContractService {
 				}
 				if (jsonObject.containsKey("assistant_manager")) {
 					JSONObject json = JSONObject.fromObject(jsonObject.getString("assistant_manager"));
-					User assistant_manager = userRepository.findById(Integer.valueOf(json.getString("user_id")));// 项目副设总
-					contract.setAssistant_manager(assistant_manager);
+					if (!json.isNullObject() && json != null) {// JSONObject为空判断
+						User assistant_manager = userRepository.findById(Integer.valueOf(json.getString("user_id")));// 项目副设总
+						contract.setAssistant_manager(assistant_manager);
+					}
 				}
 				if (jsonObject.containsKey("cont_initiation")) {
 					contract.setCont_initiation(jsonObject.getInt("cont_initiation"));// 是否立项
