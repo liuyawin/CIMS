@@ -14,9 +14,10 @@
 			class="hand showInfo" id="contShow" ng-click="showContInfo()"><img
 			src="../images/hideInfo.png" class="hand hideE showInfo"
 			id="contHide" ng-click="hideContInfo()"></span> <a class="update-btn"
-			href="/CIMS/file/download.do">下载附件</a><a class="update-btn"
+			href="/CIMS/file/download.do">下载附件</a>
+			<!-- <a class="update-btn"
 			href="#/contractUpdate" has-permission='cHeadEdit'>修改1</a><a
-			class="update-btn" href="#/contractModify" has-permission='cBodyEdit'>修改2</a>
+			class="update-btn" href="#/contractModify" has-permission='cBodyEdit'>修改2</a> -->
 	</div>
 	<form ng-submit="repeatAddContract()" name="staff">
 	<table class="tbl tablelist" id="contInformation">
@@ -192,9 +193,9 @@
 		<span>工期阶段详情<img src="../images/showInfo.png"
 			class="hand showInfo" id="prstShow" ng-click="showPrstInfo()"><img
 			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="prstHide" ng-click="hidePrstInfo()"></span> <a
+			id="prstHide" ng-click="hidePrstInfo()"></span> <!-- <a
 			class="update-btn tablelink" href="" ng-click="addOneStage()"
-			has-permission='cPsAdd'>添加</a>
+			has-permission='cPsAdd'>添加</a> -->
 	</div>
 
 	<table class="tbl tablelist" id="prstInformation">
@@ -205,7 +206,7 @@
 			<td class="width10 text-center">工期进度</td>
 			<td class="width10 text-center">项目经理</td>
 			<td class="width10 text-center">实完工时间</td>
-			<td class="width10 text-center" has-permission='cPsEdit'>操作</td>
+			<!-- <td class="width10 text-center" has-permission='cPsEdit'>操作</td> -->
 		</tr>
 		<tr ng-repeat="stage in prst">
 			<td class="width10 text-center">阶段{{$index+1}}</td>
@@ -214,9 +215,9 @@
 			<td>{{stage.prst_state |prstType}}</td>
 			<td>{{stage.manager.user_name}}</td>
 			<td>{{stage.prst_atime.time | dateType}}</td>
-			<td has-permission='cPsEdit'><a class="tablelink"
+			<!-- <td has-permission='cPsEdit'><a class="tablelink"
 				ng-click="modifyPrst()">修改</a><a class="tablelink"
-				ng-click="delPrst()">删除</a></td>
+				ng-click="delPrst()">删除</a></td> -->
 		</tr>
 
 	</table>
@@ -229,9 +230,9 @@
 		<span>收款节点详情<img src="../images/showInfo.png"
 			class="hand showInfo" id="renoShow" ng-click="showRenoInfo()"><img
 			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="renoHide" ng-click="hideRenoInfo()"></span><a
+			id="renoHide" ng-click="hideRenoInfo()"></span><!-- <a
 			class="update-btn tablelink" href="" ng-click="addOneNode()"
-			has-permission='cRnAdd'>添加</a>
+			has-permission='cRnAdd'>添加</a> -->
 	</div>
 	<table class="tbl tablelist" id="renoInformation">
 		<tr>
@@ -244,7 +245,7 @@
 			<!-- <td colspan='1'>实收款金额</td>
 				<td colspan='1'>实收款时间</td> -->
 			<td class="width10 text-center">收款情况</td>
-			<td class="width10 text-center">操作</td>
+		<!-- 	<td class="width10 text-center">操作</td> -->
 		</tr>
 		<tr ng-repeat="node in reno">
 			<td class="width10 text-center">节点{{$index+1}}</td>
@@ -254,19 +255,15 @@
 			<td>{{node.reno_time.time | dateType}}</td>
 			<td>{{node.projectStage.prst_content}}</td>
 			<td>{{node.reno_state |renoType}}</td>
-			<td><a ng-click="modifyReno()" class="tablelink"
+			<!-- <td><a ng-click="modifyReno()" class="tablelink"
 				has-permission='cRnEdit'>修改</a><a ng-click="delReno()"
 				class="tablelink" has-permission='cRnDel'>删除</a><a
 				ng-click="addReceipt(node.contract.cont_id,node.reno_id)"
-				class="tablelink" has-permission='bReceAdd'>开收据</a></td>
+				class="tablelink" has-permission='bReceAdd'>开收据</a></td> -->
 
 		</tr>
 
 	</table>
-
-	<input type="submit" id="addReceiveNode" class="btn"
-		style="display: none" value="添加收款节点" />
-
 </div>
 <!-- 派发任务模态框 -->
 <div class="overlayer"></div>

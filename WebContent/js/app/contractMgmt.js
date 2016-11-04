@@ -664,7 +664,7 @@ app
 													contract.cont = data.contract;
 													contract.contract = data.contract;
 													if (data.contract.cont_stime) {
-														contract.contract.cont_stime =changeDateType(data.contract.cont_stime.time); 
+														contract.contract.cont_stime =changeDateType(data.contract.cont_stime); 
 													}
 
 												});
@@ -833,11 +833,6 @@ app
 							}
 							// 添加单个工期阶段
 							contract.addOneStage = function() {// 动态添加工期阶段
-								$scope.fchat = new Object();
-								$scope.fchat.stages = [ {
-									key : 0,
-									value : ""
-								} ];
 								$(".overlayer").fadeIn(200);
 								$("#prstAdd").fadeIn(200);
 
@@ -847,14 +842,15 @@ app
 										var conId = sessionStorage
 												.getItem("conId");
 										var prstFormData = JSON
-												.stringify($scope.fchat);
-										services.addProjectStage({
+												.stringify(contract.prStage);
+										console.log("添加单个工期"+prstFormData);
+										/*services.addProjectStage({
 											projectStage : prstFormData,
 											cont_id : conId
 										}).success(function(data) {
 											alert("添加工期成功！");
 											selectPrstByContId();
-										});
+										});*/
 										$(".overlayer").fadeOut(100);
 										$("#prstAdd").fadeOut(100);
 									});
@@ -967,31 +963,24 @@ app
 							}
 							// 添加单个收款节点
 							contract.addOneNode = function() {// 动态添加工期阶段
-
-								$scope.rnchat = new Object();
-								$scope.rnchat.nodes = [ {
-									key : 0,
-									value : ""
-								} ];
 								selectPrstByContId();
 								$(".overlayer").fadeIn(200);
 								$("#renoAdd").fadeIn(200);
-
 							}
 							$("#sureAddReno").click(
 									function() {
-
 										var conId = sessionStorage
 												.getItem("conId");
 										var renoFormData = JSON
-												.stringify($scope.rnchat);
-										services.addReceiveNode({
+												.stringify(contract.reNode);
+										console.log(renoFormData);
+										/*services.addReceiveNode({
 											receiveNode : renoFormData,
 											cont_id : conId
 										}).success(function(data) {
 											selectRenoByContId();
 											alert("添加收款节点成功！");
-										});
+										});*/
 										$(".overlayer").fadeOut(100);
 										$(".tip").fadeOut(100);
 									});
@@ -1112,17 +1101,13 @@ app
 							contract.modifyPrst = function() {
 								var prstId = this.stage.prst_id;
 								sessionStorage.setItem("prstId", prstId);
-
 								services
 										.selectPrstById({
 											prstId : prstId
 										})
 										.success(
 												function(data) {
-
 													contract.prStage = data.projectStage;
-													console
-															.log(data.projectStage);
 													$scope.prStage.prst_etime = changeDateType(data.projectStage.prst_etime);
 
 												});
@@ -1163,10 +1148,8 @@ app
 										})
 										.success(
 												function(data) {
-
 													contract.reNode = data.receiveNode;
 													$scope.reNode.reno_time = changeDateType(data.receiveNode.reno_time);
-
 												});
 								sessionStorage.setItem("renoId", renoId);
 								/*
@@ -1182,13 +1165,13 @@ app
 								$("#renoModify").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 								var reno = JSON.stringify($scope.reNode);
+								console.log("修改收款节点"+reno);
 								services.modifyReno({
 									renoId : sessionStorage.getItem("renoId"),
 									receiveNode : reno
 								}).success(function(data) {
 									alert("修改成功！");
 									selectRenoByContId();
-
 								});
 							});
 
@@ -1198,6 +1181,7 @@ app
 							});
 							// 10.25zq更改时间的样式
 							function changeDateType(date) {
+								console.log("传进来的时间"+date);
 								if (date != "") {
 									var DateTime = new Date(date.time)
 											.toLocaleDateString().replace(
@@ -1205,6 +1189,7 @@ app
 								} else {
 									var DateTime = "";
 								}
+								console.log("转化后的的时间"+DateTime);
 								return DateTime;
 							}
 							// 10.26zq实现选择工期时的联动
@@ -1259,13 +1244,7 @@ app
 								$(".overlayer").fadeOut(100);
 								$("#tipStatus").fadeOut(100);
 							});
-							// 更改任务时间的格式
-							function changeDateType(time) {
-
-								newDate = new Date(time).toLocaleDateString()
-										.replace(/\//g, '-');
-								return newDate;
-							}
+							
 							// 初始化页面信息
 							function initData() {
 								// 点击创建任务时弹出模态框
