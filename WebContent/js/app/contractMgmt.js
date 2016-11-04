@@ -1192,6 +1192,7 @@ app
 							// lwt:点击项目状态时弹出模态框
 							contract.modifyStatus = function(conId) {
 								sessionStorage.setItem("conId", conId);
+								var radio = document.getElementsByName("radioState");
 								$(".overlayer").fadeIn(200);
 								$("#tipStatus").fadeIn(200);
 							};
