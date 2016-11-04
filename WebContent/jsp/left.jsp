@@ -126,5 +126,10 @@
 			}
 
 		}
+		
+		var $li = $('.leftmenu li');
+		$li.click(function(){
+			sessionStorage.setItem("currentPage", $(this).attr('id'));
+		});
 	});
 </script>
