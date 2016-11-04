@@ -112,19 +112,23 @@
 								class="task_per" name="1" ng-checked="isSelected('task_per',1)"
 								ng-click="updateSelection($event,'task_per',1)" type="checkbox" />审核发票任务<input
 								class="task_per" name="2" ng-checked="isSelected('task_per',2)"
-								ng-click="updateSelection($event,'task_per',2)" type="checkbox" />完成发票任务<input
-								class="task_per" name="3" ng-checked="isSelected('task_per',3)"
-								ng-click="updateSelection($event,'task_per',3)" type="checkbox" />审核到款</td>
+								ng-click="updateSelection($event,'task_per',2)" type="checkbox" />完成发票任务</td>
 						</tr>
 						<tr>
-							<td>票据<td>
+							<td>收据<td>
 							<td><input
 								class="bill_per" name="0" ng-checked="isSelected('bill_per',0)"
 								ng-click="updateSelection($event,'bill_per',0)" type="checkbox" />开发票<input
 								class="bill_per" name="1" ng-checked="isSelected('bill_per',1)"
-								ng-click="updateSelection($event,'bill_per',1)" type="checkbox" />开收据<input
+								ng-click="updateSelection($event,'bill_per',1)" type="checkbox" />开收据</td>
+						</tr>
+						<tr>
+							<td>到款<td>
+							<td><input
 								class="bill_per" name="2" ng-checked="isSelected('bill_per',2)"
-								ng-click="updateSelection($event,'bill_per',2)" type="checkbox" />到款</td>
+								ng-click="updateSelection($event,'bill_per',2)" type="checkbox" />到款<input
+								class="task_per" name="3" ng-checked="isSelected('bill_per',3)"
+								ng-click="updateSelection($event,'bill_per',3)" type="checkbox" />审核到款</td>
 						</tr>
 						<tr>
 							<td>角色<td>
