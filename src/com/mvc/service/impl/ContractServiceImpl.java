@@ -75,6 +75,8 @@ public class ContractServiceImpl implements ContractService {
 		contract.setCont_initiation(1);// 已立项
 		contract.setCont_ishistory(0);// 未删除
 		contract.setCont_state(0);// 合同状态
+		contract.setCont_rank(1);//合同等级
+		contract.setCompany_type("0");//公司类型
 		contract.setCont_ctime(date);// 合同创建时间
 		contract.setCreator(user);// 合同创建者
 		contract.setCur_prst("未录入工期阶段");// 当前工期阶段
