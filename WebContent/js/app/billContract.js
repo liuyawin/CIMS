@@ -315,7 +315,7 @@ app
 								if (permissionList.search(reg) < 0) {
 									$("#selectAudit").show();
 									$("#selectReceiver").hide();
-								}else{
+								} else {
 									$("#selectAudit").hide();
 									$("#selectReceiver").show();
 								}
@@ -336,7 +336,6 @@ app
 							};
 							$("#sureAdd").click(
 									function() {
-
 										var taskFormData = JSON
 												.stringify(contract.invoice);
 										services.addInvoiceTask(
@@ -441,34 +440,21 @@ app
 								};
 
 							};
-							$("#sureRemoAdd")
-									.click(
-											function() {
-												var taskFormData = JSON
-														.stringify(contract.receiveMoney);
-												console.log(taskFormData);
-												services
-														.addReMoneyTask(
-																{
-																	receiveMoney : taskFormData,
-																	contId : sessionStorage
-																			.getItem("conId")
-																})
-														.success(
-																function(data) {
-																	$(
-																			"#tipRemoAdd")
-																			.fadeOut(
-																					100);
-																	$(
-																			".overlayer")
-																			.fadeOut(
-																					200);
-																	contract.receiveMoney = "";
-																	alert("添加成功！");
+							contract.addRemoTask = function() {
+								var taskFormData = JSON
+										.stringify(contract.receiveMoney);
+								console.log(taskFormData);
+								services.addReMoneyTask({
+									receiveMoney : taskFormData,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
+									$("#tipRemoAdd").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									contract.receiveMoney = "";
+									alert("添加成功！");
 
-																});
-											});
+								});
+							}
 
 							$("#cancelRemoAdd").click(function() {
 								$("#tipRemoAdd").fadeOut(100);
@@ -491,8 +477,7 @@ app
 								};
 
 							};
-							$("#sureAddReceipt").click(
-									function() {
+							contract.addRece=function() {
 										var receFormData = JSON
 												.stringify(contract.receipt);
 										services.addReceipt(
@@ -506,9 +491,8 @@ app
 											$(".overlayer").fadeOut(200);
 											alert("收据添加成功！");
 											contract.receipt = "";
-
 										});
-									});
+									}
 
 							$("#cancelAddReceipt").click(function() {
 								$("#tipAddReceipt").fadeOut(100);
@@ -591,6 +575,22 @@ app
 										$(this).parent().children("span").css(
 												'display', 'none');
 									});
+
+							// 验证金额输入格式
+							var $numberFormat = $(".numberFormat");
+							var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
+							$(".numberFormat").blur(
+									function() {
+										if (!numberRegexp.test(this.value)) {
+											$(this).parent().children("span")
+													.css('display', 'inline');
+										}
+									});
+							$(".numberFormat").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
 						} ]);
 // 小数过滤器
 app.filter('receFloat', function() {
@@ -600,7 +600,6 @@ app.filter('receFloat', function() {
 		} else {
 			var money = parseFloat(input).toFixed(2);
 		}
-
 		return money;
 	}
 });
@@ -798,6 +797,18 @@ app.filter('dateType', function() {
 		}
 
 		return type;
+	}
+});
+// 截取任务内容
+app.filter('cutString', function() {
+	return function(input) {
+		var content = "";
+		if (input != "") {
+			var shortInput = input.substr(0, 8);
+			content = shortInput + "……";
+		}
+
+		return content;
 	}
 });
 // 等级的判断

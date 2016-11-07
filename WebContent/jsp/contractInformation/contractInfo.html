@@ -256,7 +256,7 @@
 			<td>{{node.projectStage.prst_content}}</td>
 			<td>{{node.reno_state |renoType}}</td>
 			<td><a ng-click="modifyReno()" class="tablelink"
-				has-permission='cRnEdit'>修改</a><a ng-click="delReno()"
+				has-permission='cRnEdit'>添加</a><a ng-click="delReno()"
 				class="tablelink" has-permission='cRnDel'>删除</a></td>
 
 
@@ -276,7 +276,7 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form>
+		<form  ng-submit="addOneProStage()">
 			<ul class="forminfo">
 				<li><label>内容</label><input type="text" class="dfinput"
 					id="stageContent" name="stageContent"
@@ -306,7 +306,7 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form>
+		<form  ng-submit="modifyOnePrst()">
 			<ul class="forminfo">
 				<li><label>内容</label><input type="text" class="dfinput"
 					id="stageContent" name="stageContent"
@@ -338,7 +338,7 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form>
+		<form  ng-submit="addOneReNode()">
 			<ul class="forminfo">
 				<li><label>工期阶段</label> <select id="nodePrstAdd"
 					class="dfselect middle_input" ng-change="prstChange(0)"
@@ -380,7 +380,7 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form>
+		<form  ng-submit="modifyOneReno()">
 			<ul class="forminfo">
 				<li><label>工期阶段</label> <select id="nodePrstModify"
 					class="dfselect middle_input" ng-change="prstChange(1)"
@@ -401,7 +401,7 @@
 					placeholder="格式：0.00" required />万元</li>
 				<li><label>提醒天数设置</label><input type="text"
 					class="dfinput width35" placeholder="格式：7"
-					ng-model="reNode.reno_wday" required />天</li>
+					ng-model="reNode.reno_wday" required  ng-pattern="/^(0|\+?[1-9][0-9]*)$/"/>天</li>
 
 			</ul>
 			<div class="tipbtn">

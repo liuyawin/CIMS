@@ -190,7 +190,7 @@ invoiceApp
 								services.selectContractById({
 									cont_id : cont_id
 								}).success(function(data) {
-									invoice.cont = data;
+									invoice.cont = data.contract;
 								});
 							}
 
@@ -478,8 +478,22 @@ invoiceApp
 							}
 							findRoleFromCookie();
 							initData();// 初始化
-
 							dateformat();// 格式化日期格式
+							// 验证金额输入格式
+							var $numberFormat = $(".numberFormat");
+							var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
+							$(".numberFormat").blur(
+									function() {
+										if (!numberRegexp.test(this.value)) {
+											$(this).parent().children("span")
+													.css('display', 'inline');
+										}
+									});
+							$(".numberFormat").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
 						} ]);
 
 // 小数过滤器

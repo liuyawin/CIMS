@@ -762,6 +762,31 @@ app
 								}
 							}
 
+							// 项目阶段的全选
+							contract.selectAllProStage = function() {
+								var $selectAll = $("#selectAllProStage");
+								if ($selectAll.is(':checked')) {
+									contract.proStage0 = "true";
+									contract.proStage1 = "true";
+									contract.proStage2 = "true";
+									contract.proStage3 = "true";
+									contract.proStage4 = "true";
+									contract.proStage5 = "true";
+									contract.proStage6 = "true";
+									contract.proStage7 = "true";
+									contract.proStage8 = "true";
+								} else {
+									contract.proStage0 = "false";
+									contract.proStage1 = "false";
+									contract.proStage2 = "false";
+									contract.proStage3 = "false";
+									contract.proStage4 = "false";
+									contract.proStage5 = "false";
+									contract.proStage6 = "false";
+									contract.proStage7 = "false";
+									contract.proStage8 = "false";
+								}
+							}
 							// 合同，收款节点，工期阶段的详情
 							contract.showContInfo = function() {
 								$('#contInformation').show();
@@ -853,24 +878,22 @@ app
 								};
 
 							}
-							$("#sureAddPrst").click(
-									function() {
-										var conId = sessionStorage
-												.getItem("conId");
-										var prstFormData = JSON
-												.stringify(contract.prStage);
-										console.log("添加单个工期" + prstFormData);
-										services.addProjectStage({
-											projectStage : prstFormData,
-											cont_id : conId
-										}).success(function(data) {
-											alert("添加工期成功！");
-											selectPrstByContId();
-										});
+							contract.addOneProStage = function() {
+								var conId = sessionStorage.getItem("conId");
+								var prstFormData = JSON
+										.stringify(contract.prStage);
+								console.log("添加单个工期" + prstFormData);
+								services.addProjectStage({
+									projectStage : prstFormData,
+									cont_id : conId
+								}).success(function(data) {
+									alert("添加工期成功！");
+									selectPrstByContId();
+								});
 
-										$(".overlayer").fadeOut(100);
-										$("#prstAdd").fadeOut(100);
-									});
+								$(".overlayer").fadeOut(100);
+								$("#prstAdd").fadeOut(100);
+							}
 
 							$("#cancelAddPrst").click(function() {
 
@@ -888,15 +911,22 @@ app
 												+ list[i].value + ",";
 									}
 								}
-								var conFormData = JSON
-										.stringify(contract.contract);
-								services.repeatAddContract({
-									contract : conFormData,
-									cont_id : sessionStorage.getItem('conId')
-								}).success(function(data) {
-									/* window.sessionStorage.setItem("contractId",); */
-									alert("修改合同成功！");
-								});
+								if (contract.contract.proStage) {
+									var conFormData = JSON
+											.stringify(contract.contract);
+									services.repeatAddContract(
+											{
+												contract : conFormData,
+												cont_id : sessionStorage
+														.getItem('conId')
+											}).success(function(data) {
+										/* window.sessionStorage.setItem("contractId",); */
+										alert("修改合同成功！");
+									});
+
+								} else {
+									alert("请选择项目阶段！");
+								}
 
 							};
 							// zq：添加工期阶段到数据库
@@ -990,27 +1020,24 @@ app
 										+ (date.getDate());
 								contract.reNode = {
 									reno_time : timeNow
-
 								};
 							}
-							$("#sureAddReno").click(
-									function() {
-										var conId = sessionStorage
-												.getItem("conId");
-										var renoFormData = JSON
-												.stringify(contract.reNode);
-										console.log(renoFormData);
-										services.addReceiveNode({
-											receiveNode : renoFormData,
-											cont_id : conId
-										}).success(function(data) {
-											selectRenoByContId();
-											alert("添加收款节点成功！");
-										});
+							contract.addOneReNode = function() {
+								var conId = sessionStorage.getItem("conId");
+								var renoFormData = JSON
+										.stringify(contract.reNode);
+								console.log(renoFormData);
+								services.addReceiveNode({
+									receiveNode : renoFormData,
+									cont_id : conId
+								}).success(function(data) {
+									selectRenoByContId();
+									alert("添加收款节点成功！");
+								});
 
-										$(".overlayer").fadeOut(100);
-										$(".tip").fadeOut(100);
-									});
+								$(".overlayer").fadeOut(100);
+								$(".tip").fadeOut(100);
+							}
 
 							$("#cancelAddReno").click(function() {
 
@@ -1148,7 +1175,7 @@ app
 								$(".overlayer").fadeIn(200);
 								$("#prstModify").fadeIn(200);
 							}
-							$("#sureModifyPrst").click(function() {
+							contract.modifyOnePrst = function() {
 								$("#prstModify").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 								var prst = JSON.stringify($scope.prStage);
@@ -1160,7 +1187,7 @@ app
 									selectPrstByContId();
 									selectRenoByContId();
 								});
-							});
+							}
 
 							$("#cancelModifyPrst").click(function() {
 								$("#prstModify").fadeOut(100);
@@ -1190,7 +1217,7 @@ app
 								$("#renoModify").fadeIn(200);
 
 							}
-							$("#sureModifyReno").click(function() {
+							contract.modifyOneReno = function() {
 								$("#renoModify").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 								var reno = JSON.stringify($scope.reNode);
@@ -1202,7 +1229,7 @@ app
 									alert("修改成功！");
 									selectRenoByContId();
 								});
-							});
+							}
 
 							$("#cancelModifyReno").click(function() {
 								$("#renoModify").fadeOut(100);
@@ -1591,6 +1618,22 @@ app
 												'display', 'none');
 									});
 
+							// 验证金额输入格式
+							var $numberFormat = $(".numberFormat");
+							var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
+							$(".numberFormat").blur(
+									function() {
+										if (!numberRegexp.test(this.value)) {
+											$(this).parent().children("span")
+													.css('display', 'inline');
+										}
+									});
+							$(".numberFormat").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
+
 						} ]);
 
 app
@@ -1879,6 +1922,18 @@ app.filter('dateType', function() {
 		}
 
 		return type;
+	}
+});
+// 截取任务内容
+app.filter('cutString', function() {
+	return function(input) {
+		var content = "";
+		if (input != "") {
+			var shortInput = input.substr(0, 8);
+			content = shortInput + "……";
+		}
+
+		return content;
 	}
 });
 app.filter('dateTimeType',
