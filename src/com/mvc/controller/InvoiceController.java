@@ -160,7 +160,7 @@ public class InvoiceController {
 	public @ResponseBody String addInvoice(HttpServletRequest request, HttpSession session) throws ParseException {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		String permission = user.getRole().getRole_permission();// 权限
-		String permissionStr=LoginController.numToPermissionStr(permission);
+		String permissionStr = LoginController.numToPermissionStr(permission);
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("invoice"));
 		Invoice invoice = new Invoice();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -168,18 +168,15 @@ public class InvoiceController {
 		Contract contract = new Contract();
 		contract.setCont_id(Integer.valueOf(request.getParameter("contId")));
 		invoice.setContract(contract);
-		invoice.setInvo_money(Float.valueOf(jsonObject.getString("invoMoney")));
-		invoice.setInvo_firm(jsonObject.getString("invoFirm"));
-		if (jsonObject.containsKey("auditId")) {
-			User audit = new User();
-			audit.setUser_id(Integer.valueOf(jsonObject.getString("auditId")));
-			invoice.setAudit(audit);
-		}
-		Date sTime = format.parse(jsonObject.getString("invoStime"));
+		invoice.setInvo_money(Float.valueOf(jsonObject.getString("invo_money")));
+		invoice.setInvo_firm(jsonObject.getString("invo_firm"));
+		Date sTime = format.parse(jsonObject.getString("invo_stime"));
 		invoice.setInvo_stime(sTime);
-		Date eTime = format.parse(jsonObject.getString("invoEtime"));
+		Date eTime = format.parse(jsonObject.getString("invo_etime"));
 		invoice.setInvo_etime(eTime);
-		invoice.setInvo_remark(jsonObject.getString("invoRemark"));
+		if (jsonObject.containsKey("invo_remark")) {
+			invoice.setInvo_remark(jsonObject.getString("invo_remark"));
+		}
 		User creator = new User();
 		creator.setUser_id(user.getUser_id());
 		invoice.setCreator(creator);
@@ -187,8 +184,20 @@ public class InvoiceController {
 		invoice.setInvo_ctime(new Date(time));
 		if (permissionStr.contains("tInvoAudit")) {// 审核发票权限（主任）
 			invoice.setInvo_state(InvoiceStatus.waitdealing.value);// 待处理
+			if (jsonObject.containsKey("receiver")) {
+				JSONObject receiverObject = JSONObject.fromObject(jsonObject.getString("receiver"));
+				User receiver = new User();
+				receiver.setUser_id(Integer.valueOf(receiverObject.getString("user_id")));
+				invoice.setReceiver(receiver);
+			}
 			invoice.setAudit(user);
 		} else {
+			if (jsonObject.containsKey("audit")) {
+				JSONObject auditObject = JSONObject.fromObject(jsonObject.getString("audit"));
+				User audit = new User();
+				audit.setUser_id(Integer.valueOf(auditObject.getString("user_id")));
+				invoice.setAudit(audit);
+			}
 			invoice.setInvo_state(InvoiceStatus.waitAudit.value);// 待审核
 		}
 		boolean invoiceResult = false;
@@ -275,7 +284,6 @@ public class InvoiceController {
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
-
 		List<Invoice> list = invoiceService.selectInvoByStateAndContId(invoState, cont_id, pager);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", list);
