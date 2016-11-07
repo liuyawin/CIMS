@@ -147,7 +147,14 @@ receiptapp.factory('receiptservices', [ '$http', 'baseUrl',
 					data : data
 				});
 			};
-
+			// 删除收据
+			services.delRece = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'receipt/deleteReceipt.do',
+					data : data
+				});
+			};
 			return services;
 		} ]);
 
@@ -214,7 +221,7 @@ receiptapp.controller('ReceiptController', [
 				$(".overlayer").fadeOut(200);
 				$(".tip").fadeOut(200);
 			});
-			receipt.addRece=function() {
+			receipt.addRece = function() {
 				var receFormData = JSON.stringify(receipt.receipt);
 				services.addReceipt({
 					receipt : receFormData,
@@ -251,6 +258,8 @@ receiptapp.controller('ReceiptController', [
 				}).success(function(data) {
 					receipt.receipt = data.receipt
 				});
+				$("#sureEditReceipt").hide();
+				$("#cancelEditReceipt").hide();
 				$("#tipCheckReceipt").fadeIn(200);
 				$(".overlayer").fadeIn(200);
 			}
@@ -359,6 +368,64 @@ receiptapp.controller('ReceiptController', [
 
 				}
 			}
+			// 删除收据
+			receipt.delReceipt = function() {
+				var receId = this.rece.rece_id;
+				sessionStorage.setItem("receId", receId);
+				$("#tipDel").fadeIn(200);
+				$(".overlayer").fadeIn(200);
+			}
+			$("#sureDel").click(function() {
+				$("#tipDel").fadeOut(100);
+				$(".overlayer").fadeOut(200);
+				services.delRece({
+					receId : receId
+				}).success(function(data) {
+					alert("操作成功！");
+					selectReceiptByContId();
+				});
+			});
+
+			$("#cancelDel").click(function() {
+				$("#tipDel").fadeOut(100);
+				$(".overlayer").fadeOut(200);
+			});
+			// 修改收据
+			receipt.editReceipt = function() {
+				$("#sureEditReceipt").show();
+				$("#cancelEditReceipt").show();
+				var receId = this.rece.rece_id;
+				services.selectReceiptByReceId({
+					receId : receId
+				}).success(function(data) {
+					receipt.receipt = data.receipt
+				});
+				$(".overlayer").fadeIn(200);
+				$("#tipCheckReceipt").fadeIn(200);
+				// 输入时间的input默认值设置为当前时间
+				var date = new Date();
+				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
+						+ "-" + (date.getDate());
+				receipt.receipt = {
+					receAtime : timeNow
+				};
+			}
+			receipt.editReceiptInfo = function() {
+				var receFormData = JSON.stringify(receipt.receipt);
+				services.addReceipt({
+					receipt : receFormData
+				}).success(function(data) {
+					$("#tipCheckReceipt").fadeOut(100);
+					$(".overlayer").fadeOut(200);
+					alert("操作成功！");
+					receipt.receipt = "";
+					initData();
+				});
+			}
+			$("#cancelEditReceipt").click(function() {
+				$("#tipCheckReceipt").fadeOut(100);
+				$(".overlayer").fadeOut(200);
+			});
 			// zq初始化页面信息
 			function initData() {
 				$(".tiptop a").click(function() {
@@ -404,18 +471,14 @@ receiptapp.controller('ReceiptController', [
 			// 验证金额输入格式
 			var $numberFormat = $(".numberFormat");
 			var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
-			$(".numberFormat").blur(
-					function() {
-						if (!numberRegexp.test(this.value)) {
-							$(this).parent().children("span")
-									.css('display', 'inline');
-						}
-					});
-			$(".numberFormat").click(
-					function() {
-						$(this).parent().children("span").css(
-								'display', 'none');
-					});
+			$(".numberFormat").blur(function() {
+				if (!numberRegexp.test(this.value)) {
+					$(this).parent().children("span").css('display', 'inline');
+				}
+			});
+			$(".numberFormat").click(function() {
+				$(this).parent().children("span").css('display', 'none');
+			});
 		} ]);
 
 // 小数过滤器
