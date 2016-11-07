@@ -53,10 +53,10 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			String selectSql = " update invoice set invo _isdelete =:invo _isdelete  where invo_id =:invo_id ";
+			String selectSql = " update invoice set invo_isdelete =:invo_isdelete  where invo_id =:invo_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("invo_id", invoiceId);
-			query.setParameter("invo _isdelete", IsDelete.YES.value);
+			query.setParameter("invo_isdelete", IsDelete.YES.value);
 			query.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();

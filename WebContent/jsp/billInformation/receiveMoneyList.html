@@ -94,16 +94,16 @@
 				</select></li>
 				<li><label>备注</label> <textarea name="" cols="" rows=""
 						class="textinput area_style" ng-model="receiveMoney.remo_remark"
-						required></textarea></li>
-				<li><label>实到款金额</label><input type="text" name="remoAmoney"
+						></textarea></li>
+				<li id="remoAmoney"><label>实到款金额</label><input type="text" name="remoAmoney"
 					id="remoAmoney" class="dfinput numberFormat"
 					ng-model="receiveMoney.remo_amoney" required placeholder="格式：0.00">万元&nbsp;<span
 					class="error-span">格式错误</span></li>
 			</ul>
 			<div class="tipbtn">
-				<input name="" type="submit" class="sure" id="sureRemoAudit"
+				<input name="" type="submit" class="sure" id="sureRemoEdit"
 					value="确认" style="display:none" />&nbsp;<input name="" type="button" class="cancel"
-					id="cancelRemoAudit" value="取消"  style="display:none"/>
+					id="cancelRemoEdit" value="取消"  style="display:none"/>
 			</div>
 		</form>
 	</div>
@@ -136,7 +136,7 @@
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sure" id="sureRemoAudit"
-					value="派发" />&nbsp; <input name="" type="button" class="cancel"
+					value="确认" />&nbsp; <input name="" type="button" class="cancel"
 					id="cancelRemoAudit" value="取消" />
 			</div>
 		</form>

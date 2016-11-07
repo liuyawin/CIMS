@@ -436,21 +436,24 @@ invoiceApp
 								if (this.invo.invo_state == "2") {
 									alert("发票已开，不能删除！");
 								} else {
-									sessionStorage.setItem("remoId", remoId);
+									sessionStorage.setItem("invoId", invoId);
 									$("#tipDel").fadeIn(200);
 									$(".overlayer").fadeIn(200);
 								}
 							}
-							$("#sureDel").click(function() {
-								$("#tipDel").fadeOut(100);
-								$(".overlayer").fadeOut(200);
-								services.delInvo({
-									invoId : invoId
-								}).success(function(data) {
-									alert("操作成功！");
-									refreshInvoList();
-								});
-							});
+							$("#sureDel").click(
+									function() {
+										$("#tipDel").fadeOut(100);
+										$(".overlayer").fadeOut(200);
+										services.delInvo(
+												{
+													invoiceId : sessionStorage
+															.getItem("invoId")
+												}).success(function(data) {
+											alert("操作成功！");
+											refreshInvoList();
+										});
+									});
 
 							$("#cancelDel").click(function() {
 								$("#tipDel").fadeOut(100);
@@ -458,31 +461,61 @@ invoiceApp
 							});
 							// 修改发票
 							invoice.editInvo = function() {
+								var regStr = "\\s" + 'tInvoAudit' + "\\s";
+								var reg = new RegExp(regStr);
+								if (permissionList.search(reg) < 0) {
+									$("#selectAudit").show();
+									$("#selectReceiver").hide();
+								} else {
+									$("#selectAudit").hide();
+									$("#selectReceiver").show();
+								}
 								var invoId = this.invo.invo_id;
-								sessionStorage.setItem("remoId", remoId);
+								sessionStorage.setItem("invoId", invoId);
 								if (this.invo.invo_state == "2") {
 									alert("发票已开，不能修改！");
 								} else {
+									selectAllUsers();
+									services
+											.selectInvoiceById({
+												invoiceId : invoId
+											})
+											.success(
+													function(data) {
+														invoice.invoice = data.invoice;
+														if (data.invoice.invo_stime != null
+																&& data.invoice.invo_etime != null) {
+															invoice.invoice.invo_stime = changeDateType(data.invoice.invo_stime.time);
+															invoice.invoice.invo_etime = changeDateType(data.invoice.invo_etime.time);
+														} else {
+															invoice.invoice.invo_stime = "";
+															invoice.invoice.invo_etime = "";
+														}
+														$("#tipEdit").fadeIn(
+																200);
+														$(".overlayer").fadeIn(
+																200);
 
-									$("#tipCheck").fadeIn(200);
-									$(".overlayer").fadeIn(200);
-									$("#sureEditInvoice").show();
-									$("#cancelEditInvoice").show();
+													});
+
 								}
 							}
 							invoice.editInvoiceInfo = function() {
+								var taskFormData = JSON
+										.stringify(invoice.invoice);
 								services.addInvoiceTask({
-									invoId : invoId
+									invoice : taskFormData,
+									contId : sessionStorage.getItem("conId")
 								}).success(function(data) {
 									alert("操作成功！");
-									$("#tipCheck").fadeOut(100);
+									$("#tipEdit").fadeOut(100);
 									$(".overlayer").fadeOut(200);
 									refreshInvoList();
 								});
 							}
 
-							$("#cancelDel").click(function() {
-								$("#tipCheck").fadeOut(100);
+							$("#cancelEditInvoice").click(function() {
+								$("#tipEdit").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 							});
 							// 修改和删除后刷新页面
@@ -509,6 +542,11 @@ invoiceApp
 										pageTurn(data.totalPage, 1);
 									});
 								}
+							}
+							function selectAllUsers() {
+								services.getAllUsers().success(function(data) {
+									invoice.users = data;
+								});
 							}
 							// zq初始化页面信息
 							function initData() {

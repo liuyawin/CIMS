@@ -185,8 +185,9 @@ receiveMoneyApp
 								var remoId = this.remo.remo_id;
 								selectAllUsers();
 								selectReceiveMoneyById(remoId);
-								$("#sureRemoAudit").hide();
-								$("#cancelRemoAudit").hide();
+								$("#sureRemoEdit").hide();
+								$("#cancelRemoEdit").hide();
+								$("#remoAmoney").show();
 								$(".overlayer").fadeIn(200);
 								$("#tipRemo").fadeIn(200);
 
@@ -388,7 +389,7 @@ receiveMoneyApp
 								$("#tipDel").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 								services.delRemo({
-									remoId : remoId
+									remoId : sessionStorage.getItem("remoId")
 								}).success(function(data) {
 									alert("操作成功！");
 									refreshRemoList();
@@ -407,27 +408,29 @@ receiveMoneyApp
 									selectReceiveMoneyById(remoId);
 									$(".overlayer").fadeIn(200);
 									$("#tipRemo").fadeIn(200);
-									$("#sureRemoAudit").show();
-									$("#cancelRemoAudit").show();
+									$("#sureRemoEdit").show();
+									$("#cancelRemoEdit").show();
+									$("#remoAmoney").hide();
 								} else {
 									alert("已核对，不能修改！");
 								}
-								
+
 							}
 							reMoney.editReceiveMoneyTask = function() {
 								var taskFormData = JSON
 										.stringify(reMoney.receiveMoney);
 								services.addReMoneyTask({
-									receiveMoney : taskFormData
+									receiveMoney : taskFormData,
+									contId : sessionStorage.getItem("conId")
 								}).success(function(data) {
-									$("#tipRemoAdd").fadeOut(100);
+									$("#tipRemo").fadeOut(100);
 									$(".overlayer").fadeOut(200);
 									contract.receiveMoney = "";
-									alert("添加成功！");
+									alert("操作成功！");
 									refreshRemoList();
 								});
 							}
-							$("#cancelRemoAudit").click(function() {
+							$("#cancelRemoEdit").click(function() {
 								$("#tipRemo").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 							});

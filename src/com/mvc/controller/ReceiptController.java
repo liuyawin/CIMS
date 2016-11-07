@@ -114,18 +114,18 @@ public class ReceiptController {
 		contract.setCont_id(Integer.valueOf(request.getParameter("contId")));
 		receipt.setContract(contract);
 		receipt.setUser(user);
-		if (jsonObject.containsKey("receAtime")) {
-			Date sdate = format.parse(jsonObject.getString("receAtime"));
+		if (jsonObject.containsKey("rece_atime")) {
+			Date sdate = format.parse(jsonObject.getString("rece_atime"));
 			receipt.setRece_atime(sdate);
 		}
-		if (jsonObject.containsKey("receFirm")) {
-			receipt.setRece_firm(jsonObject.getString("receFirm"));
+		if (jsonObject.containsKey("rece_firm")) {
+			receipt.setRece_firm(jsonObject.getString("rece_firm"));
 		}
-		if (jsonObject.containsKey("receMoney")) {
-			receipt.setRece_money(Float.valueOf(jsonObject.getString("receMoney")));
+		if (jsonObject.containsKey("rece_money")) {
+			receipt.setRece_money(Float.valueOf(jsonObject.getString("rece_money")));
 		}
-		if (jsonObject.containsKey("receRemark")) {
-			receipt.setRece_remark(jsonObject.getString("receRemark"));
+		if (jsonObject.containsKey("rece_remark")) {
+			receipt.setRece_remark(jsonObject.getString("rece_remark"));
 		}
 		receipt.setRece_isdelete(IsDelete.NO.value);
 		boolean result = false;
