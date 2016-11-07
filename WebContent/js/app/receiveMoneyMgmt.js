@@ -171,7 +171,7 @@ receiveMoneyApp
 								selectReceiveMoneyById(remoId);
 								$(".overlayer").fadeIn(200);
 								$("#tipRemo").fadeIn(200);
-								$(".tipbtn").hide();
+								
 
 							}
 
@@ -182,13 +182,11 @@ receiveMoneyApp
 								sessionStorage.setItem("remoId", remoId);
 								selectAllUsers();
 								selectReceiveMoneyById(remoId);
-
 								$(".overlayer").fadeIn(200);
-								$("#tipRemo").fadeIn(200);
-								$(".tipbtn").show();
+								$("#tipRemoAudit").fadeIn(200);
 							};
 							$("#cancelRemoAudit").click(function() {
-								$("#tipRemo").fadeOut(100);
+								$("#tipRemoAudit").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 								reMoney.receiveMoney = "";
 							});
@@ -198,7 +196,7 @@ receiveMoneyApp
 									remoAmoney : $("#remoAmoney").val()
 								}).success(function(data) {
 									alert("操作成功！");
-									$("#tipRemo").fadeOut(100);
+									$("#tipRemoAudit").fadeOut(100);
 									$(".overlayer").fadeOut(200);
 
 									selectContractById();
@@ -231,7 +229,7 @@ receiveMoneyApp
 								services.selectContractById({
 									cont_id : contId
 								}).success(function(data) {
-									reMoney.cont = data;
+									reMoney.cont = data.contract;
 								});
 							}
 
@@ -425,6 +423,21 @@ receiveMoneyApp
 							initData();// 初始化
 
 							dateformat();// 格式化日期格式
+							// 验证金额输入格式
+							var $numberFormat = $(".numberFormat");
+							var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
+							$(".numberFormat").blur(
+									function() {
+										if (!numberRegexp.test(this.value)) {
+											$(this).parent().children("span")
+													.css('display', 'inline');
+										}
+									});
+							$(".numberFormat").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
 						} ]);
 
 // 小数过滤器

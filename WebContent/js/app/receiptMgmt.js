@@ -202,11 +202,11 @@ receiptapp.controller('ReceiptController', [
 				$("#tipAddReceipt").fadeIn(200);
 				// 输入时间的input默认值设置为当前时间
 				var date = new Date();
-				var timeNow = date.getFullYear() + "-"
-						+ (date.getMonth() + 1) + "-" + (date.getDate());
+				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
+						+ "-" + (date.getDate());
 				receipt.receipt = {
-						receAtime : timeNow
-					
+					receAtime : timeNow
+
 				};
 
 			};
@@ -214,21 +214,19 @@ receiptapp.controller('ReceiptController', [
 				$(".overlayer").fadeOut(200);
 				$(".tip").fadeOut(200);
 			});
-			$("#sureAddReceipt").click(function() {
+			receipt.addRece=function() {
 				var receFormData = JSON.stringify(receipt.receipt);
 				services.addReceipt({
 					receipt : receFormData,
 					contId : sessionStorage.getItem("conId")
 				}).success(function(data) {
-
 					$("#tipAddReceipt").fadeOut(100);
 					$(".overlayer").fadeOut(200);
 					alert("收据添加成功！");
 					receipt.receipt = "";
 					initData();
-
 				});
-			});
+			}
 
 			$("#cancelAddReceipt").click(function() {
 				$("#tipAddReceipt").fadeOut(100);
@@ -236,19 +234,26 @@ receiptapp.controller('ReceiptController', [
 				receipt.receipt = "";
 			});
 			// zq查看合同ID，并记入sessione
-			/*receipt.addReceipt = function(renoId, contId) {
-				var renoId = sessionStorage.getItem('renoId');
-				var contId = sessionStorage.getItem('conId');
-				var receFormData = JSON.stringify(receipt.receipt);
-				services.addReceipt({
-					receipt : receFormData,
-					renoId : renoId,
-					contId : contId
+			/*
+			 * receipt.addReceipt = function(renoId, contId) { var renoId =
+			 * sessionStorage.getItem('renoId'); var contId =
+			 * sessionStorage.getItem('conId'); var receFormData =
+			 * JSON.stringify(receipt.receipt); services.addReceipt({ receipt :
+			 * receFormData, renoId : renoId, contId : contId
+			 * }).success(function(data) { alert("收据添加成功！");
+			 * window.history.back(); }); };
+			 */
+
+			receipt.checkReceipt = function() {
+				var receId = this.rece.rece_id;
+				services.selectReceiptByReceId({
+					receId : receId
 				}).success(function(data) {
-					alert("收据添加成功！");
-					window.history.back();
+					receipt.receipt = data.receipt
 				});
-			};*/
+				$("#tipCheckReceipt").fadeIn(200);
+				$(".overlayer").fadeIn(200);
+			}
 
 			// zq：读取合同的信息
 			function selectContractById() {
@@ -256,7 +261,7 @@ receiptapp.controller('ReceiptController', [
 				services.selectContractById({
 					cont_id : cont_id
 				}).success(function(data) {
-					receipt.cont = data;
+					receipt.cont = data.contract;
 				});
 			}
 			// zq：根据合同ID查询工期阶段的内容
@@ -291,14 +296,12 @@ receiptapp.controller('ReceiptController', [
 				});
 			}
 			// 根据收据ID查看收据的详情
-			function selectReceiptByReceId() {
-				var receId = sessionStorage.getItem('receId');
-				services.selectReceiptByReceId({
-					receId : receId
-				}).success(function(data) {
-					receipt.receipt = data.receipt
-				});
-			}
+			/*
+			 * function selectReceiptByReceId() { var receId =
+			 * sessionStorage.getItem('receId');
+			 * services.selectReceiptByReceId({ receId : receId
+			 * }).success(function(data) { receipt.receipt = data.receipt }); }
+			 */
 			// zq：根据合同ID计算该合同目前收据共多少钱
 			function countReceiptMoneyByContId() {
 				var contId = sessionStorage.getItem('conId');
@@ -329,38 +332,40 @@ receiptapp.controller('ReceiptController', [
 					cookie[name.trim()] = value;
 					console.log("进来了,已经赋值" + name);
 					if (name.trim() == "role") {
-						sessionStorage.setItem("userRole",
-								value);
-						switch (sessionStorage.getItem(
-						'userRole').trim()) {
-				case "1":
-					receipt.receAddShow = true;
-					
-					break;
-				case "2":
-					receipt.receAddShow = false;
-					
-					break;
-				case "3":
-					receipt.receAddShow = true;
-					
+						sessionStorage.setItem("userRole", value);
+						switch (sessionStorage.getItem('userRole').trim()) {
+						case "1":
+							receipt.receAddShow = true;
 
-					break;
-				case "4":
-					receipt.receAddShow = false;
-					
-					break;
-				case "5":
-					receipt.receAddShow = false;
-					
-					break;
-				}
+							break;
+						case "2":
+							receipt.receAddShow = false;
+
+							break;
+						case "3":
+							receipt.receAddShow = true;
+
+							break;
+						case "4":
+							receipt.receAddShow = false;
+
+							break;
+						case "5":
+							receipt.receAddShow = false;
+
+							break;
+						}
 					}
 
 				}
 			}
 			// zq初始化页面信息
 			function initData() {
+				$(".tiptop a").click(function() {
+					/* sessionStorage.setItem("conId", ""); */
+					$(".overlayer").fadeOut(200);
+					$(".tip").fadeOut(200);
+				});
 				$("#invoice").hide();
 				$("#receipt").show();
 				$("#contract").hide();
@@ -396,7 +401,21 @@ receiptapp.controller('ReceiptController', [
 			initData();// 初始化
 			findRoleFromCookie();
 			dateformat();// 格式化日期格式
-
+			// 验证金额输入格式
+			var $numberFormat = $(".numberFormat");
+			var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
+			$(".numberFormat").blur(
+					function() {
+						if (!numberRegexp.test(this.value)) {
+							$(this).parent().children("span")
+									.css('display', 'inline');
+						}
+					});
+			$(".numberFormat").click(
+					function() {
+						$(this).parent().children("span").css(
+								'display', 'none');
+					});
 		} ]);
 
 // 小数过滤器
