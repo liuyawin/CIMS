@@ -65,7 +65,7 @@
 	<div class="tcdPageCode">页码容器</div>
 
 </div>
-<!-- 派发到款通知模态框 -->
+<!-- 查看到款通知模态框 -->
 <div class="overlayer"></div>
 <div class="tip" id="tipRemo" style="height: 450px">
 	<div class="tiptop">
@@ -75,8 +75,8 @@
 		<form ng-submit="addReceiveMoneyTask()">
 			<ul class="forminfo">
 				<li><label>应到款金额</label><input type="text" name="remoMoney"
-					id="remoMoney" class="dfinput" ng-model="receiveMoney.remo_money"
-					required>万元</li>
+					id="remoMoney" class="dfinput numberFormat" ng-model="receiveMoney.remo_money"
+					required placeholder="格式：0.00">万元 &nbsp;<span class="error-span">格式错误</span></li>
 				<li><label>到款时间</label><input type="text"
 					ng-model="receiveMoney.remo_time" class="dfinput dateFormat"
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span>
@@ -90,8 +90,37 @@
 						class="textinput area_style" ng-model="receiveMoney.remo_remark"
 						required></textarea></li>
 				<li><label>实到款金额</label><input type="text" name="remoAmoney"
-					id="remoAmoney" class="dfinput "
-					ng-model="receiveMoney.remo_amoney" required>万元</li>
+					id="remoAmoney" class="dfinput numberFormat"
+					ng-model="receiveMoney.remo_amoney" required placeholder="格式：0.00">万元&nbsp;<span class="error-span">格式错误</span></li>
+			</ul>
+			
+		</form>
+	</div>
+</div>
+<!-- 查看到款通知模态框完 -->
+<!-- 审核到款通知模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipRemoAudit" style="height: 450px">
+	<div class="tiptop">
+		<span>创建任务</span><a></a>
+	</div>
+	<div class="invorkInfo-div">
+		<fieldset>
+			<legend>发票信息</legend>
+			<ul class="forminfo">
+				<li><label>应到款金额：</label>{{receiveMoney.remo_money}}</li>
+				<li><label>到款时间：</label>{{receiveMoney.remo_time |dateType}}</li>
+				<li><label>核对人：</label>{{receiveMoney.operater.user_name}}</li>
+				<li><div class="remark-div">备注：{{invoice.invo_remark}}</div></li>
+			</ul>
+		</fieldset>
+	</div>
+	<div class="formbody">
+		<form ng-submit="addReceiveMoneyTask()">
+			<ul class="forminfo">
+				<li><label>实到款金额</label><input type="text" name="remoAmoney"
+					id="remoAmoney" class="dfinput numberFormat"
+					ng-model="receiveMoney.remo_amoney" required placeholder="格式：0.00">万元 &nbsp;<span class="error-span">格式错误</span></li>
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sure" id="sureRemoAudit"
@@ -101,4 +130,4 @@
 		</form>
 	</div>
 </div>
-<!-- 派发到款通知模态框完 -->
+<!-- 审核到款通知模态框完 -->

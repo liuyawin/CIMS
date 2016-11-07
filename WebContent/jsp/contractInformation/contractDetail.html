@@ -29,8 +29,8 @@
 				<td colspan='2' class="width20 text-center table_title_width">合同金额（万元）<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><input type="text"
-					ng-model="contract.cont_money" class="dfinput input_border"
-					required /></td>
+					ng-model="contract.cont_money" class="dfinput input_border numberFormat"
+					required placeholder="格式：0.00"/>&nbsp;<span class="error-span">格式错误</span></td>
 				<td colspan='2' class="width20 text-center">项目编码<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><input type="text"
@@ -55,40 +55,52 @@
 					class="left_length5 text_style">*</label></td>
 				<td colspan='6'>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" ng-model="proStage0" ng-true-value="true"
-							ng-false-value="false" class="proStage" value="0" />规划
+						<input type="checkBox" name="proStage" ng-model="proStage0"
+							ng-true-value="true" ng-false-value="false" class="proStage"
+							value="0" />规划
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" ng-model="proStage1" ng-true-value="true"
-							ng-false-value="false" class="proStage" value="1" />预可研
+						<input type="checkBox" name="proStage" ng-model="proStage1"
+							ng-true-value="true" ng-false-value="false" class="proStage"
+							value="1" />预可研
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" ng-model="proStage2" ng-true-value="true"
-							ng-false-value="false" class="proStage" value="2" />可研
+						<input type="checkBox" name="proStage" ng-model="proStage2"
+							ng-true-value="true" ng-false-value="false" class="proStage"
+							value="2" />可研
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" ng-model="proStage3" ng-true-value="true"
-							ng-false-value="false" class="proStage" value="3" />项目建议书
+						<input type="checkBox" name="proStage" ng-model="proStage3"
+							ng-true-value="true" ng-false-value="false" class="proStage"
+							value="3" />项目建议书
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" ng-model="proStage4" ng-true-value="true"
-							ng-false-value="false" class="proStage" value="4" />初步设计
+						<input type="checkBox" name="proStage" ng-model="proStage4"
+							ng-true-value="true" ng-false-value="false" class="proStage"
+							value="4" />初步设计
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" ng-model="proStage5" ng-true-value="true"
-							ng-false-value="false" class="proStage" value="5" />发包、招标设计
+						<input type="checkBox" name="proStage" ng-model="proStage5"
+							ng-true-value="true" ng-false-value="false" class="proStage"
+							value="5" />发包、招标设计
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" ng-model="proStage6" ng-true-value="true"
-							ng-false-value="false" class="proStage" value="6" />施工详图
+						<input type="checkBox" name="proStage" ng-model="proStage6"
+							ng-true-value="true" ng-false-value="false" class="proStage"
+							value="6" />施工详图
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" ng-model="proStage7" ng-true-value="true"
-							ng-false-value="false" class="proStage" value="7" />竣工图
+						<input type="checkBox" name="proStage" ng-model="proStage7"
+							ng-true-value="true" ng-false-value="false" class="proStage"
+							value="7" />竣工图
 					</div>
 					<div class="div-checkbox">
-						<input type="checkBox" name="proStage" ng-model="proStage8" ng-true-value="true"
-							ng-false-value="false" class="proStage" value="8" />其他
+						<input type="checkBox" name="proStage" ng-model="proStage8"
+							ng-true-value="true" ng-false-value="false" class="proStage"
+							value="8" />其他
+					</div>
+					<div class="div-checkbox">
+						<input type="checkbox" id="selectAllProStage" ng-click="selectAllProStage()" />全选
 					</div>
 				</td>
 			</tr>
@@ -300,7 +312,7 @@
 						class="textinput text_border" ng-model="contract.cont_remark"></textarea></td>
 			</tr>
 		</table>
-		<input type="submit" id="addContract" class="btn"  value="确认提交" />
+		<input type="submit" id="addContract" class="btn" value="确认提交" />
 
 	</form>
 </div>
@@ -384,6 +396,6 @@
 		</ul>
 
 		<input type="submit" id="addReceiveNode" class="btn"
-			style="display: none" value="添加收款节点"/>
+			style="display: none" value="添加收款节点" />
 	</form>
 </div>
