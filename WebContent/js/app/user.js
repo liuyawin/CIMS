@@ -219,18 +219,19 @@ app.controller('userController', [
 			}
 			// 功能模块权限字段名
 			var perName = [ "con_per", "task_per", "bill_per", "system_per",
-					"index_per" ];
+					"index_per", "left_per" ];
 			// 初始化权限数据容器
 			function initCheckBoxData() {
 				$("input:checkbox[name='selectAllChkBx']").attr("checked",
 						false);
 
 				user.selected = {};
-				for (var i = 0; i < 5; i++) {
+				for (var i = 0; i < 6; i++) {
 					user.selected[perName[i]] = new Array();
 					for (var j = 0; j < 12; j++)
 						user.selected[perName[i]][j] = 0;
 				}
+				console.log(user.selected);
 			}
 			// 根据用户选择更新权限数据容器
 			var updateSelected = function(action, clazz, name) {

@@ -56,7 +56,7 @@
 <!-- 新建和修改模态框 -->
 
 <div class="overlayer"></div>
-<div class="tip" style="height: 570px;">
+<div class="tip" style="height: 570px;width:780px">
 	<div class="tiptop">
 		<span>用户设置</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
@@ -70,7 +70,7 @@
 				<!-- ！！！下面这段代码别乱动 -->
 				<!-- ！！！下面这段代码别乱动 -->
 				<!-- ！！！下面这段代码别乱动 -->
-				<li><table class="tablelist" style="width: 430px">
+				<li><table class="tablelist" style="width: 720px">
 						<tr>
 							<td style="width: 72px">合同
 							<td>
@@ -99,7 +99,9 @@
 								class="con_per" name="6" ng-checked="isSelected('con_per',6)"
 								ng-click="updateSelection($event,'con_per',6)" type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="7" ng-checked="isSelected('con_per',7)"
-								ng-click="updateSelection($event,'con_per',7)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								ng-click="updateSelection($event,'con_per',7)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input 
+								class="task_per" name="3" ng-checked="isSelected('task_per',3)" 
+								ng-click="updateSelection($event,'task_per',3)" type="checkbox" />完工&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
 							<td>收款节点
@@ -206,7 +208,32 @@
 								class="index_per" name="6"
 								ng-checked="isSelected('index_per',6)"
 								ng-click="updateSelection($event,'index_per',6)" type="checkbox" />工期超时&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						</tr>
+						</tr>	
+						<tr>
+							<td>左侧栏
+							<td>
+							<td><input class="left_per" name="0"
+								ng-checked="isSelected('left_per',0)"
+								ng-click="updateSelection($event,'left_per',0)" type="checkbox" />合同管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="1"
+								ng-checked="isSelected('left_per',1)"
+								ng-click="updateSelection($event,'left_per',1)" type="checkbox" />票据管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="2"
+								ng-checked="isSelected('left_per',2)"
+								ng-click="updateSelection($event,'left_per',2)" type="checkbox" />用户管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="3"
+								ng-checked="isSelected('left_per',3)"
+								ng-click="updateSelection($event,'left_per',3)" type="checkbox" />发票任务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="4"
+								ng-checked="isSelected('left_per',4)"
+								ng-click="updateSelection($event,'left_per',4)" type="checkbox" />到款任务&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="5"
+								ng-checked="isSelected('left_per',5)"
+								ng-click="updateSelection($event,'left_per',5)" type="checkbox" />收款超时&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="6"
+								ng-checked="isSelected('left_per',6)"
+								ng-click="updateSelection($event,'left_per',6)" type="checkbox" />工期超时&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						</tr>					
 					</table></li>
 			</ul>
 			<!-- 按钮 -->
@@ -224,7 +251,7 @@
 					class="dfinput" ng-model="editRole.role_name" id="mustInput" /></li>
 				<li>
 					<!-- ！！！下面这段代码别乱动 --> <!-- ！！！下面这段代码别乱动 --> <!-- ！！！下面这段代码别乱动 -->
-					<table class="tablelist" style="width: 430px">
+					<table class="tablelist" style="width: 720px">
 						<tr>
 							<td style="width: 72px">合同
 							<td>
@@ -253,7 +280,9 @@
 								class="con_per" name="6" ng-checked="isSelected('con_per',6)"
 								ng-click="updateSelection($event,'con_per',6)" type="checkbox" />修改&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="con_per" name="7" ng-checked="isSelected('con_per',7)"
-								ng-click="updateSelection($event,'con_per',7)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								ng-click="updateSelection($event,'con_per',7)" type="checkbox" />删除&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input 
+								class="task_per" name="3" ng-checked="isSelected('task_per',3)" 
+								ng-click="updateSelection($event,'task_per',3)" type="checkbox" />完工&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
 							<td>收款节点
@@ -350,7 +379,7 @@
 								ng-click="updateSelection($event,'index_per',2)" type="checkbox" />审核发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="index_per" name="3"
 								ng-checked="isSelected('index_per',3)"
-								ng-click="updateSelection($event,'index_per',3)" type="checkbox" />完成发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								ng-click="updateSelection($event,'index_per',3)" type="checkbox" />完成发票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 								class="index_per" name="4"
 								ng-checked="isSelected('index_per',4)"
 								ng-click="updateSelection($event,'index_per',4)" type="checkbox" />核对到款&nbsp;&nbsp;&nbsp;&nbsp;<input
@@ -360,6 +389,31 @@
 								class="index_per" name="6"
 								ng-checked="isSelected('index_per',6)"
 								ng-click="updateSelection($event,'index_per',6)" type="checkbox" />工期超时&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						</tr>
+						<tr>
+							<td>左侧栏
+							<td>
+							<td><input class="left_per" name="0"
+								ng-checked="isSelected('left_per',0)"
+								ng-click="updateSelection($event,'left_per',0)" type="checkbox" />合同管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="1"
+								ng-checked="isSelected('left_per',1)"
+								ng-click="updateSelection($event,'left_per',1)" type="checkbox" />票据管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="2"
+								ng-checked="isSelected('left_per',2)"
+								ng-click="updateSelection($event,'left_per',2)" type="checkbox" />用户管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="3"
+								ng-checked="isSelected('left_per',3)"
+								ng-click="updateSelection($event,'left_per',3)" type="checkbox" />发票任务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="4"
+								ng-checked="isSelected('left_per',4)"
+								ng-click="updateSelection($event,'left_per',4)" type="checkbox" />到款任务&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="5"
+								ng-checked="isSelected('left_per',5)"
+								ng-click="updateSelection($event,'left_per',5)" type="checkbox" />收款超时&nbsp;&nbsp;&nbsp;&nbsp;<input
+								class="left_per" name="6"
+								ng-checked="isSelected('left_per',6)"
+								ng-click="updateSelection($event,'left_per',6)" type="checkbox" />工期超时&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 					</table>
 				</li>
