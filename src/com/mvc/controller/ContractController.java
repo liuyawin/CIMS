@@ -266,14 +266,16 @@ public class ContractController {
 	 * 设总更新合同状态
 	 * 
 	 * @param request
+	 * @param session
 	 * @return
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/modifyStatus.do")
-	public @ResponseBody String updateState(HttpServletRequest request) throws ParseException {
+	public @ResponseBody String updateState(HttpServletRequest request, HttpSession session) throws ParseException {
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
 		Integer contState = Integer.valueOf(request.getParameter("contState"));
-		boolean result = contractService.updateState(contId, contState);
+		boolean result = contractService.updateState(contId, contState, user);
 		return JSON.toJSONString(result);
 	}
 }
