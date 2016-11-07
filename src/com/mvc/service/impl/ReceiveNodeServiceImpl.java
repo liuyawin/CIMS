@@ -75,15 +75,15 @@ public class ReceiveNodeServiceImpl implements ReceiveNodeService {
 			receiveNode.setReno_amoney((float) 0.00);// 实际收款金额
 			receiveNode.setReno_ctime(new Date(time));// 节点录入时间
 			receiveNode.setUser(user);
-			Contract contract = contractRepository.selectContById(cont_id);
-			;// 所属合同
+			Contract contract = contractRepository.selectContById(cont_id);// 所属合同
 			receiveNode.setContract(contract);
 			receiveNode.setReno_isdelete(0);// 默认未删除
 
-			if (jsonObject.containsKey("projectStage")) {// 对应的工期阶段ID
-				Integer prst_id = Integer.valueOf(jsonObject.getString("projectStage"));
-				ProjectStage projectStage = projectStageRepository.findOne(prst_id);
-				receiveNode.setProjectStage(projectStage);// 所属阶段
+			if (jsonObject.containsKey("projectStage")) {
+				JSONObject tmp = (JSONObject) jsonObject.get("projectStage");
+				Integer prst_id = Integer.valueOf(tmp.getString("prst_id"));
+				ProjectStage projectStage = projectStageRepository.findOne(prst_id);// 所属阶段
+				receiveNode.setProjectStage(projectStage);
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
