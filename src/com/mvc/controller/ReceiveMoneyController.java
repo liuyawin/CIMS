@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.base.constants.SessionKeyConstants;
+import com.base.enums.IsDelete;
 import com.base.enums.ReceiveMoneyStatus;
 import com.mvc.entity.Contract;
 import com.mvc.entity.ReceiveMoney;
@@ -188,8 +189,30 @@ public class ReceiveMoneyController {
 			receiveMoney.setOperater(operater);
 		}
 		receiveMoney.setRemo_state(ReceiveMoneyStatus.waitAudit.value);
+		receiveMoney.setRemo_isdelete(IsDelete.NO.value);
 		receiveMoney.setRemo_amoney(Float.valueOf(0));
-		boolean result = receiveMoneyService.save(receiveMoney);
+		boolean result = false;
+		if (jsonObject.containsKey("remo_id")) {
+			receiveMoney.setRemo_id(Integer.valueOf(jsonObject.getString("remo_id")));
+			result = receiveMoneyService.save(receiveMoney);
+		} else {
+			result = receiveMoneyService.save(receiveMoney);
+		}
+
+		return JSON.toJSONString(result);
+	}
+
+	/**
+	 * 删除到款记录
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteReceMoney.do")
+	public @ResponseBody String deleteReceMoney(HttpServletRequest request, HttpSession session) {
+		Integer remoId = Integer.valueOf(request.getParameter("remoId"));
+		boolean result = receiveMoneyService.delete(remoId);
 		return JSON.toJSONString(result);
 	}
 }

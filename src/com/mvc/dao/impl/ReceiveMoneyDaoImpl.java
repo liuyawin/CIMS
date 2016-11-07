@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.base.enums.IsDelete;
 import com.base.enums.ReceiveMoneyStatus;
 import com.base.enums.RemoStatus;
 import com.mvc.dao.ReceiveMoneyDao;
@@ -35,10 +36,11 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 	@Override
 	public Float receiveMoneyByContId(Integer contId) {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select coalesce(sum(remo_amoney),0) from receive_money r where cont_id=:cont_id and remo_state=:remo_state";
+		String countSql = " select coalesce(sum(remo_amoney),0) from receive_money r where cont_id=:cont_id and remo_state=:remo_state and remo_isdelete=:remo_isdelete";
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("cont_id", contId);
 		query.setParameter("remo_state", RemoStatus.finish.value);
+		query.setParameter("remo_isdelete", IsDelete.NO.value);
 		List<Object> result = query.getResultList();
 		em.close();
 		return Float.valueOf(result.get(0).toString());
@@ -51,9 +53,9 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		String selectSql = "";
 		if (remoState != ReceiveMoneyStatus.all.value) {
-			selectSql += "select * from receive_money where  cont_id =:cont_id and remo_state=:remo_state ";
+			selectSql += "select * from receive_money where  cont_id =:cont_id and remo_state=:remo_state and remo_isdelete=:remo_isdelete";
 		} else {
-			selectSql += "select * from receive_money where  cont_id =:cont_id  ";
+			selectSql += "select * from receive_money where  cont_id =:cont_id and remo_isdelete=:remo_isdelete";
 		}
 		selectSql += " order by remo_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, ReceiveMoney.class);
@@ -61,6 +63,7 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		if (remoState != ReceiveMoneyStatus.all.value) {
 			query.setParameter("remo_state", remoState);
 		}
+		query.setParameter("remo_isdelete", IsDelete.NO.value);
 		query.setParameter("offset", offset);
 		query.setParameter("end", end);
 		List<ReceiveMoney> list = query.getResultList();
@@ -75,15 +78,16 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		String countSql = "";
 		if (remoState != ReceiveMoneyStatus.all.value) {
-			countSql += "select count(*) from receive_money where  cont_id =:cont_id and remo_state=:remo_state ";
+			countSql += "select count(*) from receive_money where  cont_id =:cont_id and remo_state=:remo_state and remo_isdelete=:remo_isdelete";
 		} else {
-			countSql += "select count(*)  from receive_money where  cont_id =:cont_id  ";
+			countSql += "select count(*)  from receive_money where  cont_id =:cont_id  and remo_isdelete=:remo_isdelete";
 		}
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("cont_id", contId);
 		if (remoState != ReceiveMoneyStatus.all.value) {
 			query.setParameter("remo_state", remoState);
 		}
+		query.setParameter("remo_isdelete", IsDelete.NO.value);
 		List<Object> result = query.getResultList();
 		em.close();
 		return Integer.parseInt(result.get(0).toString());
@@ -95,7 +99,7 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			String selectSql = " update receive_money set  remo_amoney=:remo_amoney,remo_state=:remo_state  where remo_id =:remo_id ";
+			String selectSql = " update receive_money set remo_amoney=:remo_amoney,remo_state=:remo_state  where remo_id =:remo_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("remo_id", remoId);
 			query.setParameter("remo_amoney", remoAmoney);
@@ -116,9 +120,9 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		String selectSql = "";
 		if (remoState != ReceiveMoneyStatus.all.value) {
-			selectSql += "select * from receive_money where  (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state ";
+			selectSql += "select * from receive_money where  (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state and remo_isdelete=:remo_isdelete";
 		} else {
-			selectSql += "select * from receive_money where  operater_id =:operater_id or creater_id=:creater_id  ";
+			selectSql += "select * from receive_money where  operater_id =:operater_id or creater_id=:creater_id  and remo_isdelete=:remo_isdelete";
 		}
 		selectSql += " order by remo_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, ReceiveMoney.class);
@@ -127,6 +131,7 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		if (remoState != ReceiveMoneyStatus.all.value) {
 			query.setParameter("remo_state", remoState);
 		}
+		query.setParameter("remo_isdelete", IsDelete.NO.value);
 		query.setParameter("offset", offset);
 		query.setParameter("end", end);
 		List<ReceiveMoney> list = query.getResultList();
@@ -141,9 +146,9 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		String countSql = "";
 		if (remoState != ReceiveMoneyStatus.all.value) {
-			countSql += "select count(*) from receive_money where  (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state ";
+			countSql += "select count(*) from receive_money where  (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state and remo_isdelete=:remo_isdelete";
 		} else {
-			countSql += "select count(*)  from receive_money where operater_id =:operater_id or creater_id=:creater_id ";
+			countSql += "select count(*)  from receive_money where operater_id =:operater_id or creater_id=:creater_id and remo_isdelete=:remo_isdelete";
 		}
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("operater_id", userId);
@@ -151,8 +156,28 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		if (remoState != ReceiveMoneyStatus.all.value) {
 			query.setParameter("remo_state", remoState);
 		}
+		query.setParameter("remo_isdelete", IsDelete.NO.value);
 		List<Object> result = query.getResultList();
 		em.close();
 		return Integer.parseInt(result.get(0).toString());
+	}
+
+	// 根据到款ID删除到款记录
+	@Override
+	public Boolean delete(Integer remoId) {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		try {
+			String updateSql = " update receive_money set remo_isdelete =:remo_isdelete where remo_id =:remo_id ";
+			Query query = em.createNativeQuery(updateSql);
+			query.setParameter("remo_id", remoId);
+			query.setParameter("remo_isdelete", IsDelete.YES.value);
+			query.executeUpdate();
+			em.flush();
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+		return true;
 	}
 }

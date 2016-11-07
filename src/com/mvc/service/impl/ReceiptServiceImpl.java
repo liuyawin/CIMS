@@ -44,8 +44,8 @@ public class ReceiptServiceImpl implements ReceiptService {
 	}
 
 	// 保存
-	public boolean save(Receipt receipt) {
-		Receipt result = receiptRepository.save(receipt);
+	public Boolean save(Receipt receipt) {
+		Receipt result = receiptRepository.saveAndFlush(receipt);
 		if (result.getRece_id() != null)
 			return true;
 		else
@@ -67,5 +67,10 @@ public class ReceiptServiceImpl implements ReceiptService {
 		return receiptDao.totalMoneyOfReceipt(contId);
 	}
 
+	// 根据收据ID删除收据
+	@Override
+	public Boolean delete(Integer receId) {
+		return receiptDao.delete(receId);
+	}
 
 }
