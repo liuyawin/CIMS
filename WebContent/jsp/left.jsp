@@ -29,7 +29,8 @@
 			<ul id="task-ul" class="menuson">
 				<li id="receiveTask"><cite></cite> <a
 					href="${ctx}/task/toTaskPage.do#/receiveTask">接收的任务</a><i></i></li>
-				<li id="sendTask"><cite></cite> <a href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
+				<li id="sendTask"><cite></cite> <a
+					href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
 				<li id="invoiceTask"><cite></cite> <a
 					href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
 				<li id="receiveMoneyTask"><cite></cite> <a
@@ -55,9 +56,9 @@
 			</div>
 			<ul id="alarm-ul" class="menuson">
 				<li id="debtAlarm"><cite></cite> <a
-					href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款超时</a><i></i></li>
+					href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款相关</a><i></i></li>
 				<li id="overdueAlarm"><cite></cite> <a
-					href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList">工程逾期</a><i></i></li>
+					href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList">工期相关</a><i></i></li>
 				<li id="overtimeAlarm"><cite></cite> <a
 					href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList">任务超时</a><i></i></li>
 			</ul>
@@ -69,9 +70,9 @@
 			</div>
 			<ul id="system-ul" class="menuson">
 				<li id="roleList"><cite></cite> <a
-					href="${ctx}/role/toUserManagePage.do#/roleList">角色列表</a><i></i></li>
+					href="${ctx}/role/toUserManagePage.do#/roleList">角色管理</a><i></i></li>
 				<li id="userList"><cite></cite> <a
-					href="${ctx}/role/toUserManagePage.do#/userList">用户列表</a><i></i></li>
+					href="${ctx}/role/toUserManagePage.do#/userList">用户管理</a><i></i></li>
 				<li id="alarmSet"><cite></cite> <a
 					href="${ctx}/alarmLevel/toAlarmSetPage.do#/alarmSet">报警设置</a><i></i></li>
 			</ul>
@@ -126,9 +127,9 @@
 			}
 
 		}
-		
+
 		var $li = $('.leftmenu li');
-		$li.click(function(){
+		$li.click(function() {
 			sessionStorage.setItem("currentPage", $(this).attr('id'));
 		});
 	});
