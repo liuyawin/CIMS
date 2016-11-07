@@ -29,6 +29,7 @@ public class Receipt {
 	private User user;// 开收据者
 	private Contract contract;// 所属合同
 	private ReceiveNode receiveNode;// 收款节点
+	private Integer rece_isdelete;// 是否删除，0表示：未删除，1表示已删除
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -110,6 +111,15 @@ public class Receipt {
 
 	public void setRece_atime(Date rece_atime) {
 		this.rece_atime = rece_atime;
+	}
+
+	@Column(columnDefinition = "INT default 0")
+	public Integer getRece_isdelete() {
+		return rece_isdelete;
+	}
+
+	public void setRece_isdelete(Integer rece_isdelete) {
+		this.rece_isdelete = rece_isdelete;
 	}
 
 }

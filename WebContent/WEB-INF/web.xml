@@ -6,6 +6,7 @@
 	<!-- <?xml version="1.0" encoding="UTF-8"?> <web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" 
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
 		http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"> -->
+
 	<!-- 引入应用上下文 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
@@ -22,9 +23,22 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	<!-- 报错页面 -->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/jsp/404.html</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/jsp/500.html</location>
+	</error-page>
+
+	<!-- session过期设置相关 -->
 	<session-config>
 		<session-timeout>30</session-timeout>
 	</session-config>
+
+	<!-- session过滤器配置相关 -->
 	<filter>
 		<filter-name>SessionFilter</filter-name>
 		<filter-class>com.base.filter.SessionFilter</filter-class>
@@ -47,6 +61,8 @@
 		<dispatcher>FORWARD</dispatcher>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
+
+	<!-- 编码配置相关 -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -69,6 +85,8 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
+
+	<!-- Spring mvc配置入口 -->
 	<servlet>
 		<servlet-name>springmvc</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -84,6 +102,7 @@
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 
+	<!-- 配置起始页 -->
 	<welcome-file-list>
 		<welcome-file>jsp/login.jsp</welcome-file>
 	</welcome-file-list>

@@ -158,9 +158,9 @@ public class InvoiceController {
 	 */
 	@RequestMapping(value = "/addInvoiceTask.do")
 	public @ResponseBody String addInvoice(HttpServletRequest request, HttpSession session) throws ParseException {
-		JSONObject result = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		String permission = user.getRole().getRole_permission();// 权限
+		String permissionStr=LoginController.numToPermissionStr(permission);
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("invoice"));
 		Invoice invoice = new Invoice();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -185,33 +185,20 @@ public class InvoiceController {
 		invoice.setCreator(creator);
 		invoice.setInvo_isdelete(IsDelete.NO.value);
 		invoice.setInvo_ctime(new Date(time));
-		if (permission.contains("tInvoAudit")) {// 审核发票权限（主任）
+		if (permissionStr.contains("tInvoAudit")) {// 审核发票权限（主任）
 			invoice.setInvo_state(InvoiceStatus.waitdealing.value);// 待处理
 			invoice.setAudit(user);
 		} else {
 			invoice.setInvo_state(InvoiceStatus.waitAudit.value);// 待审核
 		}
-		boolean invoiceResult = invoiceService.save(invoice);
-		if (invoiceResult)
-			result.put("result", "true");
-		else {
-			result.put("result", "false");
+		boolean invoiceResult = false;
+		if (jsonObject.containsKey("invo_id")) {
+			invoice.setInvo_id(Integer.valueOf(jsonObject.getString("invo_id")));
+			invoiceResult = invoiceService.save(invoice);
+		} else {
+			invoiceResult = invoiceService.save(invoice);
 		}
-		return result.toString();
-	}
-
-	/**
-	 * 删除发票
-	 * 
-	 * @param request
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value = "/deleteInvoice.do")
-	public @ResponseBody String delete(HttpServletRequest request, HttpSession session) {
-		Integer invoiceId = Integer.valueOf(request.getParameter("invoiceId"));
-		boolean result = invoiceService.delete(invoiceId);
-		return JSON.toJSONString(result);
+		return JSON.toJSONString(invoiceResult);
 	}
 
 	/**
@@ -294,6 +281,20 @@ public class InvoiceController {
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 删除发票记录
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteInvoice.do")
+	public @ResponseBody String deleteInvoice(HttpServletRequest request, HttpSession session) {
+		Integer invoiceId = Integer.valueOf(request.getParameter("invoiceId"));
+		boolean result = invoiceService.delete(invoiceId);
+		return JSON.toJSONString(result);
 	}
 
 }
