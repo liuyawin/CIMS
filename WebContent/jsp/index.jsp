@@ -48,9 +48,9 @@
 
 		<ul class="infolist">
 			<li has-permission='iDebtAlarm'><a
-				href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList" class="">收款超时：{{debtAlarmNum}}</a></li>
+				href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList" class="">收款相关：{{debtAlarmNum}}</a></li>
 			<li has-permission='iOverdueAlarm'><a
-				href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList" class="">工程逾期：{{overdueAlarmNum}}</a></li>
+				href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList" class="">工期相关：{{overdueAlarmNum}}</a></li>
 			<li><a href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList"
 				class="">任务超时：{{taskAlarmNum}}</a></li>
 		</ul>

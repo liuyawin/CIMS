@@ -16,7 +16,7 @@ public class PermissionConstants {
 	public static final String bill = "billPer";
 	public static final String system = "systemPer";
 	public static final String index = "indexPer";
-
+	public static final String left = "leftPer";
 	// 合同所有权限:{新建, 主任修改 ,文书修改, 删除, 修改状态, 添加工期阶段, 修改工期阶段 ,删除工期阶段, 添加收款节点, 修改收款节点,
 	// 删除收款节点, 新建任务}
 	public static final String[] contPer = { "cAdd", "cHeadEdit", "cBodyEdit", "cDel", "cStateEdit", "cPsAdd",
