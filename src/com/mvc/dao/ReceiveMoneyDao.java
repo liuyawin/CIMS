@@ -32,4 +32,7 @@ public interface ReceiveMoneyDao {
 
 	// 根据状态查询到款记录总条数
 	Integer countByState(Integer userId, Integer remoState);
+	
+	// 根据到款ID删除到款记录
+	Boolean delete(Integer remoId);
 }

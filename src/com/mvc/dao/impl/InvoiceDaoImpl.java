@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.base.enums.InvoiceStatus;
+import com.base.enums.IsDelete;
 import com.mvc.dao.InvoiceDao;
 import com.mvc.entity.Invoice;
 import com.utils.Pager;
@@ -52,9 +53,10 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			String selectSql = " update invoice set `invo _isdelete` = 1  where invo_id =:invo_id ";
+			String selectSql = " update invoice set invo _isdelete =:invo _isdelete  where invo_id =:invo_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("invo_id", invoiceId);
+			query.setParameter("invo _isdelete", IsDelete.YES.value);
 			query.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();

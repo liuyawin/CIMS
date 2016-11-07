@@ -79,4 +79,10 @@ public class ReceiveMoneyServiceImpl implements ReceiveMoneyService {
 		return receiveMoneyDao.countByState(userId, remoState);
 	}
 
+	// 根据到款ID删除到款记录
+	@Override
+	public Boolean delete(Integer remoId) {
+		return receiveMoneyDao.delete(remoId);
+	}
+
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.base.enums.ContractState;
 import com.base.enums.MethodType;
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
@@ -75,8 +76,8 @@ public class ContractServiceImpl implements ContractService {
 		contract.setCont_initiation(1);// 已立项
 		contract.setCont_ishistory(0);// 未删除
 		contract.setCont_state(0);// 合同状态
-		contract.setCont_rank(1);//合同等级
-		contract.setCompany_type("0");//公司类型
+		contract.setCont_rank(1);// 合同等级
+		contract.setCompany_type("0");// 公司类型
 		contract.setCont_ctime(date);// 合同创建时间
 		contract.setCreator(user);// 合同创建者
 		contract.setCur_prst("未录入工期阶段");// 当前工期阶段
@@ -205,8 +206,25 @@ public class ContractServiceImpl implements ContractService {
 
 	// 张姣娜：根据合同id修改状态
 	@Override
-	public Boolean updateState(Integer contId, Integer contState) {
-		return contractDao.updateState(contId, contState);
+	public Boolean updateState(Integer contId, Integer contState, User user) {
+		Contract contract = contractRepository.selectContById(contId);
+		boolean flag = contractDao.updateState(contId, contState);
+		if (flag) {
+			// 合同日志
+			ContractRecord contractRecord = new ContractRecord();
+			long time = System.currentTimeMillis();
+			Date date = new Date(time);
+
+			String before = ContractState.intToStr(contract.getCont_state());
+			String after = ContractState.intToStr(contState);
+			contractRecord.setConre_content(
+					user.getUser_name() + "---项目状态：" + before + ">>" + after + "---" + contract.getCont_name());
+			contractRecord.setConre_time(date);
+			contractRecord.setContract(contract);
+			contractRecord.setUser(user);
+			contractRecordRepository.saveAndFlush(contractRecord);
+		}
+		return flag;
 	}
 
 	// 张姣娜：查询所有停建合同列表

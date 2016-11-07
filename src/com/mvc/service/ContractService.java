@@ -44,7 +44,7 @@ public interface ContractService {
 	Boolean updateContBase(Integer cont_id, JSONObject jsonObject, User user);
 
 	// 张姣娜：根据合同id修改状态
-	Boolean updateState(Integer contId, Integer contState);
+	Boolean updateState(Integer contId, Integer contState, User user);
 
 	// 张姣娜：查询所有停建合同列表
 	List<Contract> findAllStopCont(String contName, Integer offset, Integer end);
