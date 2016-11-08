@@ -323,6 +323,51 @@ app.controller('userController', [
 			});
 			// 添加用户
 			$(".sure1").click(function() {
+				//输入验证
+				var flag = false;
+				if (!user.addinguser.user_num) {
+					$('#userNumError').css('display', 'inline');
+					flag = true;
+				}else if(user.addinguser.user_num.trim() == ""){
+					$('#userNumError').css('display', 'inline');
+					flag = true;
+				}
+				if (!user.addinguser.user_pwd) {
+					$('#userPwdError').css('display', 'inline');
+					flag = true;
+				}else if(user.addinguser.user_pwd.length<6){
+					$('#userPwdError').css('display', 'inline');
+					flag = true;
+				}
+				if (!user.addinguser.user_name) {
+					$('#userNameError').css('display', 'inline');
+					flag = true;
+				}else if(user.addinguser.user_name.trim() == ""){
+					$('#userNameError').css('display', 'inline');
+					flag = true;
+				}
+				if (!user.addinguser.user_tel) {
+					$('#userTelError').css('display', 'inline');
+					flag = true;
+				}else if(!user.addinguser.user_tel.match(/\d{11}/)){
+					$('#userTelError').css('display', 'inline');
+					flag = true;
+				}
+				if (!user.addinguser.user_email) {
+					$('#userEmailError').css('display', 'inline');
+					flag = true;
+				}else if(!user.addinguser.user_email
+						.match(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)){
+					$('#userEmailError').css('display', 'inline');
+					flag = true;
+				}
+				if($('#userExistError').css('display')=="inline"){
+					flag = true;
+				}
+				if (flag) {
+					return false;
+				}
+				//验证完毕
 				var AddUser = JSON.stringify(user.addinguser);
 				services.addUser({
 					user : AddUser

@@ -65,32 +65,38 @@
 
 <!-- 新建和修改模态框 -->
 <div class="overlayer"></div>
-<div class="tip" style="height: 500px;">
+<div class="tip" style="height: 500px; width: 540px">
 	<div class="tiptop">
-		<span>用户设置</span><a></a>
+		<span>添加用户</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<!-- 任务具体内容 -->
 	<div class="formbody">
-		<form id="addUser-form" ng-submit="addUser()" class="hidden">
+		<form id="addUser-form" class="hidden">
 			<ul class="forminfo">
-				<li><label>账号<b>*</b></label><input type="text"
-					class="dfinput" ng-model="addinguser.user_num" id="mustInput" /></li>
-				<li><label>密码<b>*</b></label><input type="password"
-					class="dfinput" ng-model="addinguser.user_pwd" id="mustInput" /></li>
-				<li><label>姓名<b>*</b></label><input type="text" class="dfinput"
-					ng-model="addinguser.user_name" /></li>
-				<li><label>电话<b>*</b></label><input type="text"
-					class="dfinput" ng-model="addinguser.user_tel" id="mustInput" /></li>
-				<li><label>邮箱</label><input type="text" class="dfinput"
-					ng-model="addinguser.user_email" /></li>
-				<li><label>性别</label><cite><input name="sex"
+				<li><label>用户账号<b>*</b></label><input type="text"
+					name="userNum" class="dfinput" ng-model="addinguser.user_num"
+					id="mustInput" /> <span id="userExistError" class="error-span">用户已存在</span>
+					<span id="userNumError" class="error-span">账号不能为空</span></li>
+				<li><label>用户密码<b>*</b></label><input type="password"
+					name="userPwd" class="dfinput" ng-model="addinguser.user_pwd"
+					id="mustInput" /> <span id="userPwdError" class="error-span">密码不能少于6位</span></li>
+				<li><label>用户姓名<b>*</b></label><input type="text"
+					class="dfinput" name="userName" ng-model="addinguser.user_name" />
+					<span id="userNameError" class="error-span">姓名不能为空</span></li>
+				<li><label>用户电话<b>*</b></label><input type="text"
+					name="userTel" class="dfinput" ng-model="addinguser.user_tel"
+					id="mustInput" /> <span id="userTelError" class="error-span">格式错误</span></li>
+				<li><label>用户邮箱</label><input type="text" class="dfinput"
+					name="userEmail" ng-model="addinguser.user_email" /> <span
+					id="userEmailError" class="error-span">格式错误</span></li>
+				<li><label>用户性别</label><cite><input name="sex"
 						type="radio" ng-model="addinguser.user_sex" value="0" />男&nbsp;&nbsp;&nbsp;&nbsp;<input
 						name="sex" type="radio" value="1" ng-model="user.user_sex" />女</cite></li>
-				<li><label>部门<b>*</b></label><cite><input name="dept"
+				<li><label>用户部门<b>*</b></label><cite><input name="dept"
 						type="radio" ng-model="addinguser.user_dept" value="0" />综合部&nbsp;&nbsp;&nbsp;&nbsp;<input
 						name="dept" type="radio" value="1" ng-model="user.user_dept" />设计部</cite></li>
-				<li><label>角色<b>*</b></label>
+				<li><label>用户角色<b>*</b></label>
 					<div class="vocation">
 						<select class="select1 dfinput" ng-model="addinguser.role.role_id">
 							<option ng-repeat="role in roles" value={{role.role_id}}>{{role.role_name}}</option>
@@ -99,23 +105,22 @@
 			</ul>
 			<!-- 按钮 -->
 			<div class="tipbtn">
-				<input name="" type="button" class="sure sure1" value="确定"
-					ng-click="" />&nbsp; <input name="" type="button" class="cancel"
-					value="取消" />
+				<input type="button" class="sure sure1" value="确定" />&nbsp;
+				<input name="" type="button" class="cancel" value="取消" />
 			</div>
 		</form>
 
 		<form id="editUser-form" class="hidden">
 
 			<ul class="forminfo">
-				<li><label>账号<b>*</b></label><input type="text"
-					class="dfinput" ng-model="editUser.user_num" id="mustInput" /></li>
+				<li><label>账号<b>*</b></label><input type="text" class="dfinput"
+					ng-model="editUser.user_num" id="mustInput" /></li>
 				<li><label>密码<b>*</b></label><input type="password"
 					class="dfinput" ng-model="editUser.user_pwd" id="mustInput" /></li>
 				<li><label>姓名<b>*</b></label><input type="text" class="dfinput"
 					ng-model="editUser.user_name" /></li>
-				<li><label>电话<b>*</b></label><input type="text"
-					class="dfinput" ng-model="editUser.user_tel" id="mustInput" /></li>
+				<li><label>电话<b>*</b></label><input type="text" class="dfinput"
+					ng-model="editUser.user_tel" id="mustInput" /></li>
 				<li><label>邮箱</label><input type="text" class="dfinput"
 					ng-model="editUser.user_email" /></li>
 				<li><label>性别</label><cite><input name="sex"
@@ -141,4 +146,46 @@
 	</div>
 </div>
 <!-- 新建和修改模态框完 -->
+<script>
+	$(function() {
+		//验证账号是否存在
+		var $userNumInput = $('#addUser-form input[name=userNum]'),
+			$userPwdInput = $('#addUser-form input[name=userPwd]'),
+			$userNameInput = $('#addUser-form input[name=userName]'),
+			$userTelInput = $('#addUser-form input[name=userTel]'),
+			$userEmailInput = $('#addUser-form input[name=userEmail]'),
+			$userNumInput = $('#addUser-form input[name=userNum]');
+		$userNumInput.blur(function() {
+			console.log("账号改变了")
+			$.get("/CIMS/user/isUserNumExist.do", {
+				userNum : $userNumInput.val()
+			}, function(data) {
+				if (data) {
+					$('#userExistError').css('display', 'inline');
+				}
+			})
+		})
 
+		$userNumInput.click(function() {
+			$('#userExistError').css('display', 'none');
+			$('#userNumError').css('display', 'none');
+		})
+		
+		$userNumInput.click(function() {
+			$('#userExistError').css('display', 'none');
+			$('#userNumError').css('display', 'none');
+		})
+		$userPwdInput.click(function() {
+			$('#userPwdError').css('display', 'none');
+		})
+		$userNameInput.click(function() {
+			$('#userNameError').css('display', 'none');
+		})
+		$userTelInput.click(function() {
+			$('#userTelError').css('display', 'none');
+		})
+		$userEmailInput.click(function() {
+			$('#userEmailError').css('display', 'none');
+		})
+	})
+</script>
