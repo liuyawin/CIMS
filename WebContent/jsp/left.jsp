@@ -85,7 +85,6 @@
 		$.get("/CIMS/login/getLeftbarPermission.do",function(data){
 			console.log("左侧栏权限："+data);
 			var leftbarPermission = data.substring(1,data.length-2).split(",");
-			console.log(leftbarPermission);
 			for(var i=0,len=leftbarPermission.length;i<len;i++){
 				var $temp = $('.'+leftbarPermission[i].trim());
 				if($temp){

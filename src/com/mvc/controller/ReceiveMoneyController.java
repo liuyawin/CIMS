@@ -140,7 +140,6 @@ public class ReceiveMoneyController {
 		Integer remoId = Integer.valueOf(request.getParameter("remoId"));
 		Float remoAmoney = Float.valueOf(request.getParameter("remoAmoney"));
 		Boolean result = receiveMoneyService.updateRemoStateById(remoId, remoAmoney, user);
-
 		ReceiveMoney receiveMoney = receiveMoneyService.findByRemoId(remoId);
 		int cont_id = receiveMoney.getContract().getCont_id();
 		// 更新收款节点的收款状态

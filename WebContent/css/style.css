@@ -863,7 +863,7 @@ h2 {
 .forminfo li label {
 	width: 86px;
 	line-height: 34px;
-	display: block;
+	/* display: block; */
 	float: left;
 }
 
