@@ -18,7 +18,7 @@
 		</form>
 
 		<ul class="toolbar1" has-permission='uUserAdd'>
-			<li class="click" ng-click="addNewUser()"><a href="#"><span><img
+			<li class="click" ng-click="addNewUser()"><a href=""><span><img
 						src="../images/t01.png" /></span>新建</a></li>
 		</ul>
 
@@ -30,8 +30,11 @@
 				<th>编号</th>
 				<th>账号</th>
 				<th>姓名</th>
+				<th>性别</th>
+				<th>部门</th>
+				<th>角色</th>
 				<th>电话</th>
-				<th>用户角色</th>
+				<th>邮箱</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -40,11 +43,15 @@
 				<td>{{$index + 1 }}</td>
 				<td>{{user.user_num}}</td>
 				<td>{{user.user_name}}</td>
-				<td>{{user.user_tel}}</td>
+				<td>{{user.user_sex | userSex}}</td>
+				<td>{{user.user_dept | userDept}}</td>
 				<td>{{user.role.role_name}}</td>
-				<td><a ng-click="editUserBtn(this)" class="tablelink" has-permission='uUserEdit'> 修改</a><a
-					href="#userList" ng-click="deleteUser(user.user_id)"
-					class="tablelink" has-permission='uUserDel'> 删除</a></td>
+				<td>{{user.user_tel}}</td>
+				<td>{{user.user_email}}</td>
+				<td><a ng-click="editUserBtn(this)" class="tablelink"
+					has-permission='uUserEdit'> 修改</a><a href="#userList"
+					ng-click="deleteUser(user.user_id)" class="tablelink"
+					has-permission='uUserDel'> 删除</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -67,21 +74,23 @@
 	<div class="formbody">
 		<form id="addUser-form" ng-submit="addUser()" class="hidden">
 			<ul class="forminfo">
-				<li><label>用户账号<b>*</b></label><input type="text"
+				<li><label>账号<b>*</b></label><input type="text"
 					class="dfinput" ng-model="addinguser.user_num" id="mustInput" /></li>
-				<li><label>用户密码<b>*</b></label><input type="password"
+				<li><label>密码<b>*</b></label><input type="password"
 					class="dfinput" ng-model="addinguser.user_pwd" id="mustInput" /></li>
-				<li><label>用户姓名</label><input type="text" class="dfinput"
+				<li><label>姓名<b>*</b></label><input type="text" class="dfinput"
 					ng-model="addinguser.user_name" /></li>
-				<li><label>用户电话<b>*</b></label><input type="text"
+				<li><label>电话<b>*</b></label><input type="text"
 					class="dfinput" ng-model="addinguser.user_tel" id="mustInput" /></li>
-				<li><label>用户邮箱</label><input type="text" class="dfinput"
+				<li><label>邮箱</label><input type="text" class="dfinput"
 					ng-model="addinguser.user_email" /></li>
 				<li><label>性别</label><cite><input name="sex"
 						type="radio" ng-model="addinguser.user_sex" value="0" />男&nbsp;&nbsp;&nbsp;&nbsp;<input
 						name="sex" type="radio" value="1" ng-model="user.user_sex" />女</cite></li>
-
-				<li><label>用户角色<b>*</b></label>
+				<li><label>部门<b>*</b></label><cite><input name="dept"
+						type="radio" ng-model="addinguser.user_dept" value="0" />综合部&nbsp;&nbsp;&nbsp;&nbsp;<input
+						name="dept" type="radio" value="1" ng-model="user.user_dept" />设计部</cite></li>
+				<li><label>角色<b>*</b></label>
 					<div class="vocation">
 						<select class="select1 dfinput" ng-model="addinguser.role.role_id">
 							<option ng-repeat="role in roles" value={{role.role_id}}>{{role.role_name}}</option>
@@ -99,20 +108,23 @@
 		<form id="editUser-form" class="hidden">
 
 			<ul class="forminfo">
-				<li><label>用户账号<b>*</b></label><input type="text"
+				<li><label>账号<b>*</b></label><input type="text"
 					class="dfinput" ng-model="editUser.user_num" id="mustInput" /></li>
-				<li><label>用户密码<b>*</b></label><input type="password"
+				<li><label>密码<b>*</b></label><input type="password"
 					class="dfinput" ng-model="editUser.user_pwd" id="mustInput" /></li>
-				<li><label>用户姓名</label><input type="text" class="dfinput"
+				<li><label>姓名<b>*</b></label><input type="text" class="dfinput"
 					ng-model="editUser.user_name" /></li>
-				<li><label>用户电话<b>*</b></label><input type="text"
+				<li><label>电话<b>*</b></label><input type="text"
 					class="dfinput" ng-model="editUser.user_tel" id="mustInput" /></li>
-				<li><label>用户邮箱</label><input type="text" class="dfinput"
+				<li><label>邮箱</label><input type="text" class="dfinput"
 					ng-model="editUser.user_email" /></li>
 				<li><label>性别</label><cite><input name="sex"
 						type="radio" ng-model="editUser.user_sex" value="0" />男&nbsp;&nbsp;&nbsp;&nbsp;<input
 						name="sex" type="radio" value="1" ng-model="editUser.user_sex" />女</cite></li>
-				<li><label>用户角色<b>*</b></label>
+				<li><label>部门<b>*</b></label><cite><input name="dept"
+						type="radio" ng-model="editUser.user_dept" value="0" />综合部&nbsp;&nbsp;&nbsp;&nbsp;<input
+						name="dept" type="radio" value="1" ng-model="editUser.user_dept" />设计部</cite></li>
+				<li><label>角色<b>*</b></label>
 					<div class="vocation">
 						<select class="select1 dfinput" ng-model="editUser.role.role_id">
 							<option ng-repeat="role in roles2" value={{role.role_id}}>{{role.role_name}}</option>

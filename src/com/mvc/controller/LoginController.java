@@ -25,6 +25,7 @@ import com.mvc.service.TaskService;
 import com.mvc.service.UserService;
 import com.utils.CookieUtil;
 import com.utils.HttpRedirectUtil;
+import com.utils.MD5;
 
 import net.sf.json.JSONObject;
 
@@ -100,7 +101,6 @@ public class LoginController {
 		String passWord = request.getParameter("password");
 		User user = userService.findByUserNum(userNum);
 		JSONObject jsonObject = new JSONObject();
-
 		if (user != null) {
 			String passwd = user.getUser_pwd();
 			if (passwd != null && passwd.equals(passWord)) {

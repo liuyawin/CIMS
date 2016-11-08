@@ -56,30 +56,30 @@ var app = angular
 								: data;
 					} ];
 				});
-//获取权限列表
-var permissionList; 
+// 获取权限列表
+var permissionList;
 angular.element(document).ready(function() {
-console.log("获取权限列表！"); 
-$.get('/CIMS/login/getUserPermission.do', function(data) { 
-	  permissionList = data; // 
-	  angular.bootstrap($("#user"), ['user']); //手动加载angular模块
-	  }); 
+	console.log("获取权限列表！");
+	$.get('/CIMS/login/getUserPermission.do', function(data) {
+		permissionList = data; // 
+		angular.bootstrap($("#user"), [ 'user' ]); // 手动加载angular模块
+	});
 });
 
 app.directive('hasPermission', function($timeout) {
-		return {
-			restrict : 'ECMA',
-			link : function(scope, element, attr) {
-				var key = attr.hasPermission.trim(); // 获取页面上的权限值
-				var keys = permissionList;
-				var regStr = "\\s" + key + "\\s";
-				var reg = new RegExp(regStr);
-				if (keys.search(reg) < 0) {
-					element.css("display", "none");
-				}
+	return {
+		restrict : 'ECMA',
+		link : function(scope, element, attr) {
+			var key = attr.hasPermission.trim(); // 获取页面上的权限值
+			var keys = permissionList;
+			var regStr = "\\s" + key + "\\s";
+			var reg = new RegExp(regStr);
+			if (keys.search(reg) < 0) {
+				element.css("display", "none");
 			}
-		};
-	});
+		}
+	};
+});
 app.run([ '$rootScope', '$location', function($rootScope, $location) {
 	$rootScope.$on('$routeChangeSuccess', function(evt, next, previous) {
 		console.log('路由跳转成功');
@@ -253,8 +253,8 @@ app.controller('userController', [
 
 			}
 			// 根据用户选择更新权限数据容器
-			user.updateSelection = function(e,clazz,name) {
-				var checkbox = e.target;		
+			user.updateSelection = function(e, clazz, name) {
+				var checkbox = e.target;
 				var action = (checkbox.checked ? 'add' : 'remove');
 				updateSelected(action, clazz, name);
 			}
@@ -266,7 +266,8 @@ app.controller('userController', [
 
 			// 用户模态框开始
 			// 点击新建按钮事件
-			user.addNewUser = function() {
+			user.addNewUser = function(e) {
+				preventDefault(e);
 				services.getAllRoleList().success(function(data) {
 					user.roles = data;
 				});
@@ -344,7 +345,7 @@ app.controller('userController', [
 				$(".tip").fadeIn(200);
 				$("#addRole-form").slideDown(200);
 				$("#editRole-form").hide();
-				
+
 			};
 			function preventDefault(e) {
 				if (e && e.preventDefault) {
@@ -520,6 +521,16 @@ app.controller('userController', [
 
 				}
 			}
+			function preventDefault(e) {
+				if (e && e.preventDefault) {
+					// 阻止默认浏览器动作(W3C)
+					e.preventDefault();
+				} else {
+					// IE中阻止函数器默认动作的方式
+					window.event.returnValue = false;
+					return false;
+				}
+			}
 			// 初始化
 			function initData() {
 				console.log("初始化页面信息");
@@ -555,3 +566,30 @@ app.controller('userController', [
 			});
 
 		} ]);
+
+// 部门的判断
+app.filter('userDept', function() {
+	return function(input) {
+		var dept = "";
+		if (input == "0")
+			dept = "综合部";
+		else if (input == "1")
+			dept = "设计部";
+		else if (!input)
+			dept = "";
+		return dept;
+	}
+});
+// 性别判断
+app.filter('userSex', function() {
+	return function(input) {
+		var sex = "";
+		if (input == "0")
+			sex = "男";
+		else if (input == "1")
+			sex = "女";
+		else if (!input)
+			sex = "";
+		return sex;
+	}
+});
