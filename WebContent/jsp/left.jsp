@@ -42,12 +42,12 @@
 			</div>
 			<ul id="bill-ul" class="menuson">
 				<li id="billMgmt"><cite></cite> <a
-					href="${ctx}/contract/toBillMngContractPage.do#/contractList">票据管理</a><i></i></li>
+					href="${ctx}/invoice/toBillMngInvoicePage.do#/contractList">票据管理</a><i></i></li>
 				<li id="invoiceTask" class="invoiceTask" style="display: none"><cite></cite>
 					<a href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
 				<li id="receiveMoneyTask" class="remoTask" style="display: none"><cite></cite>
 					<a
-					href="${ctx}/receiveMoney/toBillMngInvoicePage.do#/receiveMoneyTaskList">到款任务</a><i></i></li>
+					href="${ctx}/invoice/toBillMngInvoicePage.do#/receiveMoneyTaskList">到款任务</a><i></i></li>
 			</ul>
 
 		</dd>
@@ -82,35 +82,24 @@
 	</dl>
 </section>
 <script>
-	$(document)
-			.ready(
-					function() {
-						//根据权限显示左侧栏相关条目
-						$
-								.get(
-										"/CIMS/login/getLeftbarPermission.do",
-										function(data) {
-											console.log("左侧栏权限：" + data);
-											var leftbarPermission = data
-													.substring(1,
-															data.length - 2)
-													.split(",");
-											console.log(leftbarPermission);
-											for (var i = 0, len = leftbarPermission.length; i < len; i++) {
-												var $temp = $('.'
-														+ leftbarPermission[i]
-																.trim());
-												if ($temp) {
-													$temp.css('display',
-															'block');
-												}
-											}
-										});
-						//点击li时将当前页面的信息存入sessionStorage
-						var $li = $('.leftmenu li');
-						$li.click(function() {
-							sessionStorage.setItem("currentPage", $(this).attr(
-									'id'));
-						});
-					});
+
+	$(document).ready(function() {
+		//根据权限显示左侧栏相关条目
+		$.get("/CIMS/login/getLeftbarPermission.do",function(data){
+			console.log("左侧栏权限："+data);
+			var leftbarPermission = data.substring(1,data.length-2).split(",");
+			for(var i=0,len=leftbarPermission.length;i<len;i++){
+				var $temp = $('.'+leftbarPermission[i].trim());
+				if($temp){
+					$temp.css('display','block');
+				}
+			}
+		});
+		//点击li时将当前页面的信息存入sessionStorage
+		var $li = $('.leftmenu li');
+		$li.click(function() {
+			sessionStorage.setItem("currentPage", $(this).attr('id'));
+		});
+	});
+
 </script>

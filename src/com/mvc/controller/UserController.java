@@ -7,18 +7,20 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mvc.entity.Role;
 import com.mvc.entity.User;
-import com.mvc.entity.UserDeptRelation;
 import com.mvc.service.UserService;
+import com.utils.MD5;
 import com.utils.Pager;
 
 import net.sf.json.JSONObject;
 
 import com.alibaba.fastjson.JSON;
+import com.base.enums.Dept;
 
 /**
  * 用户相关内容
@@ -41,7 +43,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getUserListByPage.do")
-	public @ResponseBody String getStores(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String getUsersByPrarm(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Long totalRow = userService.countTotal();
 		Pager pager = new Pager();
@@ -61,7 +63,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getAllUserList.do")
-	public @ResponseBody String getAllStores(HttpServletRequest request, HttpSession session) {
+	public @ResponseBody String getAllUsers(HttpServletRequest request, HttpSession session) {
 		List<User> result = userService.findUserAlls();
 		return JSON.toJSONString(result);
 	}
@@ -94,10 +96,11 @@ public class UserController {
 		User user = new User();
 		user.setUser_num(jsonObject.getString("user_num"));
 		user.setUser_name(jsonObject.getString("user_name"));
-		user.setUser_pwd(jsonObject.getString("user_pwd"));
+		user.setUser_pwd(MD5.encodeByMD5(jsonObject.getString("user_pwd")));
 		user.setUser_sex(Integer.parseInt(jsonObject.getString("user_sex")));
 		user.setUser_tel(jsonObject.getString("user_tel"));
 		user.setUser_email(jsonObject.getString("user_email"));
+		user.setUser_dept(Integer.valueOf(jsonObject.getString("user_dept")));
 		Role role = new Role();
 		role.setRole_id(Integer.parseInt(jsonObject.getJSONObject("role").getString("role_id")));
 		user.setRole(role);
@@ -113,7 +116,7 @@ public class UserController {
 	}
 
 	/**
-	 * 只要设计部人员列表
+	 * 获取设计部人员列表
 	 * 
 	 * @param request
 	 * @param session
@@ -121,7 +124,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/selectUsersFromDesign.do")
 	public @ResponseBody String getUsersFromDesign(HttpServletRequest request, HttpSession session) {
-		List<UserDeptRelation> result = userService.findUserFromDesign();
+		List<User> result = userService.findUserByDeptName(Dept.shejibu.value);
 		return JSON.toJSONString(result);
 	}
 
@@ -136,10 +139,22 @@ public class UserController {
 	public @ResponseBody String getUserContentById(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		Integer userid = Integer.valueOf(request.getParameter("userid"));
-		User user = userService.findUserContentById(userid);
+		User user = userService.findById(userid);
 		jsonObject.put("user", user);
 		return jsonObject.toString();
-
+	}
+	/**
+	 * 检查用户是否已经存在
+	 * @param request
+	 * @param session
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/isUserNumExist.do")
+	public @ResponseBody Long checkUserName(HttpServletRequest request, HttpSession session, ModelMap map) {
+		String userNum = request.getParameter("userNum");
+		Long result = userService.isExist(userNum);
+		return result;
 	}
 
 }

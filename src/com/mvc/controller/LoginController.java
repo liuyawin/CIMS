@@ -25,6 +25,7 @@ import com.mvc.service.TaskService;
 import com.mvc.service.UserService;
 import com.utils.CookieUtil;
 import com.utils.HttpRedirectUtil;
+import com.utils.MD5;
 
 import net.sf.json.JSONObject;
 
@@ -97,10 +98,9 @@ public class LoginController {
 	public @ResponseBody JSONObject loginValidate(HttpSession session, HttpServletRequest request, ModelMap model,
 			HttpServletResponse res) {
 		String userNum = request.getParameter("userName");
-		String passWord = request.getParameter("password");
+		String passWord = MD5.encodeByMD5(request.getParameter("password"));
 		User user = userService.findByUserNum(userNum);
 		JSONObject jsonObject = new JSONObject();
-
 		if (user != null) {
 			String passwd = user.getUser_pwd();
 			if (passwd != null && passwd.equals(passWord)) {
@@ -128,19 +128,9 @@ public class LoginController {
 	public String login(HttpSession session, HttpServletRequest request, ModelMap model, HttpServletResponse res) {
 		String error_msg = "";
 		String userNum = request.getParameter("userName");
-		String password = request.getParameter("password");
+		String password = MD5.encodeByMD5(request.getParameter("password"));
 		String isRemember = request.getParameter("isRemember"); // 记住密码//值获取不到
 		User user = userService.findByUserNum(userNum);
-		System.out.println("测试开始：");
-		String result = "";
-		String permission = "";
-		if (user.getRole().getRole_permission() != null && !user.getRole().getRole_permission().equals("")) {
-			permission = user.getRole().getRole_permission();
-			result = leftPermissionStr(permission);
-		}
-		System.out.println("result：" + result);
-		System.out.println("测试结束！");
-
 		CookieUtil cookie_u = new CookieUtil();
 		if (user != null) { // 用户存在
 			String passwd = user.getUser_pwd();
