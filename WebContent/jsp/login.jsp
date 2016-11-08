@@ -50,7 +50,7 @@
 			</form>
 		</div>
 	</div>
-	<div class="loginbm">西安电子科技大学</div>
+	<div class="loginbm">西北勘测设计院光伏电设计分院</div>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/js/lib/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript"

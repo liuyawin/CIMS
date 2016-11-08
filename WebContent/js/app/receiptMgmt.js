@@ -168,6 +168,7 @@ receiptapp
 						function($scope, services, $location) {
 							// 合同
 							var receipt = $scope;
+							var recePage=1;
 
 							// zq查看合同ID，并记入sessione
 							receipt.getContId = function(contId) {
@@ -236,7 +237,8 @@ receiptapp
 									$(".overlayer").fadeOut(200);
 									alert("收据添加成功！");
 									receipt.receipt = "";
-									initData();
+									findReceipts(1);
+									countReceiptMoneyByContId();
 								});
 							}
 
@@ -284,6 +286,7 @@ receiptapp
 									cont_id : cont_id
 								}).success(function(data) {
 									receipt.prst = data.list;
+									
 								});
 							}
 							// zq：根据合同ID查询收款节点的内容
@@ -305,7 +308,7 @@ receiptapp
 								}).success(function(data) {
 									receipt.receipts = data.list;
 									receipt.totalRow = data.totalRow;
-
+									pageTurn(data.totalPage, 1);
 								});
 							}
 							// 根据收据ID查看收据的详情
@@ -389,7 +392,8 @@ receiptapp
 									receId : sessionStorage.getItem("receId")
 								}).success(function(data) {
 									alert("操作成功！");
-									selectReceiptByContId();
+									findReceipts(recePage);
+									countReceiptMoneyByContId();
 								});
 							});
 
@@ -419,7 +423,6 @@ receiptapp
 
 							}
 							receipt.editReceiptInfo = function() {
-								alert("进来了");
 								var receFormData = JSON
 										.stringify(receipt.receipt);
 								services.addReceipt({
@@ -430,7 +433,8 @@ receiptapp
 									$(".overlayer").fadeOut(200);
 									alert("操作成功！");
 									receipt.receipt = "";
-									initData();
+									findReceipts(recePage);
+									countReceiptMoneyByContId();
 								});
 							}
 							$("#cancelEditReceipt").click(function() {
@@ -444,12 +448,31 @@ receiptapp
 										.replace(/\//g, '-');
 								return newDate;
 							}
-							// 更改任务时间的格式
-							function changeDateType(time) {
-
-								newDate = new Date(time).toLocaleDateString()
-										.replace(/\//g, '-');
-								return newDate;
+							// zq换页
+							function pageTurn(totalPage, page) {
+								var $pages = $(".tcdPageCode");
+								console.log($pages.length);
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											recePage = p;
+											findReceipts(p);
+										}
+									});
+								}
+							}
+							// zq：根据合同ID查找所有的收据
+							function findReceipts(p) {
+								var contId = sessionStorage.getItem('conId');
+								services.selectReceiptByContId({
+									page : p,
+									contId : contId
+								}).success(function(data) {
+									receipt.receipts = data.list;
+									receipt.totalRow = data.totalRow;
+								});
 							}
 							// zq初始化页面信息
 							function initData() {

@@ -44,16 +44,6 @@ public class ReceiveMoneyController {
 	ReceiveNodeService receiveNodeService;
 
 	/**
-	 * 返回收据界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toBillMngInvoicePage.do")
-	public String InvoiceReceivePage() {
-		return "billInformation/index";
-	}
-
-	/**
 	 * 根据状态获取到款列表
 	 * 
 	 * @param request
