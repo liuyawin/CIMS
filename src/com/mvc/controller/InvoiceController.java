@@ -44,6 +44,7 @@ public class InvoiceController {
 	 */
 	@RequestMapping("/toBillMngInvoicePage.do")
 	public String InvoiceReceivePage() {
+		System.out.println("zhangqun");
 		return "billInformation/index";
 	}
 
