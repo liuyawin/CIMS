@@ -302,7 +302,7 @@ public class LoginController {
 		String permission = "";
 		if (user.getRole().getRole_permission() != null && !user.getRole().getRole_permission().equals("")) {
 			permission = user.getRole().getRole_permission();
-			result = numToPermissionStr(permission);
+			result = leftPermissionStr(permission);
 		}
 		return JSON.toJSONString(result + " ");
 	}
