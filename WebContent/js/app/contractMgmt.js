@@ -530,6 +530,7 @@ app
 								}, contract.file).success(function(data) {
 									sessionStorage.setItem("conId", data);
 									contract.contract.cont_id = data;
+								
 									$("#addContract").hide();
 									$("#updateContract").show();
 									alert("创建合同成功！");

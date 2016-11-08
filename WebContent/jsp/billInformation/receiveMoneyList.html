@@ -56,9 +56,9 @@
 				<td class="width5">{{remo.operater.user_name}}</td>
 				<td class="width10"><a ng-click="checkRemo()"
 					class="tablelink underline">查看</a><a ng-click="auditRemo()"
-					class="tablelink underline" has-permission="tRemoAudit">审核</a><a
-					ng-click="editRemo()" class="tablelink underline">修改</a><a
-					ng-click="delRemo()" class="tablelink underline">删除</a></td>
+					class="tablelink underline" has-permission="tRemoAudit">核对</a><a
+					ng-click="editRemo()" class="tablelink underline" has-permission='bRemoAdd'>修改</a><a
+					ng-click="delRemo()" class="tablelink underline" has-permission='bRemoAdd'>删除</a></td>
 
 			</tr>
 		</tbody>
