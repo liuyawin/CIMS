@@ -18,20 +18,18 @@
 		<li><label>开发票时间</label><input name="" type="text"
 			class="dfinput" value="{{invoice.invo_time.time | dateType}}"
 			readonly /></li>
-			<li><label>业主公司</label><input name="" type="text"
-			class="dfinput" value="{{invoice.invo_firm}}"
-			readonly /></li>
-		<li><label>发起者</label> <input name="" type="text"
-			class="dfinput" readonly value="{{invoice.creator.user_name}}" /></li>
-		<li><label>审核者</label><input type="text" class="dfinput"
-			readonly value="{{invoice.audit.user_name}}"></li>
-		<li><label>执行者</label><input type="text" class="dfinput"
-			readonly value="{{invoice.receiver.user_name}}"></li>
-			<li><label>所属合同</label><input type="text" class="dfinput"
+		<li><label>业主公司</label><input name="" type="text" class="dfinput"
+			value="{{invoice.invo_firm}}" readonly /></li>
+		<li><label>发起者</label> <input name="" type="text" class="dfinput"
+			readonly value="{{invoice.creator.user_name}}" /></li>
+		<li><label>审核者</label><input type="text" class="dfinput" readonly
+			value="{{invoice.audit.user_name}}"></li>
+		<li><label>执行者</label><input type="text" class="dfinput" readonly
+			value="{{invoice.receiver.user_name}}"></li>
+		<li><label>所属合同</label><input type="text" class="dfinput"
 			readonly value="{{invoice.contract.cont_name}}"></li>
 		<li><label>备注</label> <textarea name="" cols="" rows=""
-				class="textinput" readonly 
-				>{{invoice.invo_remark}}</textarea></li>
+				class="textinput" readonly>{{invoice.invo_remark}}</textarea></li>
 	</ul>
 </div>
 <br>

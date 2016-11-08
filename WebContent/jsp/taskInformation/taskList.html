@@ -31,13 +31,14 @@
 		<thead>
 			<tr>
 				<th>序号</th>
-				<th>内容</th>
+
 				<th>类型</th>
 				<th>状态</th>
 				<th>创建者</th>
 				<th>报警次数</th>
 				<th has-permission='tContCollect'>补录合同</th>
-				<th has-permission='tContDetail'>查看合同</th>
+				<th has-permission='tContDetail'>相关合同</th>
+				<th>备注</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -45,7 +46,6 @@
 		<tbody>
 			<tr ng-repeat="t in tasks" id={{t.task_id}}>
 				<td>{{$index + 1}}</td>
-				<td>{{t.task_content |cutString}}</td>
 				<td><div ng-switch={{t.task_type}}>
 						<div ng-switch-when="0">普通任务</div>
 						<div ng-switch-when="1">文书任务</div>
@@ -92,7 +92,7 @@
 						</div>
 
 					</div></td>
-
+				<td>{{t.task_content |cutString}}</td>
 				<td><a ng-click="checkTask()" class="tablelink">查看</a><a
 					ng-click="finishTask()" class="tablelink finishLabel"
 					task-finish='{{t.task_state}},{{t.task_type}}'>完成</a><a
