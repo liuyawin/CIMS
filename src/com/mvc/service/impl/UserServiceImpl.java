@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService {
 	// 根据userNum查询用户账号是否存在,返回1存在，返回0不存在
 	public Long isExist(String userNum) {
 		Long result = userRepository.countByUserNum(userNum);
-		System.out.println("验证用户名是否存在返回結果" + result);
 		return result;
 	}
 

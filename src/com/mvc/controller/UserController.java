@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -141,7 +142,19 @@ public class UserController {
 		User user = userService.findById(userid);
 		jsonObject.put("user", user);
 		return jsonObject.toString();
-
+	}
+	/**
+	 * 检查用户是否已经存在
+	 * @param request
+	 * @param session
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/isUserNumExist.do")
+	public @ResponseBody Long checkUserName(HttpServletRequest request, HttpSession session, ModelMap map) {
+		String userNum = request.getParameter("userNum");
+		Long result = userService.isExist(userNum);
+		return result;
 	}
 
 }
