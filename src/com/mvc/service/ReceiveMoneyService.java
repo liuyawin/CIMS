@@ -6,6 +6,9 @@ package com.mvc.service;
 import java.util.List;
 
 import com.mvc.entity.ReceiveMoney;
+import com.mvc.entity.User;
+
+import net.sf.json.JSONObject;
 
 /**
  * 到款
@@ -28,10 +31,10 @@ public interface ReceiveMoneyService {
 	Integer countByParam(Integer contId, Integer remoState);
 
 	// 审核到款记录
-	Boolean updateRemoStateById(Integer remoId, Float remoAmoney);
+	Boolean updateRemoStateById(Integer remoId, Float remoAmoney, User user);
 
 	// 新增到款
-	Boolean save(ReceiveMoney receiveMoney);
+	Boolean save(JSONObject jsonObject, Integer cont_id, User user);
 
 	// 根据状态查询到款记录
 	List<ReceiveMoney> findListByState(Integer userId, Integer remoState, Integer offset, Integer end);
@@ -40,6 +43,6 @@ public interface ReceiveMoneyService {
 	Integer countByState(Integer userId, Integer remoState);
 
 	// 根据到款ID删除到款记录
-	Boolean delete(Integer remoId);
+	Boolean delete(Integer remoId, User user);
 
 }

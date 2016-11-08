@@ -254,7 +254,8 @@ public class InvoiceController {
 	@RequestMapping(value = "/deleteInvoice.do")
 	public @ResponseBody String deleteInvoice(HttpServletRequest request, HttpSession session) {
 		Integer invoiceId = Integer.valueOf(request.getParameter("invoiceId"));
-		boolean result = invoiceService.delete(invoiceId);
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Boolean result = invoiceService.delete(invoiceId, user);
 		return JSON.toJSONString(result);
 	}
 

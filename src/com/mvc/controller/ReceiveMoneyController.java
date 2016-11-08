@@ -4,8 +4,6 @@
 package com.mvc.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,9 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.base.constants.SessionKeyConstants;
-import com.base.enums.IsDelete;
-import com.base.enums.ReceiveMoneyStatus;
-import com.mvc.entity.Contract;
 import com.mvc.entity.ReceiveMoney;
 import com.mvc.entity.User;
 import com.mvc.service.ReceiveMoneyService;
@@ -141,9 +136,10 @@ public class ReceiveMoneyController {
 	 */
 	@RequestMapping(value = "/auditReceiveMoney.do")
 	public @ResponseBody String updateState(HttpServletRequest request, HttpSession session) throws ParseException {
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer remoId = Integer.valueOf(request.getParameter("remoId"));
 		Float remoAmoney = Float.valueOf(request.getParameter("remoAmoney"));
-		boolean result = receiveMoneyService.updateRemoStateById(remoId, remoAmoney);
+		Boolean result = receiveMoneyService.updateRemoStateById(remoId, remoAmoney, user);
 
 		ReceiveMoney receiveMoney = receiveMoneyService.findByRemoId(remoId);
 		int cont_id = receiveMoney.getContract().getCont_id();
@@ -164,41 +160,10 @@ public class ReceiveMoneyController {
 	 */
 	@RequestMapping(value = "/addReMoneyTask.do")
 	public @ResponseBody String addReMoney(HttpServletRequest request, HttpSession session) throws ParseException {
-		User creater = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("receiveMoney"));
-		ReceiveMoney receiveMoney = new ReceiveMoney();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Contract contract = new Contract();
-		contract.setCont_id(Integer.valueOf(request.getParameter("contId")));
-		receiveMoney.setContract(contract);
-		receiveMoney.setCreater(creater);
-		if (jsonObject.containsKey("remo_time")) {
-			Date remoTime = format.parse(jsonObject.getString("remo_time"));
-			receiveMoney.setRemo_time(remoTime);
-		}
-		if (jsonObject.containsKey("remo_money")) {
-			receiveMoney.setRemo_money(Float.valueOf(jsonObject.getString("remo_money")));
-		}
-		if (jsonObject.containsKey("remo_remark")) {
-			receiveMoney.setRemo_remark(jsonObject.getString("remo_remark"));
-		}
-		if (jsonObject.containsKey("operater")) {
-			JSONObject tmp = JSONObject.fromObject(jsonObject.getString("operater"));
-			User operater = new User();
-			operater.setUser_id(Integer.valueOf(tmp.getString("user_id")));
-			receiveMoney.setOperater(operater);
-		}
-		receiveMoney.setRemo_state(ReceiveMoneyStatus.waitAudit.value);
-		receiveMoney.setRemo_isdelete(IsDelete.NO.value);
-		receiveMoney.setRemo_amoney(Float.valueOf(0));
-		boolean result = false;
-		if (jsonObject.containsKey("remo_id")) {
-			receiveMoney.setRemo_id(Integer.valueOf(jsonObject.getString("remo_id")));
-			result = receiveMoneyService.save(receiveMoney);
-		} else {
-			result = receiveMoneyService.save(receiveMoney);
-		}
-
+		Integer cont_id = Integer.valueOf(request.getParameter("contId"));
+		Boolean result = receiveMoneyService.save(jsonObject, cont_id, user);
 		return JSON.toJSONString(result);
 	}
 
@@ -211,8 +176,9 @@ public class ReceiveMoneyController {
 	 */
 	@RequestMapping(value = "/deleteReceMoney.do")
 	public @ResponseBody String deleteReceMoney(HttpServletRequest request, HttpSession session) {
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer remoId = Integer.valueOf(request.getParameter("remoId"));
-		boolean result = receiveMoneyService.delete(remoId);
+		Boolean result = receiveMoneyService.delete(remoId, user);
 		return JSON.toJSONString(result);
 	}
 }

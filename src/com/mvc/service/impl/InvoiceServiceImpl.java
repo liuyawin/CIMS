@@ -47,7 +47,23 @@ public class InvoiceServiceImpl implements InvoiceService {
 	}
 
 	// 根据发票id删除发票
-	public boolean delete(Integer invoiceId) {
+	public Boolean delete(Integer invoiceId, User user) {
+		Invoice invoice = invoiceRepository.findById(invoiceId);
+		Contract contract = invoice.getContract();
+
+		Boolean flag = invoiceDao.delete(invoiceId);
+		if (flag) {
+			// 合同日志
+			ContractRecord contractRecord = new ContractRecord();
+			contractRecord.setConre_content(
+					user.getUser_name() + "---删除发票，金额：" + invoice.getInvo_money() + "万元---" + contract.getCont_name());
+			long time = System.currentTimeMillis();
+			Date date = new Date(time);
+			contractRecord.setConre_time(date);
+			contractRecord.setContract(contract);
+			contractRecord.setUser(user);
+			contractRecordRepository.saveAndFlush(contractRecord);
+		}
 		return invoiceDao.delete(invoiceId);
 	}
 
@@ -110,19 +126,19 @@ public class InvoiceServiceImpl implements InvoiceService {
 				}
 				invoice.setInvo_state(InvoiceStatus.waitAudit.value);// 待审核
 			}
+			if (jsonObject.containsKey("invo_id")) {// 修改发票
+				invoice.setInvo_id(Integer.valueOf(jsonObject.getString("invo_id")));
+			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
-		Invoice invoiceResult = null;
-		if (jsonObject.containsKey("invo_id")) {// 修改发票
-			invoice.setInvo_id(Integer.valueOf(jsonObject.getString("invo_id")));
-		}
-		invoiceResult = invoiceRepository.saveAndFlush(invoice);
+		Invoice invoiceResult = invoiceRepository.saveAndFlush(invoice);
 
 		// 合同日志
 		ContractRecord contractRecord = new ContractRecord();
-		contractRecord.setConre_content(user.getUser_name() + "---开发票---" + contract.getCont_name());
+		contractRecord.setConre_content(
+				user.getUser_name() + "---开发票，金额：" + invoice.getInvo_money() + "万元---" + contract.getCont_name());
 		contractRecord.setConre_time(date);
 		contractRecord.setContract(contract);
 		contractRecord.setUser(user);

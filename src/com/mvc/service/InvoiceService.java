@@ -24,7 +24,7 @@ public interface InvoiceService {
 	Invoice findById(Integer invoiceId);
 
 	// 根据发票id删除发票
-	boolean delete(Integer invoiceId);
+	Boolean delete(Integer invoiceId, User user);
 
 	// 根据合同id，页数返回发票列表
 	List<Invoice> findByContId(Integer cont_id, Integer offset, Integer end);
