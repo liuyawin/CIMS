@@ -6,6 +6,9 @@ package com.mvc.service;
 import java.util.List;
 
 import com.mvc.entity.Receipt;
+import com.mvc.entity.User;
+
+import net.sf.json.JSONObject;
 
 /**
  * 收据
@@ -31,11 +34,11 @@ public interface ReceiptService {
 	Receipt findByReceiptId(Integer rece_id);
 
 	// 保存
-	Boolean save(Receipt receipt);
+	Boolean save(JSONObject jsonObject, Integer cont_id, User user);
 
 	// 根据合同ID查询收据总金额
 	Float totalMoneyOfReceipt(Integer contId);
 
 	// 根据收据ID删除收据
-	Boolean delete(Integer receId);
+	Boolean delete(Integer receId, User user);
 }

@@ -7,7 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.mvc.entity.Invoice;
+import com.mvc.entity.User;
 import com.utils.Pager;
+
+import net.sf.json.JSONObject;
 
 /**
  * 发票
@@ -21,7 +24,7 @@ public interface InvoiceService {
 	Invoice findById(Integer invoiceId);
 
 	// 根据发票id删除发票
-	boolean delete(Integer invoiceId);
+	Boolean delete(Integer invoiceId, User user);
 
 	// 根据合同id，页数返回发票列表
 	List<Invoice> findByContId(Integer cont_id, Integer offset, Integer end);
@@ -33,7 +36,7 @@ public interface InvoiceService {
 	Float totalMoneyOfInvoice(Integer contId);
 
 	// 创建发票
-	boolean save(Invoice invoice);
+	Boolean save(JSONObject jsonObject, Integer cont_id, User user);
 
 	// 根据用户id，页数返回发票列表
 	List<Invoice> findByPage(Integer user_id, Integer invoState, Integer offset, Integer end);
@@ -48,7 +51,7 @@ public interface InvoiceService {
 	List<Invoice> WaitingDealFindByPage(Integer user_id, Integer invoiceState, Integer offset, Integer end);
 
 	// 点击完成更新发票状态
-	boolean invoiceFinish(Integer invoiceId, Date invoTime);
+	Boolean invoiceFinish(Integer invoiceId, Date invoTime, User user);
 
 	// 主任转发发票
 	boolean transmitInvoice(Integer invoiceId, Date invoEtime, Integer receiverId);
