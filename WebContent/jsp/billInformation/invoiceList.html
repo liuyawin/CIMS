@@ -54,21 +54,21 @@
 				<td class="width15"><a
 					href="/CIMS/contract/toContractPage.do#/contractInfo"
 					ng-click="getConId(t.contract.cont_id)">{{invo.contract.cont_name
-						}}</a></td>
-				<td class="width10">{{invo.invo_state | invoState}}</td>
+						| cutString}}</a></td>
+				<td class="width5">{{invo.invo_state | invoState}}</td>
 				<td class="width15">{{invo.invo_firm | cutString}}</td>
 				<td class="width5">{{invo.creator.user_name}}</td>
 				<!--  <td class="width5">{{invo.audit.user_name}}</td>-->
 				<td class="width5">{{invo.receiver.user_name}}</td>
 				<td class="width10">{{invo.invo_time.time | dateType}}</td>
-				<td class="width10"><a ng-click="selectInvoiceById()"
+				<td class="width15"><a ng-click="selectInvoiceById()"
 					class="tablelink underline">查看</a>
 				<!-- <a ng-click="invoiceInfo()"
 					class="tablelink underline" has-permission='tInvoAudit'>审核</a> -->
 					<a ng-click="updateInvoiceState()" class="tablelink underline"
 					has-permission='tInvoFinish'>完成</a><a ng-click="delInvo()"
-					class="tablelink underline">删除</a><a ng-click="editInvo()"
-					class="tablelink underline">修改</a></td>
+					class="tablelink underline" has-permission='bInvoAdd'>删除</a><a ng-click="editInvo()"
+					class="tablelink underline" has-permission='bInvoAdd'>修改</a></td>
 			</tr>
 		</tbody>
 	</table>

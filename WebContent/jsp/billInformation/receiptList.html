@@ -27,7 +27,7 @@
 	<table class="tablelist">
 		<thead>
 			<tr>
-				<th class="width10">收据编号</th>
+				<th class="width5">序号</th>
 				<th class="width10">金额（万元）</th>
 				<th class="width10">实际收款时间</th>
 				<!-- <th class="width10">应收款时间</th>
@@ -40,7 +40,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="rece in receipts">
-				<td class="width10">收据{{$index + 1}}</td>
+				<td class="width5">收据{{$index + 1}}</td>
 				<td class="width5">{{rece.rece_money | receFloat}}</td>
 				<td class="width10">{{rece.rece_atime.time | dateType}}</td>
 				<!-- <td class="width10">{{rece.receiveNode.reno_time.time |
@@ -52,8 +52,8 @@
 				<td class="width15">{{rece.rece_remark | cutString}}</td>
 				<td class="width10"><a href="" class="tablelink"
 					ng-click="checkReceipt()">详情</a><a href="" class="tablelink"
-					ng-click="editReceipt()">修改</a><a href="" class="tablelink"
-					ng-click="delReceipt()">删除</a></td>
+					ng-click="editReceipt()" has-permission='bReceAdd'>修改</a><a href="" class="tablelink"
+					ng-click="delReceipt()" has-permission='bReceAdd'>删除</a></td>
 			</tr>
 		</tbody>
 	</table>
