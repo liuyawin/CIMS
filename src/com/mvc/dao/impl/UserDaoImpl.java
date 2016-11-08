@@ -12,8 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.UserDao;
 import com.mvc.entity.User;
-import com.mvc.entity.UserDeptRelation;
-import com.mvc.repository.DepartmentRepository;
 import com.mvc.repository.UserRepository;
 
 /**
@@ -27,8 +25,6 @@ public class UserDaoImpl implements UserDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
-	@Autowired
-	DepartmentRepository departmentRepository;
 	@Autowired
 	UserRepository userRepository;
 
@@ -71,16 +67,4 @@ public class UserDaoImpl implements UserDao {
 		return list;
 	}
 
-	// 只要设计部人员列表
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<UserDeptRelation> findUserFromDesign() {
-		EntityManager em = emf.createEntityManager();
-		int deptid = departmentRepository.findOnlyUserDesign();
-		String selectSql = "select * from user_dept_relation where dept_id=" + deptid + " and re_state=0";
-		Query query = em.createNativeQuery(selectSql, UserDeptRelation.class);
-		List<UserDeptRelation> list = query.getResultList();
-		em.close();
-		return list;
-	}
 }

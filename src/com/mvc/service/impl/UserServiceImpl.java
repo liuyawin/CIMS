@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.UserDao;
 import com.mvc.entity.User;
-import com.mvc.entity.UserDeptRelation;
 import com.mvc.repository.UserRepository;
 import com.mvc.service.UserService;
 
@@ -71,12 +70,6 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAlls();
 	}
 
-	// 只要设计部人员列表
-	@Override
-	public List<UserDeptRelation> findUserFromDesign() {
-		return userDao.findUserFromDesign();
-	}
-
 	// 根据id删除
 	@Override
 	public boolean deleteIsdelete(Integer user_id) {
@@ -89,10 +82,10 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findById(user_id);
 	}
 
-	// 根据ID查看用户详情
+	// 根据用户部门筛选用户
 	@Override
-	public User findUserContentById(Integer user_id) {
-		return userRepository.findUserContentById(user_id);
+	public List<User> findUserByDeptName(Integer deptName) {
+		return userRepository.findUserByDeptName(deptName);
 	}
 
 }

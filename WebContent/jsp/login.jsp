@@ -45,9 +45,7 @@
 					<li><input name="userName" type="text" class="loginuser" id="userName" placeholder="用户名" /><label style="visibility:hidden" id="userError" class="error-label">用户不存在</label></li>
 					<li><input name="password" type="password" class="loginpwd" id="password" placeholder="密码" /><label style="visibility:hidden" id="pwdError" class="error-label">密码错误</label></li>
 					<li><input type="button" class="loginbtn" value="登录"
-						id="login-btn"/><label><input
-							name="" type="checkbox" checked="checked" id="rememberMe" />记住密码</label><label><a
-							href="#">忘记密码？</a></label></li>
+						id="login-btn"/><input style="margin-left:24px" type="reset" class="loginbtn" value="重置"/></li>
 				</ul>
 			</form>
 		</div>
