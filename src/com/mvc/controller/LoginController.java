@@ -312,7 +312,11 @@ public class LoginController {
 		JSONObject jsonObject = JSONObject.fromObject(permissionNum);
 		if (jsonObject.containsKey("left_per"))
 			result = toPermissionStr(jsonObject.getString("left_per"), PermissionConstants.left, result);
-		return result.substring(0, result.length()-1);
+		if (result.equals("")) {
+			return " ";
+		} else {
+			return result.substring(0, result.length() - 1);
+		}
 	}
 
 	public static String numToPermissionStr(String permissionNum) {

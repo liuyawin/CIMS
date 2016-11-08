@@ -4,6 +4,7 @@
 eclipse.preferences.version=1
 encoding//WebContent/jsp/billInformation/contractInfo.html=UTF-8
 encoding//WebContent/jsp/billInformation/contractList.html=UTF-8
+encoding//WebContent/jsp/billInformation/invoiceDetail.html=UTF-8
 encoding//WebContent/jsp/billInformation/invoiceList.html=UTF-8
 encoding//WebContent/jsp/billInformation/receiveMoneyList.html=UTF-8
 encoding//WebContent/jsp/contractInformation/contractInfo.html=UTF-8
