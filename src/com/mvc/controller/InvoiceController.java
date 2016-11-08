@@ -182,6 +182,7 @@ public class InvoiceController {
 		invoice.setCreator(creator);
 		invoice.setInvo_isdelete(IsDelete.NO.value);
 		invoice.setInvo_ctime(new Date(time));
+		// 下面注释掉的代码不要删除（设总有开发票权限时会用到）
 		if (permissionStr.contains("tInvoAudit")) {// 审核发票权限（主任）
 			invoice.setInvo_state(InvoiceStatus.waitdealing.value);// 待处理
 			if (jsonObject.containsKey("receiver")) {

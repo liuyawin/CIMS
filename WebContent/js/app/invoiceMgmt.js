@@ -705,7 +705,7 @@ invoiceApp.filter('invoState', function() {
 			state = "待审核";
 		}
 		if (input == "1") {
-			state = "已审，待执行";
+			state = "待执行";
 		}
 		if (input == "2") {
 			state = "已完成";

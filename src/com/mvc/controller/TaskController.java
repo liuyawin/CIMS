@@ -166,19 +166,15 @@ public class TaskController {
 		long time = System.currentTimeMillis();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Contract contract = new Contract();
-		System.out.println("conId:" + request.getParameter("conId"));
 		if (request.getParameter("conId") != "") {
 			contract.setCont_id(Integer.valueOf(request.getParameter("conId")));
 			task.setContract(contract);
 		}
-		System.out.println("taskType:" + request.getParameter("taskType"));
 		Integer taskType = Integer.valueOf(request.getParameter("taskType"));
 		task.setTask_type(taskType);
 
 		task.setCreator(user);
 		jsonObject = JSONObject.fromObject(request.getParameter("task"));
-		System.out.println("task" + request.getParameter("task"));
-
 		User receiver = new User();
 		receiver.setUser_id(Integer.valueOf(jsonObject.getString("receiver_id")));
 		task.setReceiver(receiver);
@@ -197,10 +193,8 @@ public class TaskController {
 			Task taskResult = taskService.save(task);
 			if (taskResult.getTask_id() != null) {
 				result.put("result", "true");
-				System.out.println("任务创建成功");
 			} else {
 				result.put("result", "false");
-				System.out.println("任务创建失败");
 			}
 		} else {// 1代表文书任务
 			List<String> subTasks = new ArrayList<String>();
@@ -224,7 +218,6 @@ public class TaskController {
 				flag = subTaskService.save(subTask);
 			}
 			if (flag) {
-				System.out.println("re:" + flag);
 				result.put("result", "true");
 			} else
 				result.put("result", "false");
