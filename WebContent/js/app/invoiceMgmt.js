@@ -161,6 +161,23 @@ invoiceApp.factory('invoiceservices', [ '$http', 'baseUrl',
 					data : data
 				});
 			};
+			// 删除发票
+			services.delInvo = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'invoice/deleteInvoice.do',
+					data : data
+				});
+			};
+			// zq添加发票任务
+			services.addInvoiceTask = function(data) {
+
+				return $http({
+					method : 'post',
+					url : baseUrl + 'invoice/addInvoiceTask.do',
+					data : data,
+				});
+			};
 			return services;
 		} ]);
 
@@ -413,6 +430,124 @@ invoiceApp
 							contract.getConId = function(conId) {
 								sessionStorage.setItem('conId', conId);
 							};
+							// 删除发票
+							invoice.delInvo = function() {
+								var invoId = this.invo.invo_id;
+								if (this.invo.invo_state == "2") {
+									alert("发票已开，不能删除！");
+								} else {
+									sessionStorage.setItem("invoId", invoId);
+									$("#tipDel").fadeIn(200);
+									$(".overlayer").fadeIn(200);
+								}
+							}
+							$("#sureDel").click(
+									function() {
+										$("#tipDel").fadeOut(100);
+										$(".overlayer").fadeOut(200);
+										services.delInvo(
+												{
+													invoiceId : sessionStorage
+															.getItem("invoId")
+												}).success(function(data) {
+											alert("操作成功！");
+											refreshInvoList();
+										});
+									});
+
+							$("#cancelDel").click(function() {
+								$("#tipDel").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+							});
+							// 修改发票
+							invoice.editInvo = function() {
+								var regStr = "\\s" + 'tInvoAudit' + "\\s";
+								var reg = new RegExp(regStr);
+								if (permissionList.search(reg) < 0) {
+									$("#selectAudit").show();
+									$("#selectReceiver").hide();
+								} else {
+									$("#selectAudit").hide();
+									$("#selectReceiver").show();
+								}
+								var invoId = this.invo.invo_id;
+								sessionStorage.setItem("invoId", invoId);
+								if (this.invo.invo_state == "2") {
+									alert("发票已开，不能修改！");
+								} else {
+									selectAllUsers();
+									services
+											.selectInvoiceById({
+												invoiceId : invoId
+											})
+											.success(
+													function(data) {
+														invoice.invoice = data.invoice;
+														if (data.invoice.invo_stime != null
+																&& data.invoice.invo_etime != null) {
+															invoice.invoice.invo_stime = changeDateType(data.invoice.invo_stime.time);
+															invoice.invoice.invo_etime = changeDateType(data.invoice.invo_etime.time);
+														} else {
+															invoice.invoice.invo_stime = "";
+															invoice.invoice.invo_etime = "";
+														}
+														$("#tipEdit").fadeIn(
+																200);
+														$(".overlayer").fadeIn(
+																200);
+
+													});
+
+								}
+							}
+							invoice.editInvoiceInfo = function() {
+								var taskFormData = JSON
+										.stringify(invoice.invoice);
+								services.addInvoiceTask({
+									invoice : taskFormData,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
+									alert("操作成功！");
+									$("#tipEdit").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									refreshInvoList();
+								});
+							}
+
+							$("#cancelEditInvoice").click(function() {
+								$("#tipEdit").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+							});
+							// 修改和删除后刷新页面
+							function refreshInvoList() {
+								var invoListType = sessionStorage
+										.getItem("invoListType");
+								if (invoListType == "INVO") {
+									services.getInvoiceList(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : 1,
+												invoState : invoState
+											}).success(function(data) {
+										invoice.invoices = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								} else if (invoListType == "INVOTASK") {
+									services.getInvoTaskList({
+										page : 1,
+										invoState : invoState
+									}).success(function(data) {
+										invoice.invoices = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								}
+							}
+							function selectAllUsers() {
+								services.getAllUsers().success(function(data) {
+									invoice.users = data;
+								});
+							}
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {

@@ -44,9 +44,9 @@
 		<tbody>
 			<tr ng-repeat="remo in remos">
 				<td class="width5">{{$index + 1}}</td>
-				<td class="width15"><a 
-								href="/CIMS/contract/toContractPage.do#/contractInfo"
-								ng-click="getConId(t.contract.cont_id)">{{remo.contract.cont_name}}</a></td>
+				<td class="width15"><a
+					href="/CIMS/contract/toContractPage.do#/contractInfo"
+					ng-click="getConId(t.contract.cont_id)">{{remo.contract.cont_name}}</a></td>
 				<td class="width10">{{remo.remo_money |receFloat}}</td>
 				<td class="width10">{{remo.remo_amoney | receFloat}}</td>
 				<td class="width10">{{remo.remo_time.time |dateType}}</td>
@@ -56,7 +56,9 @@
 				<td class="width5">{{remo.remo_state |remoState}}</td>
 				<td class="width10"><a ng-click="checkRemo()"
 					class="tablelink underline">查看</a><a ng-click="auditRemo()"
-					class="tablelink underline"  has-permission="tRemoAudit">审核</a></td>
+					class="tablelink underline" has-permission="tRemoAudit">审核</a><a
+					ng-click="editRemo()" class="tablelink underline">修改</a><a
+					ng-click="delRemo()" class="tablelink underline">删除</a></td>
 
 			</tr>
 		</tbody>
@@ -69,14 +71,18 @@
 <div class="overlayer"></div>
 <div class="tip" id="tipRemo" style="height: 450px">
 	<div class="tiptop">
-		<span>创建任务</span><a></a>
+		<span>到款详情</span><a></a>
 	</div>
 	<div class="formbody">
-		<form ng-submit="addReceiveMoneyTask()">
+		<form ng-submit="editReceiveMoneyTask()">
 			<ul class="forminfo">
+				<li class="hidden"><input type="text" name="remoMoney"
+					id="remoMoney" class="dfinput numberFormat"
+					ng-model="receiveMoney.remo_id" required></li>
 				<li><label>应到款金额</label><input type="text" name="remoMoney"
-					id="remoMoney" class="dfinput numberFormat" ng-model="receiveMoney.remo_money"
-					required placeholder="格式：0.00">万元 &nbsp;<span class="error-span">格式错误</span></li>
+					id="remoMoney" class="dfinput numberFormat"
+					ng-model="receiveMoney.remo_money" required placeholder="格式：0.00">万元
+					&nbsp;<span class="error-span">格式错误</span></li>
 				<li><label>到款时间</label><input type="text"
 					ng-model="receiveMoney.remo_time" class="dfinput dateFormat"
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span>
@@ -88,12 +94,17 @@
 				</select></li>
 				<li><label>备注</label> <textarea name="" cols="" rows=""
 						class="textinput area_style" ng-model="receiveMoney.remo_remark"
-						required></textarea></li>
-				<li><label>实到款金额</label><input type="text" name="remoAmoney"
+						></textarea></li>
+				<li id="remoAmoney"><label>实到款金额</label><input type="text" name="remoAmoney"
 					id="remoAmoney" class="dfinput numberFormat"
-					ng-model="receiveMoney.remo_amoney" required placeholder="格式：0.00">万元&nbsp;<span class="error-span">格式错误</span></li>
+					ng-model="receiveMoney.remo_amoney" required placeholder="格式：0.00">万元&nbsp;<span
+					class="error-span">格式错误</span></li>
 			</ul>
-			
+			<div class="tipbtn">
+				<input name="" type="submit" class="sure" id="sureRemoEdit"
+					value="确认" style="display:none" />&nbsp;<input name="" type="button" class="cancel"
+					id="cancelRemoEdit" value="取消"  style="display:none"/>
+			</div>
 		</form>
 	</div>
 </div>
@@ -120,14 +131,33 @@
 			<ul class="forminfo">
 				<li><label>实到款金额</label><input type="text" name="remoAmoney"
 					id="remoAmoney" class="dfinput numberFormat"
-					ng-model="receiveMoney.remo_amoney" required placeholder="格式：0.00">万元 &nbsp;<span class="error-span">格式错误</span></li>
+					ng-model="receiveMoney.remo_amoney" required placeholder="格式：0.00">万元
+					&nbsp;<span class="error-span">格式错误</span></li>
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sure" id="sureRemoAudit"
-					value="派发" />&nbsp; <input name="" type="button" class="cancel"
+					value="确认" />&nbsp; <input name="" type="button" class="cancel"
 					id="cancelRemoAudit" value="取消" />
 			</div>
 		</form>
 	</div>
 </div>
 <!-- 审核到款通知模态框完 -->
+<!-- //删除任务模态框 -->
+<div class="tip" id="tipDel" style="height: 220px">
+	<div class="tiptop">
+		<span>提示信息</span><a></a>
+	</div>
+
+	<div class="tipinfo">
+		<div class="tipright">
+			<p>是否确认对信息的删除 ？</p>
+			<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+		</div>
+	</div>
+
+	<div class="tipbtn">
+		<input name="" type="button" class="sure" id="sureDel" value="确定" />&nbsp;
+		<input name="" type="button" class="cancel" id="cancelDel" value="取消" />
+	</div>
+</div>

@@ -147,6 +147,22 @@ receiveMoneyApp.factory('receivemoneyservices', [
 					data : data
 				});
 			};
+			// 删除到款
+			services.delRemo = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + "receiveMoney/deleteReceMoney.do",
+					data : data
+				});
+			};
+			// 10.27zq添加到款任务{修改}
+			services.addReMoneyTask = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'receiveMoney/addReMoneyTask.do',
+					data : data
+				});
+			};
 			return services;
 		} ]);
 
@@ -169,9 +185,11 @@ receiveMoneyApp
 								var remoId = this.remo.remo_id;
 								selectAllUsers();
 								selectReceiveMoneyById(remoId);
+								$("#sureRemoEdit").hide();
+								$("#cancelRemoEdit").hide();
+								$("#remoAmoney").show();
 								$(".overlayer").fadeIn(200);
 								$("#tipRemo").fadeIn(200);
-								
 
 							}
 
@@ -355,6 +373,93 @@ receiveMoneyApp
 							contract.getConId = function(conId) {
 								sessionStorage.setItem('conId', conId);
 							};
+
+							// 删除到款
+							reMoney.delRemo = function() {
+								var remoId = this.remo.remo_id;
+								if (this.remo.remo_state == "0") {
+									sessionStorage.setItem("remoId", remoId);
+									$("#tipDel").fadeIn(200);
+									$(".overlayer").fadeIn(200);
+								} else {
+									alert("已核对，不能删除！");
+								}
+							}
+							$("#sureDel").click(function() {
+								$("#tipDel").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								services.delRemo({
+									remoId : sessionStorage.getItem("remoId")
+								}).success(function(data) {
+									alert("操作成功！");
+									refreshRemoList();
+								});
+							});
+
+							$("#cancelDel").click(function() {
+								$("#tipDel").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+							});
+							// 修改到款
+							reMoney.editRemo = function() {
+								var remoId = this.remo.remo_id;
+								if (this.remo.remo_state == "0") {
+									selectAllUsers();
+									selectReceiveMoneyById(remoId);
+									$(".overlayer").fadeIn(200);
+									$("#tipRemo").fadeIn(200);
+									$("#sureRemoEdit").show();
+									$("#cancelRemoEdit").show();
+									$("#remoAmoney").hide();
+								} else {
+									alert("已核对，不能修改！");
+								}
+
+							}
+							reMoney.editReceiveMoneyTask = function() {
+								var taskFormData = JSON
+										.stringify(reMoney.receiveMoney);
+								services.addReMoneyTask({
+									receiveMoney : taskFormData,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
+									$("#tipRemo").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									contract.receiveMoney = "";
+									alert("操作成功！");
+									refreshRemoList();
+								});
+							}
+							$("#cancelRemoEdit").click(function() {
+								$("#tipRemo").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+							});
+							// 删除修改之后的页面刷新函数
+							function refreshRemoList() {
+								var remoListType = sessionStorage
+										.getItem("remoListType");
+								if (remoListType == "REMO") {
+									services.selectReceiveMoneysByContId(
+											{
+												contId : sessionStorage
+														.getItem("conId"),
+												page : 1,
+												remoState : remoState
+											}).success(function(data) {
+										reMoney.remos = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								} else if (remoListType == "REMOTASK") {
+									services.selectRemoTasksByState({
+										page : 1,
+										remoState : remoState
+									}).success(function(data) {
+										reMoney.remos = data.list;
+										pageTurn(data.totalPage, 1);
+									});
+								}
+
+							}
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {

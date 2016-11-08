@@ -329,8 +329,8 @@ app
 										+ (date.getMonth() + 1) + "-"
 										+ (date.getDate());
 								contract.invoice = {
-									invoStime : timeNow,
-									invoEtime : timeNow
+									invo_stime : timeNow,
+									invo_etime : timeNow
 								};
 
 							};
@@ -473,7 +473,7 @@ app
 										+ (date.getMonth() + 1) + "-"
 										+ (date.getDate());
 								contract.receipt = {
-									receAtime : timeNow
+									rece_atime : timeNow
 								};
 
 							};

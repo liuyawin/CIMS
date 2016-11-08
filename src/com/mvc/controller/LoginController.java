@@ -136,7 +136,7 @@ public class LoginController {
 		String permission = "";
 		if (user.getRole().getRole_permission() != null && !user.getRole().getRole_permission().equals("")) {
 			permission = user.getRole().getRole_permission();
-			result = numToPermissionStr(permission);
+			result = leftPermissionStr(permission);
 		}
 		System.out.println("result：" + result);
 		System.out.println("测试结束！");
@@ -288,6 +288,33 @@ public class LoginController {
 		return JSON.toJSONString(result + " ");
 	}
 
+	/**
+	 * 获取当前用户权限
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/getLeftbarPermission.do")
+	public @ResponseBody String getLeftbarPermission(HttpServletRequest request, HttpSession session) {
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		String result = "";
+		String permission = "";
+		if (user.getRole().getRole_permission() != null && !user.getRole().getRole_permission().equals("")) {
+			permission = user.getRole().getRole_permission();
+			result = numToPermissionStr(permission);
+		}
+		return JSON.toJSONString(result + " ");
+	}
+
+	public static String leftPermissionStr(String permissionNum) {
+		String result = "";
+		JSONObject jsonObject = JSONObject.fromObject(permissionNum);
+		if (jsonObject.containsKey("left_per"))
+			result = toPermissionStr(jsonObject.getString("left_per"), PermissionConstants.left, result);
+		return result.substring(0, result.length()-1);
+	}
+
 	public static String numToPermissionStr(String permissionNum) {
 		String result = "";
 		JSONObject jsonObject = JSONObject.fromObject(permissionNum);
@@ -301,8 +328,6 @@ public class LoginController {
 			result = toPermissionStr(jsonObject.getString("system_per"), PermissionConstants.system, result);
 		if (jsonObject.containsKey("index_per"))
 			result = toPermissionStr(jsonObject.getString("index_per"), PermissionConstants.index, result);
-		if (jsonObject.containsKey("left_per"))
-			result = toPermissionStr(jsonObject.getString("left_per"), PermissionConstants.left, result);
 		return result + " ";
 	}
 
@@ -330,7 +355,7 @@ public class LoginController {
 					strb.append(" " + PermissionConstants.indexPer[i]);
 					break;
 				case "leftPer":
-					strb.append(" " + PermissionConstants.leftPer[i]);
+					strb.append(PermissionConstants.leftPer[i] + ",");
 					break;
 				default:
 					break;
