@@ -42,12 +42,12 @@
 			</div>
 			<ul id="bill-ul" class="menuson">
 				<li id="billMgmt"><cite></cite> <a
-					href="${ctx}/invoice/toBillMngInvoicePage.do#/contractList">票据管理</a><i></i></li>
+					href="${ctx}/contract/toBillMngContractPage.do#/contractList">票据管理</a><i></i></li>
 				<li id="invoiceTask" class="invoiceTask" style="display: none"><cite></cite>
-					<a href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
+					<a href="${ctx}/contract/toBillMngContractPage.do#/invoiceTaskList">发票任务</a><i></i></li>
 				<li id="receiveMoneyTask" class="remoTask" style="display: none"><cite></cite>
 					<a
-					href="${ctx}/invoice/toBillMngInvoicePage.do#/receiveMoneyTaskList">到款任务</a><i></i></li>
+					href="${ctx}/contract/toBillMngContractPage.do#/receiveMoneyTaskList">到款任务</a><i></i></li>
 			</ul>
 
 		</dd>

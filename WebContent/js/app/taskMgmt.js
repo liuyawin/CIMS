@@ -237,23 +237,23 @@ app
 								};
 
 							};
-							taskHtml.addOneTask=function() {
-										var taskFormData = JSON
-												.stringify(taskHtml.task);
-										var taskType = 0;
-										console.log(taskFormData.task_type);
-										services.addTask({
-											task : taskFormData,
-											conId : "",
-											taskType : taskType
-										}).success(function(data) {
-											$("#tipAdd").fadeOut(100);
-											$(".overlayer").fadeOut(200);
-											alert("添加成功！");
-											getTaskListByContent(tState, 1);
-											taskHtml.task = "";
-										});
-									}
+							taskHtml.addOneTask = function() {
+								var taskFormData = JSON
+										.stringify(taskHtml.task);
+								var taskType = 0;
+								console.log(taskFormData.task_type);
+								services.addTask({
+									task : taskFormData,
+									conId : "",
+									taskType : taskType
+								}).success(function(data) {
+									$("#tipAdd").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									alert("添加成功！");
+									getTaskListByContent(tState, 1);
+									taskHtml.task = "";
+								});
+							}
 
 							$("#cancelAdd").click(function() {
 								$("#tipAdd").fadeOut(100);
@@ -286,8 +286,10 @@ app
 																200);
 														$("#tipCheck").fadeIn(
 																200);
-														getTaskListByContent(tState, taskPage);
-														
+														getTaskListByContent(
+																tState,
+																taskPage);
+
 													});
 									$("#cancelCheck").click(function() {
 										$("#tipCheck").fadeOut(100);
@@ -319,7 +321,9 @@ app
 													function(data) {
 
 														initState();
-														getTaskListByContent(tState, taskPage);
+														getTaskListByContent(
+																tState,
+																taskPage);
 														$scope.fchat.taskId = taskId;
 														taskHtml.subTasks = data.list;
 														for (var i = 0; i < data.list.length; i++) {
@@ -439,14 +443,27 @@ app
 							// zq完成任务确认
 							taskHtml.finishTask = function() {
 								var taskId = this.t.task_id;
+								sessionStorage.setItem("taskId", taskId);
+								$("#tipFinish").fadeIn(200);
+								$(".overlayer").fadeIn(200);
+							};
+							$("#sureFinishTask").click(function() {
+								$("#tipFinish").fadeOut(100);
+								$(".overlayer").fadeOut(200);
 								services.finishTask({
-									taskId : taskId
+									taskId : sessionStorage.getItem("taskId")
 								}).success(function(data) {
 									alert("任务完成!");
 									getTaskListByContent(tState, taskPage);
 								});
 
-							};
+							});
+
+							$("#cancelFinishTask").click(function() {
+								$("#tipFinish").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+							});
+
 							// 更改任务时间的格式
 							function changeDateType(time) {
 
@@ -516,7 +533,6 @@ app
 							 * });
 							 */
 							// 李文书新添
-							
 							function initState() {
 								$scope.fchat = new Object();
 
@@ -583,7 +599,7 @@ app
 									tState = "-1";
 									taskHtml.tState = "-1";
 									sendOrReceive = 1;
-									searchKey=null;
+									searchKey = null;
 									sessionStorage
 											.setItem("sendOrReceive", "1");
 									services.getTaskByKeys({
@@ -603,7 +619,7 @@ app
 									tState = "-1";
 									taskHtml.tState = "-1";
 									sendOrReceive = 0;
-									searchKey=null;
+									searchKey = null;
 									sessionStorage
 											.setItem("sendOrReceive", "0");
 									services.getTaskByKeys({

@@ -25,10 +25,10 @@ public interface UserService {
 	boolean deleteIsdelete(Integer user_id);
 
 	// 查询部门总条数
-	Long countTotal();
+	Integer countTotal(String searchKey);
 
 	// 根据页数筛选全部用户列表
-	List<User> findUserAllByPage(Integer offset, Integer end);
+	List<User> findUserAllByPage(String searchKey, Integer offset, Integer end);
 
 	// 获取用户列表，无翻页功能
 	List<User> findUserAlls();

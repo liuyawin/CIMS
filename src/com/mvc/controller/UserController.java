@@ -45,11 +45,12 @@ public class UserController {
 	@RequestMapping(value = "/getUserListByPage.do")
 	public @ResponseBody String getUsersByPrarm(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		Long totalRow = userService.countTotal();
+		String searchKey = request.getParameter("searchKey");
+		Integer totalRow = userService.countTotal(searchKey);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(Integer.parseInt(totalRow.toString()));
-		List<User> list = userService.findUserAllByPage(pager.getOffset(), pager.getLimit());
+		List<User> list = userService.findUserAllByPage(searchKey, pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();

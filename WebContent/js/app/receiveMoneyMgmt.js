@@ -197,11 +197,16 @@ receiveMoneyApp
 							reMoney.auditRemo = function() {
 
 								var remoId = this.remo.remo_id;
-								sessionStorage.setItem("remoId", remoId);
-								selectAllUsers();
-								selectReceiveMoneyById(remoId);
-								$(".overlayer").fadeIn(200);
-								$("#tipRemoAudit").fadeIn(200);
+								
+								if (this.remo.remo_state == "0") {
+									sessionStorage.setItem("remoId", remoId);
+									selectAllUsers();
+									selectReceiveMoneyById(remoId);
+									$(".overlayer").fadeIn(200);
+									$("#tipRemoAudit").fadeIn(200);
+								} else {
+									alert("已核对，不能重复操作！");
+								}
 							};
 							$("#cancelRemoAudit").click(function() {
 								$("#tipRemoAudit").fadeOut(100);
