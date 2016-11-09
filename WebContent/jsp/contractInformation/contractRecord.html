@@ -11,19 +11,19 @@
 	<table class="tablelist">
 		<thead>
 			<tr>
-				<th class="width10 text-center">操作编号</th>
+				<th class="width5 text-center">编号</th>
+				<th class="width30 text-center">操作内容</th>
+				<th class="width5 text-center">操作人</th>
 				<th class="width10 text-center">操作时间</th>
-				<th class="width20 text-center">操作记录</th>
-				<th class="width10 text-center">操作人</th>
-
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="cRecord in records">
-				<td class="width10 text-center">{{$index+1}}</td>
-				<td>{{cRecord.conre_time.time |dateTimeType}}</td>
+				<td class="width5 text-center">{{$index+1}}</td>
 				<td>{{cRecord.conre_content}}</td>
 				<td>{{cRecord.user.user_name}}</td>
+				<td>{{cRecord.conre_time.time |dateTimeType}}</td>
+				
 			</tr>
 		</tbody>
 	</table>

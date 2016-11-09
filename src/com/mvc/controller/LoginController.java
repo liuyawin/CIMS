@@ -123,7 +123,6 @@ public class LoginController {
 	 * @param res
 	 * @return
 	 */
-	@SuppressWarnings("unused")
 	@RequestMapping("/login.do")
 	public String login(HttpSession session, HttpServletRequest request, ModelMap model, HttpServletResponse res) {
 		String error_msg = "";

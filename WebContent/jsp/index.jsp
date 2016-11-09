@@ -36,7 +36,7 @@
 			<li has-permission='iFiniInvoTask'><a
 				href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList"
 				class="">发票任务： {{billTaskNum}}</a></li>
-			<li><a has-permission="iFiniRemoTask"
+			<li has-permission="iFiniRemoTask"><a 
 				href="${ctx}/receiveMoney/toBillMngInvoicePage.do#/receiveMoneyTaskList"
 				class="">核对到款任务： {{remoTaskNum}}</a></li>
 			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">普通任务：{{otherTaskNum}}</a></li>
