@@ -48,16 +48,6 @@ public class ContractController {
 	}
 
 	/**
-	 * 返回票据管理合同界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toBillMngContractPage.do")
-	public String billMngContractPage() {
-		return "billInformation/index";
-	}
-
-	/**
 	 * 获取指定页面的十条合同信息，总页数(和"根据合同名获取合同信息"方法完全一样)
 	 * 
 	 * @param request

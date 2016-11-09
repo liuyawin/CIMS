@@ -208,22 +208,34 @@ receiveMoneyApp
 								$(".overlayer").fadeOut(200);
 								reMoney.receiveMoney = "";
 							});
-							$("#sureRemoAudit").click(function() {
-								services.auditReceiveMoney({
-									remoId : sessionStorage.getItem("remoId"),
-									remoAmoney : $("#remoAmoney").val()
-								}).success(function(data) {
-									alert("操作成功！");
-									$("#tipRemoAudit").fadeOut(100);
-									$(".overlayer").fadeOut(200);
+							$("#sureRemoAudit")
+									.click(
+											function() {
+												services
+														.auditReceiveMoney(
+																{
+																	remoId : sessionStorage
+																			.getItem("remoId"),
+																	remoAmoney : reMoney.receiveMoney.remo_amoney
+																})
+														.success(
+																function(data) {
+																	alert("操作成功！");
+																	$(
+																			"#tipRemoAudit")
+																			.fadeOut(
+																					100);
+																	$(
+																			".overlayer")
+																			.fadeOut(
+																					200);
+																	selectContractById();
+																	countReceiveMoneyByContId();
+																	findReceiveMoneys(remoPage);
 
-									selectContractById();
-									countReceiveMoneyByContId();
-									findReceiveMoneys(remoPage);
+																});
 
-								});
-
-							});
+											});
 							// 根据到款ID查找到款单条记录
 							function selectReceiveMoneyById(remoId) {
 								services
@@ -321,7 +333,9 @@ receiveMoneyApp
 												page : p,
 												remoState : remoState
 											}).success(function(data) {
+
 										reMoney.remos = data.list;
+										countReceiveMoneyByContId();
 									});
 								} else if (remoListType == "REMOTASK") {
 									services.selectRemoTasksByState({
@@ -392,7 +406,8 @@ receiveMoneyApp
 									remoId : sessionStorage.getItem("remoId")
 								}).success(function(data) {
 									alert("操作成功！");
-									refreshRemoList();
+									findReceiveMoneys(remoPage);
+									countReceiveMoneyByContId();
 								});
 							});
 
@@ -427,39 +442,29 @@ receiveMoneyApp
 									$(".overlayer").fadeOut(200);
 									contract.receiveMoney = "";
 									alert("操作成功！");
-									refreshRemoList();
+									findReceiveMoneys(remoPage);
+									countReceiveMoneyByContId();
 								});
 							}
 							$("#cancelRemoEdit").click(function() {
 								$("#tipRemo").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 							});
-							// 删除修改之后的页面刷新函数
-							function refreshRemoList() {
-								var remoListType = sessionStorage
-										.getItem("remoListType");
-								if (remoListType == "REMO") {
-									services.selectReceiveMoneysByContId(
-											{
-												contId : sessionStorage
-														.getItem("conId"),
-												page : 1,
-												remoState : remoState
-											}).success(function(data) {
-										reMoney.remos = data.list;
-										pageTurn(data.totalPage, 1);
-									});
-								} else if (remoListType == "REMOTASK") {
-									services.selectRemoTasksByState({
-										page : 1,
-										remoState : remoState
-									}).success(function(data) {
-										reMoney.remos = data.list;
-										pageTurn(data.totalPage, 1);
-									});
-								}
-
-							}
+							/*
+							 * // 删除修改之后的页面刷新函数 function refreshRemoList() { var
+							 * remoListType = sessionStorage
+							 * .getItem("remoListType"); if (remoListType ==
+							 * "REMO") { services.selectReceiveMoneysByContId( {
+							 * contId : sessionStorage .getItem("conId"), page :
+							 * 1, remoState : remoState
+							 * }).success(function(data) { reMoney.remos =
+							 * data.list; pageTurn(data.totalPage, 1); }); }
+							 * else if (remoListType == "REMOTASK") {
+							 * services.selectRemoTasksByState({ page : 1,
+							 * remoState : remoState }).success(function(data) {
+							 * reMoney.remos = data.list;
+							 * pageTurn(data.totalPage, 1); }); } }
+							 */
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {

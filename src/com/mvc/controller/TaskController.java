@@ -89,7 +89,7 @@ public class TaskController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value = "/selectTaskByContext.do")
+	@RequestMapping(value = "/selectTaskByKeys.do")
 	public @ResponseBody String getTasksBySearchKey(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);

@@ -9,9 +9,9 @@
 <div class="rightinfo">
 	<div class="tools">
 		<form class="toolbar">
-			<input name="" type="text" class="dfinput" id="tContent"
-				placeholder="内容关键字" /><select class="dfselect" ng-model="tState"
-				style="width: 167px">
+			<!-- <input name="" type="text" class="dfinput" id="tContent"
+				placeholder="内容关键字" /> --><select class="dfselect" ng-model="tState"
+				style="width: 167px" id="tState">
 				<option value="-1">全部</option>
 				<option value="0">新任务</option>
 				<option value="1">处理中</option>
@@ -31,7 +31,6 @@
 		<thead>
 			<tr>
 				<th>序号</th>
-
 				<th>类型</th>
 				<th>状态</th>
 				<th>创建者</th>
@@ -131,7 +130,7 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form id="" ng-submit="addTask()">
+		<form  ng-submit="addOneTask()">
 			<ul class="forminfo">
 				<li><label>任务类型</label> <label value="0">普通任务</label></li>
 				<li><label>接收人</label><select name="tReceiver" class="dfselect"
@@ -150,8 +149,7 @@
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span></li>
 			</ul>
 			<div class="tipbtn">
-				<input name="" type="submit" class="sure" id="sureAdd" value="派发"
-					ng-click="addTask()" />&nbsp; <input name="" type="button"
+				<input name="" type="submit" class="sure" id="sureAdd" value="派发" />&nbsp; <input name="" type="button"
 					class="cancel" id="cancelAdd" value="取消" />
 			</div>
 		</form>

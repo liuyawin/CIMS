@@ -12,7 +12,7 @@
 
 		<form class="toolbar">
 			<input name="" type="text" class="dfinput" id="cName"
-				ng-model="alarmContent" /> <input class="btn" type="submit"
+				ng-model="alarmContent" placeholder="内容关键字" /> <input class="btn" type="submit"
 				value="查询" ng-click="selectAlarmByContent()">
 		</form>
 	</div>
@@ -23,8 +23,8 @@
 				<th>内容</th>
 				<th>时间</th>
 				<th>次数</th>
-				<th>合同</th>
-				<th>操作</th>
+				<th>所属合同</th>
+				<!-- <th>操作</th> -->
 			</tr>
 		</thead>
 		<tbody>
@@ -35,8 +35,8 @@
 				<td>{{alarm.num}}</td>
 				<td><a class="underline"
 					href="/CIMS/contract/toContractPage.do#contractInfo">{{alarm.contract.cont_name}}</a></td>
-				<td><a href="#alarmDetail" class="tablelink"
-					ng-click="getAlarmId(alarm.alar_id)">详情</a></td>
+				<!-- <td><a href="#alarmDetail" class="tablelink"
+					ng-click="getAlarmId(alarm.alar_id)">详情</a></td> -->
 			</tr>
 		</tbody>
 	</table>

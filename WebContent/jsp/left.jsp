@@ -4,7 +4,7 @@
 <section class="leftbar">
 	<dl class="leftmenu">
 		<!-- 合同信息管理 -->
-		<dd id="contract" class="contManager" style="display:none">
+		<dd id="contract" class="contManager" style="display: none">
 			<div class="title ">
 				<span><img src="${ctx}/images/leftico01.png" /></span>合同管理
 			</div>
@@ -31,21 +31,23 @@
 					href="${ctx}/task/toTaskPage.do#/receiveTask">接收的任务</a><i></i></li>
 				<li id="sendTask"><cite></cite> <a
 					href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
-				<li id="invoiceTask"  class="invoiceTask" style="display:none"><cite></cite> <a
-					href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
-				<li id="receiveMoneyTask"  class="remoTask" style="display:none"><cite></cite> <a
-					href="${ctx}/receiveMoney/toBillMngInvoicePage.do#/receiveMoneyTaskList">到款任务</a><i></i></li>
+
 			</ul>
 		</dd>
 
 		<!-- 票据管理 -->
-		<dd id="billInformation" class="billManager" style="display:none">
+		<dd id="billInformation" class="billManager" style="display: none">
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>票据管理
 			</div>
 			<ul id="bill-ul" class="menuson">
 				<li id="billMgmt"><cite></cite> <a
-					href="${ctx}/contract/toBillMngContractPage.do#/contractList">票据管理</a><i></i></li>
+					href="${ctx}/invoice/toBillMngInvoicePage.do#/contractList">票据管理</a><i></i></li>
+				<li id="invoiceTask" class="invoiceTask" style="display: none"><cite></cite>
+					<a href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
+				<li id="receiveMoneyTask" class="remoTask" style="display: none"><cite></cite>
+					<a
+					href="${ctx}/invoice/toBillMngInvoicePage.do#/receiveMoneyTaskList">到款任务</a><i></i></li>
 			</ul>
 
 		</dd>
@@ -55,16 +57,16 @@
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
 			</div>
 			<ul id="alarm-ul" class="menuson">
-				<li id="debtAlarm" class="remoAlarm" style="display:none"><cite></cite> <a
-					href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款相关</a><i></i></li>
-				<li id="overdueAlarm" class="psAlarm" style="display:none"><cite></cite> <a
-					href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList">工期相关</a><i></i></li>
+				<li id="debtAlarm" class="remoAlarm" style="display: none"><cite></cite>
+					<a href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款相关</a><i></i></li>
+				<li id="overdueAlarm" class="psAlarm" style="display: none"><cite></cite>
+					<a href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList">工期相关</a><i></i></li>
 				<li id="overtimeAlarm"><cite></cite> <a
 					href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList">任务超时</a><i></i></li>
 			</ul>
 		</dd>
 		<!-- 基础信息管理 -->
-		<dd id="userManagement" class="userManager" style="display:none">
+		<dd id="userManagement" class="userManager" style="display: none">
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
 			</div>
@@ -80,17 +82,20 @@
 	</dl>
 </section>
 <script>
+
 	$(document).ready(function() {
 		//根据权限显示左侧栏相关条目
 		$.get("/CIMS/login/getLeftbarPermission.do",function(data){
 			console.log("左侧栏权限："+data);
 			var leftbarPermission = data.substring(1,data.length-2).split(",");
-			console.log(leftbarPermission);
 			for(var i=0,len=leftbarPermission.length;i<len;i++){
-				var $temp = $('.'+leftbarPermission[i].trim());
-				if($temp){
-					$temp.css('display','block');
+				if(leftbarPermission[i].trim()){
+					var $temp = $('.'+leftbarPermission[i].trim());
+					if($temp){
+						$temp.css('display','block');
+					}
 				}
+				
 			}
 		});
 		//点击li时将当前页面的信息存入sessionStorage
@@ -99,4 +104,5 @@
 			sessionStorage.setItem("currentPage", $(this).attr('id'));
 		});
 	});
+
 </script>

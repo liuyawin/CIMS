@@ -451,7 +451,8 @@ invoiceApp
 															.getItem("invoId")
 												}).success(function(data) {
 											alert("操作成功！");
-											refreshInvoList();
+											findInvoices(nowPage);
+											countInvoiceMoneyByContId();
 										});
 									});
 
@@ -510,7 +511,8 @@ invoiceApp
 									alert("操作成功！");
 									$("#tipEdit").fadeOut(100);
 									$(".overlayer").fadeOut(200);
-									refreshInvoList();
+									findInvoices(nowPage);
+									countInvoiceMoneyByContId();
 								});
 							}
 
@@ -518,7 +520,7 @@ invoiceApp
 								$("#tipEdit").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 							});
-							// 修改和删除后刷新页面
+							/*// 修改和删除后刷新页面
 							function refreshInvoList() {
 								var invoListType = sessionStorage
 										.getItem("invoListType");
@@ -547,7 +549,7 @@ invoiceApp
 								services.getAllUsers().success(function(data) {
 									invoice.users = data;
 								});
-							}
+							}*/
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {
