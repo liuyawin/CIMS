@@ -80,7 +80,7 @@ h2 {
 	height: 88px;
 	background: url(../images/topleft.jpg) no-repeat;
 	float: left;
-	width: 240px;
+	width: 450px;
 }
 
 .topleft img {
@@ -863,7 +863,7 @@ h2 {
 .forminfo li label {
 	width: 86px;
 	line-height: 34px;
-	display: block;
+	/* display: block; */
 	float: left;
 }
 

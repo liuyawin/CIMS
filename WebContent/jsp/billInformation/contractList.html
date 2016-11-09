@@ -11,7 +11,7 @@
 	<div class="tools">
 
 		<form class="toolbar">
-			<input name="" type="text" class="dfinput" id="cName" /> <input
+			<input name="" type="text" class="dfinput" id="cName" placeholder="合同名称关键字"/> <input
 				class="btn" type="submit" value="查询" ng-click="selectConByName()">
 		</form>
 
@@ -45,19 +45,19 @@
 				<td>{{con.rece_totalmoney}}</td>
 				<td>{{con.rece_total}}</td>
 				<td><a
-					href="/CIMS/invoice/toBillMngInvoicePage.do#/receiveMoneyList"
+					href="/CIMS/receiveMoney/toBillMngInvoicePage.do#/receiveMoneyList"
 					class="tablelink" ng-click="getConId(con.cont_id)">详情</a> <a
 					class="tablelink" ng-click="addReMoneyTask()" has-permission='bRemoAdd'>到款</a></td>
 				<td>
 					<!-- <a href="#"
 					class="tablelink">录发票</a> --> <a
-					href="/CIMS/invoice/toBillMngInvoicePage.do#/invoiceList"
+					href="/CIMS/receiveMoney/toBillMngInvoicePage.do#/invoiceList"
 					class="tablelink" ng-click="getConId(con.cont_id)">详情</a> <a
 					class="tablelink" ng-click="addInvoiceTask(con.cont_id)"
 					has-permission='bInvoAdd'>开发票</a>
 				</td>
 				<td><a
-					href="/CIMS/invoice/toBillMngInvoicePage.do#/receiptList"
+					href="/CIMS/receiveMoney/toBillMngInvoicePage.do#/receiptList"
 					class="tablelink" ng-click="getConId(con.cont_id)">详情</a> <a
 					ng-click="addReceipt(con.cont_id)" class="tablelink"
 					has-permission='bReceAdd'>开收据</a></td>
@@ -79,31 +79,31 @@
 			<ul class="forminfo">
 				<li><label>发票金额</label><input type="text" name="invoMoney"
 					id="invoMoney" class="dfinput invoMoney numberFormat"
-					ng-model="invoice.invoMoney" required  placeholder="格式：0.00">万元&nbsp;&nbsp;<span class="error-span">格式错误</span></li>
+					ng-model="invoice.invo_money" required  placeholder="格式：0.00">万元&nbsp;&nbsp;<span class="error-span">格式错误</span></li>
 				<li><label>业主公司</label><input type="text" name="invoFirm"
-					class="dfinput" ng-model="invoice.invoFirm" required></li>
+					class="dfinput" ng-model="invoice.invo_firm" required></li>
 				<li id="selectReceiver"><label>执行人</label><select name="tReceiver" class="dfselect"
-					ng-model="invoice.receiverId">
+					ng-model="invoice.receiver.user_id">
 						<option ng-repeat="user in users" value={{user.user_id}}>
 							<span>{{user.user_name}}</span>
 						</option>
 				</select></li>
 				<li id="selectAudit"><label>审核人</label><select name="tAudit" class="dfselect"
-					ng-model="invoice.auditId">
+					ng-model="invoice.audit.user_id">
 						<option ng-repeat="user in users" value={{user.user_id}}>
 							<span>{{user.user_name}}</span>
 						</option>
 				</select></li>
 				<li><label>开始时间</label><input type="text"
-					ng-model="invoice.invoStime" class="dfinput dateFormat"
+					ng-model="invoice.invo_stime" class="dfinput dateFormat"
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span>
 				</li>
 				<li><label>结束时间</label><input type="text" name="invoEtime"
-					ng-model="invoice.invoEtime" class="dfinput dateFormat"
+					ng-model="invoice.invo_etime" class="dfinput dateFormat"
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span></li>
 				<li id="taskContent"><label>备注</label> <textarea name=""
 						cols="" rows="" class="textinput area_style"
-						ng-model="invoice.invoRemark" required></textarea></li>
+						ng-model="invoice.invo_remark" ></textarea></li>
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sure" id="sureAdd" value="派发"
@@ -160,16 +160,15 @@
 		<form ng-submit="addRece()">
 			<ul class="forminfo">
 				<li><label>金额</label><input type="text"
-					ng-model="receipt.receMoney" class="dfinput numberFormat" placeholder="格式：0.00" required />万元&nbsp;&nbsp;<span class="error-span">格式错误</span></li>
+					ng-model="receipt.rece_money" class="dfinput numberFormat" placeholder="格式：0.00" required />万元&nbsp;&nbsp;<span class="error-span">格式错误</span></li>
 				<li><label>业主公司</label><input type="text"
-					ng-model="receipt.receFirm" class="dfinput" required /></li>
+					ng-model="receipt.rece_firm" class="dfinput" required /></li>
 				<li><label>开收据时间</label><input type="text"
 					class="dfinput dateFormat" placeholder="格式：2016-09-07"
-					id="stageEtime" name="stageEtime" ng-model="receipt.receAtime"
+					id="stageEtime" name="stageEtime" ng-model="receipt.rece_atime"
 					required /><span class="error-span">格式错误</span></li>
 				<li><label>备注</label> <textarea name="" cols="" rows=""
-						class="textinput area_style" ng-model="receipt.receRemark"></textarea></li>
-
+						class="textinput area_style" ng-model="receipt.rece_remark"></textarea></li>
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sureSend" id="sureAddReceipt"

@@ -36,7 +36,7 @@
 			<li has-permission='iFiniInvoTask'><a
 				href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList"
 				class="">发票任务： {{billTaskNum}}</a></li>
-			<li><a has-permission="iFiniRemoTask"
+			<li has-permission="iFiniRemoTask"><a 
 				href="${ctx}/receiveMoney/toBillMngInvoicePage.do#/receiveMoneyTaskList"
 				class="">核对到款任务： {{remoTaskNum}}</a></li>
 			<li><a href="${ctx}/task/toTaskPage.do#/receiveTask" class="">普通任务：{{otherTaskNum}}</a></li>
@@ -48,9 +48,9 @@
 
 		<ul class="infolist">
 			<li has-permission='iDebtAlarm'><a
-				href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList" class="">收款超时：{{debtAlarmNum}}</a></li>
+				href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList" class="">收款相关：{{debtAlarmNum}}</a></li>
 			<li has-permission='iOverdueAlarm'><a
-				href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList" class="">工程逾期：{{overdueAlarmNum}}</a></li>
+				href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList" class="">工期相关：{{overdueAlarmNum}}</a></li>
 			<li><a href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList"
 				class="">任务超时：{{taskAlarmNum}}</a></li>
 		</ul>

@@ -147,276 +147,396 @@ receiptapp.factory('receiptservices', [ '$http', 'baseUrl',
 					data : data
 				});
 			};
-
+			// 删除收据
+			services.delRece = function(data) {
+				return $http({
+					method : 'post',
+					url : baseUrl + 'receipt/deleteReceipt.do',
+					data : data
+				});
+			};
 			return services;
 		} ]);
 
-receiptapp.controller('ReceiptController', [
-		'$scope',
-		'receiptservices',
-		'$location',
-		function($scope, services, $location) {
-			// 合同
-			var receipt = $scope;
+receiptapp
+		.controller(
+				'ReceiptController',
+				[
+						'$scope',
+						'receiptservices',
+						'$location',
+						function($scope, services, $location) {
+							// 合同
+							var receipt = $scope;
+							var recePage=1;
 
-			// zq查看合同ID，并记入sessione
-			receipt.getContId = function(contId) {
-				sessionStorage.setItem('conId', contId);
-			};
-			// zq查看收据节点、合同ID，并记入sessione
-			receipt.getRenoId = function(renoId, contId) {
-				sessionStorage.setItem('renoId', renoId);
-				sessionStorage.setItem('conId', contId);
-			};
-			// zq查看收据ID，并记入sessione
-			receipt.getReceId = function(receId) {
-				sessionStorage.setItem('receId', receId);
+							// zq查看合同ID，并记入sessione
+							receipt.getContId = function(contId) {
+								sessionStorage.setItem('conId', contId);
+							};
+							// zq查看收据节点、合同ID，并记入sessione
+							receipt.getRenoId = function(renoId, contId) {
+								sessionStorage.setItem('renoId', renoId);
+								sessionStorage.setItem('conId', contId);
+							};
+							// zq查看收据ID，并记入sessione
+							receipt.getReceId = function(receId) {
+								sessionStorage.setItem('receId', receId);
 
-			};
+							};
 
-			receipt.showContInfo = function() {
-				$('#contInformation').show();
-				$('#contShow').hide();
-				$('#contHide').show();
-			}
-			receipt.hideContInfo = function() {
-
-				$('#contInformation').hide();
-				$('#contShow').show();
-				$('#contHide').hide();
-			}
-			receipt.showPrstInfo = function() {
-				$('#prstInformation').show();
-				$('#prstShow').hide();
-				$('#prstHide').show();
-			}
-			receipt.hidePrstInfo = function() {
-
-				$('#prstInformation').hide();
-				$('#prstShow').show();
-				$('#prstHide').hide();
-			}
-			// lwt:开收据
-			receipt.addReceipt = function() {
-				$(".overlayer").fadeIn(200);
-				$("#tipAddReceipt").fadeIn(200);
-				// 输入时间的input默认值设置为当前时间
-				var date = new Date();
-				var timeNow = date.getFullYear() + "-" + (date.getMonth() + 1)
-						+ "-" + (date.getDate());
-				receipt.receipt = {
-					receAtime : timeNow
-
-				};
-
-			};
-			$(".tiptop a").click(function() {
-				$(".overlayer").fadeOut(200);
-				$(".tip").fadeOut(200);
-			});
-			receipt.addRece=function() {
-				var receFormData = JSON.stringify(receipt.receipt);
-				services.addReceipt({
-					receipt : receFormData,
-					contId : sessionStorage.getItem("conId")
-				}).success(function(data) {
-					$("#tipAddReceipt").fadeOut(100);
-					$(".overlayer").fadeOut(200);
-					alert("收据添加成功！");
-					receipt.receipt = "";
-					initData();
-				});
-			}
-
-			$("#cancelAddReceipt").click(function() {
-				$("#tipAddReceipt").fadeOut(100);
-				$(".overlayer").fadeOut(200);
-				receipt.receipt = "";
-			});
-			// zq查看合同ID，并记入sessione
-			/*
-			 * receipt.addReceipt = function(renoId, contId) { var renoId =
-			 * sessionStorage.getItem('renoId'); var contId =
-			 * sessionStorage.getItem('conId'); var receFormData =
-			 * JSON.stringify(receipt.receipt); services.addReceipt({ receipt :
-			 * receFormData, renoId : renoId, contId : contId
-			 * }).success(function(data) { alert("收据添加成功！");
-			 * window.history.back(); }); };
-			 */
-
-			receipt.checkReceipt = function() {
-				var receId = this.rece.rece_id;
-				services.selectReceiptByReceId({
-					receId : receId
-				}).success(function(data) {
-					receipt.receipt = data.receipt
-				});
-				$("#tipCheckReceipt").fadeIn(200);
-				$(".overlayer").fadeIn(200);
-			}
-
-			// zq：读取合同的信息
-			function selectContractById() {
-				var cont_id = sessionStorage.getItem('conId');
-				services.selectContractById({
-					cont_id : cont_id
-				}).success(function(data) {
-					receipt.cont = data.contract;
-				});
-			}
-			// zq：根据合同ID查询工期阶段的内容
-			function selectPrstByContId() {
-				var cont_id = sessionStorage.getItem('conId');
-				services.selectPrstByContId({
-					cont_id : cont_id
-				}).success(function(data) {
-					receipt.prst = data.list;
-				});
-			}
-			// zq：根据合同ID查询收款节点的内容
-			function selectRenoByContId() {
-				var cont_id = sessionStorage.getItem('conId');
-				services.selectRenoByContId({
-					cont_id : cont_id
-				}).success(function(data) {
-					receipt.reno = data.list;
-				});
-			}
-
-			// zq：根据合同ID查找所有的收据
-			function selectReceiptByContId() {
-				var contId = sessionStorage.getItem('conId');
-				services.selectReceiptByContId({
-					page : 1,
-					contId : contId
-				}).success(function(data) {
-					receipt.receipts = data.list;
-					receipt.totalRow = data.totalRow;
-
-				});
-			}
-			// 根据收据ID查看收据的详情
-			/*
-			 * function selectReceiptByReceId() { var receId =
-			 * sessionStorage.getItem('receId');
-			 * services.selectReceiptByReceId({ receId : receId
-			 * }).success(function(data) { receipt.receipt = data.receipt }); }
-			 */
-			// zq：根据合同ID计算该合同目前收据共多少钱
-			function countReceiptMoneyByContId() {
-				var contId = sessionStorage.getItem('conId');
-
-				services.countReceiptMoneyByContId({
-					contId : contId
-				}).success(function(data) {
-
-					receipt.totalMoney = data.totalMoney;
-
-				});
-			}
-			function findRoleFromCookie() {
-				var cookie = {};
-
-				var cookies = document.cookie;
-				if (cookies === "")
-					return cookie;
-				var list = cookies.split(";");
-				for (var i = 0; i < list.length; i++) {
-					var cookieString = list[i];
-					/* console.log("cookie内容" + cookieString); */
-					var p = cookieString.indexOf("=");
-					var name = cookieString.substring(0, p);
-					var value = cookieString.substring(p + 1,
-							cookieString.length);
-					console.log(name);
-					cookie[name.trim()] = value;
-					console.log("进来了,已经赋值" + name);
-					if (name.trim() == "role") {
-						sessionStorage.setItem("userRole", value);
-						switch (sessionStorage.getItem('userRole').trim()) {
-						case "1":
-							receipt.receAddShow = true;
-
-							break;
-						case "2":
-							receipt.receAddShow = false;
-
-							break;
-						case "3":
-							receipt.receAddShow = true;
-
-							break;
-						case "4":
-							receipt.receAddShow = false;
-
-							break;
-						case "5":
-							receipt.receAddShow = false;
-
-							break;
-						}
-					}
-
-				}
-			}
-			// zq初始化页面信息
-			function initData() {
-				$(".tiptop a").click(function() {
-					/* sessionStorage.setItem("conId", ""); */
-					$(".overlayer").fadeOut(200);
-					$(".tip").fadeOut(200);
-				});
-				$("#invoice").hide();
-				$("#receipt").show();
-				$("#contract").hide();
-				$("#receiveMoney").hide();
-				console.log("初始化页面信息");
-				if ($location.path().indexOf('/receiptList') == 0) {
-					selectReceiptByContId();// 根据合同ID查找所有收据
-					countReceiptMoneyByContId();// 根据合同ID查找该合同的所有收款金额
-					selectContractById();// 根据ID查找合同详情
-
-				} else if ($location.path().indexOf('/receiptInfo') == 0) {
-					selectContractById();// 根据合同ID查看合同信息
-					selectPrstByContId();// 根据合同查看工期阶段
-					selectRenoByContId();// 根据合同ID查看收款节点
-				} else if ($location.path().indexOf('/receiptDetail') == 0) {
-					selectReceiptByReceId();
-				}
-			}
-			function dateformat() {
-				var $dateFormat = $(".dateFormat");
-				var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
-				$(".dateFormat").blur(
-						function() {
-							if (!dateRegexp.test(this.value)) {
-								$(this).parent().children("span").css(
-										'display', 'inline');
+							receipt.showContInfo = function() {
+								$('#contInformation').show();
+								$('#contShow').hide();
+								$('#contHide').show();
 							}
-						});
-				$(".dateFormat").click(function() {
-					$(this).parent().children("span").css('display', 'none');
-				});
-			}
-			initData();// 初始化
-			findRoleFromCookie();
-			dateformat();// 格式化日期格式
-			// 验证金额输入格式
-			var $numberFormat = $(".numberFormat");
-			var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
-			$(".numberFormat").blur(
-					function() {
-						if (!numberRegexp.test(this.value)) {
-							$(this).parent().children("span")
-									.css('display', 'inline');
-						}
-					});
-			$(".numberFormat").click(
-					function() {
-						$(this).parent().children("span").css(
-								'display', 'none');
-					});
-		} ]);
+							receipt.hideContInfo = function() {
+
+								$('#contInformation').hide();
+								$('#contShow').show();
+								$('#contHide').hide();
+							}
+							receipt.showPrstInfo = function() {
+								$('#prstInformation').show();
+								$('#prstShow').hide();
+								$('#prstHide').show();
+							}
+							receipt.hidePrstInfo = function() {
+
+								$('#prstInformation').hide();
+								$('#prstShow').show();
+								$('#prstHide').hide();
+							}
+							// lwt:开收据
+							receipt.addReceipt = function() {
+								$(".overlayer").fadeIn(200);
+								$("#tipAddReceipt").fadeIn(200);
+								// 输入时间的input默认值设置为当前时间
+								var date = new Date();
+								var timeNow = date.getFullYear() + "-"
+										+ (date.getMonth() + 1) + "-"
+										+ (date.getDate());
+								receipt.receipt = {
+									rece_atime : timeNow
+
+								};
+
+							};
+							$(".tiptop a").click(function() {
+								$(".overlayer").fadeOut(200);
+								$(".tip").fadeOut(200);
+							});
+							receipt.addRece = function() {
+								var receFormData = JSON
+										.stringify(receipt.receipt);
+								services.addReceipt({
+									receipt : receFormData,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
+									$("#tipAddReceipt").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									alert("收据添加成功！");
+									receipt.receipt = "";
+									findReceipts(1);
+									countReceiptMoneyByContId();
+								});
+							}
+
+							$("#cancelAddReceipt").click(function() {
+								$("#tipAddReceipt").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								receipt.receipt = "";
+							});
+							// zq查看合同ID，并记入sessione
+							/*
+							 * receipt.addReceipt = function(renoId, contId) {
+							 * var renoId = sessionStorage.getItem('renoId');
+							 * var contId = sessionStorage.getItem('conId'); var
+							 * receFormData = JSON.stringify(receipt.receipt);
+							 * services.addReceipt({ receipt : receFormData,
+							 * renoId : renoId, contId : contId
+							 * }).success(function(data) { alert("收据添加成功！");
+							 * window.history.back(); }); };
+							 */
+
+							receipt.checkReceipt = function() {
+								var receId = this.rece.rece_id;
+								services.selectReceiptByReceId({
+									receId : receId
+								}).success(function(data) {
+									receipt.receipt = data.receipt
+								});
+								$("#tipCheckReceipt").fadeIn(200);
+								$(".overlayer").fadeIn(200);
+							}
+
+							// zq：读取合同的信息
+							function selectContractById() {
+								var cont_id = sessionStorage.getItem('conId');
+								services.selectContractById({
+									cont_id : cont_id
+								}).success(function(data) {
+									receipt.cont = data.contract;
+								});
+							}
+							// zq：根据合同ID查询工期阶段的内容
+							function selectPrstByContId() {
+								var cont_id = sessionStorage.getItem('conId');
+								services.selectPrstByContId({
+									cont_id : cont_id
+								}).success(function(data) {
+									receipt.prst = data.list;
+									
+								});
+							}
+							// zq：根据合同ID查询收款节点的内容
+							function selectRenoByContId() {
+								var cont_id = sessionStorage.getItem('conId');
+								services.selectRenoByContId({
+									cont_id : cont_id
+								}).success(function(data) {
+									receipt.reno = data.list;
+								});
+							}
+
+							// zq：根据合同ID查找所有的收据
+							function selectReceiptByContId() {
+								var contId = sessionStorage.getItem('conId');
+								services.selectReceiptByContId({
+									page : 1,
+									contId : contId
+								}).success(function(data) {
+									receipt.receipts = data.list;
+									receipt.totalRow = data.totalRow;
+									pageTurn(data.totalPage, 1);
+								});
+							}
+							// 根据收据ID查看收据的详情
+							/*
+							 * function selectReceiptByReceId() { var receId =
+							 * sessionStorage.getItem('receId');
+							 * services.selectReceiptByReceId({ receId : receId
+							 * }).success(function(data) { receipt.receipt =
+							 * data.receipt }); }
+							 */
+							// zq：根据合同ID计算该合同目前收据共多少钱
+							function countReceiptMoneyByContId() {
+								var contId = sessionStorage.getItem('conId');
+
+								services.countReceiptMoneyByContId({
+									contId : contId
+								}).success(function(data) {
+
+									receipt.totalMoney = data.totalMoney;
+
+								});
+							}
+							function findRoleFromCookie() {
+								var cookie = {};
+
+								var cookies = document.cookie;
+								if (cookies === "")
+									return cookie;
+								var list = cookies.split(";");
+								for (var i = 0; i < list.length; i++) {
+									var cookieString = list[i];
+									/* console.log("cookie内容" + cookieString); */
+									var p = cookieString.indexOf("=");
+									var name = cookieString.substring(0, p);
+									var value = cookieString.substring(p + 1,
+											cookieString.length);
+									console.log(name);
+									cookie[name.trim()] = value;
+									console.log("进来了,已经赋值" + name);
+									if (name.trim() == "role") {
+										sessionStorage.setItem("userRole",
+												value);
+										switch (sessionStorage.getItem(
+												'userRole').trim()) {
+										case "1":
+											receipt.receAddShow = true;
+
+											break;
+										case "2":
+											receipt.receAddShow = false;
+
+											break;
+										case "3":
+											receipt.receAddShow = true;
+
+											break;
+										case "4":
+											receipt.receAddShow = false;
+
+											break;
+										case "5":
+											receipt.receAddShow = false;
+
+											break;
+										}
+									}
+
+								}
+							}
+							// 删除收据
+							receipt.delReceipt = function() {
+								var receId = this.rece.rece_id;
+								sessionStorage.setItem("receId", receId);
+								$("#tipDel").fadeIn(200);
+								$(".overlayer").fadeIn(200);
+							}
+							$("#sureDel").click(function() {
+								$("#tipDel").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								services.delRece({
+									receId : sessionStorage.getItem("receId")
+								}).success(function(data) {
+									alert("操作成功！");
+									findReceipts(recePage);
+									countReceiptMoneyByContId();
+								});
+							});
+
+							$("#cancelDel").click(function() {
+								$("#tipDel").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+							});
+							// 修改收据
+							receipt.editReceipt = function() {
+								var receId = this.rece.rece_id;
+								services
+										.selectReceiptByReceId({
+											receId : receId
+										})
+										.success(
+												function(data) {
+													receipt.receipt = data.receipt;
+													if (data.receipt.rece_atime) {
+														receipt.receipt.rece_atime = changeDateType(data.receipt.rece_atime.time);
+													} else {
+														receipt.receipt.rece_atime = "";
+													}
+
+												});
+								$(".overlayer").fadeIn(200);
+								$("#tipEditReceipt").fadeIn(200);
+
+							}
+							receipt.editReceiptInfo = function() {
+								var receFormData = JSON
+										.stringify(receipt.receipt);
+								services.addReceipt({
+									receipt : receFormData,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
+									$("#tipEditReceipt").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									alert("操作成功！");
+									receipt.receipt = "";
+									findReceipts(recePage);
+									countReceiptMoneyByContId();
+								});
+							}
+							$("#cancelEditReceipt").click(function() {
+								$("#tipEditReceipt").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+							});
+							// 更改任务时间的格式
+							function changeDateType(time) {
+
+								newDate = new Date(time).toLocaleDateString()
+										.replace(/\//g, '-');
+								return newDate;
+							}
+							// zq换页
+							function pageTurn(totalPage, page) {
+								var $pages = $(".tcdPageCode");
+								console.log($pages.length);
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											recePage = p;
+											findReceipts(p);
+										}
+									});
+								}
+							}
+							// zq：根据合同ID查找所有的收据
+							function findReceipts(p) {
+								var contId = sessionStorage.getItem('conId');
+								services.selectReceiptByContId({
+									page : p,
+									contId : contId
+								}).success(function(data) {
+									receipt.receipts = data.list;
+									receipt.totalRow = data.totalRow;
+								});
+							}
+							// zq初始化页面信息
+							function initData() {
+								$(".tiptop a").click(function() {
+									/* sessionStorage.setItem("conId", ""); */
+									$(".overlayer").fadeOut(200);
+									$(".tip").fadeOut(200);
+								});
+								$("#invoice").hide();
+								$("#receipt").show();
+								$("#contract").hide();
+								$("#receiveMoney").hide();
+								console.log("初始化页面信息");
+								if ($location.path().indexOf('/receiptList') == 0) {
+									selectReceiptByContId();// 根据合同ID查找所有收据
+									countReceiptMoneyByContId();// 根据合同ID查找该合同的所有收款金额
+									selectContractById();// 根据ID查找合同详情
+
+								} else if ($location.path().indexOf(
+										'/receiptInfo') == 0) {
+									selectContractById();// 根据合同ID查看合同信息
+									selectPrstByContId();// 根据合同查看工期阶段
+									selectRenoByContId();// 根据合同ID查看收款节点
+								} else if ($location.path().indexOf(
+										'/receiptDetail') == 0) {
+									selectReceiptByReceId();
+								}
+							}
+							function dateformat() {
+								var $dateFormat = $(".dateFormat");
+								var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
+								$(".dateFormat").blur(
+										function() {
+											if (!dateRegexp.test(this.value)) {
+												$(this).parent().children(
+														"span").css('display',
+														'inline');
+											}
+										});
+								$(".dateFormat").click(
+										function() {
+											$(this).parent().children("span")
+													.css('display', 'none');
+										});
+							}
+							initData();// 初始化
+							findRoleFromCookie();
+							dateformat();// 格式化日期格式
+							// 验证金额输入格式
+							var $numberFormat = $(".numberFormat");
+							var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
+							$(".numberFormat").blur(
+									function() {
+										if (!numberRegexp.test(this.value)) {
+											$(this).parent().children("span")
+													.css('display', 'inline');
+										}
+									});
+							$(".numberFormat").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
+						} ]);
 
 // 小数过滤器
 receiptapp.filter('receFloat', function() {

@@ -113,7 +113,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		console.log("发送请求获取合同信息");
 		return $http({
 			method : 'post',
-			url : baseUrl + 'task/selectTaskByContext.do',
+			url : baseUrl + 'task/selectTaskByKeys.do',
 			data : data
 		});
 	};
@@ -192,6 +192,8 @@ app
 							var taskHtml = $scope;
 							var tState;
 							var sendOrReceive;
+							var taskPage = 1;
+							var searchKey = null;
 							// zq跳转合同页面，将合同ID存入sessionStorage中
 							taskHtml.getConId = function(cont_id) {
 								sessionStorage.setItem('conId', cont_id); // 存入合同ID
@@ -205,9 +207,9 @@ app
 							// zq根据内容查询任务列表
 							taskHtml.getTaskByKeys = function() {
 								tState = taskHtml.tState;
-
+								searchKey = null;
 								services.getTaskByKeys({
-									context : $("#tContent").val(),
+									context : searchKey,
 									page : 1,
 									taskState : tState,
 									sendOrReceive : sendOrReceive
@@ -235,25 +237,23 @@ app
 								};
 
 							};
-							$("#sureAdd").click(
-									function() {
+							taskHtml.addOneTask=function() {
 										var taskFormData = JSON
 												.stringify(taskHtml.task);
 										var taskType = 0;
-
 										console.log(taskFormData.task_type);
 										services.addTask({
 											task : taskFormData,
 											conId : "",
 											taskType : taskType
 										}).success(function(data) {
-
-											alert("添加成功！");
 											$("#tipAdd").fadeOut(100);
 											$(".overlayer").fadeOut(200);
+											alert("添加成功！");
+											getTaskListByContent(tState, 1);
 											taskHtml.task = "";
 										});
-									});
+									}
 
 							$("#cancelAdd").click(function() {
 								$("#tipAdd").fadeOut(100);
@@ -265,7 +265,6 @@ app
 							taskHtml.checkTask = function() {
 								var taskId = this.t.task_id;
 								var taskType = this.t.task_type;
-
 								if (taskType == 0 || taskType == 2) {
 									services
 											.checkTask({
@@ -287,6 +286,8 @@ app
 																200);
 														$("#tipCheck").fadeIn(
 																200);
+														getTaskListByContent(tState, taskPage);
+														
 													});
 									$("#cancelCheck").click(function() {
 										$("#tipCheck").fadeOut(100);
@@ -318,6 +319,7 @@ app
 													function(data) {
 
 														initState();
+														getTaskListByContent(tState, taskPage);
 														$scope.fchat.taskId = taskId;
 														taskHtml.subTasks = data.list;
 														for (var i = 0; i < data.list.length; i++) {
@@ -423,18 +425,8 @@ app
 									taskId : sessionStorage.getItem('taskId')
 								}).success(function(data) {
 									console.log("根据内容获取任务列表成功！");
-
 									alert("删除成功！");
-									/* $("#" + taskId + "").hide(); */
-									services.getTaskList({
-										taskState : tState,
-										page : 1,
-										sendOrReceive : sendOrReceive
-									}).success(function(data) {
-										taskHtml.tasks = data.list;
-										pageTurn(tState, data.totalPage, 1);
-
-									});
+									getTaskListByContent(tState, taskPage);
 
 								});
 							});
@@ -451,14 +443,7 @@ app
 									taskId : taskId
 								}).success(function(data) {
 									alert("任务完成!");
-									services.getTaskList({
-										taskState : tState,
-										page : 1,
-										sendOrReceive : sendOrReceive
-									}).success(function(data) {
-										taskHtml.tasks = data.list;
-										pageTurn(tState, data.totalPage, 1)
-									});
+									getTaskListByContent(tState, taskPage);
 								});
 
 							};
@@ -478,37 +463,25 @@ app
 										});
 							}
 
-							// zq获取所有任务列表
-							function getTaskList(taskState, page) {
-								services.getTaskList({
-									taskState : taskState,
-									page : page,
-									sendOrReceive : sendOrReceive
-								}).success(function(data) {
-									taskHtml.tasks = data.list;
-
-								});
-							}
-							// zq所有任务换页
-							function pageTurn(taskState, totalPage, page) {
-
-								var $pages = $(".tcdPageCode");
-								console.log($pages.length);
-								if ($pages.length != 0) {
-									$(".tcdPageCode").createPage({
-										pageCount : totalPage,
-										current : page,
-										backFn : function(p) {
-											getTaskList(taskState, p)
-										}
-									});
-								}
-							}
+							/*
+							 * // zq获取所有任务列表 function getTaskList(taskState,
+							 * page) { services.getTaskList({ taskState :
+							 * taskState, page : page, sendOrReceive :
+							 * sendOrReceive }).success(function(data) {
+							 * taskHtml.tasks = data.list; }); } // zq所有任务换页
+							 * function pageTurn(taskState, totalPage, page) {
+							 * 
+							 * var $pages = $(".tcdPageCode");
+							 * console.log($pages.length); if ($pages.length !=
+							 * 0) { $(".tcdPageCode").createPage({ pageCount :
+							 * totalPage, current : page, backFn : function(p) {
+							 * taskPage = p; getTaskList(taskState, p) } }); } }
+							 */
 
 							// zq 获取任务列表按照内容翻页查找函数
 							function getTaskListByContent(taskState, page) {
 								services.getTaskByKeys({
-									context : $("#tContent").val(),
+									context : searchKey,
 									page : page,
 									taskState : taskState,
 									sendOrReceive : sendOrReceive
@@ -522,7 +495,6 @@ app
 							// zq按查询内容获取任务列表的换页
 							function pageTurnByContent(taskState, totalPage,
 									page) {
-
 								var $pages = $(".tcdPageCode");
 								console.log($pages.length);
 								if ($pages.length != 0) {
@@ -530,6 +502,7 @@ app
 										pageCount : totalPage,
 										current : page,
 										backFn : function(p) {
+											taskPage = p;
 											getTaskListByContent(taskState, p);
 										}
 									});
@@ -543,6 +516,7 @@ app
 							 * });
 							 */
 							// 李文书新添
+							
 							function initState() {
 								$scope.fchat = new Object();
 
@@ -609,32 +583,40 @@ app
 									tState = "-1";
 									taskHtml.tState = "-1";
 									sendOrReceive = 1;
+									searchKey=null;
 									sessionStorage
 											.setItem("sendOrReceive", "1");
-									services.getTaskList({
+									services.getTaskByKeys({
 										taskState : tState,
 										page : 1,
-										sendOrReceive : sendOrReceive
-									}).success(function(data) {
-										taskHtml.tasks = data.list;
-										pageTurn(tState, data.totalPage, 1)
-									});
+										sendOrReceive : sendOrReceive,
+										context : searchKey
+									}).success(
+											function(data) {
+												taskHtml.tasks = data.list;
+												pageTurnByContent(tState,
+														data.totalPage, 1)
+											});
 
 								} else if ($location.path()
 										.indexOf('/sendTask') == 0) {
 									tState = "-1";
 									taskHtml.tState = "-1";
 									sendOrReceive = 0;
+									searchKey=null;
 									sessionStorage
 											.setItem("sendOrReceive", "0");
-									services.getTaskList({
+									services.getTaskByKeys({
 										taskState : tState,
 										page : 1,
-										sendOrReceive : sendOrReceive
-									}).success(function(data) {
-										taskHtml.tasks = data.list;
-										pageTurn(tState, data.totalPage, 1);
-									});
+										sendOrReceive : sendOrReceive,
+										context : searchKey
+									}).success(
+											function(data) {
+												taskHtml.tasks = data.list;
+												pageTurnByContent(tState,
+														data.totalPage, 1);
+											});
 								}
 							}
 							initData();

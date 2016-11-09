@@ -27,7 +27,7 @@
 
 
 	<div class="logintop">
-		<span>欢迎登录后台管理界面平台</span>
+		<span>欢迎登录光电项目设计进度到款跟踪系统</span>
 		<!-- <ul>
     <li><a href="#">回首页</a></li>
     <li><a href="#">帮助</a></li>
@@ -45,14 +45,12 @@
 					<li><input name="userName" type="text" class="loginuser" id="userName" placeholder="用户名" /><label style="visibility:hidden" id="userError" class="error-label">用户不存在</label></li>
 					<li><input name="password" type="password" class="loginpwd" id="password" placeholder="密码" /><label style="visibility:hidden" id="pwdError" class="error-label">密码错误</label></li>
 					<li><input type="button" class="loginbtn" value="登录"
-						id="login-btn"/><label><input
-							name="" type="checkbox" checked="checked" id="rememberMe" />记住密码</label><label><a
-							href="#">忘记密码？</a></label></li>
+						id="login-btn"/><input style="margin-left:24px" type="reset" class="loginbtn" value="重置"/></li>
 				</ul>
 			</form>
 		</div>
 	</div>
-	<div class="loginbm">西安电子科技大学</div>
+	<div class="loginbm">西北勘测设计院光伏电设计分院</div>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/js/lib/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript"

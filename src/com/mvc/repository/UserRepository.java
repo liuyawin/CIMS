@@ -28,7 +28,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	public Long countByUserNum(@Param("user_num") String user_num);
 
 	// 根据userNum查询用户信息
-	@Query("select u from User u where user_num = :user_num")
+	@Query("select u from User u where user_num = :user_num and user_isdelete=0")
 	public User findByUserNum(@Param("user_num") String user_num);
 
 	// 查询用户总条数
@@ -47,12 +47,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("select count(user_id) from User u where role_id=:role_id and user_isdelete=0")
 	public Long countUserByroleid(@Param("role_id") Integer role_id);
 
-	// 根据ID查看用户详情
-	@Query("select u from User u where user_id=:user_id and user_isdelete=0")
-	public User findUserContentById(@Param("user_id") Integer user_id);
-
-	// 根据用户名查找用户id（报警）
-	@Query("select user_id from User u where user_name=:user_name and user_isdelete=0 ")
-	public Integer findUserByUsername(@Param("user_name") String username);
+	// 根据userNum查询用户信息
+	@Query("select u from User u where user_dept = :user_dept")
+	public List<User> findUserByDeptName(@Param("user_dept") Integer deptName);
 
 }

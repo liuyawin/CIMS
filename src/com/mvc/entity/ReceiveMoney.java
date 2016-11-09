@@ -32,6 +32,7 @@ public class ReceiveMoney {
 	private User operater;// 操作人
 	private Contract contract;// 所属合同
 	private String remo_remark;// 备注
+	private Integer remo_isdelete;// 是否删除，0表示：未删除，1表示已删除
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -114,6 +115,15 @@ public class ReceiveMoney {
 
 	public void setRemo_remark(String remo_remark) {
 		this.remo_remark = remo_remark;
+	}
+
+	@Column(columnDefinition = "INT default 0")
+	public Integer getRemo_isdelete() {
+		return remo_isdelete;
+	}
+
+	public void setRemo_isdelete(Integer remo_isdelete) {
+		this.remo_isdelete = remo_isdelete;
 	}
 
 }

@@ -1,8 +1,6 @@
 package com.mvc.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.base.constants.SessionKeyConstants;
-import com.mvc.entity.Contract;
 import com.mvc.entity.Receipt;
 import com.mvc.entity.User;
 import com.mvc.service.AlarmService;
@@ -92,7 +89,6 @@ public class ReceiptController {
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
 		Float totalMoney = receiptService.totalMoneyOfReceipt(contId);
 		jsonObject.put("totalMoney", totalMoney);
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -107,92 +103,23 @@ public class ReceiptController {
 	public @ResponseBody String addReceipt(HttpServletRequest request, HttpSession session) throws ParseException {
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("receipt"));
-		Receipt receipt = new Receipt();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Contract contract = new Contract();
-		contract.setCont_id(Integer.valueOf(request.getParameter("contId")));
-		receipt.setContract(contract);
-		receipt.setUser(user);
-		if (jsonObject.containsKey("receAtime")) {
-			Date sdate = format.parse(jsonObject.getString("receAtime"));
-			receipt.setRece_atime(sdate);
-		}
-		if (jsonObject.containsKey("receFirm")) {
-			receipt.setRece_firm(jsonObject.getString("receFirm"));
-		}
-		if (jsonObject.containsKey("receMoney")) {
-			receipt.setRece_money(Float.valueOf(jsonObject.getString("receMoney")));
-		}
-		if (jsonObject.containsKey("receRemark")) {
-			receipt.setRece_remark(jsonObject.getString("receRemark"));
-		}
-		boolean result = receiptService.save(receipt);
+		Integer cont_id = Integer.valueOf(request.getParameter("contId"));
+		Boolean result = receiptService.save(jsonObject, cont_id, user);
 		return JSON.toJSONString(result);
 	}
 
-	// /**
-	// * 创建收据
-	// *
-	// * @param request
-	// * @param session
-	// * @return
-	// */
-	// @RequestMapping(value = "/addReceipt.do")
-	// public @ResponseBody String addReceiptBefore(HttpServletRequest request,
-	// HttpSession session)
-	// throws ParseException {
-	// JSONObject result = new JSONObject();
-	// User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-	// JSONObject jsonObject =
-	// JSONObject.fromObject(request.getParameter("receipt"));
-	// Receipt receipt = new Receipt();
-	// SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-	// Contract contract = new Contract();
-	// contract.setCont_id(Integer.valueOf(request.getParameter("contId")));
-	// receipt.setContract(contract);
-	// ReceiveNode receiveNode = new ReceiveNode();
-	// receiveNode.setReno_id(Integer.valueOf(request.getParameter("renoId")));
-	// receipt.setReceiveNode(receiveNode);
-	// receipt.setUser(user);
-	// if (jsonObject.containsKey("receAtime")) {
-	// Date sdate = format.parse(jsonObject.getString("receAtime"));
-	// receipt.setRece_atime(sdate);
-	// }
-	// if (jsonObject.containsKey("receFirm")) {
-	// receipt.setRece_firm(jsonObject.getString("receFirm"));
-	// }
-	// if (jsonObject.containsKey("receMoney")) {
-	// receipt.setRece_money(Float.valueOf(jsonObject.getString("receMoney")));
-	// }
-	// if (jsonObject.containsKey("receRemark")) {
-	// receipt.setRece_remark(jsonObject.getString("receRemark"));
-	// }
-	// boolean receiptResult = receiptService.save(receipt);
-	// Integer renoId = Integer.valueOf(request.getParameter("renoId"));
-	// ReceiveNode receiveNode2 = receiveNodeService.findByRenoId(renoId);
-	// Float reNoAMoney = receiveNode2.getReno_amoney() +
-	// Float.valueOf(jsonObject.getString("receMoney"));
-	// Float reNoMoney = receiveNode2.getReno_money();
-	// receiveNode2.setReno_amoney(reNoAMoney);
-	// Integer reNoStatus;
-	// if (reNoAMoney == 0)
-	// reNoStatus = RenoStatus.waitReceive.value;
-	// else if (0 < reNoAMoney && reNoAMoney < reNoMoney) {
-	// reNoStatus = RenoStatus.noEnough.value;
-	// } else if ((Math.abs(reNoMoney - reNoAMoney) < 0.00000001)) {// 判断float相等
-	// reNoStatus = RenoStatus.finish.value;
-	// alarmService.updateByIdType(renoId, RemoveType.RenoAlarm.value);
-	// } else {
-	// reNoStatus = RenoStatus.beyondActually.value;
-	// alarmService.updateByIdType(renoId, RemoveType.RenoAlarm.value);
-	// }
-	// receiveNode2.setReno_state(reNoStatus);
-	// receiveNodeService.addReceiveNode(receiveNode2);
-	// if (receiptResult)
-	// result.put("result", "true");
-	// else {
-	// result.put("result", "false");
-	// }
-	// return result.toString();
-	// }
+	/**
+	 * 删除收据记录
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteReceipt.do")
+	public @ResponseBody String deleteReceipt(HttpServletRequest request, HttpSession session) {
+		Integer receId = Integer.valueOf(request.getParameter("receId"));
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Boolean result = receiptService.delete(receId, user);
+		return JSON.toJSONString(result);
+	}
 }

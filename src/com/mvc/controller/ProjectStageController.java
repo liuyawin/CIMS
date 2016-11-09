@@ -52,7 +52,6 @@ public class ProjectStageController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("projectStage"));
 		Integer cont_id = Integer.valueOf(request.getParameter("cont_id"));
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-
 		boolean flag = projectStageService.addProjectStage(jsonObject, cont_id, user);
 		return String.valueOf(flag);
 	}

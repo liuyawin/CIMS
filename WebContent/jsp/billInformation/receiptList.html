@@ -12,21 +12,22 @@
 		<span>收据详情</span>
 	</div>
 	<div>
-		<label class="text_style">合同总金额 {{cont.cont_money | receFloat}}
-			万元！</label><label class="text_style">收据总金额 {{totalMoney | receFloat}}
-			万元！</label><label class="text_style">共开了 {{totalRow}} 张收据！</label>
+		<label class="text_style">合同总金额 {{cont.cont_money |
+			receFloat}} 万元！</label><label class="text_style">收据总金额 {{totalMoney |
+			receFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
+			张收据！</label>
 	</div>
 	<div class="tools">
 		<ul class="toolbar1" ng-show='receAddShow'>
 			<li class="click"><a ng-click="addReceipt()" class="tablelink"
 				has-permission='bReceAdd'><span><img
-					src="../images/t01.png" /></span>开收据</a></li>
+						src="../images/t01.png" /></span>开收据</a></li>
 		</ul>
 	</div>
 	<table class="tablelist">
 		<thead>
 			<tr>
-				<th class="width10">收据编号</th>
+				<th class="width5">序号</th>
 				<th class="width10">金额（万元）</th>
 				<th class="width10">实际收款时间</th>
 				<!-- <th class="width10">应收款时间</th>
@@ -39,7 +40,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="rece in receipts">
-				<td class="width10">收据{{$index + 1}}</td>
+				<td class="width5">收据{{$index + 1}}</td>
 				<td class="width5">{{rece.rece_money | receFloat}}</td>
 				<td class="width10">{{rece.rece_atime.time | dateType}}</td>
 				<!-- <td class="width10">{{rece.receiveNode.reno_time.time |
@@ -50,7 +51,9 @@
 				<td class="width10">{{rece.user.user_name}}</td>
 				<td class="width15">{{rece.rece_remark | cutString}}</td>
 				<td class="width10"><a href="" class="tablelink"
-					ng-click="checkReceipt()">详情</a></td>
+					ng-click="checkReceipt()">详情</a><a href="" class="tablelink"
+					ng-click="editReceipt()" has-permission='bReceAdd'>修改</a><a href="" class="tablelink"
+					ng-click="delReceipt()" has-permission='bReceAdd'>删除</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -72,15 +75,17 @@
 		<form ng-submit="addRece()">
 			<ul class="forminfo">
 				<li><label>金额</label><input type="text"
-					ng-model="receipt.receMoney" class="dfinput numberFormat" placeholder="格式：0.00" required />万元&nbsp;&nbsp;<span class="error-span">格式错误</span></li>
+					ng-model="receipt.rece_money" class="dfinput numberFormat"
+					placeholder="格式：0.00" required />万元&nbsp;&nbsp;<span
+					class="error-span">格式错误</span></li>
 				<li><label>业主公司</label><input type="text"
-					ng-model="receipt.receFirm" class="dfinput" required /></li>
+					ng-model="receipt.rece_firm" class="dfinput" required /></li>
 				<li><label>收款时间</label><input type="text"
 					class="dfinput dateFormat" placeholder="格式：2016-09-07"
-					id="stageEtime" name="stageEtime" ng-model="receipt.receAtime"
+					id="stageEtime" name="stageEtime" ng-model="receipt.rece_atime"
 					required /><span class="error-span">格式错误</span></li>
 				<li><label>备注</label> <textarea name="" cols="" rows=""
-						class="textinput area_style" ng-model="receipt.receRemark"></textarea></li>
+						class="textinput area_style" ng-model="receipt.rece_remark"></textarea></li>
 
 			</ul>
 			<div class="tipbtn">
@@ -94,14 +99,16 @@
 <!-- 开收据模态框完 -->
 <!--查看收据模态框 -->
 <div class="overlayer"></div>
-<div class="tip" id="tipCheckReceipt" style="height: 400px">
+<div class="tip" id="tipCheckReceipt" style="height: 450px">
 	<div class="tiptop">
 		<span>收据详情</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form ng-submit="checkReceipt()">
+		<form>
 			<ul class="forminfo">
+				<li class="hidden"><input name="" type="text" class="dfinput" readonly
+					value="{{receipt.rece_id}}" />万元</li>
 				<li><label>收据金额</label> <input name="" type="text"
 					class="dfinput" readonly value="{{receipt.rece_money |receFloat}}" />万元</li>
 				<li><label>开收据时间</label><input name="" type="text"
@@ -114,12 +121,60 @@
 				<li><label>备注</label> <textarea name="" cols="" rows=""
 						class="textinput area_style" readonly>{{receipt.rece_remark}}</textarea></li>
 			</ul>
-
-		</form>
+			</form>
 	</div>
 </div>
 <!-- 查看收据模态框完 -->
+<!--lwt: 修改收据模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipEditReceipt" style="height: 400px">
+	<div class="tiptop">
+		<span>修改收据</span><a></a>
+		<!-- 这个a标签是模态框上的叉叉 -->
+	</div>
+	<div class="formbody">
+		<form ng-submit="editReceiptInfo()">
+			<ul class="forminfo">
+				<li><label>金额</label><input type="text"
+					ng-model="receipt.rece_money" class="dfinput numberFormat"
+					placeholder="格式：0.00" required />万元&nbsp;&nbsp;<span
+					class="error-span">格式错误</span></li>
+				<li><label>业主公司</label><input type="text"
+					ng-model="receipt.rece_firm" class="dfinput" required /></li>
+				<li><label>收款时间</label><input type="text"
+					class="dfinput dateFormat" placeholder="格式：2016-09-07"
+					id="stageEtime" name="stageEtime" ng-model="receipt.rece_atime"
+					required /><span class="error-span">格式错误</span></li>
+				<li><label>备注</label> <textarea name="" cols="" rows=""
+						class="textinput area_style" ng-model="receipt.rece_remark"></textarea></li>
 
+			</ul>
+			<div class="tipbtn">
+				<input name="" type="submit" class="sureSend" id="sureEditReceipt" value="确认" />&nbsp; 
+				<input name="" type="button" id="cancelEditReceipt" class="cancelSend" value="取消" />
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 修改收据模态框完 -->
+<!-- //删除任务模态框 -->
+<div class="tip" id="tipDel" style="height: 220px">
+	<div class="tiptop">
+		<span>提示信息</span><a></a>
+	</div>
+
+	<div class="tipinfo">
+		<div class="tipright">
+			<p>是否确认对信息的删除 ？</p>
+			<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+		</div>
+	</div>
+
+	<div class="tipbtn">
+		<input name="" type="button" class="sure" id="sureDel" value="确定" />&nbsp;
+		<input name="" type="button" class="cancel" id="cancelDel" value="取消" />
+	</div>
+</div>
 
 
 

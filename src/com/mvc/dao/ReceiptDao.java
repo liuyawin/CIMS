@@ -23,4 +23,7 @@ public interface ReceiptDao {
 
 	// 根据合同ID查询收据总金额
 	Float totalMoneyOfReceipt(Integer contId);
+
+	// 根据收据ID删除收据
+	Boolean delete(Integer receId);
 }

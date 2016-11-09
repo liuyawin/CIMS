@@ -4,7 +4,7 @@
 <section class="leftbar">
 	<dl class="leftmenu">
 		<!-- 合同信息管理 -->
-		<dd id="contract">
+		<dd id="contract" class="contManager" style="display: none">
 			<div class="title ">
 				<span><img src="${ctx}/images/leftico01.png" /></span>合同管理
 			</div>
@@ -29,22 +29,25 @@
 			<ul id="task-ul" class="menuson">
 				<li id="receiveTask"><cite></cite> <a
 					href="${ctx}/task/toTaskPage.do#/receiveTask">接收的任务</a><i></i></li>
-				<li id="sendTask"><cite></cite> <a href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
-				<li id="invoiceTask"><cite></cite> <a
-					href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
-				<li id="receiveMoneyTask"><cite></cite> <a
-					href="${ctx}/receiveMoney/toBillMngInvoicePage.do#/receiveMoneyTaskList">到款任务</a><i></i></li>
+				<li id="sendTask"><cite></cite> <a
+					href="${ctx}/task/toTaskPage.do#/sendTask">发出的任务</a><i></i></li>
+
 			</ul>
 		</dd>
 
 		<!-- 票据管理 -->
-		<dd id="billInformation">
+		<dd id="billInformation" class="billManager" style="display: none">
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>票据管理
 			</div>
 			<ul id="bill-ul" class="menuson">
 				<li id="billMgmt"><cite></cite> <a
-					href="${ctx}/contract/toBillMngContractPage.do#/contractList">票据管理</a><i></i></li>
+					href="${ctx}/invoice/toBillMngInvoicePage.do#/contractList">票据管理</a><i></i></li>
+				<li id="invoiceTask" class="invoiceTask" style="display: none"><cite></cite>
+					<a href="${ctx}/invoice/toBillMngInvoicePage.do#/invoiceTaskList">发票任务</a><i></i></li>
+				<li id="receiveMoneyTask" class="remoTask" style="display: none"><cite></cite>
+					<a
+					href="${ctx}/invoice/toBillMngInvoicePage.do#/receiveMoneyTaskList">到款任务</a><i></i></li>
 			</ul>
 
 		</dd>
@@ -54,24 +57,24 @@
 				<span><img src="${ctx}/images/leftico03.png" /></span>报警信息
 			</div>
 			<ul id="alarm-ul" class="menuson">
-				<li id="debtAlarm"><cite></cite> <a
-					href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款超时</a><i></i></li>
-				<li id="overdueAlarm"><cite></cite> <a
-					href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList">工程逾期</a><i></i></li>
+				<li id="debtAlarm" class="remoAlarm" style="display: none"><cite></cite>
+					<a href="${ctx}/alarm/toAlarmPage.do#/debtAlarmList">收款相关</a><i></i></li>
+				<li id="overdueAlarm" class="psAlarm" style="display: none"><cite></cite>
+					<a href="${ctx}/alarm/toAlarmPage.do#/overdueAlarmList">工期相关</a><i></i></li>
 				<li id="overtimeAlarm"><cite></cite> <a
 					href="${ctx}/alarm/toAlarmPage.do#/taskAlarmList">任务超时</a><i></i></li>
 			</ul>
 		</dd>
 		<!-- 基础信息管理 -->
-		<dd id="userManagement">
+		<dd id="userManagement" class="userManager" style="display: none">
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>用户管理
 			</div>
 			<ul id="system-ul" class="menuson">
 				<li id="roleList"><cite></cite> <a
-					href="${ctx}/role/toUserManagePage.do#/roleList">角色列表</a><i></i></li>
+					href="${ctx}/role/toUserManagePage.do#/roleList">角色管理</a><i></i></li>
 				<li id="userList"><cite></cite> <a
-					href="${ctx}/role/toUserManagePage.do#/userList">用户列表</a><i></i></li>
+					href="${ctx}/role/toUserManagePage.do#/userList">用户管理</a><i></i></li>
 				<li id="alarmSet"><cite></cite> <a
 					href="${ctx}/alarmLevel/toAlarmSetPage.do#/alarmSet">报警设置</a><i></i></li>
 			</ul>
@@ -79,57 +82,27 @@
 	</dl>
 </section>
 <script>
+
 	$(document).ready(function() {
-		var cookie = {};
-
-		var cookies = document.cookie;
-		if (cookies === "")
-			return cookie;
-		var list = cookies.split(";");
-		for (var i = 0; i < list.length; i++) {
-			var cookieString = list[i];
-			/* console.log("cookie内容" + cookieString); */
-			var p = cookieString.indexOf("=");
-			var name = cookieString.substring(0, p);
-			var value = cookieString.substring(p + 1, cookieString.length);
-
-			cookie[name.trim()] = value;
-
-			if (name.trim() == "role") {
-				if (value.trim() == "2") {
+		//根据权限显示左侧栏相关条目
+		$.get("/CIMS/login/getLeftbarPermission.do",function(data){
+			console.log("左侧栏权限："+data);
+			var leftbarPermission = data.substring(1,data.length-2).split(",");
+			for(var i=0,len=leftbarPermission.length;i<len;i++){
+				if(leftbarPermission[i].trim()){
+					var $temp = $('.'+leftbarPermission[i].trim());
+					if($temp){
+						$temp.css('display','block');
+					}
 				}
-				switch (value.trim()) {
-				case "1":
-
-					break;
-				case "2":
-					$("#contract").hide();
-					$("#invoiceTask").hide();
-					$("#receiveMoneyTask").hide();
-					$("#userManagement").hide();
-					$("#billInformation").hide();
-					$("#overdueAlarm").hide();
-					$("#debtAlarm").hide();
-
-					break;
-				case "3":
-					$("#userManagement").hide();
-					break;
-				case "4":
-					$("#userManagement").hide();
-					break;
-				case "5":
-					$("#userManagement").hide();
-					break;
-				}
-
+				
 			}
-
-		}
-		
+		});
+		//点击li时将当前页面的信息存入sessionStorage
 		var $li = $('.leftmenu li');
-		$li.click(function(){
+		$li.click(function() {
 			sessionStorage.setItem("currentPage", $(this).attr('id'));
 		});
 	});
+
 </script>

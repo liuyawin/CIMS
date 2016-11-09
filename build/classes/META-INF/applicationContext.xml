@@ -85,6 +85,7 @@
 			<tx:method name="add*" propagation="REQUIRED" />
 			<tx:method name="delete*" propagation="REQUIRED" />
 			<tx:method name="count*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
 		</tx:attributes>
 	</tx:advice>
 

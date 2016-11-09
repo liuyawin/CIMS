@@ -10,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.base.enums.IsDelete;
 import com.mvc.dao.UserDao;
 import com.mvc.entity.User;
-import com.mvc.entity.UserDeptRelation;
-import com.mvc.repository.DepartmentRepository;
 import com.mvc.repository.UserRepository;
 
 /**
@@ -28,8 +27,6 @@ public class UserDaoImpl implements UserDao {
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 	@Autowired
-	DepartmentRepository departmentRepository;
-	@Autowired
 	UserRepository userRepository;
 
 	/**
@@ -39,14 +36,11 @@ public class UserDaoImpl implements UserDao {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		try {
-			String selectSql = " update user set `user_isdelete` = 1 where user_id =:user_id ";
+			String selectSql = " update user set user_isdelete =:user_isdelete where user_id =:user_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("user_id", id);
+			query.setParameter("user_isdelete",IsDelete.YES.value );
 			query.executeUpdate();
-			String selectSql1 = " update user_dept_relation set `re_state`=1 where user_id=:user_id ";
-			Query query1 = em.createNativeQuery(selectSql1);
-			query1.setParameter("user_id", id);
-			query1.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();
 		} finally {
@@ -71,16 +65,4 @@ public class UserDaoImpl implements UserDao {
 		return list;
 	}
 
-	// 只要设计部人员列表
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<UserDeptRelation> findUserFromDesign() {
-		EntityManager em = emf.createEntityManager();
-		int deptid = departmentRepository.findOnlyUserDesign();
-		String selectSql = "select * from user_dept_relation where dept_id=" + deptid + " and re_state=0";
-		Query query = em.createNativeQuery(selectSql, UserDeptRelation.class);
-		List<UserDeptRelation> list = query.getResultList();
-		em.close();
-		return list;
-	}
 }

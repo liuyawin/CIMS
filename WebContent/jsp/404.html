@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<!-- Viewport metatags -->
+<meta name="HandheldFriendly" content="true" />
+<meta name="MobileOptimized" content="320" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<link href="/CIMS/css/error.css" rel="stylesheet" type="text/css" />
+
+<title>404错误页面</title>
+
+</head>
+
+<body>
+    
+	<!-- Main Wrapper. Set this to 'fixed' for fixed layout and 'fluid' for fluid layout' -->
+	<div id="da-wrapper" class="fluid">
+    
+        <!-- Content -->
+        <div id="da-content">
+            
+            <!-- Container -->
+            <div class="da-container clearfix">
+            
+            	<div id="da-error-wrapper">
+                	
+                   	<div id="da-error-pin"></div>
+                    <div id="da-error-code">
+                    	error <span>404</span>                    </div>
+                
+                	<h1 class="da-error-heading">哎呀...您访问的页面不存在！</h1>
+                    <p>您可能输入了错误的网址，或者该网页已删除</p><p><button id="back">返回上一页</button></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div id="da-footer">
+        	<div class="da-container clearfix">
+           	<p>Copyright &copy; 2016 Xidian University,All Rights Reserved</p></div>
+        </div>
+    </div>
+    <script>
+		window.onload = function(){
+			document.getElementById("back").onclick = function() {
+				history.go(-1);
+			}
+		}
+	</script>
+</body>
+</html>

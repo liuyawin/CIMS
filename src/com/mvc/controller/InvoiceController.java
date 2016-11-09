@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.base.constants.SessionKeyConstants;
-import com.base.enums.InvoiceStatus;
-import com.base.enums.IsDelete;
-import com.mvc.entity.Contract;
 import com.mvc.entity.Invoice;
 import com.mvc.entity.User;
 import com.mvc.service.InvoiceService;
@@ -158,60 +155,11 @@ public class InvoiceController {
 	 */
 	@RequestMapping(value = "/addInvoiceTask.do")
 	public @ResponseBody String addInvoice(HttpServletRequest request, HttpSession session) throws ParseException {
-		JSONObject result = new JSONObject();
 		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
-		String permission = user.getRole().getRole_permission();// 权限
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("invoice"));
-		Invoice invoice = new Invoice();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		long time = System.currentTimeMillis();
-		Contract contract = new Contract();
-		contract.setCont_id(Integer.valueOf(request.getParameter("contId")));
-		invoice.setContract(contract);
-		invoice.setInvo_money(Float.valueOf(jsonObject.getString("invoMoney")));
-		invoice.setInvo_firm(jsonObject.getString("invoFirm"));
-		if (jsonObject.containsKey("auditId")) {
-			User audit = new User();
-			audit.setUser_id(Integer.valueOf(jsonObject.getString("auditId")));
-			invoice.setAudit(audit);
-		}
-		Date sTime = format.parse(jsonObject.getString("invoStime"));
-		invoice.setInvo_stime(sTime);
-		Date eTime = format.parse(jsonObject.getString("invoEtime"));
-		invoice.setInvo_etime(eTime);
-		invoice.setInvo_remark(jsonObject.getString("invoRemark"));
-		User creator = new User();
-		creator.setUser_id(user.getUser_id());
-		invoice.setCreator(creator);
-		invoice.setInvo_isdelete(IsDelete.NO.value);
-		invoice.setInvo_ctime(new Date(time));
-		if (permission.contains("tInvoAudit")) {// 审核发票权限（主任）
-			invoice.setInvo_state(InvoiceStatus.waitdealing.value);// 待处理
-			invoice.setAudit(user);
-		} else {
-			invoice.setInvo_state(InvoiceStatus.waitAudit.value);// 待审核
-		}
-		boolean invoiceResult = invoiceService.save(invoice);
-		if (invoiceResult)
-			result.put("result", "true");
-		else {
-			result.put("result", "false");
-		}
-		return result.toString();
-	}
-
-	/**
-	 * 删除发票
-	 * 
-	 * @param request
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value = "/deleteInvoice.do")
-	public @ResponseBody String delete(HttpServletRequest request, HttpSession session) {
-		Integer invoiceId = Integer.valueOf(request.getParameter("invoiceId"));
-		boolean result = invoiceService.delete(invoiceId);
-		return JSON.toJSONString(result);
+		Integer cont_id = Integer.valueOf(request.getParameter("contId"));
+		Boolean invoiceResult = invoiceService.save(jsonObject, cont_id, user);
+		return JSON.toJSONString(invoiceResult);
 	}
 
 	/**
@@ -224,10 +172,11 @@ public class InvoiceController {
 	 */
 	@RequestMapping(value = "/updateInvoiceState.do")
 	public @ResponseBody String invoiceFinish(HttpServletRequest request, HttpSession session) throws ParseException {
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date invoTime = format.parse(request.getParameter("invoTime"));
-		boolean result = invoiceService.invoiceFinish(invoiceId, invoTime);
+		boolean result = invoiceService.invoiceFinish(invoiceId, invoTime, user);
 		return JSON.toJSONString(result);
 	}
 
@@ -288,12 +237,26 @@ public class InvoiceController {
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
-
 		List<Invoice> list = invoiceService.selectInvoByStateAndContId(invoState, cont_id, pager);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 删除发票记录
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteInvoice.do")
+	public @ResponseBody String deleteInvoice(HttpServletRequest request, HttpSession session) {
+		Integer invoiceId = Integer.valueOf(request.getParameter("invoiceId"));
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
+		Boolean result = invoiceService.delete(invoiceId, user);
+		return JSON.toJSONString(result);
 	}
 
 }

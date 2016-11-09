@@ -48,16 +48,6 @@ public class ContractController {
 	}
 
 	/**
-	 * 返回票据管理合同界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/toBillMngContractPage.do")
-	public String billMngContractPage() {
-		return "billInformation/index";
-	}
-
-	/**
 	 * 获取指定页面的十条合同信息，总页数(和"根据合同名获取合同信息"方法完全一样)
 	 * 
 	 * @param request
@@ -266,14 +256,16 @@ public class ContractController {
 	 * 设总更新合同状态
 	 * 
 	 * @param request
+	 * @param session
 	 * @return
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/modifyStatus.do")
-	public @ResponseBody String updateState(HttpServletRequest request) throws ParseException {
+	public @ResponseBody String updateState(HttpServletRequest request, HttpSession session) throws ParseException {
+		User user = (User) session.getAttribute(SessionKeyConstants.LOGIN);
 		Integer contId = Integer.valueOf(request.getParameter("contId"));
 		Integer contState = Integer.valueOf(request.getParameter("contState"));
-		boolean result = contractService.updateState(contId, contState);
+		boolean result = contractService.updateState(contId, contState, user);
 		return JSON.toJSONString(result);
 	}
 }
