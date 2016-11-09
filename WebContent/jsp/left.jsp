@@ -89,10 +89,13 @@
 			console.log("左侧栏权限："+data);
 			var leftbarPermission = data.substring(1,data.length-2).split(",");
 			for(var i=0,len=leftbarPermission.length;i<len;i++){
-				var $temp = $('.'+leftbarPermission[i].trim());
-				if($temp){
-					$temp.css('display','block');
+				if(leftbarPermission[i].trim()){
+					var $temp = $('.'+leftbarPermission[i].trim());
+					if($temp){
+						$temp.css('display','block');
+					}
 				}
+				
 			}
 		});
 		//点击li时将当前页面的信息存入sessionStorage
