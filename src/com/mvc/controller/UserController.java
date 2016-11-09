@@ -143,8 +143,10 @@ public class UserController {
 		jsonObject.put("user", user);
 		return jsonObject.toString();
 	}
+
 	/**
-	 * 检查用户是否已经存在
+	 * 检查用户是否已经存在:返回1存在，返回0不存在
+	 * 
 	 * @param request
 	 * @param session
 	 * @param map
