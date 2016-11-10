@@ -15,43 +15,43 @@
 		</div>
 		<table class="tbl tablelist" id="contInformation">
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">合同名称</td>
+				<td colspan='2' class="width15 text-center">合同名称</td>
 				<td colspan='6'>{{cont.cont_name}}</td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">合同类别</td>
+				<td colspan='2' class="width15 text-center">合同类别</td>
 				<td colspan='2'>{{cont.cont_type |conType}}</td>
 				<td colspan='2' class=" text-center">合同等级</td>
 				<td colspan='2'>{{cont.cont_rank | conRank}}
 				<td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">合同金额（万元）<label
+				<td colspan='2' class="width15 text-center">合同金额（万元）<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_money" class="dfinput input_border numberFormat"
 					required placeholder="格式：0.00"/>&nbsp;<span class="error-span">格式错误</span></td>
-				<td colspan='2' class="width20 text-center">项目编码<label
+				<td colspan='2' class="width15 text-center">项目编码<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_pnum" class="dfinput input_border" required /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">合同编号</td>
+				<td colspan='2' class="width15 text-center">合同编号</td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_onum" class="dfinput input_border" /></td>
-				<td colspan='2' class="width20 text-center">甲方合同编号</td>
+				<td colspan='2' class="width15 text-center">甲方合同编号</td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_cnum" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">项目名称</td>
+				<td colspan='2' class="width15 text-center ">项目名称</td>
 				<td colspan='2'>{{cont.cont_project}}</td>
-				<td colspan='2' class="width20 text-center">项目所在省市</td>
+				<td colspan='2' class="width15 text-center">项目所在省市</td>
 				<td colspan='2'>{{cont.province}}&nbsp;&nbsp;{{cont.city}}</td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">项目阶段<label
+				<td colspan='2' class="width15 text-center">项目阶段<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='6'>
 					<div class="div-checkbox">
@@ -105,9 +105,9 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">项目状态</td>
+				<td colspan='2' class="width15 text-center">项目状态</td>
 				<td colspan='2'>{{cont.cont_state |conState}}</td>
-				<td colspan='2' class="width20 text-center table_title_width">合同签订时间<label
+				<td colspan='2' class="width15 text-center">合同签订时间<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><input type="text"
 					class="dfinput dateFormat input_border" placeholder="格式：2016-09-07"
@@ -116,13 +116,13 @@
 
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">项目设总<label
+				<td colspan='2' class="width15 text-center ">项目设总<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><select class="dfselect input_border"
 					ng-model="contract.manager.user_id" ng-options="user.user_id as user.user_name for user in userDepts" required >
 						<option value="">请选择</option>
 				</select></td>
-				<td colspan='2' class="width20 text-center">是否有委托书<label
+				<td colspan='2' class="width15 text-center">是否有委托书<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><div class="div-checkbox">
 						<input name="cont_hasproxy" type="radio" name="hasproxy"
@@ -133,12 +133,12 @@
 							ng-model="contract.cont_hasproxy" value="0" />无
 					</div></td>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">项目副设总</td>
+				<td colspan='2' class="width15 text-center">项目副设总</td>
 				<td colspan='2'><select class="dfselect input_border"
 					ng-model="contract.assistant_manager.user_id" 	ng-options="user.user_id as user.user_name for user in userDepts">
 						<option value="">请选择</option>
 				</select></td>
-				<td colspan='2' class="width20 text-center">是否立项<label
+				<td colspan='2' class="width15 text-center">是否立项<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><div class="div-checkbox">
 						<input name="cont_initiation" type="radio" name="initiation"
@@ -152,8 +152,8 @@
 
 
 			<tr>
-				<td rowspan='16' colspan='1' class="text-center table_title_width">业主信息</td>
-				<td colspan='2' class="width20 text-center table_title_width">公司全称</td>
+				<td rowspan='16' colspan='1' class="text-center">业主信息</td>
+				<td colspan='2' class="width15 text-center">公司全称</td>
 				<td colspan='6'>{{cont.cont_client}}</td>
 			</tr>
 
@@ -194,78 +194,78 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">通讯地址</td>
+				<td colspan='2' class="width15 text-center">通讯地址</td>
 				<td colspan='6'><input type="text"
 					ng-model="contract.cont_caddress" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">业主邮编</td>
+				<td colspan='2' class="width15 text-center">业主邮编</td>
 				<td colspan='1'><input type="text"
 					ng-model="contract.cont_czipcode" class="dfinput input_border" /></td>
-				<td colspan='2' class="width20 text-center">业主传真</td>
+				<td colspan='2' class="width15 text-center">业主传真</td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_cfax" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='3' class="width20 text-center table_title_width">联系人1</td>
+				<td colspan='3' class="width15 text-center">联系人1</td>
 
-				<td colspan='4' class="width20 text-center">联系人2</td>
+				<td colspan='4' class="width15 text-center">联系人2</td>
 
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">姓名</td>
+				<td colspan='2' class="width15 text-center ">姓名</td>
 				<td colspan='1'>{{contract.cont_cheader}}</td>
-				<td colspan='2' class="width20 text-center">姓名</td>
+				<td colspan='2' class="width15 text-center">姓名</td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_cheader2" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">手机号</td>
+				<td colspan='2' class="width15 text-center">手机号</td>
 				<td colspan='1'>{{contract.cont_ctel}}</td>
-				<td colspan='2' class="width20 text-center">手机号</td>
+				<td colspan='2' class="width15 text-center">手机号</td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_ctel2" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">固定电话</td>
+				<td colspan='2' class="width15 text-center">固定电话</td>
 				<td colspan='1'><input type="text"
 					ng-model="contract.landline_tel" class="dfinput input_border" /></td>
-				<td colspan='2' class="width20 text-center">固定电话</td>
+				<td colspan='2' class="width15 text-center">固定电话</td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.landline_tel2" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">职务</td>
+				<td colspan='2' class="width15 text-center">职务</td>
 				<td colspan='1'><input type="text" ng-model="contract.post"
 					class="dfinput input_border" /></td>
-				<td colspan='2' class="width20 text-center">职务</td>
+				<td colspan='2' class="width15 text-center">职务</td>
 				<td colspan='2'><input type="text" ng-model="contract.post2"
 					class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">所在部门</td>
+				<td colspan='2' class="width15 text-center">所在部门</td>
 				<td colspan='1'><input type="text"
 					ng-model="contract.cont_cdept" class="dfinput input_border" /></td>
-				<td colspan='2' class="width20 text-center">所在部门</td>
+				<td colspan='2' class="width15 text-center">所在部门</td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_cdept2" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">电子邮箱</td>
+				<td colspan='2' class="width15 text-center">电子邮箱</td>
 				<td colspan='1'><input type="email"
 					ng-model="contract.cont_cemail" class="dfinput input_border" /></td>
-				<td colspan='2' class="width20 text-center">电子邮箱</td>
+				<td colspan='2' class="width15 text-center">电子邮箱</td>
 				<td colspan='2'><input type="email"
 					ng-model="contract.cont_cemail2" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">公司注册地址</td>
+				<td colspan='2' class="width15 text-center">公司注册地址</td>
 				<td colspan='6'><input type="text"
 					ng-model="contract.com_signaddress" class="dfinput input_border" /></td>
 
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">纳税人类型</td>
+				<td colspan='2' class="width15 text-center">纳税人类型</td>
 				<td colspan='1'>
 					<div class="div-checkbox">
 						<input type="radio" name="contAvetaxpayer"
@@ -277,7 +277,7 @@
 					</div>
 				</td>
 
-				<td colspan='2' class="width20 text-center">发票类型</td>
+				<td colspan='2' class="width15 text-center">发票类型</td>
 				<td colspan='2'><div class="div-checkbox">
 						<input type="radio" name="invoiceType"
 							ng-model="contract.invoice_type" value="0" />增值税专用发票
@@ -288,23 +288,23 @@
 					</div></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">纳税人识别号</td>
+				<td colspan='2' class="width15 text-center">纳税人识别号</td>
 				<td colspan='1'><input type="text"
 					ng-model="contract.cont_taxidennum" class="dfinput input_border" /></td>
-				<td colspan='2' class="width20 text-center">电话（固定）</td>
+				<td colspan='2' class="width15 text-center">电话（固定）</td>
 				<td colspan='2'><input type="text" ng-model="contract.tel"
 					class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">开户行</td>
+				<td colspan='2' class="width15 text-center">开户行</td>
 				<td colspan='1'><input type="text"
 					ng-model="contract.cont_bank" class="dfinput input_border" /></td>
-				<td colspan='2' class="width20 text-center">银行账号</td>
+				<td colspan='2' class="width15 text-center">银行账号</td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_account" class="dfinput input_border" /></td>
 			</tr>
 			<tr>
-				<td colspan='2' class="width20 text-center table_title_width">其他需要说明的情况</td>
+				<td colspan='2' class="width15 text-center">其他需要说明的情况</td>
 				<td colspan='6'><textarea name="" cols="" rows=""
 						class="textinput text_border" ng-model="contract.cont_remark"></textarea></td>
 			</tr>

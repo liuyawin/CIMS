@@ -22,7 +22,7 @@
 
 		<ul class="toolbar1" has-permission='bInvoAdd'>
 			<li class="click"><a
-				href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img
+				href=""  ng-click="addInvoiceTask(cont.cont_id,cont.cont_client)"><span><img
 						src="../images/t01.png" /></span>开发票</a></li>
 		</ul>
 	</div>
@@ -90,7 +90,7 @@
 		<fieldset>
 			<legend>发票信息</legend>
 			<ul class="forminfo">
-				<li><label>发票金额：</label>{{invoice.invo_money}}万元</li>
+				<li><label>发票金额：</label>{{invoice.invo_money | receFloat}}万元</li>
 				<li><label>应开票时间：</label>{{invoice.invo_etime.time |dateType}}</li>
 				<li><label>实开票时间：</label>{{invoice.invo_time.time | dateType}}</li>
 				<li><label>业主公司：</label>{{invoice.invo_firm}}</li>
@@ -223,3 +223,55 @@
 		<input name="" type="button" class="cancel" id="cancelDel" value="取消" />
 	</div>
 </div>
+<!-- 派发发票任务模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipAddInvo" style="height: 530px">
+	<div class="tiptop">
+		<span>添加发票</span><a></a>
+	</div>
+	<div class="formbody">
+		<form ng-submit="addNewInvoiceTask()">
+			<div class="textWarn">
+				<label class="text_style">合同总金额 {{cont.cont_money |
+					receFloat}} 万元！&nbsp;&nbsp;已开发票 {{totalMoney | receFloat}} 万元！</label>
+			</div>
+			<ul class="forminfo">
+				<li><label>发票金额</label><input type="text" name="invoMoney"
+					id="invoMoney" class="dfinput invoMoney numberFormat"
+					ng-model="invoice.invo_money" required placeholder="格式：0.00">万元&nbsp;&nbsp;<span
+					class="error-span">格式错误</span></li>
+				<li><label>业主公司</label><input type="text" name="invoFirm"
+					class="dfinput" ng-model="invoice.invo_firm" required></li>
+				<li id="selectReceiverAdd"><label>执行人</label><select
+					name="tReceiver" class="dfselect"
+					ng-model="invoice.receiver.user_id" ng-options="user.user_id as user.user_name for user in users" required>
+						<option value="">
+							请选择
+						</option>
+				</select></li>
+				<li id="selectAuditAdd"><label>审核人</label><select name="tAudit"
+					class="dfselect" ng-model="invoice.audit.user_id" ng-options="user.user_id as user.user_name for user in users" >
+						<option value="">
+							请选择
+						</option>
+				</select></li>
+				<li><label>开始时间</label><input type="text"
+					ng-model="invoice.invo_stime" class="dfinput dateFormat"
+					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span>
+				</li>
+				<li><label>结束时间</label><input type="text" name="invoEtime"
+					ng-model="invoice.invo_etime" class="dfinput dateFormat"
+					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span></li>
+				<li id="taskContent"><label>备注</label> <textarea name=""
+						cols="" rows="" class="textinput area_style"
+						ng-model="invoice.invo_remark"></textarea></li>
+			</ul>
+			<div class="tipbtn">
+				<input name="" type="submit" class="sureSend" id="sureAdd" value="确认"
+					/>&nbsp; <input name="" type="button"
+					class="cancelSend" id="cancelAdd" value="取消" />
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 派发任务模态框完 -->

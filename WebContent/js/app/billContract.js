@@ -492,6 +492,7 @@ app
 								var FIRM = this.con.cont_client;
 								sessionStorage.setItem("conId", contId);
 								countReceiptMoneyByContId();
+								selectContractById();
 								$(".overlayer").fadeIn(200);
 								$("#tipAddReceipt").fadeIn(200);
 								// 输入时间的input默认值设置为当前时间

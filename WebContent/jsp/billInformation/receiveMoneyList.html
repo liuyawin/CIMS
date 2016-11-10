@@ -153,8 +153,8 @@
 		<fieldset>
 			<legend>到款信息</legend>
 			<ul class="forminfo">
-				<li><label>应到款金额：</label>{{receiveMoney.remo_money}}&nbsp;&nbsp;万元</li>
-				<li><label>实到款金额：</label>{{receiveMoney.remo_amoney}}&nbsp;&nbsp;万元</li>
+				<li><label>应到款金额：</label>{{receiveMoney.remo_money | receFloat}}&nbsp;&nbsp;万元</li>
+				<li><label>实到款金额：</label>{{receiveMoney.remo_amoney | receFloat}}&nbsp;&nbsp;万元</li>
 				<li><label>到款时间：</label>{{receiveMoney.remo_time.time | dateType}}</li>
 				<li><label>核对人：</label>{{receiveMoney.operater.user_name}}</li>
 				<li><div class="remark-div">备注：{{receiveMoney.remo_remark}}</div></li>
