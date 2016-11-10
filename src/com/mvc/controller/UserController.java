@@ -45,11 +45,12 @@ public class UserController {
 	@RequestMapping(value = "/getUserListByPage.do")
 	public @ResponseBody String getUsersByPrarm(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		Long totalRow = userService.countTotal();
+		String searchKey = request.getParameter("searchKey");
+		Integer totalRow = userService.countTotal(searchKey);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(Integer.parseInt(totalRow.toString()));
-		List<User> list = userService.findUserAllByPage(pager.getOffset(), pager.getLimit());
+		List<User> list = userService.findUserAllByPage(searchKey, pager.getOffset(), pager.getLimit());
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -97,15 +98,24 @@ public class UserController {
 		user.setUser_num(jsonObject.getString("user_num"));
 		user.setUser_name(jsonObject.getString("user_name"));
 		user.setUser_pwd(MD5.encodeByMD5(jsonObject.getString("user_pwd")));
-		user.setUser_sex(Integer.parseInt(jsonObject.getString("user_sex")));
-		user.setUser_tel(jsonObject.getString("user_tel"));
-		user.setUser_email(jsonObject.getString("user_email"));
-		user.setUser_dept(Integer.valueOf(jsonObject.getString("user_dept")));
+		if (jsonObject.containsKey("user_sex")) {
+			user.setUser_sex(Integer.parseInt(jsonObject.getString("user_sex")));
+		}
+		if (jsonObject.containsKey("user_tel")) {
+			user.setUser_tel(jsonObject.getString("user_tel"));
+		}
+		if (jsonObject.containsKey("user_email")) {
+			user.setUser_email(jsonObject.getString("user_email"));
+		}
+		if (jsonObject.containsKey("user_dept")) {
+			user.setUser_dept(Integer.valueOf(jsonObject.getString("user_dept")));
+		}
 		Role role = new Role();
 		role.setRole_id(Integer.parseInt(jsonObject.getJSONObject("role").getString("role_id")));
 		user.setRole(role);
 		user.setUser_isdelete(0);
 		boolean result;
+		
 		if (jsonObject.containsKey("user_id")) {
 			user.setUser_id(Integer.valueOf(jsonObject.getString("user_id")));
 			result = userService.save(user);// 修改用户信息

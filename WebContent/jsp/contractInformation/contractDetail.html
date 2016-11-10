@@ -119,10 +119,8 @@
 				<td colspan='2' class="width20 text-center table_title_width">项目设总<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'><select class="dfselect input_border"
-					ng-model="contract.manager.user_id" required>
-						<option value={{userDept.user.user_id}}
-							ng-repeat="userDept in userDepts">{{userDept.user.user_name}}</option>
-
+					ng-model="contract.manager.user_id" ng-options="user.user_id as user.user_name for user in userDepts" required >
+						<option value="">请选择</option>
 				</select></td>
 				<td colspan='2' class="width20 text-center">是否有委托书<label
 					class="left_length5 text_style">*</label></td>
@@ -137,9 +135,8 @@
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">项目副设总</td>
 				<td colspan='2'><select class="dfselect input_border"
-					ng-model="contract.assistant_manager.user_id">
-						<option value={{userDept.user.user_id}}
-							ng-repeat="userDept in userDepts">{{userDept.user.user_name}}</option>
+					ng-model="contract.assistant_manager.user_id" 	ng-options="user.user_id as user.user_name for user in userDepts">
+						<option value="">请选择</option>
 				</select></td>
 				<td colspan='2' class="width20 text-center">是否立项<label
 					class="left_length5 text_style">*</label></td>
@@ -301,7 +298,7 @@
 			<tr>
 				<td colspan='2' class="width20 text-center table_title_width">开户行</td>
 				<td colspan='1'><input type="text"
-					ng-model="contract.cont_czipcode" class="dfinput input_border" /></td>
+					ng-model="contract.cont_bank" class="dfinput input_border" /></td>
 				<td colspan='2' class="width20 text-center">银行账号</td>
 				<td colspan='2'><input type="text"
 					ng-model="contract.cont_account" class="dfinput input_border" /></td>

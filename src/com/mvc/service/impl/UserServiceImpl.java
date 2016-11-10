@@ -53,14 +53,14 @@ public class UserServiceImpl implements UserService {
 
 	// 查询部门总条数
 	@Override
-	public Long countTotal() {
-		return userRepository.countTotal();
+	public Integer countTotal(String searchKey) {
+		return userDao.countTotal(searchKey);
 	}
 
 	// 根据页数筛选全部用户列表
 	@Override
-	public List<User> findUserAllByPage(Integer offset, Integer end) {
-		return userDao.findUserAllByPage(offset, end);
+	public List<User> findUserAllByPage(String searchKey, Integer offset, Integer end) {
+		return userDao.findUserAllByPage(searchKey, offset, end);
 	}
 
 	// 获取用户列表，无翻页功能

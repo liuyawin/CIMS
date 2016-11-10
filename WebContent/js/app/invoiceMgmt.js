@@ -544,12 +544,12 @@ invoiceApp
 										pageTurn(data.totalPage, 1);
 									});
 								}
-							}
+							}*/
 							function selectAllUsers() {
 								services.getAllUsers().success(function(data) {
 									invoice.users = data;
 								});
-							}*/
+							}
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {

@@ -199,6 +199,30 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// zq根据合同ID获取发票总金额
+	services.countInvoiceMoneyByContId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'invoice/countInvoiceMoneyByContId.do',
+			data : data
+		});
+	};
+	// zq根据合同ID获取获取已到款钱数
+	services.countReceiveMoneyByContId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receiveMoney/receiveMoneyByContId.do',
+			data : data
+		});
+	};
+	// zq根据合同ID获取收据总金额
+	services.countReceiptMoneyByContId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'receipt/countReceiptMoneyByContId.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 
@@ -310,6 +334,7 @@ app
 							}
 							// zq添加发票任务
 							contract.addInvoiceTask = function(contId) {
+								var FIRM = this.con.cont_client;
 								var regStr = "\\s" + 'tInvoAudit' + "\\s";
 								var reg = new RegExp(regStr);
 								if (permissionList.search(reg) < 0) {
@@ -322,6 +347,8 @@ app
 								selectAllUsers();
 								/* var contId = this.con.cont_id; */
 								sessionStorage.setItem("conId", contId);
+								countInvoiceMoneyByContId();
+								selectContractById();
 								$("#tipAdd").fadeIn(200);
 								$(".overlayer").fadeIn(200);
 								var date = new Date();
@@ -330,28 +357,24 @@ app
 										+ (date.getDate());
 								contract.invoice = {
 									invo_stime : timeNow,
-									invo_etime : timeNow
+									invo_etime : timeNow,
+									invo_firm : FIRM
 								};
 
 							};
-							$("#sureAdd").click(
-									function() {
-										var taskFormData = JSON
-												.stringify(contract.invoice);
-										services.addInvoiceTask(
-												{
-													invoice : taskFormData,
-													contId : sessionStorage
-															.getItem("conId")
-												}).success(function(data) {
-
-											$("#tipAdd").fadeOut(100);
-											$(".overlayer").fadeOut(200);
-											contract.invoice = "";
-											alert("添加成功！");
-
-										});
-									});
+							contract.addNewInvoiceTask= function() {
+								var taskFormData = JSON
+										.stringify(contract.invoice);
+								services.addInvoiceTask({
+									invoice : taskFormData,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
+									$("#tipAdd").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									contract.invoice = "";
+									alert("添加成功！");
+								});
+							}
 
 							$("#cancelAdd").click(function() {
 								$("#tipAdd").fadeOut(100);
@@ -429,6 +452,8 @@ app
 								/* var contId = this.con.cont_id; */
 								sessionStorage.setItem("conId",
 										this.con.cont_id);
+								selectContractById();
+								countReceiveMoneyByContId();
 								$("#tipRemoAdd").fadeIn(200);
 								$(".overlayer").fadeIn(200);
 								var date = new Date();
@@ -464,7 +489,9 @@ app
 							});
 							// lwt:开收据
 							contract.addReceipt = function(contId) {
+								var FIRM = this.con.cont_client;
 								sessionStorage.setItem("conId", contId);
+								countReceiptMoneyByContId();
 								$(".overlayer").fadeIn(200);
 								$("#tipAddReceipt").fadeIn(200);
 								// 输入时间的input默认值设置为当前时间
@@ -473,26 +500,25 @@ app
 										+ (date.getMonth() + 1) + "-"
 										+ (date.getDate());
 								contract.receipt = {
-									rece_atime : timeNow
+									rece_atime : timeNow,
+									rece_firm : FIRM
 								};
 
 							};
-							contract.addRece=function() {
-										var receFormData = JSON
-												.stringify(contract.receipt);
-										services.addReceipt(
-												{
-													receipt : receFormData,
-													contId : sessionStorage
-															.getItem("conId")
-												}).success(function(data) {
+							contract.addRece = function() {
+								var receFormData = JSON
+										.stringify(contract.receipt);
+								services.addReceipt({
+									receipt : receFormData,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
 
-											$("#tipAddReceipt").fadeOut(100);
-											$(".overlayer").fadeOut(200);
-											alert("收据添加成功！");
-											contract.receipt = "";
-										});
-									}
+									$("#tipAddReceipt").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									alert("收据添加成功！");
+									contract.receipt = "";
+								});
+							}
 
 							$("#cancelAddReceipt").click(function() {
 								$("#tipAddReceipt").fadeOut(100);
@@ -505,6 +531,37 @@ app
 								newDate = new Date(time).toLocaleDateString()
 										.replace(/\//g, '-');
 								return newDate;
+							}
+							// zq：根据合同ID计算该合同目前开了多少钱的发票
+							function countInvoiceMoneyByContId() {
+								var contId = sessionStorage.getItem('conId');
+								services.countInvoiceMoneyByContId({
+									contId : contId
+								}).success(function(data) {
+									contract.invoTotalMoney = data.totalMoney;
+									contract.invoTotalRow = data.totalRow;
+								});
+							}
+							// zq：根据合同ID计算该合同目前共到款多少钱
+							function countReceiveMoneyByContId() {
+								var contId = sessionStorage.getItem('conId');
+								services.countReceiveMoneyByContId({
+									contId : contId
+								}).success(function(data) {
+									contract.remoTotalMoney = data.totalMoney;
+								});
+							}
+							// zq：根据合同ID计算该合同目前收据共多少钱
+							function countReceiptMoneyByContId() {
+								var contId = sessionStorage.getItem('conId');
+
+								services.countReceiptMoneyByContId({
+									contId : contId
+								}).success(function(data) {
+
+									contract.receTotalMoney = data.totalMoney;
+
+								});
 							}
 							// 初始化页面信息
 							function initData() {

@@ -37,10 +37,10 @@ public class AlarmStatisticDaoImpl implements AlarmStatisticDao {
 		sql.append("coalesce(sum(case when task_state=0 and task_type=0 then 1 else 0 end),0) other_task_num ");// 普通任务
 		sql.append(
 				"from (select task_id,task_state,task_type from task where task_isdelete=0 and receiver_id=:user_id) as a) as aa,");
-		sql.append("(select coalesce(sum(case when invo_state=0 then 1 else 0 end),0) wait_audit_bill_task_num,");// 待审核发票任务
+		sql.append("(select coalesce(sum(case when invo_state=0 then 1 else 0 end),0) wait_audit_bill_task_num,");// 待审核发票任务(调出的结果有问题)
 		sql.append("coalesce(sum(case when invo_state=1 then 1 else 0 end),0) bill_task_num ");// 发票任务
 		sql.append(
-				"from (select invo_id,invo_state from invoice where invo_isdelete=0 and audit_id=:user_id) as b) as bb,");
+				"from (select invo_id,invo_state from invoice where invo_isdelete=0 and receiver_id=:user_id) as b) as bb,");
 		sql.append("(select coalesce(sum(case when alar_code in(2,3) then 1 else 0 end),0) debt_alarm_num,");// 收款超时
 		sql.append("coalesce(sum(case when alar_code in(4,5) then 1 else 0 end),0) overdue_alarm_num,");// 工程逾期
 		sql.append("coalesce(sum(case when alar_code=1 then 1 else 0 end),0) task_alarm_num ");// 任务超时
