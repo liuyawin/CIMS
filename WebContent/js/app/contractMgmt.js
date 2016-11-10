@@ -530,7 +530,7 @@ app
 								}, contract.file).success(function(data) {
 									sessionStorage.setItem("conId", data);
 									contract.contract.cont_id = data;
-								
+
 									$("#addContract").hide();
 									$("#updateContract").show();
 									alert("创建合同成功！");
@@ -1050,6 +1050,8 @@ app
 								services.selectUsersFromDesign({}).success(
 										function(data) {
 											contract.userDepts = data;
+											console.log("设计部人员"
+													+ JSON.stringify(data));
 										});
 							}
 							function findRoleFromCookie() {
@@ -1076,15 +1078,26 @@ app
 							// 10.25zq确认完工
 							contract.finishPrst = function() {
 								var prstId = this.stage.prst_id;
+								sessionStorage.setItem("prstId", prstId);
+								$("#tipFinish").fadeIn(200);
+								$(".overlayer").fadeIn(200);
+							}
+							$("#sureFinishPrst").click(function() {
 								services.finishPrst({
-									prstId : prstId
+									prstId : sessionStorage.getItem("prstId")
 								}).success(function(data) {
 									alert("确认完工成功！");
 									selectContractById(); // 根据ID获取合同信息
 									selectPrstByContId();// 根据合同查看工期阶段
 									selectRenoByContId();// 根据合同ID查看收款节点
-								});
-							}
+									$("#tipFinish").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+								})
+							});
+							$("#cancelFinishPrst").click(function() {
+								$("#tipFinish").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+							});
 							// 10.25zq删除工期和收款
 							contract.delPrst = function() {
 								if (this.stage.prst_state == 0) {

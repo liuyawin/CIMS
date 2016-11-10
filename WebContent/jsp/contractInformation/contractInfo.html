@@ -15,8 +15,8 @@
 			src="../images/hideInfo.png" class="hand hideE showInfo"
 			id="contHide" ng-click="hideContInfo()"></span> <a class="update-btn"
 			href="/CIMS/file/download.do">下载附件</a><a class="update-btn"
-			href="#/contractUpdate" has-permission='cHeadEdit'>修改1</a><a
-			class="update-btn" href="#/contractModify" has-permission='cBodyEdit'>修改2</a>
+			href="#/contractUpdate" has-permission='cHeadEdit'>修改</a><a
+			class="update-btn" href="#/contractModify" has-permission='cBodyEdit'>修改补录信息</a>
 	</div>
 	<form ng-submit="repeatAddContract()" name="staff">
 		<table class="tbl tablelist" id="contInformation">
@@ -215,8 +215,7 @@
 			<td>{{stage.prst_atime.time | dateType}}</td>
 			<td has-permission='cPsEdit'><a class="tablelink"
 				ng-click="modifyPrst()">修改</a><a class="tablelink"
-				ng-click="delPrst()">删除</a><a class="tablelink"
-				ng-click="finishPrst()">完工</a></td>
+				ng-click="delPrst()">删除</a></td>
 			<td has-permission='cPsFinish'><a class="tablelink" ng-click="finishPrst()">完工</a></td>
 		</tr>
 
@@ -256,7 +255,7 @@
 			<td>{{node.projectStage.prst_content}}</td>
 			<td>{{node.reno_state |renoType}}</td>
 			<td><a ng-click="modifyReno()" class="tablelink"
-				has-permission='cRnEdit'>添加</a><a ng-click="delReno()"
+				has-permission='cRnEdit'>修改</a><a ng-click="delReno()"
 				class="tablelink" has-permission='cRnDel'>删除</a></td>
 
 
@@ -272,7 +271,7 @@
 <div class="overlayer"></div>
 <div class="tip" id="prstAdd" style="height: 300px">
 	<div class="tiptop">
-		<span>修改工期阶段</span><a></a>
+		<span>添加工期阶段</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
@@ -355,8 +354,8 @@
 					class="dfinput dateFormat" placeholder="格式：2016-09-07"
 					ng-model="reNode.reno_time" required /><span class="error-span">日期格式错误</span></li>
 				<li><label>实际应收金额</label><input type="text"
-					class="dfinput width35" ng-model="reNode.reno_money"
-					placeholder="格式：0.00" required />万元</li>
+					class="dfinput numberFormat width35 " ng-model="reNode.reno_money"
+					placeholder="格式：0.00" required />万元&nbsp;<span class="error-span">格式错误</span></li>
 				<li><label>提醒天数设置</label><input type="text"
 					class="dfinput width35" placeholder="格式：7"
 					ng-model="reNode.reno_wday" required />天</li>
@@ -397,8 +396,8 @@
 					class="dfinput dateFormat" placeholder="格式：2016-09-07"
 					ng-model="reNode.reno_time" required /><span class="error-span">日期格式错误</span></li>
 				<li><label>实际应收金额</label><input type="text"
-					class="dfinput width35" ng-model="reNode.reno_money"
-					placeholder="格式：0.00" required />万元</li>
+					class="dfinput numberFormat width35" ng-model="reNode.reno_money"
+					placeholder="格式：0.00" required />万元&nbsp;<span class="error-span">格式错误</span></li>
 				<li><label>提醒天数设置</label><input type="text"
 					class="dfinput width35" placeholder="格式：7"
 					ng-model="reNode.reno_wday" required  ng-pattern="/^(0|\+?[1-9][0-9]*)$/"/>天</li>
@@ -433,3 +432,22 @@
 	</div>
 </div>
 <!-- //删除任务模态框 -->
+<!-- //完工模态框 -->
+<div class="tip" id="tipFinish" style="height: 220px">
+	<div class="tiptop">
+		<span>提示信息</span>
+	</div>
+
+	<div class="tipinfo">
+		<div class="tipright">
+			<p>请确认工作是否已经完成？</p>
+			<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+		</div>
+	</div>
+
+	<div class="tipbtn">
+		<input name="" type="button" class="sureSend" id="sureFinishPrst" value="确定" />&nbsp;
+		<input name="" type="button" class="cancelSend" id="cancelFinishPrst" value="取消" />
+	</div>
+</div>
+<!-- //完工模态框 -->

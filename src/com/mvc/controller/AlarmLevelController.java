@@ -77,9 +77,10 @@ public class AlarmLevelController {
 	 */
 	@RequestMapping(value = "/selectAllAlarmLevel.do")
 	public @ResponseBody String getAlarmLevelList(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
 		List<AlarmLevel> result = alarmLevelService.findAlarmLevelList();
-		System.out.println(JSON.toJSONString(result));
-		return JSON.toJSONString(result);
+		jsonObject.put("list", result);
+		return jsonObject.toString();
 	}
 
 	/**

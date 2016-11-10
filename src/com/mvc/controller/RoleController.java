@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.base.enums.IsDelete;
 import com.mvc.entity.Role;
 import com.mvc.service.RoleService;
 import com.utils.Pager;
@@ -97,9 +98,8 @@ public class RoleController {
 	public @ResponseBody String addRole(HttpServletRequest request, HttpSession session) {
 		Role role = new Role();
 		role.setRole_name(request.getParameter("role_name"));
-		role.setRole_state(0);
+		role.setRole_state(IsDelete.NO.value);
 		role.setRole_permission(request.getParameter("role_permission"));
-		System.out.println("role_permission:"+request.getParameter("role_permission"));
 		boolean result;
 		if (request.getParameter("role_id") != null) {
 			role.setRole_id(Integer.valueOf(request.getParameter("role_id")));

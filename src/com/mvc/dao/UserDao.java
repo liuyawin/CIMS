@@ -18,7 +18,7 @@ public interface UserDao {
 	// 根据页数筛选全部用户列表
 	List<User> findUserAllByPage(String searchKey, Integer offset, Integer end);
 
-	// 查询部门总条数
+	// 查询用户总条数
 	Integer countTotal(String searchKey);
 
 }

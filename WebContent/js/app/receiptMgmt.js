@@ -209,6 +209,7 @@ receiptapp
 							}
 							// lwt:开收据
 							receipt.addReceipt = function() {
+								var FIRM=receipt.cont.cont_client;
 								$(".overlayer").fadeIn(200);
 								$("#tipAddReceipt").fadeIn(200);
 								// 输入时间的input默认值设置为当前时间
@@ -217,8 +218,8 @@ receiptapp
 										+ (date.getMonth() + 1) + "-"
 										+ (date.getDate());
 								receipt.receipt = {
-									rece_atime : timeNow
-
+									rece_atime : timeNow,
+									rece_firm:FIRM
 								};
 
 							};

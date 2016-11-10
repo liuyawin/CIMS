@@ -69,7 +69,7 @@ public class UserDaoImpl implements UserDao {
 		return list;
 	}
 
-	// // 查询部门总条数
+	// // 查询用户总条数
 	@SuppressWarnings("unchecked")
 	public Integer countTotal(String searchKey) {
 		EntityManager em = emf.createEntityManager();

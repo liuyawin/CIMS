@@ -326,6 +326,7 @@ public class Contract implements Serializable {
 		this.cont_avetaxpayer = cont_avetaxpayer;
 	}
 
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getCont_proalanum() {
 		return cont_proalanum;
 	}
@@ -334,6 +335,7 @@ public class Contract implements Serializable {
 		this.cont_proalanum = cont_proalanum;
 	}
 
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getCont_payalanum() {
 		return cont_payalanum;
 	}
@@ -386,7 +388,7 @@ public class Contract implements Serializable {
 		this.invo_totalmoney = invo_totalmoney;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getRece_total() {
 		return rece_total;
 	}
@@ -451,6 +453,7 @@ public class Contract implements Serializable {
 		this.cont_ishistory = cont_ishistory;
 	}
 
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getRemo_count() {
 		return remo_count;
 	}

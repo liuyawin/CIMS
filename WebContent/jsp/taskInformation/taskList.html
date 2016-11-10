@@ -10,8 +10,9 @@
 	<div class="tools">
 		<form class="toolbar">
 			<!-- <input name="" type="text" class="dfinput" id="tContent"
-				placeholder="内容关键字" /> --><select class="dfselect" ng-model="tState"
-				style="width: 167px" id="tState">
+				placeholder="内容关键字" /> -->
+			<select class="dfselect" ng-model="tState" style="width: 167px"
+				id="tState">
 				<option value="-1">全部</option>
 				<option value="0">新任务</option>
 				<option value="1">处理中</option>
@@ -130,7 +131,7 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form  ng-submit="addOneTask()">
+		<form ng-submit="addOneTask()">
 			<ul class="forminfo">
 				<li><label>任务类型</label> <label value="0">普通任务</label></li>
 				<li><label>接收人</label><select name="tReceiver" class="dfselect"
@@ -149,8 +150,9 @@
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span></li>
 			</ul>
 			<div class="tipbtn">
-				<input name="" type="submit" class="sure" id="sureAdd" value="派发" />&nbsp; <input name="" type="button"
-					class="cancel" id="cancelAdd" value="取消" />
+				<input name="" type="submit" class="sure" id="sureAdd" value="派发" />&nbsp;
+				<input name="" type="button" class="cancel" id="cancelAdd"
+					value="取消" />
 			</div>
 		</form>
 	</div>
@@ -234,6 +236,25 @@
 	</div>
 </div>
 <!-- 文书任务模态框完 -->
+<!-- //完成任务模态框 -->
+<div class="tip" id="tipFinish" style="height: 220px">
+	<div class="tiptop">
+		<span>提示信息</span>
+	</div>
+
+	<div class="tipinfo">
+		<div class="tipright">
+			<p>请确认工作是否已经完成？</p>
+			<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+		</div>
+	</div>
+
+	<div class="tipbtn">
+		<input name="" type="button" class="sure" id="sureFinishTask" value="确定" />&nbsp;
+		<input name="" type="button" class="cancel" id="cancelFinishTask" value="取消" />
+	</div>
+</div>
+<!-- //删除任务模态框 -->
 
 <script type="text/javascript">
 	$('.tablelist tbody tr:odd').addClass('odd');
