@@ -39,7 +39,7 @@ public class UserDaoImpl implements UserDao {
 			String selectSql = " update user set user_isdelete =:user_isdelete where user_id =:user_id ";
 			Query query = em.createNativeQuery(selectSql);
 			query.setParameter("user_id", id);
-			query.setParameter("user_isdelete",IsDelete.YES.value );
+			query.setParameter("user_isdelete", IsDelete.YES.value);
 			query.executeUpdate();
 			em.flush();
 			em.getTransaction().commit();
@@ -53,9 +53,13 @@ public class UserDaoImpl implements UserDao {
 	// 根据页数筛选全部用户列表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> findUserAllByPage(Integer offset, Integer end) {
+	public List<User> findUserAllByPage(String searchKey, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		String selectSql = "select * from User where user_isdelete=0";
+		// 判断查找关键字是否为空
+		if (null != searchKey) {
+			selectSql += " and ( user_name like '%" + searchKey + "%' or user_num like '%" + searchKey + "%')";
+		}
 		selectSql += " order by user_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, User.class);
 		query.setParameter("offset", offset);
@@ -63,6 +67,20 @@ public class UserDaoImpl implements UserDao {
 		List<User> list = query.getResultList();
 		em.close();
 		return list;
+	}
+
+	// // 查询部门总条数
+	@SuppressWarnings("unchecked")
+	public Integer countTotal(String searchKey) {
+		EntityManager em = emf.createEntityManager();
+		String countSql = " select count(user_id) from User u where user_isdelete=0 ";
+		if (null != searchKey) {
+			countSql += "   and (user_name like '%" + searchKey + "%' or user_num like '%" + searchKey + "%')";
+		}
+		Query query = em.createNativeQuery(countSql);
+		List<Object> totalRow = query.getResultList();
+		em.close();
+		return Integer.parseInt(totalRow.get(0).toString());
 	}
 
 }
