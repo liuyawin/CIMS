@@ -36,6 +36,6 @@ public interface UserService {
 	// 根据ID查询用户信息
 	User findById(Integer user_id);
 
-	// 根据部门名称筛选部门列表
+	// 根据部门名称筛选用户列表
 	List<User> findUserByDeptName(Integer deptName);
 }
