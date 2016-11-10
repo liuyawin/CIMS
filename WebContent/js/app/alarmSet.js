@@ -369,6 +369,7 @@ alarmApp.controller('AlarmController', [
 				if ($location.path().indexOf('/alarmSet') == 0) {
 
 					selectAllAlarmLevel();
+					
 
 				}
 			}

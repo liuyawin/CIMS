@@ -19,19 +19,20 @@
 			</select> <input class="btn" type="submit" value="查询"
 				ng-click="selectInvoicesByState()" />
 		</div>
-		<div id="invoPrompt" invo-is-show>
-			<label class="text_style">合同总金额 {{cont.cont_money |
-				invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
-				| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
-				次发票！</label>
-		</div>
-	</div>
-	<ul class="toolbar1" has-permission='bInvoAdd'>
-		<li class="click"><a
-			href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img
-					src="../images/t01.png" /></span>开发票</a></li>
-	</ul>
 
+		<ul class="toolbar1" has-permission='bInvoAdd'>
+			<li class="click"><a
+				href="/CIMS/contract/toBillMngContractPage.do#/contractList"><span><img
+						src="../images/t01.png" /></span>开发票</a></li>
+		</ul>
+	</div>
+
+	<div id="invoPrompt" invo-is-show>
+		<label class="text_style">合同总金额 {{cont.cont_money |
+			invoFloat}} 万元！</label><label class="text_style">已开发票金额 {{totalMoney
+			| invoFloat}} 万元！</label><label class="text_style">共开了 {{totalRow}}
+			次发票！</label>
+	</div>
 	<table class="tablelist">
 		<thead>
 			<tr>
@@ -62,13 +63,13 @@
 				<td class="width5">{{invo.receiver.user_name}}</td>
 				<td class="width10">{{invo.invo_time.time | dateType}}</td>
 				<td class="width15"><a ng-click="selectInvoiceById()"
-					class="tablelink underline">查看</a>
-				<!-- <a ng-click="invoiceInfo()"
+					class="tablelink underline">查看</a> <!-- <a ng-click="invoiceInfo()"
 					class="tablelink underline" has-permission='tInvoAudit'>审核</a> -->
 					<a ng-click="updateInvoiceState()" class="tablelink underline"
 					has-permission='tInvoFinish'>完成</a><a ng-click="delInvo()"
-					class="tablelink underline" has-permission='bInvoAdd'>删除</a><a ng-click="editInvo()"
-					class="tablelink underline" has-permission='bInvoAdd'>修改</a></td>
+					class="tablelink underline" has-permission='bInvoAdd'>删除</a><a
+					ng-click="editInvo()" class="tablelink underline"
+					has-permission='bInvoAdd'>修改</a></td>
 			</tr>
 		</tbody>
 	</table>
