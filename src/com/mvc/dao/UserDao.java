@@ -13,7 +13,7 @@ import com.mvc.entity.User;
 public interface UserDao {
 
 	// 根据用户id修改状态
-	public boolean updateState(Integer id);
+	boolean updateState(Integer id);
 
 	// 根据页数筛选全部用户列表
 	List<User> findUserAllByPage(String searchKey, Integer offset, Integer end);

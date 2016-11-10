@@ -28,6 +28,7 @@ public interface UserService {
 	Integer countTotal(String searchKey);
 
 	// 根据页数筛选全部用户列表
+
 	List<User> findUserAllByPage(String searchKey, Integer offset, Integer end);
 
 	// 获取用户列表，无翻页功能
@@ -36,6 +37,6 @@ public interface UserService {
 	// 根据ID查询用户信息
 	User findById(Integer user_id);
 
-	// 根据部门名称筛选部门列表
+	// 根据部门名称筛选用户列表
 	List<User> findUserByDeptName(Integer deptName);
 }

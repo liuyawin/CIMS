@@ -70,7 +70,6 @@ public class TaskController {
 		Integer taskState = Integer.valueOf(request.getParameter("taskState"));
 		Integer sendOrReceive = Integer.valueOf(request.getParameter("sendOrReceive"));
 		Integer totalRow = taskService.countByParam(user.getUser_id(), taskState, null, sendOrReceive);// 0表示发送，1表示接收
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
@@ -78,7 +77,6 @@ public class TaskController {
 				pager.getLimit(), sendOrReceive);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("totalPage返回列表:" + pager.getTotalPage());
 		return jsonObject.toString();
 	}
 
@@ -97,7 +95,6 @@ public class TaskController {
 		Integer sendOrReceive = Integer.valueOf(request.getParameter("sendOrReceive"));
 		String searchKey = request.getParameter("context");
 		Integer totalRow = taskService.countByParam(user.getUser_id(), taskState, searchKey, sendOrReceive);
-		System.out.println("总数" + totalRow);
 		Pager pager = new Pager();
 		pager.setPage(Integer.valueOf(request.getParameter("page")));
 		pager.setTotalRow(totalRow);
@@ -105,7 +102,6 @@ public class TaskController {
 				pager.getLimit(), sendOrReceive);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -124,7 +120,6 @@ public class TaskController {
 		Integer taskType = Integer.valueOf(request.getParameter("taskType"));
 		List<Task> list = taskService.findByContIdAndType(user.getUser_id(), contId, taskType);
 		jsonObject.put("list", list);
-		System.out.println("返回列表:" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
