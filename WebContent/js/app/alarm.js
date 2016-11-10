@@ -130,7 +130,7 @@ app.controller('AlarmController', [
 			var alarmContent = "";
 			// zq查看合同ID，并记入sessione
 			alarm.getContId = function(contId) {
-				sessionStorage.setItem('contId', contId);
+				sessionStorage.setItem('conId', contId);
 			};
 			// 获取报警ID
 			alarm.getAlarmId = function(alarId) {

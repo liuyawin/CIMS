@@ -77,7 +77,7 @@
 		<span>添加发票</span><a></a>
 	</div>
 	<div class="formbody">
-		<form ng-submit="addInvoiceTask()">
+		<form ng-submit="addNewInvoiceTask()">
 			<div class="textWarn">
 				<label class="text_style">合同总金额 {{cont.cont_money |
 					receFloat}} 万元！&nbsp;&nbsp;已开发票 {{invoTotalMoney | receFloat}} 万元！</label>
@@ -91,15 +91,15 @@
 					class="dfinput" ng-model="invoice.invo_firm" required></li>
 				<li id="selectReceiver"><label>执行人</label><select
 					name="tReceiver" class="dfselect"
-					ng-model="invoice.receiver.user_id">
-						<option ng-repeat="user in users" value={{user.user_id}}>
-							<span>{{user.user_name}}</span>
+					ng-model="invoice.receiver.user_id" ng-options="user.user_id as user.user_name for user in users" required>
+						<option value="">
+							请选择
 						</option>
 				</select></li>
 				<li id="selectAudit"><label>审核人</label><select name="tAudit"
-					class="dfselect" ng-model="invoice.audit.user_id">
-						<option ng-repeat="user in users" value={{user.user_id}}>
-							<span>{{user.user_name}}</span>
+					class="dfselect" ng-model="invoice.audit.user_id" ng-options="user.user_id as user.user_name for user in users" >
+						<option value="">
+							请选择
 						</option>
 				</select></li>
 				<li><label>开始时间</label><input type="text"
@@ -114,9 +114,9 @@
 						ng-model="invoice.invo_remark"></textarea></li>
 			</ul>
 			<div class="tipbtn">
-				<input name="" type="submit" class="sure" id="sureAdd" value="派发"
-					ng-click="addTask()" />&nbsp; <input name="" type="button"
-					class="cancel" id="cancelAdd" value="取消" />
+				<input name="" type="submit" class="sureSend" id="sureAdd" value="确认"
+					/>&nbsp; <input name="" type="button"
+					class="cancelSend" id="cancelAdd" value="取消" />
 			</div>
 		</form>
 	</div>
@@ -143,10 +143,10 @@
 					ng-model="receiveMoney.remo_time" class="dfinput dateFormat"
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span>
 				</li>
-				<li><label>审核人</label><select name="remoOperater"
-					class="dfselect" ng-model="receiveMoney.operater.user_id">
-						<option ng-repeat="user in users" value={{user.user_id}}>
-							<span>{{user.user_name}}</span>
+				<li><label>核对人</label><select name="remoOperater"
+					class="dfselect" ng-model="receiveMoney.operater.user_id" ng-options="user.user_id as user.user_name for user in users" required>
+						<option value="">
+							请选择
 						</option>
 				</select></li>
 				<li><label>备注</label> <textarea name="" cols="" rows=""

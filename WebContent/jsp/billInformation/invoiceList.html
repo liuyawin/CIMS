@@ -81,45 +81,33 @@
 
 <!-- 查看任务模态框 -->
 <div class="overlayer"></div>
-<div class="tip" id="tipCheck" style="height: 520px">
+<div class="tip" id="tipCheck" style="height: 450px">
 	<div class="tiptop text_right">
 		<span>发票详情</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
-	<div class="formbody">
-		<form>
+	<div class="invorkInfo-div">
+		<fieldset>
+			<legend>发票信息</legend>
 			<ul class="forminfo">
-				<li class="hidden"><input name="" type="text"
-					class="dfinput numberFormat" ng-model="invoice.invo_id" /></li>
-				<li><label>发票金额</label> <input name="" type="text"
-					class="dfinput numberFormat" ng-model="invoice.invo_money"
-					placeholder="格式：0.00" />万元&nbsp;<span class="error-span">格式错误</span></li>
-
-				<li><label>开发票时间</label><input name="" type="text"
-					class="dfinput" ng-model="invoice.invo_time" /></li>
-
-				<li><label>业主公司</label><input name="" type="text"
-					class="dfinput" ng-model="invoice.invo_firm" readonly /></li>
-				<li><label>发起者</label> <input name="" type="text"
-					class="dfinput" ng-model="invoice.creator.user_name" /></li>
-				<!-- <li><label>审核者</label><input type="text" class="dfinput"
-					readonly ng-model="invoice.audit.user_name"></li> -->
-				<li><label>所属合同</label><input type="text" class="dfinput"
-					readonly ng-model="invoice.contract.cont_name"></li>
-				<li><label>备注</label> <textarea name="" cols="" rows=""
-						class="textinput area_style" ng-model="invoice.invo_remark"></textarea></li>
+				<li><label>发票金额：</label>{{invoice.invo_money}}万元</li>
+				<li><label>应开票时间：</label>{{invoice.invo_etime.time |dateType}}</li>
+				<li><label>实开票时间：</label>{{invoice.invo_time.time | dateType}}</li>
+				<li><label>业主公司：</label>{{invoice.invo_firm}}</li>
+				<li><label>发起者：</label>{{invoice.creator.user_name}}</li>
+				<li><label>所属合同：</label>{{invoice.contract.cont_name}}</li>
+				<li><div class="remark-div">备注：{{invoice.invo_remark}}</div></li>
 			</ul>
-
-		</form>
+		</fieldset>
 	</div>
 </div>
-<!-- 查看任务模态框完 -->
+<!-- 查看发票模态框完 -->
 
 <!-- 审核发票任务模态框 -->
 <div class="overlayer"></div>
 <div class="tip" id="sendInvoTask" style="height: 540px">
 	<div class="tiptop">
-		<span>任务详情</span><a></a>
+		<span>审核发票</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="invorkInfo-div">
@@ -174,6 +162,8 @@
 	<div class="formbody">
 		<form ng-submit="editInvoiceInfo()">
 			<ul class="forminfo">
+				<li class="hidden"><input name="" type="text"
+					class="dfinput numberFormat" ng-model="invoice.invo_id" /></li>
 				<li><label>发票金额</label><input type="text" name="invoMoney"
 					id="invoMoney" class="dfinput invoMoney numberFormat"
 					ng-model="invoice.invo_money" required placeholder="格式：0.00">万元&nbsp;&nbsp;<span
@@ -183,7 +173,8 @@
 				<li id="selectReceiver"><label>执行人</label><select
 					name="tReceiver" class="dfselect"
 					ng-model="invoice.receiver.user_id"
-					ng-options="user.user_id as user.user_name for user in users">
+					ng-options="user.user_id as user.user_name for user in users"
+					required>
 						<!-- <option ng-repeat="user in users" value={{user.user_id}}>
 							<span>{{user.user_name}}</span>
 						</option> -->

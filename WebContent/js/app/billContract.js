@@ -362,24 +362,19 @@ app
 								};
 
 							};
-							$("#sureAdd").click(
-									function() {
-										var taskFormData = JSON
-												.stringify(contract.invoice);
-										services.addInvoiceTask(
-												{
-													invoice : taskFormData,
-													contId : sessionStorage
-															.getItem("conId")
-												}).success(function(data) {
-
-											$("#tipAdd").fadeOut(100);
-											$(".overlayer").fadeOut(200);
-											contract.invoice = "";
-											alert("添加成功！");
-
-										});
-									});
+							contract.addNewInvoiceTask= function() {
+								var taskFormData = JSON
+										.stringify(contract.invoice);
+								services.addInvoiceTask({
+									invoice : taskFormData,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
+									$("#tipAdd").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									contract.invoice = "";
+									alert("添加成功！");
+								});
+							}
 
 							$("#cancelAdd").click(function() {
 								$("#tipAdd").fadeOut(100);

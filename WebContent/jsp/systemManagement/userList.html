@@ -12,9 +12,9 @@
 	<div class="tools">
 
 		<form class="toolbar">
-			<input name="" type="text" class="dfinput" id="cName" ng-model="cName" placeholder="账号或姓名关键字"/> <input
-				class="btn click" type="submit" value="查询"
-				ng-click="selectUserByName()">
+			<input name="" type="text" class="dfinput" id="cName"
+				ng-model="cName" placeholder="账号或姓名关键字" /> <input class="btn click"
+				type="submit" value="查询" ng-click="selectUserByName()">
 		</form>
 
 		<ul class="toolbar1" has-permission='uUserAdd'>
@@ -98,16 +98,17 @@
 						name="dept" type="radio" value="1" ng-model="user.user_dept" />设计部</cite></li>
 				<li><label>用户角色<b>*</b></label>
 					<div class="vocation">
-						<select class="select1 dfinput" ng-model="addinguser.role.role_id" ng-options="role.role_id as role.role_name for role in roles">
-						<!-- 	<option ng-repeat="role in roles2" value={{role.role_id}}>{{role.role_name}}</option> -->
-						<option value="">请选择</option>
-						</select>
+						<select class="select1 dfinput" name="userRole" ng-model="addinguser.role.role_id"
+							ng-options="role.role_id as role.role_name for role in roles">
+							<!-- 	<option ng-repeat="role in roles2" value={{role.role_id}}>{{role.role_name}}</option> -->
+							<option value="">请选择</option>
+						</select> <span id="userRoleError" class="error-span">请选择职位</span>
 					</div></li>
 			</ul>
 			<!-- 按钮 -->
 			<div class="tipbtn">
-				<input type="button" class="sure sure1" value="确定" />&nbsp;
-				<input name="" type="button" class="cancel" value="取消" />
+				<input type="button" class="sure sure1" value="确定" />&nbsp; <input
+					name="" type="button" class="cancel" value="取消" />
 			</div>
 		</form>
 
@@ -132,10 +133,11 @@
 						name="dept" type="radio" value="1" ng-model="editUser.user_dept" />设计部</cite></li>
 				<li><label>角色<b>*</b></label>
 					<div class="vocation">
-						<select class="select1 dfinput" ng-model="editUser.role.role_id" ng-options="role.role_id as role.role_name for role in roles2">
-						<!-- 	<option ng-repeat="role in roles2" value={{role.role_id}}>{{role.role_name}}</option> -->
-						<option value="">请选择</option>
-						</select>
+						<select class="select1 dfinput" name="role" ng-model="editUser.role.role_id"
+							ng-options="role.role_id as role.role_name for role in roles2">
+							<!-- 	<option ng-repeat="role in roles2" value={{role.role_id}}>{{role.role_name}}</option> -->
+							<option value="">请选择</option>
+						</select> <span id="userRoleError" class="error-span">请选择职位</span>
 					</div></li>
 			</ul>
 			<!-- 按钮 -->
@@ -151,12 +153,7 @@
 <script>
 	$(function() {
 		//验证账号是否存在
-		var $userNumInput = $('#addUser-form input[name=userNum]'),
-			$userPwdInput = $('#addUser-form input[name=userPwd]'),
-			$userNameInput = $('#addUser-form input[name=userName]'),
-			$userTelInput = $('#addUser-form input[name=userTel]'),
-			$userEmailInput = $('#addUser-form input[name=userEmail]'),
-			$userNumInput = $('#addUser-form input[name=userNum]');
+		var $userNumInput = $('#addUser-form input[name=userNum]'), $userPwdInput = $('#addUser-form input[name=userPwd]'), $userNameInput = $('#addUser-form input[name=userName]'), $userTelInput = $('#addUser-form input[name=userTel]'), $userEmailInput = $('#addUser-form input[name=userEmail]'), $userNumInput = $('#addUser-form input[name=userNum]'), $userRoleSelect = $('#addUser-form select[name=userRole]');
 		$userNumInput.blur(function() {
 			console.log("账号改变了")
 			$.get("/CIMS/user/isUserNumExist.do", {
@@ -172,7 +169,7 @@
 			$('#userExistError').css('display', 'none');
 			$('#userNumError').css('display', 'none');
 		})
-		
+
 		$userNumInput.click(function() {
 			$('#userExistError').css('display', 'none');
 			$('#userNumError').css('display', 'none');
@@ -189,5 +186,9 @@
 		$userEmailInput.click(function() {
 			$('#userEmailError').css('display', 'none');
 		})
+		$userRoleSelect.click(function() {
+			$('#userRoleError').css('display', 'none');
+		})
+		
 	})
 </script>

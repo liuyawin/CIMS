@@ -667,7 +667,28 @@ app.filter('taskType', function() {
 		else if (input == "1")
 			type = "文书任务";
 		else if (input == "2")
+			type = "补录合同任务";
+		else if (input == "3")
 			type = "其他";
+		return type;
+	}
+});
+//zq合同状态过滤器
+app.filter('taskState', function() {
+	return function(input) {
+		var type = "";
+		/*
+		 * switch(input){ case "0":state="在建"; break; case "1":state="竣工";
+		 * break; case "2":state="停建"; break; }
+		 */
+		if (input == "0")
+			type = "待接收";
+		else if (input == "1")
+			type = "执行中";
+		else if (input == "2")
+			type = "已完成";
+		else if (!input)
+			type = "";
 		return type;
 	}
 });

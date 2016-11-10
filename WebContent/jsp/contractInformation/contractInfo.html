@@ -199,9 +199,9 @@
 		<tr>
 			<td class="width10 text-center">工期阶段</td>
 			<td class="width20 text-center">内 容</td>
-			<td class="width10 text-center">应完工时间</td>
 			<td class="width10 text-center">工期进度</td>
 			<td class="width10 text-center">项目经理</td>
+			<td class="width10 text-center">应完工时间</td>
 			<td class="width10 text-center">实完工时间</td>
 			<td class="width10 text-center" has-permission='cPsEdit'>操作</td>
 			<td class="width10 text-center" has-permission='cPsFinish'>操作</td>
@@ -209,14 +209,15 @@
 		<tr ng-repeat="stage in prst">
 			<td class="width10 text-center">阶段{{$index+1}}</td>
 			<td>{{stage.prst_content}}</td>
-			<td>{{stage.prst_etime.time | dateType}}</td>
 			<td>{{stage.prst_state |prstType}}</td>
 			<td>{{stage.manager.user_name}}</td>
+			<td>{{stage.prst_etime.time | dateType}}</td>
 			<td>{{stage.prst_atime.time | dateType}}</td>
 			<td has-permission='cPsEdit'><a class="tablelink"
 				ng-click="modifyPrst()">修改</a><a class="tablelink"
 				ng-click="delPrst()">删除</a></td>
-			<td has-permission='cPsFinish'><a class="tablelink" ng-click="finishPrst()">完工</a></td>
+			<td has-permission='cPsFinish'><a class="tablelink"
+				ng-click="finishPrst()">完工</a></td>
 		</tr>
 
 	</table>
@@ -237,28 +238,27 @@
 		<tr>
 			<td class="width10 text-center">收款节点</td>
 			<td class="width20 text-center">内容</td>
-			<td class="width10 text-center">实收金额（万元）</td>
 			<td class="width10 text-center">应收金额（万元）</td>
+			<td class="width10 text-center">实收金额（万元）</td>
+			<td class="width10 text-center">收款情况</td>
 			<td class="width10 text-center">应收款时间</td>
 			<td class="width20 text-center">工期阶段内容</td>
 			<!-- <td colspan='1'>实收款金额</td>
 				<td colspan='1'>实收款时间</td> -->
-			<td class="width10 text-center">收款情况</td>
+
 			<td class="width10 text-center">操作</td>
 		</tr>
 		<tr ng-repeat="node in reno">
 			<td class="width10 text-center">节点{{$index+1}}</td>
 			<td>{{node.reno_content}}</td>
-			<td>{{node.reno_amoney | receFloat}}</td>
 			<td>{{node.reno_money | receFloat}}</td>
+			<td>{{node.reno_amoney | receFloat}}</td>
+			<td>{{node.reno_state |renoType}}</td>
 			<td>{{node.reno_time.time | dateType}}</td>
 			<td>{{node.projectStage.prst_content}}</td>
-			<td>{{node.reno_state |renoType}}</td>
 			<td><a ng-click="modifyReno()" class="tablelink"
 				has-permission='cRnEdit'>修改</a><a ng-click="delReno()"
 				class="tablelink" has-permission='cRnDel'>删除</a></td>
-
-
 		</tr>
 
 	</table>
@@ -275,7 +275,7 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form  ng-submit="addOneProStage()">
+		<form ng-submit="addOneProStage()">
 			<ul class="forminfo">
 				<li><label>内容</label><input type="text" class="dfinput"
 					id="stageContent" name="stageContent"
@@ -305,7 +305,7 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form  ng-submit="modifyOnePrst()">
+		<form ng-submit="modifyOnePrst()">
 			<ul class="forminfo">
 				<li><label>内容</label><input type="text" class="dfinput"
 					id="stageContent" name="stageContent"
@@ -337,15 +337,16 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form  ng-submit="addOneReNode()">
+		<form ng-submit="addOneReNode()">
 			<ul class="forminfo">
 				<li><label>工期阶段</label> <select id="nodePrstAdd"
 					class="dfselect middle_input" ng-change="prstChange(0)"
 					ng-model="reNode.projectStage.prst_id" value="stage.prst_id"
-					ng-options="stage.prst_id as stage.prst_content for stage in prst">
+					ng-options="stage.prst_id as stage.prst_content for stage in prst"
+					required>
 						<!-- <option
 							value={{stage.prst_id}} ng-repeat="stage in prst">{{stage.prst_id}}:{{stage.prst_content}}</option> -->
-						<option value="">请选择工期阶段</option>
+						<option value="">请选择</option>
 				</select></li>
 				<li><label>内容</label><input id="nodeContentAdd" type="text"
 					class="dfinput middle_input" ng-model="reNode.reno_content"
@@ -379,15 +380,16 @@
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
-		<form  ng-submit="modifyOneReno()">
+		<form ng-submit="modifyOneReno()">
 			<ul class="forminfo">
 				<li><label>工期阶段</label> <select id="nodePrstModify"
 					class="dfselect middle_input" ng-change="prstChange(1)"
 					ng-model="reNode.projectStage.prst_id" value="stage.prst_id"
-					ng-options="stage.prst_id as stage.prst_content for stage in prst">
+					ng-options="stage.prst_id as stage.prst_content for stage in prst"
+					required>
 						<!-- <option
 							value={{stage.prst_id}} ng-repeat="stage in prst">{{stage.prst_id}}:{{stage.prst_content}}</option> -->
-						<option value="">请选择工期阶段</option>
+						<option value="">请选择</option>
 				</select></li>
 				<li><label>内容</label><input id="nodeContentModify" type="text"
 					class="dfinput middle_input" ng-model="reNode.reno_content"
@@ -400,7 +402,8 @@
 					placeholder="格式：0.00" required />万元&nbsp;<span class="error-span">格式错误</span></li>
 				<li><label>提醒天数设置</label><input type="text"
 					class="dfinput width35" placeholder="格式：7"
-					ng-model="reNode.reno_wday" required  ng-pattern="/^(0|\+?[1-9][0-9]*)$/"/>天</li>
+					ng-model="reNode.reno_wday" required
+					ng-pattern="/^(0|\+?[1-9][0-9]*)$/" />天</li>
 
 			</ul>
 			<div class="tipbtn">
@@ -446,8 +449,9 @@
 	</div>
 
 	<div class="tipbtn">
-		<input name="" type="button" class="sureSend" id="sureFinishPrst" value="确定" />&nbsp;
-		<input name="" type="button" class="cancelSend" id="cancelFinishPrst" value="取消" />
+		<input name="" type="button" class="sureSend" id="sureFinishPrst"
+			value="确定" />&nbsp; <input name="" type="button" class="cancelSend"
+			id="cancelFinishPrst" value="取消" />
 	</div>
 </div>
 <!-- //完工模态框 -->
