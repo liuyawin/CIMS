@@ -120,9 +120,9 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		String selectSql = "";
 		if (remoState != ReceiveMoneyStatus.all.value) {
-			selectSql += "select * from receive_money where  (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state and remo_isdelete=:remo_isdelete";
+			selectSql += "select * from receive_money where (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state and remo_isdelete=:remo_isdelete";
 		} else {
-			selectSql += "select * from receive_money where  operater_id =:operater_id or creater_id=:creater_id  and remo_isdelete=:remo_isdelete";
+			selectSql += "select * from receive_money where (operater_id =:operater_id or creater_id=:creater_id) and remo_isdelete=:remo_isdelete";
 		}
 		selectSql += " order by remo_id desc limit :offset, :end";
 		Query query = em.createNativeQuery(selectSql, ReceiveMoney.class);
@@ -146,9 +146,9 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		EntityManager em = emf.createEntityManager();
 		String countSql = "";
 		if (remoState != ReceiveMoneyStatus.all.value) {
-			countSql += "select count(*) from receive_money where  (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state and remo_isdelete=:remo_isdelete";
+			countSql += "select count(*) from receive_money where (operater_id =:operater_id or creater_id=:creater_id) and remo_state=:remo_state and remo_isdelete=:remo_isdelete";
 		} else {
-			countSql += "select count(*)  from receive_money where operater_id =:operater_id or creater_id=:creater_id and remo_isdelete=:remo_isdelete";
+			countSql += "select count(*) from receive_money where (operater_id =:operater_id or creater_id=:creater_id) and remo_isdelete=:remo_isdelete";
 		}
 		Query query = em.createNativeQuery(countSql);
 		query.setParameter("operater_id", userId);

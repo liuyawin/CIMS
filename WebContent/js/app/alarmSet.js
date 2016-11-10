@@ -212,7 +212,7 @@ alarmApp.controller('AlarmController', [
 			// bao根据状态查找报警列表
 			function selectAllAlarmLevel() {
 				services.selectAllAlarmLevel({}).success(function(data) {
-					alarm.alarmLevels = data;
+					alarm.alarmLevels = data.list;
 				});
 			}
 

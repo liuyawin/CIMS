@@ -2,6 +2,7 @@ package com.mvc.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +26,7 @@ public class AlarmLevel implements Serializable {
 	private Integer alle_rank;// 报警等级
 	private Role role;// 角色，0-文书，1-主任，2-副院长，3-院长
 	private Integer alle_days;// 报警间隔
+	private Integer alle_isdelete;// 0：未删除，1：已删除
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -60,5 +62,14 @@ public class AlarmLevel implements Serializable {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	@Column(columnDefinition = "INT not null default 0")
+	public Integer getAlle_isdelete() {
+		return alle_isdelete;
+	}
+
+	public void setAlle_isdelete(Integer alle_isdelete) {
+		this.alle_isdelete = alle_isdelete;
 	}
 }

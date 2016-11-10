@@ -31,10 +31,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("select u from User u where user_num = :user_num and user_isdelete=0")
 	public User findByUserNum(@Param("user_num") String user_num);
 
-	// 查询用户总条数
-	@Query("select count(user_id) from User u where user_isdelete=0")
-	public Long countTotal();
-
 	// 根据id删除
 	@Query("update User set user_isdelete=1 where user_id = :user_id")
 	public boolean deleteByUserId(@Param("user_id") Integer user_id);
