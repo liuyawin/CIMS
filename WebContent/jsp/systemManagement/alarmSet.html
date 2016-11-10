@@ -65,7 +65,7 @@
 	</div>
 	<!-- 任务具体内容 -->
 	<div class="formbody">
-		<form id="addAlarm-form" ng-submit="addAlarm()" class="hidden">
+		<form id="addAlarm-form" ng-submit="addAlarmLevel()" class="hidden">
 			<ul class="forminfo">
 				<li><label>重要等级</label> <select class="dfselect"
 					ng-model="alarmLevel.alle_rank">
@@ -73,21 +73,21 @@
 						<option value=0>重要</option>
 				</select></li>
 				<li><label>角色</label> <select class="dfselect"
-					ng-model="alarmLevel.role_id">
-						<option ng-repeat="role in roles" value={{role.role_id}}>{{role.role_name}}</option>
+					ng-model="alarmLevel.role_id" ng-options="role.role_id as role.role_name for role in roles">
+						<option value="">请选择</option>
 				</select></li>
-				<li><label>提醒天数</label> <input type="text" class="dfinput"
+				<li><label>提醒天数</label> <input type="text" required class="dfinput"
 					ng-model="alarmLevel.alle_days" /></li>
 			</ul>
 			<!-- 按钮 -->
 			<div class="tipbtn">
-				<input name="" type="button" class="sure sure1" value="确定"
-					ng-click="" />&nbsp; <input name="" type="button" class="cancel"
+				<input name="" type="submit" class="sure sure1" value="确定"
+					 />&nbsp; <input name="" type="button" class="cancel"
 					value="取消" />
 			</div>
 		</form>
 
-		<form id="editAlarm-form" ng-submit="addTask2()" class="hidden">
+		<form id="editAlarm-form" ng-submit="editAlarmLevel()" class="hidden">
 
 			<ul class="forminfo">
 				<li><label>重要等级</label> <select class="dfselect"
@@ -96,16 +96,16 @@
 						<option value=0>重要</option>
 				</select></li>
 				<li><label>角色</label> <select class="dfselect"
-					ng-model="editLevel.role.role_id">
-						<option ng-repeat="role in roles2" value={{role.role_id}}>{{role.role_name}}</option>
+					ng-model="editLevel.role.role_id" ng-options="role.role_id as role.role_name for role in roles2">
+						<option  value="">请选择</option>
 				</select></li>
 				<li><label>提醒天数</label> <input type="text" class="dfinput"
-					ng-model="editLevel.alle_days" /></li>
+					ng-model="editLevel.alle_days" required/></li>
 			</ul>
 			<!-- 按钮 -->
 			<div class="tipbtn">
-				<input name="" type="button" class="sure sure2" value="确定"
-					ng-click="" />&nbsp; <input name="" type="button" class="cancel"
+				<input name="" type="submit" class="sure sure2" value="确定"
+					/>&nbsp; <input name="" type="button" class="cancel"
 					value="取消" />
 			</div>
 		</form>

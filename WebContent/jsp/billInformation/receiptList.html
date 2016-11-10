@@ -101,30 +101,26 @@
 <!-- 开收据模态框完 -->
 <!--查看收据模态框 -->
 <div class="overlayer"></div>
-<div class="tip" id="tipCheckReceipt" style="height: 450px">
+<div class="tip" id="tipCheckReceipt" style="height: 370px">
 	<div class="tiptop">
 		<span>收据详情</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
-	<div class="formbody">
-		<form>
+<div class="invorkInfo-div">
+		<fieldset>
+			<legend>收据信息</legend>
 			<ul class="forminfo">
-				<li class="hidden"><input name="" type="text" class="dfinput"
-					readonly value="{{receipt.rece_id}}" />万元</li>
-				<li><label>收据金额</label> <input name="" type="text"
-					class="dfinput" readonly value="{{receipt.rece_money |receFloat}}" />万元</li>
-				<li><label>开收据时间</label><input name="" type="text"
-					class="dfinput" value="{{receipt.rece_atime.time | dateType}}"
-					readonly /></li>
-				<li><label>交款公司</label><input name="" type="text"
-					class="dfinput" value="{{receipt.rece_firm}}" readonly /></li>
-				<li><label>所属合同</label><input type="text" class="dfinput"
-					readonly value="{{receipt.contract.cont_name}}"></li>
-				<li><label>备注</label> <textarea name="" cols="" rows=""
-						class="textinput area_style" readonly>{{receipt.rece_remark}}</textarea></li>
+				<li><label>收据金额：</label>{{receipt.rece_money |receFloat}}</li>
+				<li><label>开收据时间：</label>{{receipt.rece_atime.time | dateType}}</li>
+				<li><label>交款公司：</label>{{receipt.rece_firm}}</li>
+				<li><label>所属合同：</label>{{receipt.contract.cont_name}}</li>
+				<!-- <li><label>开始时间：</label></li>
+			<li><label>截止时间：</label></li> -->
+				<li><div class="remark-div">备注：{{receipt.rece_remark}}</div></li>
 			</ul>
-		</form>
+		</fieldset>
 	</div>
+	
 </div>
 <!-- 查看收据模态框完 -->
 <!--lwt: 修改收据模态框 -->
@@ -137,6 +133,8 @@
 	<div class="formbody">
 		<form ng-submit="editReceiptInfo()">
 			<ul class="forminfo">
+				<li class="hidden"><input name="" type="text" class="dfinput"
+					readonly value="{{receipt.rece_id}}" />万元</li>
 				<li><label>金额</label><input type="text"
 					ng-model="receipt.rece_money" class="dfinput numberFormat"
 					placeholder="格式：0.00" required />万元&nbsp;&nbsp;<span

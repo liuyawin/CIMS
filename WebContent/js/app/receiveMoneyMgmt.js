@@ -185,11 +185,9 @@ receiveMoneyApp
 								var remoId = this.remo.remo_id;
 								selectAllUsers();
 								selectReceiveMoneyById(remoId);
-								$("#sureRemoEdit").hide();
-								$("#cancelRemoEdit").hide();
-								$("#remoAmoney").show();
+							
 								$(".overlayer").fadeIn(200);
-								$("#tipRemo").fadeIn(200);
+								$("#tipCheckRemo").fadeIn(200);
 
 							}
 

@@ -15,175 +15,173 @@
 			src="../images/hideInfo.png" class="hand hideE showInfo"
 			id="contHide" ng-click="hideContInfo()"></span> <a class="update-btn"
 			href="/CIMS/file/download.do">下载附件</a>
-			<!-- <a class="update-btn"
+		<!-- <a class="update-btn"
 			href="#/contractUpdate" has-permission='cHeadEdit'>修改1</a><a
 			class="update-btn" href="#/contractModify" has-permission='cBodyEdit'>修改2</a> -->
 	</div>
 	<form ng-submit="repeatAddContract()" name="staff">
-	<table class="tbl tablelist" id="contInformation">
-		<tr>
-			<td colspan='2' class="width15 text-center">合同名称<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='6'>{{cont.cont_name}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center">合同类别<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.cont_type |conType}}</td>
-			<td colspan='2' class=" text-center">合同等级<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.cont_rank | conRank}}
-			<td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center">合同金额（万元）<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.cont_money}}</td>
-			<td colspan='2' class="width15 text-center">项目编码<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.cont_pnum}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center">合同编号</td>
-			<td colspan='2'>{{cont.cont_onum}}</td>
-			<td colspan='2' class="width15 text-center">甲方合同编号</td>
-			<td colspan='2'>{{cont.cont_cnum}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center">项目名称<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.cont_project}}</td>
-			<td colspan='2' class="width15 text-center">项目所在省市<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.province}}&nbsp;&nbsp;{{cont.city}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center">项目阶段<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='6'>{{cont.proStage | conProStage}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center">项目状态<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.cont_state |conState}}</td>
-			<td colspan='2' class="width15 text-center">合同签订时间<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.cont_stime | dateType}}</td>
+		<table class="tbl tablelist" id="contInformation">
+			<tr>
+				<td colspan='2' class="width15 text-center">合同名称<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='6'>{{cont.cont_name}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center">合同类别<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.cont_type |conType}}</td>
+				<td colspan='2' class=" text-center">合同等级<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.cont_rank | conRank}}
+				<td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center">合同金额（万元）<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.cont_money}}</td>
+				<td colspan='2' class="width15 text-center">项目编码<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.cont_pnum}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center">合同编号</td>
+				<td colspan='2'>{{cont.cont_onum}}</td>
+				<td colspan='2' class="width15 text-center">甲方合同编号</td>
+				<td colspan='2'>{{cont.cont_cnum}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center">项目名称<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.cont_project}}</td>
+				<td colspan='2' class="width15 text-center">项目所在省市<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.province}}&nbsp;&nbsp;{{cont.city}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center">项目阶段<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='6'>{{cont.proStage | conProStage}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center">项目状态<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.cont_state |conState}}</td>
+				<td colspan='2' class="width15 text-center">合同签订时间<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.cont_stime | dateType}}</td>
 
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center">项目设总<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.manager.user_name}}</td>
-			<td colspan='2' class="width15 text-center">是否有委托书<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.cont_hasproxy | conHasproxy}}</td>
-		<tr>
-			<td colspan='2' class="width15 text-center">项目副设总</td>
-			<td colspan='2'>{{cont.assistant_manager.user_name}}</td>
-			<td colspan='2' class="width15 text-center">是否立项<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='2'>{{cont.cont_initiation | conInitiation}}</td>
-		</tr>
-		<tr>
-			<td rowspan='16' colspan='1' class="text-center">业主信息</td>
-			<td colspan='2' class="width15 text-center">公司全称<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='6'>{{cont.cont_client}}</td>
-		</tr>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center">项目设总<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.manager.user_name}}</td>
+				<td colspan='2' class="width15 text-center">是否有委托书<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.cont_hasproxy | conHasproxy}}</td>
+			<tr>
+				<td colspan='2' class="width15 text-center">项目副设总</td>
+				<td colspan='2'>{{cont.assistant_manager.user_name}}</td>
+				<td colspan='2' class="width15 text-center">是否立项<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='2'>{{cont.cont_initiation | conInitiation}}</td>
+			</tr>
+			<tr>
+				<td rowspan='16' colspan='1' class="text-center">业主信息</td>
+				<td colspan='2' class="width15 text-center">公司全称<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='6'>{{cont.cont_client}}</td>
+			</tr>
 
-		<tr>
-			<td colspan='3' class="text-center">组织机构代码证号/统一社会信用代码</td>
-			<td colspan='4'>{{cont.cont_orgcodenum}}</td>
-		</tr>
+			<tr>
+				<td colspan='3' class="text-center">组织机构代码证号/统一社会信用代码</td>
+				<td colspan='4'>{{cont.cont_orgcodenum}}</td>
+			</tr>
 
-		<tr>
-			<td colspan='2' class="text-center">企业性质<label
-				class="left_length5 text_style">*</label></td>
-			<td colspan='4'>{{cont.company_type | conCompanyType}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">通讯地址</td>
-			<td colspan='6'>{{cont.cont_caddress}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">业主邮编</td>
-			<td colspan='1'>{{cont.cont_czipcode}}</td>
-			<td colspan='2' class="width15 text-center">业主传真</td>
-			<td colspan='2'>{{cont.cont_cfax}}</td>
-		</tr>
-		<tr>
-			<td colspan='3' class="width15 text-center ">联系人1</td>
+			<tr>
+				<td colspan='2' class="text-center">企业性质<label
+					class="left_length5 text_style">*</label></td>
+				<td colspan='4'>{{cont.company_type | conCompanyType}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">通讯地址</td>
+				<td colspan='6'>{{cont.cont_caddress}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">业主邮编</td>
+				<td colspan='1'>{{cont.cont_czipcode}}</td>
+				<td colspan='2' class="width15 text-center">业主传真</td>
+				<td colspan='2'>{{cont.cont_cfax}}</td>
+			</tr>
+			<tr>
+				<td colspan='3' class="width15 text-center ">联系人1</td>
 
-			<td colspan='4' class="width15 text-center">联系人2</td>
+				<td colspan='4' class="width15 text-center">联系人2</td>
 
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">姓名</td>
-			<td colspan='1'>{{cont.cont_cheader}}</td>
-			<td colspan='2' class="width15 text-center">姓名</td>
-			<td colspan='2'>{{cont.cont_cheader2}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">手机号</td>
-			<td colspan='1'>{{cont.cont_ctel}}</td>
-			<td colspan='2' class="width15 text-center">手机号</td>
-			<td colspan='2'>{{cont.cont_ctel2}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">固定电话</td>
-			<td colspan='1'>{{cont.landline_tel}}</td>
-			<td colspan='2' class="width15 text-center">固定电话</td>
-			<td colspan='2'>{{cont.landline_tel2}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">职务</td>
-			<td colspan='1'>{{cont.post}}</td>
-			<td colspan='2' class="width15 text-center">职务</td>
-			<td colspan='2'>{{cont.post2}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">所在部门</td>
-			<td colspan='1'>{{cont.cont_cdept}}</td>
-			<td colspan='2' class="width15 text-center">所在部门</td>
-			<td colspan='2'>{{cont.cont_cdept2}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">电子邮箱</td>
-			<td colspan='1'>{{cont.cont_cemail}}</td>
-			<td colspan='2' class="width15 text-center">电子邮箱</td>
-			<td colspan='2'>{{cont.cont_cemail2}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">公司注册地址</td>
-			<td colspan='6'>{{cont.cont_czipcode}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">姓名</td>
+				<td colspan='1'>{{cont.cont_cheader}}</td>
+				<td colspan='2' class="width15 text-center">姓名</td>
+				<td colspan='2'>{{cont.cont_cheader2}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">手机号</td>
+				<td colspan='1'>{{cont.cont_ctel}}</td>
+				<td colspan='2' class="width15 text-center">手机号</td>
+				<td colspan='2'>{{cont.cont_ctel2}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">固定电话</td>
+				<td colspan='1'>{{cont.landline_tel}}</td>
+				<td colspan='2' class="width15 text-center">固定电话</td>
+				<td colspan='2'>{{cont.landline_tel2}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">职务</td>
+				<td colspan='1'>{{cont.post}}</td>
+				<td colspan='2' class="width15 text-center">职务</td>
+				<td colspan='2'>{{cont.post2}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">所在部门</td>
+				<td colspan='1'>{{cont.cont_cdept}}</td>
+				<td colspan='2' class="width15 text-center">所在部门</td>
+				<td colspan='2'>{{cont.cont_cdept2}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">电子邮箱</td>
+				<td colspan='1'>{{cont.cont_cemail}}</td>
+				<td colspan='2' class="width15 text-center">电子邮箱</td>
+				<td colspan='2'>{{cont.cont_cemail2}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">公司注册地址</td>
+				<td colspan='6'>{{cont.cont_czipcode}}</td>
 
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">纳税人类型</td>
-			<td colspan='1'>
-				{{cont.cont_avetaxpayer | conAvetaxpayer}}
-			</td>
-			<td colspan='2' class="width15 text-center">发票类型</td>
-			<td colspan='2'>{{cont.invoice_type | conInvoiceType}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">纳税人识别号</td>
-			<td colspan='1'>{{cont.cont_taxidennum}}</td>
-			<td colspan='2' class="width15 text-center">电话（固定）</td>
-			<td colspan='2'>{{cont.tel}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">开户行</td>
-			<td colspan='1'>{{cont.cont_czipcode}}</td>
-			<td colspan='2' class="width15 text-center">银行账号</td>
-			<td colspan='2'>{{cont.cont_cfax}}</td>
-		</tr>
-		<tr>
-			<td colspan='2' class="width15 text-center ">其他需要说明的情况</td>
-			<td colspan='6'>{{cont.cont_remark}}</textarea></td>
-		</tr>
-	</table>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">纳税人类型</td>
+				<td colspan='1'>{{cont.cont_avetaxpayer | conAvetaxpayer}}</td>
+				<td colspan='2' class="width15 text-center">发票类型</td>
+				<td colspan='2'>{{cont.invoice_type | conInvoiceType}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">纳税人识别号</td>
+				<td colspan='1'>{{cont.cont_taxidennum}}</td>
+				<td colspan='2' class="width15 text-center">电话（固定）</td>
+				<td colspan='2'>{{cont.tel}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">开户行</td>
+				<td colspan='1'>{{cont.cont_czipcode}}</td>
+				<td colspan='2' class="width15 text-center">银行账号</td>
+				<td colspan='2'>{{cont.cont_cfax}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center ">其他需要说明的情况</td>
+				<td colspan='6'>{{cont.cont_remark}}</textarea></td>
+			</tr>
+		</table>
 	</form>
 </div>
 <!-- 执行管控任务完 -->
@@ -193,7 +191,8 @@
 		<span>工期阶段详情<img src="../images/showInfo.png"
 			class="hand showInfo" id="prstShow" ng-click="showPrstInfo()"><img
 			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="prstHide" ng-click="hidePrstInfo()"></span> <!-- <a
+			id="prstHide" ng-click="hidePrstInfo()"></span>
+		<!-- <a
 			class="update-btn tablelink" href="" ng-click="addOneStage()"
 			has-permission='cPsAdd'>添加</a> -->
 	</div>
@@ -202,18 +201,18 @@
 		<tr>
 			<td class="width10 text-center">工期阶段</td>
 			<td class="width20 text-center">内 容</td>
-			<td class="width10 text-center">应完工时间</td>
 			<td class="width10 text-center">工期进度</td>
 			<td class="width10 text-center">项目经理</td>
+			<td class="width10 text-center">应完工时间</td>
 			<td class="width10 text-center">实完工时间</td>
 			<!-- <td class="width10 text-center" has-permission='cPsEdit'>操作</td> -->
 		</tr>
 		<tr ng-repeat="stage in prst">
 			<td class="width10 text-center">阶段{{$index+1}}</td>
 			<td>{{stage.prst_content}}</td>
-			<td>{{stage.prst_etime.time | dateType}}</td>
 			<td>{{stage.prst_state |prstType}}</td>
 			<td>{{stage.manager.user_name}}</td>
+			<td>{{stage.prst_etime.time | dateType}}</td>
 			<td>{{stage.prst_atime.time | dateType}}</td>
 			<!-- <td has-permission='cPsEdit'><a class="tablelink"
 				ng-click="modifyPrst()">修改</a><a class="tablelink"
@@ -230,7 +229,8 @@
 		<span>收款节点详情<img src="../images/showInfo.png"
 			class="hand showInfo" id="renoShow" ng-click="showRenoInfo()"><img
 			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="renoHide" ng-click="hideRenoInfo()"></span><!-- <a
+			id="renoHide" ng-click="hideRenoInfo()"></span>
+		<!-- <a
 			class="update-btn tablelink" href="" ng-click="addOneNode()"
 			has-permission='cRnAdd'>添加</a> -->
 	</div>
@@ -238,23 +238,25 @@
 		<tr>
 			<td class="width10 text-center">收款节点</td>
 			<td class="width20 text-center">内容</td>
-			<td class="width10 text-center">实收金额（万元）</td>
 			<td class="width10 text-center">应收金额（万元）</td>
+			<td class="width10 text-center">实收金额（万元）</td>
+			<td class="width10 text-center">收款情况</td>
 			<td class="width10 text-center">应收款时间</td>
 			<td class="width20 text-center">工期阶段内容</td>
 			<!-- <td colspan='1'>实收款金额</td>
 				<td colspan='1'>实收款时间</td> -->
-			<td class="width10 text-center">收款情况</td>
-		<!-- 	<td class="width10 text-center">操作</td> -->
+
+			<!-- 	<td class="width10 text-center">操作</td> -->
 		</tr>
 		<tr ng-repeat="node in reno">
 			<td class="width10 text-center">节点{{$index+1}}</td>
 			<td>{{node.reno_content}}</td>
-			<td>{{node.reno_amoney | receFloat}}</td>
 			<td>{{node.reno_money | receFloat}}</td>
+			<td>{{node.reno_amoney | receFloat}}</td>
+			<td>{{node.reno_state |renoType}}</td>
 			<td>{{node.reno_time.time | dateType}}</td>
 			<td>{{node.projectStage.prst_content}}</td>
-			<td>{{node.reno_state |renoType}}</td>
+
 			<!-- <td><a ng-click="modifyReno()" class="tablelink"
 				has-permission='cRnEdit'>修改</a><a ng-click="delReno()"
 				class="tablelink" has-permission='cRnDel'>删除</a><a

@@ -218,7 +218,7 @@ app
 							function getUserListByPage(page) {
 								services.getUserListByPage({
 									page : page,
-									searchKey:searchKey
+									searchKey : searchKey
 								}).success(function(data) {
 									user.users = data.list;
 								});
@@ -284,6 +284,12 @@ app
 								$(".tip").fadeIn(200);
 								$("#addUser-form").slideDown(200);
 								$("#editUser-form").hide();
+								user.addinguser = {
+									user_sex : 0,
+									user_dept : 0,
+									role : null
+								};
+
 							};
 
 							// 点击修改时弹出模态框
@@ -386,10 +392,11 @@ app
 													flag = true;
 												}
 												if (!user.addinguser.user_email) {
-													$('#userEmailError')
-															.css('display',
-																	'inline');
-													flag = true;
+													/*
+													 * $('#userEmailError')
+													 * .css('display',
+													 * 'inline'); flag = true;
+													 */
 												} else if (!user.addinguser.user_email
 														.match(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)) {
 													$('#userEmailError')
@@ -399,6 +406,18 @@ app
 												}
 												if ($('#userExistError').css(
 														'display') == "inline") {
+													flag = true;
+												}
+
+												if (!user.addinguser.role) {
+													$('#userRoleError')
+															.css('display',
+																	'inline');
+													flag = true;
+												} else if (!user.addinguser.role.role_id) {
+													$('#userRoleError')
+															.css('display',
+																	'inline');
 													flag = true;
 												}
 												if (flag) {
@@ -606,10 +625,10 @@ app
 
 							// 根据输入筛选用户
 							user.selectUserByName = function() {
-								searchKey=user.cName;
+								searchKey = user.cName;
 								services.getUserListByPage({
 									page : 1,
-									searchKey:searchKey
+									searchKey : searchKey
 								}).success(function(data) {
 									user.users = data.list;
 									pageTurn(data.totalPage, 1)
@@ -652,10 +671,10 @@ app
 								$("#alarm").hide();
 								$("#user").show();
 								if ($location.path().indexOf('/userList') == 0) {
-									searchKey=null;
+									searchKey = null;
 									services.getUserListByPage({
 										page : 1,
-										searchKey:searchKey
+										searchKey : searchKey
 									}).success(function(data) {
 										user.users = data.list;
 										pageTurn(data.totalPage, 1)

@@ -81,11 +81,11 @@
 	</div>
 	<!-- 任务具体内容 -->
 	<div class="formbody">
-	<form id="addTask1-form" ng-submit="addTask1()" class="hidden">
+	<form id="addTask1-form" ng-submit="addNewTask()" class="hidden">
 		<ul class="forminfo">
 			<li><label>执行人</label> <select class="dfselect" 
-				ng-model="task1.receiver_id">
-					<option ng-repeat="user in users" value={{user.user_id}}>{{user.user_name}}</option>					
+				ng-model="task1.receiver_id" ng-options="user.user_id as user.user_name for user in users" required>
+					<option value="">请选择</option>					
 			</select></li>
 			<li><label>子任务</label>
 				<div class="div-checkbox">
@@ -118,17 +118,17 @@
 		</ul>
 		<!-- 按钮 -->
 	<div class="tipbtn">
-		<input name="" type="button" class="sure" value="确定" ng-click="" />&nbsp; <input
+		<input name="" type="submit" class="sure" value="确定" ng-click="" />&nbsp; <input
 			name="" type="button" class="cancel" value="取消" />
 	</div>
 	</form>
 	
-	<form id="addTask2-form" ng-submit="addTask2()" class="hidden">
+	<form id="addTask2-form" ng-submit="addNewTask()" class="hidden">
 
 		<ul class="forminfo">
 			<li><label>执行人</label> <select class="dfselect"
-				ng-model="task2.receiver_id">
-					<option ng-repeat="user in users" value={{user.user_id}}>{{user.user_name}}</option>				
+				ng-model="task2.receiver_id" ng-options="user.user_id as user.user_name for user in users" required>
+					<option value="">请选择</option>				
 			</select></li>
 			<li><label>开始时间</label><input type="text" name="task2_stime"
 				placeholder="格式：2016-09-07" ng-model="task2.task_stime"
@@ -141,7 +141,7 @@
 		</ul>
 		<!-- 按钮 -->
 	<div class="tipbtn">
-		<input name="" type="button" class="sure" value="确定" ng-click="" />&nbsp; <input
+		<input name="" type="submit" class="sure" value="确定" ng-click="" />&nbsp; <input
 			name="" type="button" class="cancel" value="取消" />
 	</div>
 	</form>
