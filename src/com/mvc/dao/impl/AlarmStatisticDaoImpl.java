@@ -31,10 +31,10 @@ public class AlarmStatisticDaoImpl implements AlarmStatisticDao {
 		StringBuilder sql = new StringBuilder();
 		sql.append(
 				"select * from (select coalesce(sum(case when task_state=0 then 1 else 0 end),0) total_receive_task_num,");// 当前用户接收的所有任务
-		sql.append("coalesce(sum(case when task_state=0 and task_type=1 then 1 else 0 end),0) assistant_task_num,");// 文书任务
+		sql.append("coalesce(sum(case when (task_state=0 or task_state=1) and task_type=1 then 1 else 0 end),0) assistant_task_num,");// 文书任务
 		sql.append(
-				"coalesce(sum(case when task_state=0 and task_type=2 then 1 else 0 end),0) manager_control_task_num,");// 执行管控任务
-		sql.append("coalesce(sum(case when task_state=0 and task_type=0 then 1 else 0 end),0) other_task_num ");// 普通任务
+				"coalesce(sum(case when (task_state=0 or task_state=1) and task_type=2 then 1 else 0 end),0) manager_control_task_num,");// 执行管控任务
+		sql.append("coalesce(sum(case when (task_state=0 or task_state=1) and task_type=0 then 1 else 0 end),0) other_task_num ");// 普通任务
 		sql.append(
 				"from (select task_id,task_state,task_type from task where task_isdelete=0 and receiver_id=:user_id) as a) as aa,");
 		sql.append("(select coalesce(sum(case when invo_state=0 then 1 else 0 end),0) wait_audit_bill_task_num,");// 待审核发票任务(调出的结果有问题)
