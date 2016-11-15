@@ -182,7 +182,7 @@ alarmApp.controller('AlarmController', [
 			var isRemove;
 			// zq查看合同ID，并记入sessione
 			alarm.getContId = function(contId) {
-				sessionStorage.setItem('contId', contId);
+				sessionStorage.setItem('conId', contId);
 			};
 			// 获取报警ID
 			alarm.getAlarmId = function(alarId) {
@@ -264,6 +264,11 @@ alarmApp.controller('AlarmController', [
 					alarm.roles = data;
 					console.log(data);
 				});
+				alarm.alarmLevel = {
+					alle_days : 0,
+					alle_rank : 1,
+					role_id : null
+				};
 				$(".overlayer").fadeIn(200);
 				$(".tip").fadeIn(200);
 				$("#addAlarm-form").slideDown(200);
@@ -291,7 +296,7 @@ alarmApp.controller('AlarmController', [
 				return false;
 			};
 			// 修改报警设置
-			$(".sure2").click(function() {
+			alarm.editAlarmLevel=function() {
 				var alarmLl = JSON.stringify(alarm.editLevel);
 				console.log(alarmLl);
 				services.alarmLevelAdd({
@@ -306,7 +311,7 @@ alarmApp.controller('AlarmController', [
 
 				$(".overlayer").fadeOut(100);
 				$(".tip").fadeOut(100);
-			});
+			}
 			// 隐藏模态框
 			$(".tiptop a").click(function() {
 				$(".overlayer").fadeOut(200);
@@ -320,11 +325,9 @@ alarmApp.controller('AlarmController', [
 				$(".tip").fadeOut(100);
 			});
 			// 添加报警设置
-			$(".sure1").click(function() {
+			alarm.addAlarmLevel = function() {
 				var conId = sessionStorage.getItem("contractId");
-
 				var alarmLl = JSON.stringify(alarm.alarmLevel);
-				console.log(alarmLl);
 				services.alarmLevelAdd({
 					alle_rank : alarm.alarmLevel.alle_rank,
 					alle_days : alarm.alarmLevel.alle_days,
@@ -332,11 +335,12 @@ alarmApp.controller('AlarmController', [
 				}).success(function(data) {
 					alert("新建成功！");
 					selectAllAlarmLevel();
+					alarm.alarmLevel = "";
 				});
 
 				$(".overlayer").fadeOut(100);
 				$(".tip").fadeOut(100);
-			});
+			}
 			function findRoleFromCookie() {
 				var cookie = {};
 
@@ -355,8 +359,7 @@ alarmApp.controller('AlarmController', [
 					cookie[name.trim()] = value;
 					console.log("进来了,已经赋值" + name);
 					if (name.trim() == "role") {
-						sessionStorage.setItem("userRole",
-								value);
+						sessionStorage.setItem("userRole", value);
 					}
 
 				}

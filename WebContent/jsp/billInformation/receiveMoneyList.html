@@ -46,7 +46,7 @@
 				<td class="width5">{{$index + 1}}</td>
 				<td class="width15"><a
 					href="/CIMS/contract/toContractPage.do#/contractInfo"
-					ng-click="getConId(t.contract.cont_id)">{{remo.contract.cont_name}}</a></td>
+					ng-click="getConId(t.contract.cont_id)">{{remo.contract.cont_name |cutString}}</a></td>
 				<td class="width10">{{remo.remo_money |receFloat}}</td>
 				<td class="width10">{{remo.remo_amoney | receFloat}}</td>
 				<td class="width5">{{remo.remo_state |remoState}}</td>
@@ -67,7 +67,7 @@
 	<div class="tcdPageCode">页码容器</div>
 
 </div>
-<!-- 查看到款通知模态框 -->
+<!-- 修改到款通知模态框 -->
 <div class="overlayer"></div>
 <div class="tip" id="tipRemo" style="height: 450px">
 	<div class="tiptop">
@@ -108,7 +108,7 @@
 		</form>
 	</div>
 </div>
-<!-- 查看到款通知模态框完 -->
+<!-- 修改到款通知模态框完 -->
 <!-- 审核到款通知模态框 -->
 <div class="overlayer"></div>
 <div class="tip" id="tipRemoAudit" style="height: 450px">
@@ -117,7 +117,7 @@
 	</div>
 	<div class="invorkInfo-div">
 		<fieldset>
-			<legend>发票信息</legend>
+			<legend>到款信息</legend>
 			<ul class="forminfo">
 				<li><label>应到款金额：</label>{{receiveMoney.remo_money}}</li>
 				<li><label>到款时间：</label>{{receiveMoney.remo_time |dateType}}</li>
@@ -143,6 +143,26 @@
 	</div>
 </div>
 <!-- 审核到款通知模态框完 -->
+<!-- 查看到款通知模态框 -->
+<div class="overlayer"></div>
+<div class="tip" id="tipCheckRemo" style="height: 380px">
+	<div class="tiptop">
+		<span>到款详情</span><a></a>
+	</div>
+	<div class="invorkInfo-div">
+		<fieldset>
+			<legend>到款信息</legend>
+			<ul class="forminfo">
+				<li><label>应到款金额：</label>{{receiveMoney.remo_money | receFloat}}&nbsp;&nbsp;万元</li>
+				<li><label>实到款金额：</label>{{receiveMoney.remo_amoney | receFloat}}&nbsp;&nbsp;万元</li>
+				<li><label>到款时间：</label>{{receiveMoney.remo_time.time | dateType}}</li>
+				<li><label>核对人：</label>{{receiveMoney.operater.user_name}}</li>
+				<li><div class="remark-div">备注：{{receiveMoney.remo_remark}}</div></li>
+			</ul>
+		</fieldset>
+	</div>
+</div>
+<!-- 修改到款通知模态框完 -->
 <!-- //删除任务模态框 -->
 <div class="tip" id="tipDel" style="height: 220px">
 	<div class="tiptop">

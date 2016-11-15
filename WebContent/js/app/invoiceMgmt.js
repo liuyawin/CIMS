@@ -178,6 +178,15 @@ invoiceApp.factory('invoiceservices', [ '$http', 'baseUrl',
 					data : data,
 				});
 			};
+			// zq添加发票任务
+			services.addInvoiceTask = function(data) {
+
+				return $http({
+					method : 'post',
+					url : baseUrl + 'invoice/addInvoiceTask.do',
+					data : data,
+				});
+			};
 			return services;
 		} ]);
 
@@ -247,11 +256,6 @@ invoiceApp
 										.success(
 												function(data) {
 													invoice.invoice = data.invoice;
-													if (data.invoice.invo_time != null) {
-														invoice.invoice.invo_time = changeDateType(data.invoice.invo_time.time);
-													} else {
-														invoice.invoice.invo_time = "";
-													}
 													$(".overlayer").fadeIn(200);
 													$("#tipCheck").fadeIn(200);
 												});
@@ -520,36 +524,63 @@ invoiceApp
 								$("#tipEdit").fadeOut(100);
 								$(".overlayer").fadeOut(200);
 							});
-							/*// 修改和删除后刷新页面
-							function refreshInvoList() {
-								var invoListType = sessionStorage
-										.getItem("invoListType");
-								if (invoListType == "INVO") {
-									services.getInvoiceList(
-											{
-												contId : sessionStorage
-														.getItem("conId"),
-												page : 1,
-												invoState : invoState
-											}).success(function(data) {
-										invoice.invoices = data.list;
-										pageTurn(data.totalPage, 1);
-									});
-								} else if (invoListType == "INVOTASK") {
-									services.getInvoTaskList({
-										page : 1,
-										invoState : invoState
-									}).success(function(data) {
-										invoice.invoices = data.list;
-										pageTurn(data.totalPage, 1);
-									});
-								}
-							}
+							//查找所有用户
 							function selectAllUsers() {
 								services.getAllUsers().success(function(data) {
 									invoice.users = data;
 								});
-							}*/
+							}
+							// zq添加发票任务
+							invoice.addInvoiceTask = function(contId,firm) {
+								var FIRM = firm;
+								var regStr = "\\s" + 'tInvoAudit' + "\\s";
+								var reg = new RegExp(regStr);
+								if (permissionList.search(reg) < 0) {
+									$("#selectAuditAdd").show();
+									$("#selectReceiverAdd").hide();
+								} else {
+									$("#selectAuditAdd").hide();
+									$("#selectReceiverAdd").show();
+								}
+								selectAllUsers();
+								/* var contId = this.con.cont_id; */
+								sessionStorage.setItem("conId", contId);
+								countInvoiceMoneyByContId();
+								selectContractById();
+								$("#tipAddInvo").fadeIn(200);
+								$(".overlayer").fadeIn(200);
+								var date = new Date();
+								var timeNow = date.getFullYear() + "-"
+										+ (date.getMonth() + 1) + "-"
+										+ (date.getDate());
+								invoice.invoice = {
+									invo_stime : timeNow,
+									invo_etime : timeNow,
+									invo_firm : FIRM
+								};
+
+							};
+							invoice.addNewInvoiceTask= function() {
+								var taskFormData = JSON
+										.stringify(invoice.invoice);
+								services.addInvoiceTask({
+									invoice : taskFormData,
+									contId : sessionStorage.getItem("conId")
+								}).success(function(data) {
+									$("#tipAddInvo").fadeOut(100);
+									$(".overlayer").fadeOut(200);
+									invoice.invoice = "";
+									alert("添加成功！");
+									findInvoices(1);
+								});
+							}
+
+							$("#cancelAdd").click(function() {
+								$("#tipAddInvo").fadeOut(100);
+								$(".overlayer").fadeOut(200);
+								invoice.invoice = "";
+
+							});
 							// zq初始化页面信息
 							function initData() {
 								$(".tiptop a").click(function() {

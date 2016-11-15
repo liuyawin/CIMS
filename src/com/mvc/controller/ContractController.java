@@ -38,6 +38,16 @@ public class ContractController {
 	UserService userService;
 
 	/**
+	 * 返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toBillMngContractPage.do")
+	public String InvoiceReceivePage() {
+		return "billInformation/index";
+	}
+
+	/**
 	 * 返回主任合同界面
 	 * 
 	 * @return

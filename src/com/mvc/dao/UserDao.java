@@ -13,9 +13,12 @@ import com.mvc.entity.User;
 public interface UserDao {
 
 	// 根据用户id修改状态
-	public boolean updateState(Integer id);
+	boolean updateState(Integer id);
 
 	// 根据页数筛选全部用户列表
-	public List<User> findUserAllByPage(Integer offset, Integer end);
+	List<User> findUserAllByPage(String searchKey, Integer offset, Integer end);
+
+	// 查询用户总条数
+	Integer countTotal(String searchKey);
 
 }

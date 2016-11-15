@@ -34,7 +34,7 @@
 				<td>{{alarm.alar_time.time | dateType}}</td>
 				<td>{{alarm.num}}</td>
 				<td><a class="underline"
-					href="/CIMS/contract/toContractPage.do#contractInfo">{{alarm.contract.cont_name}}</a></td>
+					href="/CIMS/contract/toContractPage.do#contractInfo" ng-click="getContId(alarm.contract.cont_id)">{{alarm.contract.cont_name}}</a></td>
 				<!-- <td><a href="#alarmDetail" class="tablelink"
 					ng-click="getAlarmId(alarm.alar_id)">详情</a></td> -->
 			</tr>

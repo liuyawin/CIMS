@@ -11,8 +11,9 @@
 	<div class="tools">
 
 		<form class="toolbar">
-			<input name="" type="text" class="dfinput" id="cName" placeholder="合同名称关键字"/> <input
-				class="btn" type="submit" value="查询" ng-click="selectConByName()">
+			<input name="" type="text" class="dfinput" id="cName"
+				placeholder="合同名称关键字" /> <input class="btn" type="submit"
+				value="查询" ng-click="selectConByName()">
 		</form>
 
 	</div>
@@ -45,19 +46,20 @@
 				<td>{{con.rece_totalmoney}}</td>
 				<td>{{con.rece_total}}</td>
 				<td><a
-					href="/CIMS/receiveMoney/toBillMngInvoicePage.do#/receiveMoneyList"
+					href="/CIMS/invoice/toBillMngInvoicePage.do#/receiveMoneyList"
 					class="tablelink" ng-click="getConId(con.cont_id)">详情</a> <a
-					class="tablelink" ng-click="addReMoneyTask()" has-permission='bRemoAdd'>到款</a></td>
+					class="tablelink" ng-click="addReMoneyTask()"
+					has-permission='bRemoAdd'>到款</a></td>
 				<td>
 					<!-- <a href="#"
 					class="tablelink">录发票</a> --> <a
-					href="/CIMS/receiveMoney/toBillMngInvoicePage.do#/invoiceList"
+					href="/CIMS/invoice/toBillMngInvoicePage.do#/invoiceList"
 					class="tablelink" ng-click="getConId(con.cont_id)">详情</a> <a
 					class="tablelink" ng-click="addInvoiceTask(con.cont_id)"
 					has-permission='bInvoAdd'>开发票</a>
 				</td>
 				<td><a
-					href="/CIMS/receiveMoney/toBillMngInvoicePage.do#/receiptList"
+					href="/CIMS/invoice/toBillMngInvoicePage.do#/receiptList"
 					class="tablelink" ng-click="getConId(con.cont_id)">详情</a> <a
 					ng-click="addReceipt(con.cont_id)" class="tablelink"
 					has-permission='bReceAdd'>开收据</a></td>
@@ -70,28 +72,34 @@
 
 <!-- 派发发票任务模态框 -->
 <div class="overlayer"></div>
-<div class="tip" id="tipAdd" style="height: 500px">
+<div class="tip" id="tipAdd" style="height: 530px">
 	<div class="tiptop">
-		<span>创建任务</span><a></a>
+		<span>添加发票</span><a></a>
 	</div>
 	<div class="formbody">
-		<form ng-submit="addInvoiceTask()">
+		<form ng-submit="addNewInvoiceTask()">
+			<div class="textWarn">
+				<label class="text_style">合同总金额 {{cont.cont_money |
+					receFloat}} 万元！&nbsp;&nbsp;已开发票 {{invoTotalMoney | receFloat}} 万元！</label>
+			</div>
 			<ul class="forminfo">
 				<li><label>发票金额</label><input type="text" name="invoMoney"
 					id="invoMoney" class="dfinput invoMoney numberFormat"
-					ng-model="invoice.invo_money" required  placeholder="格式：0.00">万元&nbsp;&nbsp;<span class="error-span">格式错误</span></li>
+					ng-model="invoice.invo_money" required placeholder="格式：0.00">万元&nbsp;&nbsp;<span
+					class="error-span">格式错误</span></li>
 				<li><label>业主公司</label><input type="text" name="invoFirm"
 					class="dfinput" ng-model="invoice.invo_firm" required></li>
-				<li id="selectReceiver"><label>执行人</label><select name="tReceiver" class="dfselect"
-					ng-model="invoice.receiver.user_id">
-						<option ng-repeat="user in users" value={{user.user_id}}>
-							<span>{{user.user_name}}</span>
+				<li id="selectReceiver"><label>执行人</label><select
+					name="tReceiver" class="dfselect"
+					ng-model="invoice.receiver.user_id" ng-options="user.user_id as user.user_name for user in users" required>
+						<option value="">
+							请选择
 						</option>
 				</select></li>
-				<li id="selectAudit"><label>审核人</label><select name="tAudit" class="dfselect"
-					ng-model="invoice.audit.user_id">
-						<option ng-repeat="user in users" value={{user.user_id}}>
-							<span>{{user.user_name}}</span>
+				<li id="selectAudit"><label>审核人</label><select name="tAudit"
+					class="dfselect" ng-model="invoice.audit.user_id" ng-options="user.user_id as user.user_name for user in users" >
+						<option value="">
+							请选择
 						</option>
 				</select></li>
 				<li><label>开始时间</label><input type="text"
@@ -103,12 +111,12 @@
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span></li>
 				<li id="taskContent"><label>备注</label> <textarea name=""
 						cols="" rows="" class="textinput area_style"
-						ng-model="invoice.invo_remark" ></textarea></li>
+						ng-model="invoice.invo_remark"></textarea></li>
 			</ul>
 			<div class="tipbtn">
-				<input name="" type="submit" class="sure" id="sureAdd" value="派发"
-					ng-click="addTask()" />&nbsp; <input name="" type="button"
-					class="cancel" id="cancelAdd" value="取消" />
+				<input name="" type="submit" class="sureSend" id="sureAdd" value="确认"
+					/>&nbsp; <input name="" type="button"
+					class="cancelSend" id="cancelAdd" value="取消" />
 			</div>
 		</form>
 	</div>
@@ -118,32 +126,36 @@
 <div class="overlayer"></div>
 <div class="tip" id="tipRemoAdd" style="height: 420px">
 	<div class="tiptop">
-		<span>创建任务</span><a></a>
+		<span>添加到款</span><a></a>
 	</div>
 	<div class="formbody">
 		<form ng-submit="addRemoTask()">
+			<div class="textWarn">
+				<label class="text_style">合同总金额 {{cont.cont_money |
+					receFloat}} 万元！&nbsp;&nbsp;已到款 {{remoTotalMoney | receFloat}} 万元！</label>
+			</div>
 			<ul class="forminfo">
 				<li><label>应到款金额</label><input type="text" name="remoMoney"
 					id="remoMoney" class="dfinput remoMoney numberFormat"
-					ng-model="receiveMoney.remo_money" required placeholder="格式：0.00">万元&nbsp;&nbsp;<span class="error-span">格式错误</span></li>
+					ng-model="receiveMoney.remo_money" required placeholder="格式：0.00">万元&nbsp;&nbsp;<span
+					class="error-span">格式错误</span></li>
 				<li><label>到款时间</label><input type="text"
 					ng-model="receiveMoney.remo_time" class="dfinput dateFormat"
 					placeholder="格式：2016-09-07" required /><span class="error-span">格式错误</span>
 				</li>
-				<li><label>审核人</label><select name="remoOperater"
-					class="dfselect" ng-model="receiveMoney.operater.user_id">
-						<option ng-repeat="user in users" value={{user.user_id}}>
-							<span>{{user.user_name}}</span>
+				<li><label>核对人</label><select name="remoOperater"
+					class="dfselect" ng-model="receiveMoney.operater.user_id" ng-options="user.user_id as user.user_name for user in users" required>
+						<option value="">
+							请选择
 						</option>
 				</select></li>
 				<li><label>备注</label> <textarea name="" cols="" rows=""
-						class="textinput area_style" ng-model="receiveMoney.remo_remark"
-						required></textarea></li>
+						class="textinput area_style" ng-model="receiveMoney.remo_remark"></textarea></li>
 			</ul>
 			<div class="tipbtn">
 				<input name="" type="submit" class="sure" id="sureRemoAdd"
-					value="派发" />&nbsp; <input name=""
-					type="button" class="cancel" id="cancelRemoAdd" value="取消" />
+					value="派发" />&nbsp; <input name="" type="button" class="cancel"
+					id="cancelRemoAdd" value="取消" />
 			</div>
 		</form>
 	</div>
@@ -151,16 +163,22 @@
 <!-- 派发到款通知模态框完 -->
 <!--lwt: 开收据模态框 -->
 <div class="overlayer"></div>
-<div class="tip" id="tipAddReceipt" style="height: 400px">
+<div class="tip" id="tipAddReceipt" style="height: 450px">
 	<div class="tiptop">
 		<span>添加收据</span><a></a>
 		<!-- 这个a标签是模态框上的叉叉 -->
 	</div>
 	<div class="formbody">
 		<form ng-submit="addRece()">
+			<div class="textWarn">
+				<label class="text_style">合同总金额 {{cont.cont_money |
+					receFloat}} 万元！&nbsp;&nbsp;已开收据 {{receTotalMoney | receFloat}} 万元！</label>
+			</div>
 			<ul class="forminfo">
 				<li><label>金额</label><input type="text"
-					ng-model="receipt.rece_money" class="dfinput numberFormat" placeholder="格式：0.00" required />万元&nbsp;&nbsp;<span class="error-span">格式错误</span></li>
+					ng-model="receipt.rece_money" class="dfinput numberFormat"
+					placeholder="格式：0.00" required />万元&nbsp;&nbsp;<span
+					class="error-span">格式错误</span></li>
 				<li><label>业主公司</label><input type="text"
 					ng-model="receipt.rece_firm" class="dfinput" required /></li>
 				<li><label>开收据时间</label><input type="text"
