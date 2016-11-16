@@ -33,6 +33,16 @@ public class ReportFormController {
 	@Autowired
 	ReportFormService reportFormService;
 
+	/**
+	 * 返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toReportFormPage.do")
+	public String InvoiceReceivePage() {
+		return "reportForm/index";
+	}
+
 	@RequestMapping("/selectPlanProject.do")
 	public ResponseEntity<byte[]> selectPlanProject(HttpServletRequest request) {
 		// 前台参数暂留
