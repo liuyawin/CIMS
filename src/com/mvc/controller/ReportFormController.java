@@ -36,6 +36,8 @@ public class ReportFormController {
 	@RequestMapping("/selectPlanProject.do")
 	public ResponseEntity<byte[]> selectPlanProject(HttpServletRequest request) {
 		// 前台参数暂留
+		// Integer cont_state
+		// =Integer.valueOf(request.getParameter("contState"));
 		ResponseEntity<byte[]> byteArr = null;
 		ExcelHelper<PlanProjectForm> ex = new ExcelHelper<PlanProjectForm>();
 		String[] headers = { "序号", "项目名称", "项目设总", "装机容量（MW）", "合同状态", "合同额（万元）", "签订时间" };
