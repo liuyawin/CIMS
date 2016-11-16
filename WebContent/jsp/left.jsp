@@ -79,30 +79,56 @@
 					href="${ctx}/alarmLevel/toAlarmSetPage.do#/alarmSet">报警设置</a><i></i></li>
 			</ul>
 		</dd>
+		<!-- 报表统计 -->
+		<dd id="reportForm" class="reportForm" >
+			<div class="title">
+				<span><img src="${ctx}/images/leftico02.png" /></span>报表统计
+			</div>
+			<ul id="report-ul" class="menuson">
+				<li id="remoAnalyzeList"><cite></cite> <a
+					href="${ctx}/reportForm/toReportFormPage.do#/remoAnalyzeList">合同额到款分析表</a><i></i></li>
+				<li id="paymentPlanList"><cite></cite> <a
+					href="${ctx}/reportForm/toReportFormPage.do#/paymentPlanList">催款计划表</a><i></i></li>
+				<li id="projectList"><cite></cite> <a
+					href="${ctx}/reportForm/toReportFormPage.do#/projectList">项目统计表</a><i></i></li>
+				<li id="unGetContList"><cite></cite> <a
+					href="${ctx}/reportForm/toReportFormPage.do#/unGetContList">未返合同表</a><i></i></li>
+			</ul>
+		</dd>
 	</dl>
 </section>
 <script>
+	$(document)
+			.ready(
+					function() {
+						//根据权限显示左侧栏相关条目
+						$
+								.get(
+										"/CIMS/login/getLeftbarPermission.do",
+										function(data) {
+											console.log("左侧栏权限：" + data);
+											var leftbarPermission = data
+													.substring(1,
+															data.length - 2)
+													.split(",");
+											for (var i = 0, len = leftbarPermission.length; i < len; i++) {
+												if (leftbarPermission[i].trim()) {
+													var $temp = $('.'
+															+ leftbarPermission[i]
+																	.trim());
+													if ($temp) {
+														$temp.css('display',
+																'block');
+													}
+												}
 
-	$(document).ready(function() {
-		//根据权限显示左侧栏相关条目
-		$.get("/CIMS/login/getLeftbarPermission.do",function(data){
-			console.log("左侧栏权限："+data);
-			var leftbarPermission = data.substring(1,data.length-2).split(",");
-			for(var i=0,len=leftbarPermission.length;i<len;i++){
-				if(leftbarPermission[i].trim()){
-					var $temp = $('.'+leftbarPermission[i].trim());
-					if($temp){
-						$temp.css('display','block');
-					}
-				}
-				
-			}
-		});
-		//点击li时将当前页面的信息存入sessionStorage
-		var $li = $('.leftmenu li');
-		$li.click(function() {
-			sessionStorage.setItem("currentPage", $(this).attr('id'));
-		});
-	});
-
+											}
+										});
+						//点击li时将当前页面的信息存入sessionStorage
+						var $li = $('.leftmenu li');
+						$li.click(function() {
+							sessionStorage.setItem("currentPage", $(this).attr(
+									'id'));
+						});
+					});
 </script>
