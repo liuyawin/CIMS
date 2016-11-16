@@ -1,5 +1,6 @@
 package com.mvc.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.mvc.entity.Contract;
@@ -32,4 +33,8 @@ public interface ContractDao {
 
 	// 张姣娜：查询所有停建合同列表
 	List<Contract> findAllStopCont(String contName, Integer offset, Integer end);
+
+	/***** 报表相关 *****/
+	// 光电院承担规划项目表
+	List<Contract> findContByState(Integer cont_state, Date startTime, Date endTime);
 }

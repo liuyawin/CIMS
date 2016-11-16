@@ -21,5 +21,4 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
 	// 根据合同ID获取合同
 	@Query("select c from Contract c where cont_id=:cont_id and cont_ishistory=0")
 	Contract selectContById(@Param("cont_id") Integer cont_id);
-
 }
