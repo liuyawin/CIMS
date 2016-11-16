@@ -1,6 +1,7 @@
 package com.mvc.dao.impl;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -195,6 +196,29 @@ public class ContractDaoImpl implements ContractDao {
 		sql.append(" order by cont_id desc limit :offset,:end");
 		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		query.setParameter("offset", offset).setParameter("end", end);
+		List<Contract> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 光电院承担规划项目表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Contract> findContByState(Integer cont_state, Date startTime, Date endTime) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from contract c where c.cont_ishistory=0");
+		if (cont_state != null) {
+			sql.append(" and c.cont_state=" + cont_state);
+		}
+		if (startTime != null) {
+			sql.append(" and c.cont_stime < " + startTime);
+		}
+		if (endTime != null) {
+			sql.append(" and c.cont_stime < " + endTime);
+		}
+		sql.append(" order by cont_id desc");
+		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		List<Contract> list = query.getResultList();
 		em.close();
 		return list;
