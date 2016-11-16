@@ -10,7 +10,7 @@
 </section>
 <jsp:include page="/jsp/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
-
+<script src="${ctx}/js/app/reportForm.js"></script>
 <script>
 	$(function(){
 		$('dd').find('ul').css("display","none");

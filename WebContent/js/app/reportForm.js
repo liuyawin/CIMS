@@ -1,8 +1,8 @@
 var app = angular
 		.module(
 				'reportForm',
-				[ 'ngRoute', 'angularFileUpload' ],
-				function($httpProvider) { // ngRoute引入路由依赖
+				[ 'ngRoute' ],
+				function($httpProvider) {// ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
 					$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
@@ -63,100 +63,51 @@ angular.element(document).ready(function() {
 	$.get('/CIMS/login/getUserPermission.do', function(data) {
 		permissionList = data; // 
 		console.log("身份是：" + permissionList);
-		angular.bootstrap($("#ng-section"), [ 'contract' ]); // 手动加载angular模块
+		angular.bootstrap($("#reportForm"), [ 'reportForm' ]); // 手动加载angular模块
 	});
 });
-
-app.directive('hasPermission', function($timeout) {
-	return {
-		restrict : 'ECMA',
-		link : function(scope, element, attr) {
-			var key = attr.hasPermission.trim(); // 获取页面上的权限值
-			console.log("获取页面上的权限值" + key);
-			var keys = permissionList;
-			console.log("获取后台的权限值" + keys);
-			var regStr = "\\s" + key + "\\s";
-			var reg = new RegExp(regStr);
-			if (keys.search(reg) < 0) {
-				element.css("display", "none");
-			}
-		}
-	};
-});
-
-/*
- * app.run([ 'permissions', function(permissions) {
- * permissions.setPermissions(permissionList) } ]);
- */
 app.run([ '$rootScope', '$location', function($rootScope, $location) {
-	// permissions.setPermissions(permissionList)
 	$rootScope.$on('$routeChangeSuccess', function(evt, next, previous) {
 		console.log('路由跳转成功');
-		// permissions.setPermissions(permissionList);
 		$rootScope.$broadcast('reGetData');
 	});
 } ]);
 
-
-
 // 路由配置
-app
-		.config([
-				'$routeProvider',
-				function($routeProvider) {
-					$routeProvider
-							.when(
-									'/remoAnalyzeList',
-									{
-										templateUrl : '/CIMS/jsp/reportForm/remoAnalyzeList.html',
-										controller : 'ReportFormController'
-									});
-				} ]);
+app.config([ '$routeProvider', function($routeProvider) {
+	$routeProvider.when('/remoAnalyzeList', {
+		templateUrl : '/CIMS/jsp/reportForm/remoAnalyzeList.html',
+		controller : 'ReportController'
+	})
+} ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	services.getRemoAnalyzeList= function(data) {
-		/* console.log("发送请求获取信息"); */
-		return $http({
-			method : 'post',
-			url : baseUrl + 'reportForm/getRemoAnalyzeList.do',
-			data : data
-		});
-	};
 
 	return services;
 } ]);
 
 app
 		.controller(
-				'ReportFormController',
+				'ReportController',
 				[
 						'$scope',
 						'services',
 						'$location',
-						'FileUploader',
-						function($scope, services, $location, FileUploader) {
-							// 合同
+						function($scope, services, $location) {
+							// zq合同
 							var reportForm = $scope;
-
-							// 初始化页面信息
+							
+						
+							// zq初始化
 							function initData() {
-								if ($location.path().indexOf('/remoAnalyzeList') == 0) { 
-
-								} else if ($location.path().indexOf(
-										'/paymentPlanList') == 0) {
-									
-								} else if ($location.path().indexOf(
-										'/projectList') == 0) {
-									
-								} else if ($location.path().indexOf(
-										'/unGetContList') == 0) { 
-									
-								} 
+								console.log("初始化页面信息");
+								if ($location.path().indexOf('/remoAnalyzeList') == 0) {
+									alert("进来了");
+								}
 							}
-
 							initData();
-							// 验证日期输入格式
+							
 							var $dateFormat = $(".dateFormat");
 							var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
 							$(".dateFormat").blur(
@@ -167,22 +118,6 @@ app
 										}
 									});
 							$(".dateFormat").click(
-									function() {
-										$(this).parent().children("span").css(
-												'display', 'none');
-									});
-
-							// 验证金额输入格式
-							var $numberFormat = $(".numberFormat");
-							var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
-							$(".numberFormat").blur(
-									function() {
-										if (!numberRegexp.test(this.value)) {
-											$(this).parent().children("span")
-													.css('display', 'inline');
-										}
-									});
-							$(".numberFormat").click(
 									function() {
 										$(this).parent().children("span").css(
 												'display', 'none');
