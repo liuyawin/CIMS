@@ -224,4 +224,20 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
+	// 根据日期获取合同额到款对比表
+	@Override
+	public Object findByOneDate(Date date) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append(
+				"select sum(cont_money),sum(remo_totalmoney),count(cont_id) from contract c where c.cont_ishistory=0 ");
+		if (date != null) {
+			sql.append(" and cont_stime like '%" + date + "%'");
+		}
+		Query query = em.createNativeQuery(sql.toString());
+		Object result = query.getResultList();
+		em.close();
+		return result;
+	}
+
 }
