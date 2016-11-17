@@ -87,7 +87,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.getRemoAnalyzeDataByYear = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'reportForm/getRemoAnalyzeDataByYear.do',
+			url : baseUrl + 'reportForm/selectComoRemoAnalyse.do',
 			data : data
 		});
 	};
@@ -112,7 +112,8 @@ app
 									beginYear:beginYear,
 									endYear  :endYear
 								}).success(function(data){
-									
+									console.log(data);
+									reportForm.comoCompareRemo = data.reportForm;
 								});
 								
 							}

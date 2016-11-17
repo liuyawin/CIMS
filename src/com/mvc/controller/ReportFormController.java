@@ -100,8 +100,8 @@ public class ReportFormController {
 		Date dateOne = null;
 		Date dateTwo = null;
 		try {
-			dateOne = format.parse(jsonObject.getString("beginYear"));
-			dateTwo = format.parse(jsonObject.getString("endYear"));
+			dateOne = format.parse(request.getParameter("beginYear"));
+			dateTwo = format.parse(request.getParameter("endYear"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
