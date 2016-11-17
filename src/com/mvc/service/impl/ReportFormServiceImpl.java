@@ -149,7 +149,10 @@ public class ReportFormServiceImpl implements ReportFormService {
 				projectStatisticForm.setManager_name(contract.getManager().getUser_name());// 项目设总
 			}
 			projectStatisticForm.setProvince(contract.getProvince());// 所在地（省）
-			projectStatisticForm.setPro_stage(contract.getPro_stage());// 设计阶段（项目阶段）
+
+			String proStageStr = contract.getPro_stage();// 设计阶段（数字类型字符串）
+			proStageStr = intStrToStr(proStageStr);
+			projectStatisticForm.setPro_stage(proStageStr);// 设计阶段（项目阶段）
 			projectStatisticForm.setInstall_capacity(contract.getInstall_capacity());// 装机容量（MW）
 			projectStatisticForm.setCont_money(contract.getCont_money());// 合同额(万元)
 
@@ -255,6 +258,26 @@ public class ReportFormServiceImpl implements ReportFormService {
 		pager.setTotalRow(totalRow);
 
 		return pager;
+	}
+
+	/**
+	 * 将数字型字符串转换成字符串
+	 * 
+	 * @param str
+	 * @return
+	 */
+	private String intStrToStr(String str) {
+		String[] arr = { "规划", "预可研", "可研", "项目建议书", "初步设计", "发包、招标设计", "施工详图", "竣工图", "其他" };
+		if (StringUtil.strIsNotEmpty(str)) {
+			for (int i = 0; i < arr.length; i++) {
+				if (str.contains(String.valueOf(i))) {
+					System.out.println(String.valueOf(i));
+					str = str.replaceAll(String.valueOf(i), arr[i]);
+				}
+			}
+			str = str.substring(0, str.length() - 1);// 去掉最后一个逗号
+		}
+		return str;
 	}
 
 }

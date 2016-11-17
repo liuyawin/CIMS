@@ -79,8 +79,8 @@
 				<th class="width5">序号</th>
 				<th class="width20">项目名称</th>
 				<th class="width10">所在地</th>
-				<th class="width10">项目设总</th>
-				<th class="width10">项目阶段</th>
+				<th class="width7">项目设总</th>
+				<th class="width13">项目阶段</th>
 				<th class="width10">装机容量(MW)</th>
 				<th class="width10">合同状态</th>
 				<th class="width10">合同金额(万元)</th>
@@ -92,9 +92,9 @@
 				<td>{{psf.cont_project |cutString}}</td>
 				<td>{{psf.province}}</td>
 				<td>{{psf.manager_name}}</td>
-				<td>{{psf.pro_stage |proStage}}</td>
+				<td>{{psf.pro_stage }}</td>
 				<td>{{psf.install_capacity | numberFloat }}</td>
-				<td>{{psf.cont_status |contStatus}}</td>
+				<td>{{psf.cont_status}}</td>
 				<td>{{psf.cont_money | numberFloat}}</td>
 			</tr>
 		</tbody>
