@@ -25,15 +25,6 @@
 		var currentPage = sessionStorage.getItem("currentPage");
 		if (currentPage) {
 			$("#" + currentPage).addClass("active");
-=======
-<script>
-	$(function(){
-		$('dd').find('ul').css("display","none");
-		$('#report-ul').css("display","block");
-		var currentPage = sessionStorage.getItem("currentPage");
-		if(currentPage){
-			$("#"+currentPage).addClass("active");
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 		}
 	})
 </script>

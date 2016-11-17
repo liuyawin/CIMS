@@ -134,8 +134,10 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/selectUsersFromDesign.do")
 	public @ResponseBody String getUsersFromDesign(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
 		List<User> result = userService.findUserByDeptName(Dept.shejibu.value);
-		return JSON.toJSONString(result);
+		jsonObject.put("list", result);
+		return jsonObject.toString();
 	}
 
 	/**

@@ -213,8 +213,8 @@ public class ContractDaoImpl implements ContractDao {
 		Integer managerId = (Integer) map.get("managerId");
 		Integer cont_status = (Integer) map.get("cont_status");
 		String province = (String) map.get("province");
-		Date startTime = (Date) map.get("startTime");
-		Date endTime = (Date) map.get("endTime");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
 
 		Integer offset = null;
 		Integer end = null;
@@ -254,13 +254,10 @@ public class ContractDaoImpl implements ContractDao {
 			}
 		}
 		if (province != null) {
-			sql.append(" and c.province=" + province);
+			sql.append(" and c.province='" + province + "'");
 		}
-		if (startTime != null) {
-			sql.append(" and c.cont_stime < " + startTime);
-		}
-		if (endTime != null) {
-			sql.append(" and c.cont_stime < " + endTime);
+		if (startTime != null && endTime != null) {
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and'" + endTime + "'");
 		}
 		sql.append(" order by cont_id desc");
 		if (offset != null && end != null) {
@@ -272,7 +269,6 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
-<<<<<<< HEAD
 	// 查询报表总条数
 	@Override
 	public Long countTotal(Map<String, Object> map) {
@@ -281,8 +277,8 @@ public class ContractDaoImpl implements ContractDao {
 		Integer managerId = (Integer) map.get("managerId");
 		Integer cont_status = (Integer) map.get("cont_status");
 		String province = (String) map.get("province");
-		Date startTime = (Date) map.get("startTime");
-		Date endTime = (Date) map.get("endTime");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
 
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
@@ -315,19 +311,18 @@ public class ContractDaoImpl implements ContractDao {
 			}
 		}
 		if (province != null) {
-			sql.append(" and c.province=" + province);
+			sql.append(" and c.province='" + province + "'");
 		}
-		if (startTime != null) {
-			sql.append(" and c.cont_stime < " + startTime);
+		if (startTime != null && endTime != null) {
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and'" + endTime + "'");
 		}
-		if (endTime != null) {
-			sql.append(" and c.cont_stime < " + endTime);
-		}
+
 		Query query = em.createNativeQuery(sql.toString());
 		BigInteger totalRow = (BigInteger) query.getSingleResult();
 		em.close();
 		return totalRow.longValue();
-=======
+	}
+
 	// 根据日期获取合同额到款对比表
 	@Override
 	public Object findByOneDate(Date date) {
@@ -342,7 +337,6 @@ public class ContractDaoImpl implements ContractDao {
 		Object result = query.getResultList();
 		em.close();
 		return result;
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 	}
 
 }

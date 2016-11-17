@@ -78,18 +78,14 @@ app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/remoAnalyzeList', {
 		templateUrl : '/CIMS/jsp/reportForm/remoAnalyzeList.html',
 		controller : 'ReportController'
-<<<<<<< HEAD
 	}).when('/projectList', {
 		templateUrl : '/CIMS/jsp/reportForm/projectList.html',
 		controller : 'ReportController'
-=======
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 	})
 } ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-<<<<<<< HEAD
 	// zq从设计部取出项目经理人选zq2016-11-17
 	services.selectUsersFromDesign = function(data) {
 		return $http({
@@ -103,20 +99,18 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'reportForm/selectProjectListBylimits.do',
-=======
-	
+			data : data
+		});
+	};
 	services.getRemoAnalyzeDataByYear = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'reportForm/selectComoRemoAnalyse.do',
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 			data : data
 		});
 	};
 	return services;
 } ]);
-
-<<<<<<< HEAD
 app.controller('ReportController', [
 		'$scope',
 		'services',
@@ -139,6 +133,7 @@ app.controller('ReportController', [
 			};
 			// zq点击查询list2016-11-17
 			reportForm.selectProjectListBylimits = function() {
+
 				var errorText = $("#errorText").css("display");
 				if (errorText == "inline") {
 					alert("时间格式错误！");
@@ -160,7 +155,7 @@ app.controller('ReportController', [
 				proListLimits = JSON.stringify(reportForm.limit);
 				services.selectProjectListBylimits({
 					limit : proListLimits,
-					page : reportPage
+					page : 1
 				}).success(function(data) {
 					reportForm.prStForms = data.list;// prstForms查询出来的列表（ProjectStatisticForm）
 					pageTurn(data.totalPage, 1);
@@ -196,10 +191,27 @@ app.controller('ReportController', [
 					});
 				}
 			}
+			// liu
+			reportForm.getTableDate = function() {
+				var beginYear = $('#begin-year').val();
+				var endYear = $('#end-year').val();
+				services.getRemoAnalyzeDataByYear({
+					beginYear : beginYear,
+					endYear : endYear
+				}).success(function(data) {
+					console.log(data);
+					reportForm.comoCompareRemo = data.reportForm;
+				});
+
+			}
 			// 初始化
 			function initData() {
 				console.log("初始化页面信息");
 				if ($location.path().indexOf('/remoAnalyzeList') == 0) {
+					var date = new Date();
+					var year = date.getFullYear();
+					$('#begin-year').val(year);
+					$('#end-year').val(year);
 				} else if ($location.path().indexOf('/projectList') == 0) {
 					selectUsersFromDesign();
 				}
@@ -207,11 +219,11 @@ app.controller('ReportController', [
 			initData();
 			// zq控制年月2016-11-17
 			var $dateFormat = $(".dateFormatForYM");
-			var dateRegexp = /^[0-9]{4}-[0-9]{1,2}$/;
+			var dateRegexpForYM = /^[0-9]{4}-[0-9]{1,2}$/;
 			$(".dateFormatForYM").blur(
 					function() {
 						if (this.value.trim() != "") {
-							if (!dateRegexp.test(this.value)) {
+							if (!dateRegexpForYM.test(this.value)) {
 								$(this).parent().children("span").css(
 										'display', 'inline');
 							} else {
@@ -224,7 +236,19 @@ app.controller('ReportController', [
 						}
 
 					});
+			
 			$(".dateFormatForYM").click(function() {
+				$(this).parent().children("span").css('display', 'none');
+			});
+			// liu
+			var $dateFormat = $(".dateFormat");
+			var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
+			$(".dateFormat").blur(function() {
+				if (!dateRegexp.test(this.value)) {
+					$(this).parent().children("span").css('display', 'inline');
+				}
+			});
+			$(".dateFormat").click(function() {
 				$(this).parent().children("span").css('display', 'none');
 			});
 		} ]);
@@ -250,57 +274,3 @@ app.filter('numberFloat', function() {
 		return money;
 	}
 });
-=======
-app
-		.controller(
-				'ReportController',
-				[
-						'$scope',
-						'services',
-						'$location',
-						function($scope, services, $location) {
-							// zq合同
-							var reportForm = $scope;
-							
-							reportForm.getTableDate = function(){
-								var beginYear = $('#begin-year').val();
-								var endYear = $('#end-year').val();
-								services.getRemoAnalyzeDataByYear({
-									beginYear:beginYear,
-									endYear  :endYear
-								}).success(function(data){
-									console.log(data);
-									reportForm.comoCompareRemo = data.reportForm;
-								});
-								
-							}
-							// zq初始化
-							function initData() {
-								console.log("初始化页面信息");
-								if ($location.path().indexOf('/remoAnalyzeList') == 0) {
-									var date = new Date();
-									var year = date.getFullYear();
-									$('#begin-year').val(year);
-									$('#end-year').val(year);
-								}
-							}
-							initData();
-							
-							var $dateFormat = $(".dateFormat");
-							var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
-							$(".dateFormat").blur(
-									function() {
-										if (!dateRegexp.test(this.value)) {
-											$(this).parent().children("span")
-													.css('display', 'inline');
-										}
-									});
-							$(".dateFormat").click(
-									function() {
-										$(this).parent().children("span").css(
-												'display', 'none');
-									});
-
-						} ]);
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
-

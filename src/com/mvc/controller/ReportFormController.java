@@ -1,17 +1,7 @@
 package com.mvc.controller;
 
-<<<<<<< HEAD
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-=======
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,21 +16,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-<<<<<<< HEAD
 import com.mvc.entity.ProjectStatisticForm;
-=======
-import com.base.constants.SessionKeyConstants;
-import com.base.enums.TaskStatus;
+
 import com.mvc.entity.ComoCompareRemo;
-import com.mvc.entity.PlanProjectForm;
-import com.mvc.entity.Task;
-import com.mvc.entity.User;
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
+
 import com.mvc.service.ReportFormService;
 import com.utils.Pager;
 import com.utils.StringUtil;
-
-import net.sf.json.JSONObject;
 
 import net.sf.json.JSONObject;
 
@@ -58,11 +40,7 @@ public class ReportFormController {
 	ReportFormService reportFormService;
 
 	/**
-<<<<<<< HEAD
 	 * 返回收据界面
-=======
-	 * 返回报表界面
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 	 * 
 	 * @return
 	 */
@@ -71,7 +49,6 @@ public class ReportFormController {
 		return "reportForm/index";
 	}
 
-<<<<<<< HEAD
 	/**
 	 * 导出光电院项目分项统计表
 	 * 
@@ -85,8 +62,8 @@ public class ReportFormController {
 		Integer managerId = null;
 		Integer cont_status = null;
 		String province = null;
-		Date startTime = null;
-		Date endTime = null;
+		String startTime = null;
+		String endTime = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("contType"))) {
 			cont_type = Integer.valueOf(request.getParameter("contType"));// 合同类型
@@ -104,27 +81,11 @@ public class ReportFormController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
 			province = request.getParameter("province");// 省份
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-=======
-	@RequestMapping("/selectPlanProject.do")
-	public ResponseEntity<byte[]> selectPlanProject(HttpServletRequest request) {
-		// 前台参数暂留
-		// Integer cont_state
-		// =Integer.valueOf(request.getParameter("contState"));
-		ResponseEntity<byte[]> byteArr = null;
-		ExcelHelper<PlanProjectForm> ex = new ExcelHelper<PlanProjectForm>();
-		String[] headers = { "序号", "项目名称", "项目设总", "装机容量（MW）", "合同状态", "合同额（万元）", "签订时间" };
-		List<PlanProjectForm> list = reportFormService.findPlanProject(null, null, null);
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
-		try {
-			if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
-				startTime = sdf.parse(request.getParameter("startDate"));// 开始时间
-			}
-			if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-				endTime = sdf.parse(request.getParameter("endDate"));// 结束时间
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
+			startTime = request.getParameter("startDate") + "-01";// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			endTime = request.getParameter("endDate") + "-01";// 结束时间
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -141,7 +102,6 @@ public class ReportFormController {
 		return byteArr;
 	}
 
-<<<<<<< HEAD
 	/**
 	 * 查询光电院项目分项统计表
 	 * 
@@ -164,7 +124,6 @@ public class ReportFormController {
 		return jsonObject.toString();
 	}
 
-=======
 	/*
 	 * ***********************************张姣娜报表开始*******************************
 	 */
@@ -194,5 +153,5 @@ public class ReportFormController {
 	/*
 	 * ***********************************张姣娜报表结束*******************************
 	 */
->>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
+
 }

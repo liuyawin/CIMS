@@ -66,7 +66,7 @@ public class ExcelHelper<T> {
 			OutputStream out, String pattern) {
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		for (int i = 0; i < map.size(); i++) {
-			Collection<T> list = map.get(0);
+			Collection<T> list = map.get(i);
 			String[] headers = headerMap.get(i);
 			export2003Excel(workbook, titles[i], headers, list, pattern);
 		}
