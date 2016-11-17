@@ -1,9 +1,14 @@
 package com.mvc.service;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import com.mvc.entity.PlanProjectForm;
+import org.springframework.http.ResponseEntity;
+
+import com.mvc.entity.ProjectStatisticForm;
+import com.utils.Pager;
+
+import net.sf.json.JSONObject;
 
 /**
  * 报表业务层
@@ -13,6 +18,15 @@ import com.mvc.entity.PlanProjectForm;
  */
 public interface ReportFormService {
 
-	// 光电院承担规划项目表
-	List<PlanProjectForm> findPlanProject(Integer cont_state, Date startTime, Date endTime);
+	// 导出光电院项目分项统计表
+	ResponseEntity<byte[]> exportProjectStatistic(Map<String, Object> map, String path);
+
+	// 查询光电院项目分项统计表
+	List<ProjectStatisticForm> findProjectStatistic(Map<String, Object> map, Pager pager, String path);
+
+	// 将JSONObject转成Map
+	Map<String, Object> JsonObjToMap(JSONObject jsonObject);
+
+	// 查询报表页码相关
+	Pager pagerTotal(Map<String, Object> map, Integer page);
 }

@@ -1,0 +1,110 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="/CIMS/login/toIndex.do">首页</a></li>
+		<li>报表</li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div class="tools">
+		<div>
+			<form action="exportProjectListBylimits.do" method="post"
+				enctype="multipart/form-data">
+				<ul class="projectListLimit">
+					<li><label>合同类型</label><select class="dfselect layoutStyle"
+						ng-model="limit.contType" name="contType">
+							<option value="-1">全部</option>
+							<option value="0">传统光伏项目</option>
+							<option value="1">分布式</option>
+							<option value="2">光热</option>
+							<option value="3">其他</option>
+					</select></li>
+					<li><label>项目阶段</label><select class="dfselect layoutStyle"
+						ng-model="limit.proStage" name="proStage">
+							<option value="">请选择</option>
+							<option value="0">规划</option>
+							<option value="1">预可研</option>
+							<option value="2">可研</option>
+							<option value="3">项目建议书</option>
+							<option value="4">初步设计</option>
+							<option value="5">发包、招标设计</option>
+							<option value="6">施工详图</option>
+							<option value="7">竣工图</option>
+							<option value="8">其他</option>
+					</select></li>
+					<li><label>合同状态</label><select class="dfselect layoutStyle"
+						ng-model="limit.contStatus" name="contStatus">
+							<option value="">请选择</option>
+							<option value="0">未立项</option>
+							<option value="1">已立项,未签</option>
+							<option value="2">已签订</option>
+					</select></li>
+					<li><label>省份</label>
+						<div class="oneinline">
+							<div id="distpicker" class="oneinline">
+								<div class="oneinline">
+									<label class="sr-only" for="province">Province</label> <select
+										class="dfselect layoutStyle" id="province"
+										ng-model="limit.province" name="province"></select>
+								</div>
+							</div>
+						</div></li>
+					<li><label>起止年月</label><input
+						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
+						ng-model="limit.startDate" placeholder="2016-01" id="startDate"
+						name="startDate" /><label>—</label><input
+						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
+						ng-model="limit.endDate" placeholder="2016-01" id="endDate"
+						name="endDate" /><span id="errorText" class="error-span">格式错误</span></li>
+					<li><label>设总</label><select class="dfselect layoutStyle"
+						style="width: 73px" ng-model="limit.userId"
+						ng-options="user.user_id as user.user_name for user in userDepts"
+						name="userId"><option value="">请选择</option></select></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="button" value="查询" ng-click="selectProjectListBylimits()"></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="submit" value="导出"></li>
+				</ul>
+
+			</form>
+		</div>
+
+	</div>
+
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width20">项目名称</th>
+				<th class="width10">所在地</th>
+				<th class="width10">项目设总</th>
+				<th class="width10">项目阶段</th>
+				<th class="width10">装机容量(MW)</th>
+				<th class="width10">合同状态</th>
+				<th class="width10">合同金额(万元)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="psf in prStForms">
+				<td>{{$index + 1}}</td>
+				<td>{{psf.cont_project |cutString}}</td>
+				<td>{{psf.province}}</td>
+				<td>{{psf.manager_name}}</td>
+				<td>{{psf.pro_stage |proStage}}</td>
+				<td>{{psf.install_capacity | numberFloat }}</td>
+				<td>{{psf.cont_status |contStatus}}</td>
+				<td>{{psf.cont_money | numberFloat}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="tcdPageCode">页码容器</div>
+</div>
+<script>
+	$(function() {
+		var $distpicker = $('#distpicker');
+		$distpicker.distpicker();
+	});
+</script>

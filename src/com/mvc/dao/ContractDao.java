@@ -1,9 +1,10 @@
 package com.mvc.dao;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.mvc.entity.Contract;
+import com.utils.Pager;
 
 public interface ContractDao {
 
@@ -35,6 +36,9 @@ public interface ContractDao {
 	List<Contract> findAllStopCont(String contName, Integer offset, Integer end);
 
 	/***** 报表相关 *****/
-	// 光电院承担规划项目表
-	List<Contract> findContByState(Integer cont_state, Date startTime, Date endTime);
+	// 光电院项目分项统计表
+	List<Contract> findContByPara(Map<String, Object> map, Pager pager);
+
+	// 查询报表总条数
+	Long countTotal(Map<String, Object> map);
 }

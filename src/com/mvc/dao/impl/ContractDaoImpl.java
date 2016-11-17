@@ -3,6 +3,7 @@ package com.mvc.dao.impl;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
+import com.utils.Pager;
 
 /**
  * 合同
@@ -201,15 +203,58 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
-	// 光电院承担规划项目表
+	/***** 报表相关 *****/
+	// 光电院项目分项统计表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Contract> findContByState(Integer cont_state, Date startTime, Date endTime) {
+	public List<Contract> findContByPara(Map<String, Object> map, Pager pager) {
+		Integer cont_type = (Integer) map.get("cont_type");
+		String pro_stage = (String) map.get("pro_stage");
+		Integer managerId = (Integer) map.get("managerId");
+		Integer cont_status = (Integer) map.get("cont_status");
+		String province = (String) map.get("province");
+		Date startTime = (Date) map.get("startTime");
+		Date endTime = (Date) map.get("endTime");
+
+		Integer offset = null;
+		Integer end = null;
+		if (pager != null) {
+			offset = pager.getOffset();
+			end = pager.getPageSize();
+		}
+
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from contract c where c.cont_ishistory=0");
-		if (cont_state != null) {
-			sql.append(" and c.cont_state=" + cont_state);
+
+		if (cont_type == -1) {
+			sql.append(" and c.cont_type in(0,1,2,3)");
+		} else {
+			sql.append(" and c.cont_type=" + cont_type);
+		}
+		if (pro_stage != null) {
+			sql.append(" and c.pro_stage like '%" + pro_stage + "%'");
+		}
+		if (managerId != null) {
+			sql.append(" and c.manager_id=" + managerId);
+		}
+		if (cont_status != null) {
+			switch (cont_status) {
+			case 0:
+				sql.append(" and c.cont_initiation=0");
+				break;
+			case 1:
+				sql.append(" and c.cont_initiation=1 and c.cont_stime is null");
+				break;
+			case 2:
+				sql.append(" and c.cont_initiation=1 and c.cont_stime is not null");
+				break;
+			default:
+				break;
+			}
+		}
+		if (province != null) {
+			sql.append(" and c.province=" + province);
 		}
 		if (startTime != null) {
 			sql.append(" and c.cont_stime < " + startTime);
@@ -218,10 +263,69 @@ public class ContractDaoImpl implements ContractDao {
 			sql.append(" and c.cont_stime < " + endTime);
 		}
 		sql.append(" order by cont_id desc");
+		if (offset != null && end != null) {
+			sql.append(" limit " + offset + "," + end);
+		}
 		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		List<Contract> list = query.getResultList();
 		em.close();
 		return list;
+	}
+
+	// 查询报表总条数
+	@Override
+	public Long countTotal(Map<String, Object> map) {
+		Integer cont_type = (Integer) map.get("cont_type");
+		String pro_stage = (String) map.get("pro_stage");
+		Integer managerId = (Integer) map.get("managerId");
+		Integer cont_status = (Integer) map.get("cont_status");
+		String province = (String) map.get("province");
+		Date startTime = (Date) map.get("startTime");
+		Date endTime = (Date) map.get("endTime");
+
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
+
+		if (cont_type == -1) {
+			sql.append(" and c.cont_type in(0,1,2,3)");
+		} else {
+			sql.append(" and c.cont_type=" + cont_type);
+		}
+		if (pro_stage != null) {
+			sql.append(" and c.pro_stage like '%" + pro_stage + "%'");
+		}
+		if (managerId != null) {
+			sql.append(" and c.manager_id=" + managerId);
+		}
+		if (cont_status != null) {
+			switch (cont_status) {
+			case 0:
+				sql.append(" and c.cont_initiation=0");
+				break;
+			case 1:
+				sql.append(" and c.cont_initiation=1 and c.cont_stime is null");
+				break;
+			case 2:
+				sql.append(" and c.cont_initiation=1 and c.cont_stime is not null");
+				break;
+			default:
+				break;
+			}
+		}
+		if (province != null) {
+			sql.append(" and c.province=" + province);
+		}
+		if (startTime != null) {
+			sql.append(" and c.cont_stime < " + startTime);
+		}
+		if (endTime != null) {
+			sql.append(" and c.cont_stime < " + endTime);
+		}
+		Query query = em.createNativeQuery(sql.toString());
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
+		em.close();
+		return totalRow.longValue();
 	}
 
 }

@@ -1,10 +1,7 @@
 package com.mvc.controller;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,11 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mvc.entity.PlanProjectForm;
+import com.mvc.entity.ProjectStatisticForm;
 import com.mvc.service.ReportFormService;
-import com.utils.ExcelHelper;
-import com.utils.FileHelper;
+import com.utils.Pager;
+import com.utils.StringUtil;
+
+import net.sf.json.JSONObject;
 
 /**
  * 报表统计控制器
@@ -35,48 +35,94 @@ public class ReportFormController {
 	@Autowired
 	ReportFormService reportFormService;
 
-	@SuppressWarnings("rawtypes")
-	@RequestMapping("/selectPlanProject.do")
-	public ResponseEntity<byte[]> selectPlanProject(HttpServletRequest request) {
-		// 前台参数暂留
-		// Integer cont_state
-		// =Integer.valueOf(request.getParameter("contState"));
-		ResponseEntity<byte[]> byteArr = null;
-		ExcelHelper<PlanProjectForm> ex = new ExcelHelper<PlanProjectForm>();
-		String[] titles = { "光电院承担规划项目表", "光电院分布式光伏项目统计表", "光电院光伏项目统计表（不含分布式）" };
-		String[] header1 = { "序号", "项目名称", "项目设总", "装机容量（MW）", "合同状态", "合同额（万元）", "签订时间" };
-		String[] header2 = { "序号", "项目名称", "项目设总", "装机容量（MW）", "合同状态", "合同额（万元）", "签订时间" };
-		String[] header3 = { "序号", "项目名称", "项目设总", "装机容量（MW）", "合同状态", "合同额（万元）", "签订时间" };
-		List<PlanProjectForm> list = reportFormService.findPlanProject(null, null, null);
+	/**
+	 * 返回收据界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toReportFormPage.do")
+	public String InvoiceReceivePage() {
+		return "reportForm/index";
+	}
 
-		Map<Integer, String[]> headerMap = new HashMap<Integer, String[]>();// 每个sheet的标题
-		headerMap.put(0, header1);
-		headerMap.put(1, header2);
-		headerMap.put(2, header3);
+	/**
+	 * 导出光电院项目分项统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportProjectListBylimits.do")
+	public ResponseEntity<byte[]> exportProjectStatistic(HttpServletRequest request) {
+		Integer cont_type = null;
+		String pro_stage = null;
+		Integer managerId = null;
+		Integer cont_status = null;
+		String province = null;
+		Date startTime = null;
+		Date endTime = null;
 
-		Map<Integer, List> map = new HashMap<Integer, List>();// 每个sheet中内容
-		map.put(0, list);
-		map.put(1, list);
-		map.put(2, list);
-
+		if (StringUtil.strIsNotEmpty(request.getParameter("contType"))) {
+			cont_type = Integer.valueOf(request.getParameter("contType"));// 合同类型
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("proStage"))) {
+			pro_stage = request.getParameter("proStage");// 项目阶段
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
+			System.out.println("dsag" + request.getParameter("userId"));
+			managerId = Integer.valueOf(request.getParameter("userId"));// 设总
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("contStatus"))) {
+			cont_status = Integer.valueOf(request.getParameter("contStatus"));// 合同状态
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
+			province = request.getParameter("province");// 省份
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			Calendar c = Calendar.getInstance();
-			c.setTime(new Date());
-			int year = c.get(Calendar.YEAR);
-			String fileName = year + "年光电院承担规划项目表.xlsx";// 2007版(2003版受限)
-			String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
-			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-
-			OutputStream out = new FileOutputStream(path);
-			ex.exportMutiExcel(titles, headerMap, map, out, "yyyy-MM-dd");
-			out.close();
-			byteArr = FileHelper.downloadFile(fileName, path);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
+				startTime = sdf.parse(request.getParameter("startDate"));// 开始时间
+			}
+			if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+				endTime = sdf.parse(request.getParameter("endDate"));// 结束时间
+			}
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cont_type", cont_type);
+		map.put("pro_stage", pro_stage);
+		map.put("managerId", managerId);
+		map.put("cont_status", cont_status);
+		map.put("province", province);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = reportFormService.exportProjectStatistic(map, path);
 		return byteArr;
+	}
+
+	/**
+	 * 查询光电院项目分项统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectProjectListBylimits.do")
+	public @ResponseBody String selectProjectStatistic(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
+		Integer page = Integer.parseInt(request.getParameter("page"));// 指定页码
+
+		Map<String, Object> map = reportFormService.JsonObjToMap(jsonObject);
+		Pager pager = reportFormService.pagerTotal(map, page);
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		List<ProjectStatisticForm> list = reportFormService.findProjectStatistic(map, pager, path);
+
+		jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
 	}
 
 }

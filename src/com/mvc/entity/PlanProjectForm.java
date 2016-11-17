@@ -17,7 +17,7 @@ public class PlanProjectForm {
 	private String cont_state;// 合同状态
 	private Float cont_money;// 合同额（万元）
 	private Date cont_stime;// 签订时间
-
+	
 	public Integer getPlpr_id() {
 		return plpr_id;
 	}

@@ -189,6 +189,7 @@ public class ContractController {
 		Integer cont_id = Integer.valueOf(request.getParameter("cont_id"));
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("contract"));
 		Contract contract = contractService.updateContract(cont_id, jsonObject, user);
+		jsonObject = new JSONObject();
 		jsonObject.put("contract", contract);
 		return jsonObject.toString();
 	}

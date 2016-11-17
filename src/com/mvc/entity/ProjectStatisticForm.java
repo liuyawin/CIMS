@@ -1,12 +1,10 @@
 package com.mvc.entity;
 
-import java.util.Date;
-
 /**
  * 项目统计表
  * 
  * @author wangrui
- * @date 2016-11-15
+ * @date 2016-11-16
  */
 public class ProjectStatisticForm {
 
@@ -14,11 +12,11 @@ public class ProjectStatisticForm {
 	private String cont_project;// 项目名称
 	private String manager_name;// 项目设总
 	private String province;// 所在地（省）
-	private String proStage;// 设计阶段（项目阶段）
+	private String pro_stage;// 设计阶段（项目阶段）
 	private Float install_capacity;// 装机容量（MV）
-	private String cont_state;// 合同状态
 	private Float cont_money;// 合同额（万元）
-	private Date cont_stime;// 签订时间
+	private String cont_status;// 合同状态
+	private String remark;// 备注
 
 	public Integer getPrsf_id() {
 		return prsf_id;
@@ -52,12 +50,12 @@ public class ProjectStatisticForm {
 		this.province = province;
 	}
 
-	public String getProStage() {
-		return proStage;
+	public String getPro_stage() {
+		return pro_stage;
 	}
 
-	public void setProStage(String proStage) {
-		this.proStage = proStage;
+	public void setPro_stage(String pro_stage) {
+		this.pro_stage = pro_stage;
 	}
 
 	public Float getInstall_capacity() {
@@ -68,14 +66,6 @@ public class ProjectStatisticForm {
 		this.install_capacity = install_capacity;
 	}
 
-	public String getCont_state() {
-		return cont_state;
-	}
-
-	public void setCont_state(String cont_state) {
-		this.cont_state = cont_state;
-	}
-
 	public Float getCont_money() {
 		return cont_money;
 	}
@@ -84,12 +74,20 @@ public class ProjectStatisticForm {
 		this.cont_money = cont_money;
 	}
 
-	public Date getCont_stime() {
-		return cont_stime;
+	public String getCont_status() {
+		return cont_status;
 	}
 
-	public void setCont_stime(Date cont_stime) {
-		this.cont_stime = cont_stime;
+	public void setCont_status(String cont_status) {
+		this.cont_status = cont_status;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 }

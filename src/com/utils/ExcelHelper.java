@@ -16,10 +16,7 @@ import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFComment;
 import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -44,30 +41,51 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class ExcelHelper<T> {
 
 	/**
-	 * 导出2003版Excel
+	 * 导出2003版单sheet的Excel
 	 * 
 	 * @param headers
 	 * @param list
 	 * @param out
 	 */
-	public void exportExcel(String[] headers, Collection<T> list, OutputStream out) {
+	public void export2003Excel(String title, String[] headers, Collection<T> list, OutputStream out, String pattern) {
 		HSSFWorkbook workbook = new HSSFWorkbook();// 声明一个工作薄
-		exportExcel(workbook, "sheet1", headers, list, "yyyy-MM-dd");
-		writeOut(workbook, out);
+		export2003Excel(workbook, title, headers, list, pattern);
+		write2003Out(workbook, out);
 	}
 
 	/**
-	 * 导出2003版Excel
+	 * 导出2003版多sheet的Excel
 	 * 
 	 * @param headers
 	 * @param list
 	 * @param out
 	 * @param pattern
 	 */
-	public void exportExcel(String[] headers, Collection<T> list, OutputStream out, String pattern) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void export2003MutiExcel(String[] titles, Map<Integer, String[]> headerMap, Map<Integer, List> map,
+			OutputStream out, String pattern) {
 		HSSFWorkbook workbook = new HSSFWorkbook();
-		exportExcel(workbook, "sheet1", headers, list, pattern);
-		writeOut(workbook, out);
+		for (int i = 0; i < map.size(); i++) {
+			Collection<T> list = map.get(0);
+			String[] headers = headerMap.get(i);
+			export2003Excel(workbook, titles[i], headers, list, pattern);
+		}
+		write2003Out(workbook, out);
+	}
+
+	/**
+	 * 导出2007版单sheet的Excel
+	 * 
+	 * @param title
+	 * @param headers
+	 * @param list
+	 * @param out
+	 * @param pattern
+	 */
+	public void export2007Excel(String title, String[] headers, Collection<T> list, OutputStream out, String pattern) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		export2007Excel(workbook, title, headers, list, pattern);
+		write2007Out(workbook, out);
 	}
 
 	/**
@@ -80,11 +98,11 @@ public class ExcelHelper<T> {
 	 * @param pattern
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void exportMutiExcel(String[] titles, Map<Integer, String[]> headerMap, Map<Integer, List> map,
+	public void export2007MutiExcel(String[] titles, Map<Integer, String[]> headerMap, Map<Integer, List> map,
 			OutputStream out, String pattern) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		for (int i = 0; i < map.size(); i++) {
-			Collection<T> list = map.get(0);
+			Collection<T> list = map.get(i);
 			String[] headers = headerMap.get(i);
 			export2007Excel(workbook, titles[i], headers, list, pattern);
 		}
@@ -105,7 +123,7 @@ public class ExcelHelper<T> {
 	 *            如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
 	 */
 	@SuppressWarnings({ "unchecked", "deprecation", "rawtypes" })
-	private void exportExcel(HSSFWorkbook workbook, String title, String[] headers, Collection<T> list,
+	private void export2003Excel(HSSFWorkbook workbook, String title, String[] headers, Collection<T> list,
 			String pattern) {
 		HSSFSheet sheet = workbook.createSheet(title);
 		// 设置表格默认列宽度为15个字节
@@ -129,14 +147,6 @@ public class ExcelHelper<T> {
 		font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
 		// 把字体应用到当前的样式
 		style2.setFont(font2);
-		// 声明一个画图的顶级管理器
-		HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
-		// 定义注释的大小和位置
-		HSSFComment comment = patriarch.createComment(new HSSFClientAnchor(0, 0, 0, 0, (short) 4, 2, (short) 6, 5));
-		// 设置注释内容
-		comment.setString(new HSSFRichTextString("西北勘测设计院光伏电设计分院"));
-		// 设置注释作者，当鼠标移动到单元格上是可以在状态栏中看到该内容.
-		comment.setAuthor("光伏电设计分院");
 		// 产生表格标题行
 		HSSFRow row = sheet.createRow(0);
 		for (short i = 0; i < headers.length; i++) {
@@ -349,7 +359,7 @@ public class ExcelHelper<T> {
 	 * @param workbook
 	 * @param out
 	 */
-	private void writeOut(HSSFWorkbook workbook, OutputStream out) {
+	private void write2003Out(HSSFWorkbook workbook, OutputStream out) {
 		try {
 			workbook.write(out);
 		} catch (IOException e) {
