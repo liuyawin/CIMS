@@ -37,4 +37,7 @@ public interface ContractDao {
 	/***** 报表相关 *****/
 	// 光电院承担规划项目表
 	List<Contract> findContByState(Integer cont_state, Date startTime, Date endTime);
+
+	// 根据日期获取合同额到款对比表
+	Object findByOneDate(Date Date);
 }

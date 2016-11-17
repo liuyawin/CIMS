@@ -4,21 +4,32 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.base.constants.SessionKeyConstants;
+import com.base.enums.TaskStatus;
+import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.PlanProjectForm;
+import com.mvc.entity.Task;
+import com.mvc.entity.User;
 import com.mvc.service.ReportFormService;
 import com.utils.ExcelHelper;
 import com.utils.FileHelper;
+
+import net.sf.json.JSONObject;
 
 /**
  * 报表统计控制器
@@ -34,7 +45,7 @@ public class ReportFormController {
 	ReportFormService reportFormService;
 
 	/**
-	 * 返回收据界面
+	 * 返回报表界面
 	 * 
 	 * @return
 	 */
@@ -72,4 +83,33 @@ public class ReportFormController {
 		return byteArr;
 	}
 
+	/*
+	 * ***********************************张姣娜报表开始*******************************
+	 */
+	/**
+	 * 根据日期查询合同额到款对比表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/selectComoRemoAnalyse.do")
+	public @ResponseBody String findComoRemoAnalyse(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy");
+		Date dateOne = null;
+		Date dateTwo = null;
+		try {
+			dateOne = format.parse(jsonObject.getString("beginYear"));
+			dateTwo = format.parse(jsonObject.getString("endYear"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
+		jsonObject.put("comoCompareRemo", comoCompareRemo);
+		return jsonObject.toString();
+	}
+	/*
+	 * ***********************************张姣娜报表结束*******************************
+	 */
 }
