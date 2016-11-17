@@ -38,13 +38,14 @@ public class Contract implements Serializable {
 	private String cont_project;// 项目名称
 	private String province;// 新增：项目所在省........................
 	private String city;// 新增：项目所在市............................
-	private String proStage;// 新增：项目阶段(0=规划,1=预可研,2=可研,3=项目建议书,4=初步设计,5=发包、招标设计,6=施工详图,7=竣工图,8=其他).........................
-	private Integer cont_state;// 状态,0:在建,1:竣工,2:停建
+	private String pro_stage;// 新增：项目阶段(0=规划,1=预可研,2=可研,3=项目建议书,4=初步设计,5=发包、招标设计,6=施工详图,7=竣工图,8=其他).........................
+	private Integer cont_state;// 项目状态,0:在建,1:竣工,2:停建
 	private Date cont_stime;// 合同签订日期
 	private User manager;// 项目设总（项目经理）
 	private User assistant_manager;// 新增：项目副设总（项目副经理），可为空......................
 	private Integer cont_hasproxy;// 是否有委托书，0表示没有，1表示有
 	private Integer cont_initiation;// 是否立项，0:未立项，1:已立项(默认已立项)
+	private Float install_capacity;// 新增： 装机容量（MV）.......................
 
 	// 业主信息相关
 	private String cont_client;// 业主公司名称
@@ -140,6 +141,15 @@ public class Contract implements Serializable {
 
 	public void setCont_initiation(Integer cont_initiation) {
 		this.cont_initiation = cont_initiation;
+	}
+
+	@Column(columnDefinition = "float(10,2) default '0.00'")
+	public Float getInstall_capacity() {
+		return install_capacity;
+	}
+
+	public void setInstall_capacity(Float install_capacity) {
+		this.install_capacity = install_capacity;
 	}
 
 	@Column(length = 64)
@@ -487,12 +497,12 @@ public class Contract implements Serializable {
 		this.city = city;
 	}
 
-	public String getProStage() {
-		return proStage;
+	public String getPro_stage() {
+		return pro_stage;
 	}
 
-	public void setProStage(String proStage) {
-		this.proStage = proStage;
+	public void setPro_stage(String pro_stage) {
+		this.pro_stage = pro_stage;
 	}
 
 	@ManyToOne

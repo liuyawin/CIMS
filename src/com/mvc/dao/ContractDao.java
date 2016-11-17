@@ -1,8 +1,10 @@
 package com.mvc.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mvc.entity.Contract;
+import com.utils.Pager;
 
 public interface ContractDao {
 
@@ -32,4 +34,11 @@ public interface ContractDao {
 
 	// 张姣娜：查询所有停建合同列表
 	List<Contract> findAllStopCont(String contName, Integer offset, Integer end);
+
+	/***** 报表相关 *****/
+	// 光电院项目分项统计表
+	List<Contract> findContByPara(Map<String, Object> map, Pager pager);
+
+	// 查询报表总条数
+	Long countTotal(Map<String, Object> map);
 }
