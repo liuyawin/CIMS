@@ -95,6 +95,4 @@ public class ComoCompareRemo {
 		this.ratio_conum = ratio_conum;
 	}
 
-
-
 }

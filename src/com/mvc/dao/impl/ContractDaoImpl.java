@@ -230,7 +230,7 @@ public class ContractDaoImpl implements ContractDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append(
-				"select sum(cont_money),sum(remo_totalmoney),count(cont_id) from contract c where c.cont_ishistory=0 ");
+				"select coalesce(sum(cont_money),0.00),coalesce(sum(remo_totalmoney),0.00),count(cont_id) from contract c where c.cont_ishistory=0 ");
 		if (date != null) {
 			sql.append(" and cont_stime like '%" + date + "%'");
 		}

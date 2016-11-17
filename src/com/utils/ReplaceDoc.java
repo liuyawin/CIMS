@@ -39,7 +39,6 @@ public class ReplaceDoc {
 			HWPFDocument document = new HWPFDocument(tempFileInputStream);
 			// 读取文本内容
 			Range bodyRange = document.getRange();
-
 			// 替换内容
 			for (Map.Entry<String, String> entry : contentMap.entrySet()) {
 				bodyRange.replaceText("${" + entry.getKey() + "}", entry.getValue());
