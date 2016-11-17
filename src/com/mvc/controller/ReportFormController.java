@@ -1,13 +1,24 @@
 package com.mvc.controller;
 
+<<<<<<< HEAD
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+=======
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+>>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +26,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+<<<<<<< HEAD
 import com.mvc.entity.ProjectStatisticForm;
+=======
+import com.base.constants.SessionKeyConstants;
+import com.base.enums.TaskStatus;
+import com.mvc.entity.ComoCompareRemo;
+import com.mvc.entity.PlanProjectForm;
+import com.mvc.entity.Task;
+import com.mvc.entity.User;
+>>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 import com.mvc.service.ReportFormService;
 import com.utils.Pager;
 import com.utils.StringUtil;
+
+import net.sf.json.JSONObject;
 
 import net.sf.json.JSONObject;
 
@@ -36,7 +58,11 @@ public class ReportFormController {
 	ReportFormService reportFormService;
 
 	/**
+<<<<<<< HEAD
 	 * 返回收据界面
+=======
+	 * 返回报表界面
+>>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 	 * 
 	 * @return
 	 */
@@ -45,6 +71,7 @@ public class ReportFormController {
 		return "reportForm/index";
 	}
 
+<<<<<<< HEAD
 	/**
 	 * 导出光电院项目分项统计表
 	 * 
@@ -78,6 +105,17 @@ public class ReportFormController {
 			province = request.getParameter("province");// 省份
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+=======
+	@RequestMapping("/selectPlanProject.do")
+	public ResponseEntity<byte[]> selectPlanProject(HttpServletRequest request) {
+		// 前台参数暂留
+		// Integer cont_state
+		// =Integer.valueOf(request.getParameter("contState"));
+		ResponseEntity<byte[]> byteArr = null;
+		ExcelHelper<PlanProjectForm> ex = new ExcelHelper<PlanProjectForm>();
+		String[] headers = { "序号", "项目名称", "项目设总", "装机容量（MW）", "合同状态", "合同额（万元）", "签订时间" };
+		List<PlanProjectForm> list = reportFormService.findPlanProject(null, null, null);
+>>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 		try {
 			if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
 				startTime = sdf.parse(request.getParameter("startDate"));// 开始时间
@@ -103,6 +141,7 @@ public class ReportFormController {
 		return byteArr;
 	}
 
+<<<<<<< HEAD
 	/**
 	 * 查询光电院项目分项统计表
 	 * 
@@ -125,4 +164,35 @@ public class ReportFormController {
 		return jsonObject.toString();
 	}
 
+=======
+	/*
+	 * ***********************************张姣娜报表开始*******************************
+	 */
+	/**
+	 * 根据日期查询合同额到款对比表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/selectComoRemoAnalyse.do")
+	public @ResponseBody String findComoRemoAnalyse(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy");
+		Date dateOne = null;
+		Date dateTwo = null;
+		try {
+			dateOne = format.parse(request.getParameter("beginYear"));
+			dateTwo = format.parse(request.getParameter("endYear"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
+		jsonObject.put("comoCompareRemo", comoCompareRemo);
+		return jsonObject.toString();
+	}
+	/*
+	 * ***********************************张姣娜报表结束*******************************
+	 */
+>>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 }

@@ -78,14 +78,18 @@ app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/remoAnalyzeList', {
 		templateUrl : '/CIMS/jsp/reportForm/remoAnalyzeList.html',
 		controller : 'ReportController'
+<<<<<<< HEAD
 	}).when('/projectList', {
 		templateUrl : '/CIMS/jsp/reportForm/projectList.html',
 		controller : 'ReportController'
+=======
+>>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 	})
 } ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
+<<<<<<< HEAD
 	// zq从设计部取出项目经理人选zq2016-11-17
 	services.selectUsersFromDesign = function(data) {
 		return $http({
@@ -99,12 +103,20 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'reportForm/selectProjectListBylimits.do',
+=======
+	
+	services.getRemoAnalyzeDataByYear = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'reportForm/selectComoRemoAnalyse.do',
+>>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 			data : data
 		});
 	};
 	return services;
 } ]);
 
+<<<<<<< HEAD
 app.controller('ReportController', [
 		'$scope',
 		'services',
@@ -238,4 +250,57 @@ app.filter('numberFloat', function() {
 		return money;
 	}
 });
+=======
+app
+		.controller(
+				'ReportController',
+				[
+						'$scope',
+						'services',
+						'$location',
+						function($scope, services, $location) {
+							// zq合同
+							var reportForm = $scope;
+							
+							reportForm.getTableDate = function(){
+								var beginYear = $('#begin-year').val();
+								var endYear = $('#end-year').val();
+								services.getRemoAnalyzeDataByYear({
+									beginYear:beginYear,
+									endYear  :endYear
+								}).success(function(data){
+									console.log(data);
+									reportForm.comoCompareRemo = data.reportForm;
+								});
+								
+							}
+							// zq初始化
+							function initData() {
+								console.log("初始化页面信息");
+								if ($location.path().indexOf('/remoAnalyzeList') == 0) {
+									var date = new Date();
+									var year = date.getFullYear();
+									$('#begin-year').val(year);
+									$('#end-year').val(year);
+								}
+							}
+							initData();
+							
+							var $dateFormat = $(".dateFormat");
+							var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
+							$(".dateFormat").blur(
+									function() {
+										if (!dateRegexp.test(this.value)) {
+											$(this).parent().children("span")
+													.css('display', 'inline');
+										}
+									});
+							$(".dateFormat").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
+
+						} ]);
+>>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 

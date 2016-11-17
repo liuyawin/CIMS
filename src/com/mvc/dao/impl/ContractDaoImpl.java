@@ -272,6 +272,7 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
+<<<<<<< HEAD
 	// 查询报表总条数
 	@Override
 	public Long countTotal(Map<String, Object> map) {
@@ -326,6 +327,22 @@ public class ContractDaoImpl implements ContractDao {
 		BigInteger totalRow = (BigInteger) query.getSingleResult();
 		em.close();
 		return totalRow.longValue();
+=======
+	// 根据日期获取合同额到款对比表
+	@Override
+	public Object findByOneDate(Date date) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append(
+				"select sum(cont_money),sum(remo_totalmoney),count(cont_id) from contract c where c.cont_ishistory=0 ");
+		if (date != null) {
+			sql.append(" and cont_stime like '%" + date + "%'");
+		}
+		Query query = em.createNativeQuery(sql.toString());
+		Object result = query.getResultList();
+		em.close();
+		return result;
+>>>>>>> f18b41a8e0e1003b483275e365270fd6ad064cf0
 	}
 
 }
