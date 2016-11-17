@@ -100,16 +100,12 @@ public class ReportFormController {
 	@RequestMapping(value = "/selectComoRemoAnalyse.do")
 	public @ResponseBody String findComoRemoAnalyse(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy");
-		Date dateOne = null;
-		Date dateTwo = null;
-		try {
-			dateOne = format.parse(request.getParameter("beginYear"));
-			dateTwo = format.parse(request.getParameter("endYear"));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		String dateOne = request.getParameter("beginYear");
+		System.out.println("riqi111:" + request.getParameter("beginYear"));
+		System.out.println("riqi:" + dateOne);
+		String dateTwo = request.getParameter("endYear");
 		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
+		System.out.println("调取结果成功：" + comoCompareRemo.getComo_two() + comoCompareRemo.getComo_one());
 		jsonObject.put("comoCompareRemo", comoCompareRemo);
 		return jsonObject.toString();
 	}

@@ -226,7 +226,7 @@ public class ContractDaoImpl implements ContractDao {
 
 	// 根据日期获取合同额到款对比表
 	@Override
-	public Object findByOneDate(Date date) {
+	public List<Object> findByOneDate(String date) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append(
@@ -235,7 +235,7 @@ public class ContractDaoImpl implements ContractDao {
 			sql.append(" and cont_stime like '%" + date + "%'");
 		}
 		Query query = em.createNativeQuery(sql.toString());
-		Object result = query.getResultList();
+		List<Object> result = query.getResultList();
 		em.close();
 		return result;
 	}

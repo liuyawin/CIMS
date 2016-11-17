@@ -18,5 +18,5 @@ public interface ReportFormService {
 	List<PlanProjectForm> findPlanProject(Integer cont_state, Date startTime, Date endTime);
 
 	// 根据日期获取合同额到款对比表
-	ComoCompareRemo findByDate(Date oneTime, Date twoTime);
+	ComoCompareRemo findByDate(String oneTime, String twoTime);
 }

@@ -55,29 +55,58 @@ public class ReportFormServiceImpl implements ReportFormService {
 
 	// 根据日期获取合同额到款对比表
 	@Override
-	public ComoCompareRemo findByDate(Date oneDate, Date twoDate) {
+	public ComoCompareRemo findByDate(String oneDate, String twoDate) {
 
-		Object objectOne = contractDao.findByOneDate(oneDate);
-		Object objectTwo = contractDao.findByOneDate(twoDate);
+		List<Object> objectOne = contractDao.findByOneDate(oneDate);
+		List<Object> objectTwo = contractDao.findByOneDate(twoDate);
 
 		ComoCompareRemo comoCompareRemo = new ComoCompareRemo();
-		Object[] objOne = (Object[]) objectOne;
-		comoCompareRemo.setComo_one((Float) objOne[0]);
-		comoCompareRemo.setRemo_one((Float) objOne[1]);
-		comoCompareRemo.setCont_num_one((Integer) objOne[2]);
+		Object[] objOne = (Object[]) objectOne.get(0);
+		System.out.println("jieguo:" + objOne[2]);
+		comoCompareRemo.setComo_one(objOne[0].toString());
+		comoCompareRemo.setRemo_one(objOne[1].toString());
+		comoCompareRemo.setCont_num_one(objOne[2].toString());
 
-		Object[] objTwo = (Object[]) objectTwo;
-		comoCompareRemo.setComo_two((Float) objTwo[0]);
-		comoCompareRemo.setRemo_two((Float) objTwo[1]);
-		comoCompareRemo.setCont_num_two((Integer) objTwo[2]);
-
-		Float ratio_como = (Float) (((Float) objTwo[0] - (Float) objOne[0]) / ((Float) objOne[0]) * 100);
-		Float ratio_remo = (Float) (((Float) objTwo[1] - (Float) objOne[1]) / ((Float) objOne[1]) * 100);
-		Float ratio_conum = (Float) (((Float) objTwo[2] - (Float) objOne[2]) / ((Float) objOne[2]) * 100);
-
-		comoCompareRemo.setRatio_como(ratio_como + "%");
-		comoCompareRemo.setRatio_remo(ratio_remo + "%");
-		comoCompareRemo.setRatio_conum(ratio_conum + "%");
+		Object[] objTwo = (Object[]) objectTwo.get(0);
+		comoCompareRemo.setComo_two(objTwo[0].toString());
+		comoCompareRemo.setRemo_two(objTwo[1].toString());
+		comoCompareRemo.setCont_num_two(objTwo[2].toString());
+		if (objOne[0].equals(0.0)) {
+			comoCompareRemo.setRatio_como("---");
+		} else {
+			Double ratio_como = (Double) (((Double) objTwo[0] - (Double) objOne[0]) / (Double) objOne[0] * 100);
+			if (ratio_como > 0)
+				comoCompareRemo.setRatio_como("同比增长" + ratio_como + "%");
+			else if (ratio_como < 0) {
+				comoCompareRemo.setRatio_como("同比减少" + ratio_como + "%");
+			} else {
+				comoCompareRemo.setRatio_como("相等");
+			}
+		}
+		if (objOne[1].equals(0.0)) {
+			comoCompareRemo.setRatio_remo("---");
+		} else {
+			Double ratio_remo = (Double) (((Double) objTwo[1] - (Double) objOne[1]) / (Double) objOne[1] * 100);
+			if (ratio_remo > 0)
+				comoCompareRemo.setRatio_remo("同比增长" + ratio_remo + "%");
+			else if (ratio_remo < 0) {
+				comoCompareRemo.setRatio_remo("同比减少" + ratio_remo + "%");
+			} else {
+				comoCompareRemo.setRatio_remo("相等");
+			}
+		}
+		if (objOne[2].toString().equals("0")) {
+			comoCompareRemo.setRatio_conum("---");
+		} else {
+			Double ratio_conum = (Double) (((Double) objTwo[2] - (Double) objOne[2]) / (Double) objOne[2] * 100);
+			if (ratio_conum > 0)
+				comoCompareRemo.setRatio_conum("同比增长" + ratio_conum + "%");
+			else if (ratio_conum < 0) {
+				comoCompareRemo.setRatio_conum("同比减少" + ratio_conum + "%");
+			} else {
+				comoCompareRemo.setRatio_conum("相等");
+			}
+		}
 		return comoCompareRemo;
 	}
 
