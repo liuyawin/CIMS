@@ -3,6 +3,7 @@ package com.mvc.service;
 import java.util.Date;
 import java.util.List;
 
+import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.PlanProjectForm;
 
 /**
@@ -15,4 +16,7 @@ public interface ReportFormService {
 
 	// 光电院承担规划项目表
 	List<PlanProjectForm> findPlanProject(Integer cont_state, Date startTime, Date endTime);
+
+	// 根据日期获取合同额到款对比表
+	ComoCompareRemo findByDate(Date oneTime, Date twoTime);
 }
