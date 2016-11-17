@@ -83,7 +83,14 @@ app.config([ '$routeProvider', function($routeProvider) {
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-
+	
+	services.getRemoAnalyzeDataByYear = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'reportForm/getRemoAnalyzeDataByYear.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 
@@ -98,12 +105,25 @@ app
 							// zq合同
 							var reportForm = $scope;
 							
-						
+							reportForm.getTableDate = function(){
+								var beginYear = $('#begin-year').val();
+								var endYear = $('#end-year').val();
+								services.getRemoAnalyzeDataByYear({
+									beginYear:beginYear,
+									endYear  :endYear
+								}).success(function(data){
+									
+								});
+								
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
 								if ($location.path().indexOf('/remoAnalyzeList') == 0) {
-									alert("进来了");
+									var date = new Date();
+									var year = date.getFullYear();
+									$('#begin-year').val(year);
+									$('#end-year').val(year);
 								}
 							}
 							initData();

@@ -891,6 +891,10 @@ h2 {
 	text-indent: 10px;
 }
 
+.short{
+	width:120px;
+}
+
 .textinput {
 	border-top: solid 1px #a7b5bc;
 	border-left: solid 1px #a7b5bc;
