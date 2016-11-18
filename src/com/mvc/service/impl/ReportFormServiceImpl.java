@@ -4,8 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.base.enums.ContStatus;
 import com.base.enums.ContractType;
 import com.mvc.dao.ContractDao;
+import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.Contract;
 import com.mvc.entity.PlanProjectForm;
 import com.mvc.entity.ProjectStatisticForm;
@@ -194,8 +193,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 		Integer managerId = null;
 		Integer cont_status = null;
 		String province = null;
-		Date startTime = null;
-		Date endTime = null;
+		String startTime = null;
+		String endTime = null;
 		if (jsonObject.containsKey("contType")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("contType"))) {
 				cont_type = Integer.valueOf(jsonObject.getString("contType"));// 合同类型
@@ -221,20 +220,16 @@ public class ReportFormServiceImpl implements ReportFormService {
 				province = jsonObject.getString("province");// 省份
 			}
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			if (jsonObject.containsKey("startDate")) {
-				if (StringUtil.strIsNotEmpty(jsonObject.getString("startDate"))) {
-					startTime = sdf.parse(jsonObject.getString("startDate"));// 开始时间
-				}
+		if (jsonObject.containsKey("startDate")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("startDate"))) {
+				startTime = jsonObject.getString("startDate") + "-01";// 开始时间
 			}
-			if (jsonObject.containsKey("endDate")) {
-				if (StringUtil.strIsNotEmpty(jsonObject.getString("endDate"))) {
-					endTime = sdf.parse(jsonObject.getString("endDate"));// 结束时间
-				}
+		}
+		if (jsonObject.containsKey("endDate")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("endDate"))) {
+				endTime = jsonObject.getString("endDate") + "-01";// 结束时间
+
 			}
-		} catch (ParseException e) {
-			e.printStackTrace();
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -271,13 +266,40 @@ public class ReportFormServiceImpl implements ReportFormService {
 		if (StringUtil.strIsNotEmpty(str)) {
 			for (int i = 0; i < arr.length; i++) {
 				if (str.contains(String.valueOf(i))) {
-					System.out.println(String.valueOf(i));
 					str = str.replaceAll(String.valueOf(i), arr[i]);
 				}
 			}
 			str = str.substring(0, str.length() - 1);// 去掉最后一个逗号
 		}
 		return str;
+	}
+
+	// 根据日期获取合同额到款对比表
+	@Override
+	public ComoCompareRemo findByDate(Date oneDate, Date twoDate) {
+
+		Object objectOne = contractDao.findByOneDate(oneDate);
+		Object objectTwo = contractDao.findByOneDate(twoDate);
+
+		ComoCompareRemo comoCompareRemo = new ComoCompareRemo();
+		Object[] objOne = (Object[]) objectOne;
+		comoCompareRemo.setComo_one((Float) objOne[0]);
+		comoCompareRemo.setRemo_one((Float) objOne[1]);
+		comoCompareRemo.setCont_num_one((Integer) objOne[2]);
+
+		Object[] objTwo = (Object[]) objectTwo;
+		comoCompareRemo.setComo_two((Float) objTwo[0]);
+		comoCompareRemo.setRemo_two((Float) objTwo[1]);
+		comoCompareRemo.setCont_num_two((Integer) objTwo[2]);
+
+		Float ratio_como = (Float) (((Float) objTwo[0] - (Float) objOne[0]) / ((Float) objOne[0]) * 100);
+		Float ratio_remo = (Float) (((Float) objTwo[1] - (Float) objOne[1]) / ((Float) objOne[1]) * 100);
+		Float ratio_conum = (Float) (((Float) objTwo[2] - (Float) objOne[2]) / ((Float) objOne[2]) * 100);
+
+		comoCompareRemo.setRatio_como(ratio_como + "%");
+		comoCompareRemo.setRatio_remo(ratio_remo + "%");
+		comoCompareRemo.setRatio_conum(ratio_conum + "%");
+		return comoCompareRemo;
 	}
 
 }

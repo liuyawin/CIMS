@@ -11,6 +11,7 @@
 <jsp:include page="/jsp/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
 <script src="${ctx}/js/app/reportForm.js"></script>
+<<<<<<< HEAD
 <script type="text/javascript"
 	src="${ctx}/js/lib/distpicker/bootstrap.js"></script>
 <script type="text/javascript"

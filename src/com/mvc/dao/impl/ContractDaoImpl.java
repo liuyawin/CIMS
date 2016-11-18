@@ -213,8 +213,8 @@ public class ContractDaoImpl implements ContractDao {
 		Integer managerId = (Integer) map.get("managerId");
 		Integer cont_status = (Integer) map.get("cont_status");
 		String province = (String) map.get("province");
-		Date startTime = (Date) map.get("startTime");
-		Date endTime = (Date) map.get("endTime");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
 
 		Integer offset = null;
 		Integer end = null;
@@ -254,13 +254,10 @@ public class ContractDaoImpl implements ContractDao {
 			}
 		}
 		if (province != null) {
-			sql.append(" and c.province=" + province);
+			sql.append(" and c.province='" + province + "'");
 		}
-		if (startTime != null) {
-			sql.append(" and c.cont_stime < " + startTime);
-		}
-		if (endTime != null) {
-			sql.append(" and c.cont_stime < " + endTime);
+		if (startTime != null && endTime != null) {
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and'" + endTime + "'");
 		}
 		sql.append(" order by cont_id desc");
 		if (offset != null && end != null) {
@@ -280,8 +277,8 @@ public class ContractDaoImpl implements ContractDao {
 		Integer managerId = (Integer) map.get("managerId");
 		Integer cont_status = (Integer) map.get("cont_status");
 		String province = (String) map.get("province");
-		Date startTime = (Date) map.get("startTime");
-		Date endTime = (Date) map.get("endTime");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
 
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
@@ -314,18 +311,32 @@ public class ContractDaoImpl implements ContractDao {
 			}
 		}
 		if (province != null) {
-			sql.append(" and c.province=" + province);
+			sql.append(" and c.province='" + province + "'");
 		}
-		if (startTime != null) {
-			sql.append(" and c.cont_stime < " + startTime);
+		if (startTime != null && endTime != null) {
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and'" + endTime + "'");
 		}
-		if (endTime != null) {
-			sql.append(" and c.cont_stime < " + endTime);
-		}
+
 		Query query = em.createNativeQuery(sql.toString());
 		BigInteger totalRow = (BigInteger) query.getSingleResult();
 		em.close();
 		return totalRow.longValue();
+	}
+
+	// 根据日期获取合同额到款对比表
+	@Override
+	public Object findByOneDate(Date date) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append(
+				"select sum(cont_money),sum(remo_totalmoney),count(cont_id) from contract c where c.cont_ishistory=0 ");
+		if (date != null) {
+			sql.append(" and cont_stime like '%" + date + "%'");
+		}
+		Query query = em.createNativeQuery(sql.toString());
+		Object result = query.getResultList();
+		em.close();
+		return result;
 	}
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mvc.entity.ProjectStatisticForm;
+
+import com.mvc.entity.ComoCompareRemo;
+
 import com.mvc.service.ReportFormService;
 import com.utils.Pager;
 import com.utils.StringUtil;
@@ -58,8 +62,8 @@ public class ReportFormController {
 		Integer managerId = null;
 		Integer cont_status = null;
 		String province = null;
-		Date startTime = null;
-		Date endTime = null;
+		String startTime = null;
+		String endTime = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("contType"))) {
 			cont_type = Integer.valueOf(request.getParameter("contType"));// 合同类型
@@ -77,16 +81,11 @@ public class ReportFormController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
 			province = request.getParameter("province");// 省份
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
-				startTime = sdf.parse(request.getParameter("startDate"));// 开始时间
-			}
-			if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-				endTime = sdf.parse(request.getParameter("endDate"));// 结束时间
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
+			startTime = request.getParameter("startDate") + "-01";// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			endTime = request.getParameter("endDate") + "-01";// 结束时间
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -124,5 +123,35 @@ public class ReportFormController {
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
+
+	/*
+	 * ***********************************张姣娜报表开始*******************************
+	 */
+	/**
+	 * 根据日期查询合同额到款对比表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/selectComoRemoAnalyse.do")
+	public @ResponseBody String findComoRemoAnalyse(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy");
+		Date dateOne = null;
+		Date dateTwo = null;
+		try {
+			dateOne = format.parse(request.getParameter("beginYear"));
+			dateTwo = format.parse(request.getParameter("endYear"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
+		jsonObject.put("comoCompareRemo", comoCompareRemo);
+		return jsonObject.toString();
+	}
+	/*
+	 * ***********************************张姣娜报表结束*******************************
+	 */
 
 }

@@ -1,5 +1,6 @@
 package com.mvc.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,8 @@ import com.mvc.entity.ProjectStatisticForm;
 import com.utils.Pager;
 
 import net.sf.json.JSONObject;
+
+import com.mvc.entity.ComoCompareRemo;
 
 /**
  * 报表业务层
@@ -29,4 +32,7 @@ public interface ReportFormService {
 
 	// 查询报表页码相关
 	Pager pagerTotal(Map<String, Object> map, Integer page);
+
+	// 根据日期获取合同额到款对比表
+	ComoCompareRemo findByDate(Date oneTime, Date twoTime);
 }

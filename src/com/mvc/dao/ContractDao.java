@@ -1,5 +1,6 @@
 package com.mvc.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -41,4 +42,7 @@ public interface ContractDao {
 
 	// 查询报表总条数
 	Long countTotal(Map<String, Object> map);
+
+	// 根据日期获取合同额到款对比表
+	Object findByOneDate(Date Date);
 }

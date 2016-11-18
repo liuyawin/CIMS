@@ -59,9 +59,9 @@
 						ng-model="limit.endDate" placeholder="2016-01" id="endDate"
 						name="endDate" /><span id="errorText" class="error-span">格式错误</span></li>
 					<li><label>设总</label><select class="dfselect layoutStyle"
-						style="width: 73px" ng-model="limit.userId"
-						ng-options="user.user_id as user.user_name for user in userDepts"
-						name="userId"><option value="">请选择</option></select></li>
+						style="width: 73px" ng-model="limit.userId" name="userId"><option
+								value="">请选择</option>
+							<option value="{{user.user_id}}" ng-repeat="user in userDepts">{{user.user_name}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectProjectListBylimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -102,9 +102,11 @@
 
 	<div class="tcdPageCode">页码容器</div>
 </div>
+
 <script>
 	$(function() {
 		var $distpicker = $('#distpicker');
 		$distpicker.distpicker();
 	});
 </script>
+
