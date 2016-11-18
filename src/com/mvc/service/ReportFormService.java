@@ -47,5 +47,5 @@ public interface ReportFormService {
 	List<NoBackContForm> findNoBackCont(Map<String, Object> map, Pager pager, String path);
 
 	// 根据日期获取合同额到款对比表
-	ComoCompareRemo findByDate(Date oneTime, Date twoTime);
+	ComoCompareRemo findByDate(String oneTime, String twoTime);
 }

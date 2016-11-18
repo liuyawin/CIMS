@@ -17,10 +17,13 @@
 		</form>
 
 		<ul class="toolbar1" >
-			<li class="click"><a href="" ><span><img
-						src="../images/t01.png" /></span>导出</a></li>
+			<li class="click"><a ng-click="outputComoCompareRemo(e)" href="" ><span><img
+						src="../images/t01.png" /></span>导出</a></li>			
 		</ul>
-
+		<input id="chart1-svg" class="hidden" type="text" />
+		<input id="chart2-svg" class="hidden" type="text" />
+		<input id="chart3-svg" class="hidden" type="text" />
+		<input id="chart4-svg" class="hidden" type="text" />
 	</div>
 	
 <table class="tablelist">
@@ -29,8 +32,8 @@
 			<tr>
 				<th>序号</th>
 				<th>对比项</th>
-				<th>2014年</th>
-				<th>2015年</th>
+				<th>{{1|bYear}}年</th>
+				<th>{{1|eYear}}年</th>
 				<th>备注</th>
 			</tr>
 		</thead>
@@ -61,16 +64,20 @@
 	<label class="error-label" ng-show="!table1Show">对不起，未找到相关数据</label>
 	
 	<table class="tablelist">
+<<<<<<< HEAD
 		<caption>2014年、2015年光伏自营项目新签合同额分析表</caption>
+=======
+		<caption>{{1|bYear}}年、{{1|eYear}}年光伏自营项目新签合同额分析表</caption>
+>>>>>>> 5e08ad6960840f46583107d54e6dbabead7f6bd4
 		<thead ng-show="table2Show">
 			<tr>
 				<th>序号</th>
 				<th>省份</th>
-				<th>2014年新签合同额（万元）</th>
-				<th>2015年新签合同额（万元）</th>
-				<th>2014年该省合同占比</th>
-				<th>2015年该省合同占比</th>
-				<th>2015年合同增长比例</th>
+				<th>{{1|bYear}}年新签合同额（万元）</th>
+				<th>{{1|eYear}}年新签合同额（万元）</th>
+				<th>{{1|bYear}}年该省合同占比</th>
+				<th>{{1|eYear}}年该省合同占比</th>
+				<th>{{1|eYear}}年合同增长比例</th>
 				<th>备注</th>
 			</tr>
 		</thead>
@@ -90,17 +97,21 @@
 	<label class="error-label" ng-show="!table2Show">对不起，未找到相关数据</label>
 	
 	<table class="tablelist">
+<<<<<<< HEAD
 		<caption>2014年、2015年自营项目到款及2016年预计到款分析表</caption>
+=======
+		<caption>{{1|bYear}}年、{{1|eYear}}年自营项目到款及{{1|nYear}}年预计到款分析表</caption>
+>>>>>>> 5e08ad6960840f46583107d54e6dbabead7f6bd4
 		<thead ng-show="table3Show">
 			<tr class="report-tr">
 				<th>序号</th>
 				<th>省份</th>
-				<th>2014年到款额（万元）</th>
-				<th>2015年到款额（万元）</th>
-				<th>2015年之前项目2015年到款额（万元）</th>
-				<th>2015年当年项目2015年到款额（万元）</th>
-				<th>2015年当年项目2016年预计到款额（万元）</th>
-				<th>2015年之前项目2016年预计到款额（万元）</th>
+				<th>{{1|bYear}}年到款额（万元）</th>
+				<th>{{1|eYear}}年到款额（万元）</th>
+				<th>{{1|eYear}}年之前项目{{1|eYear}}年到款额（万元）</th>
+				<th>{{1|eYear}}年当年项目{{1|eYear}}年到款额（万元）</th>
+				<th>{{1|eYear}}年当年项目{{1|nYear}}年预计到款额（万元）</th>
+				<th>{{1|eYear}}年之前项目{{1|nYear}}年预计到款额（万元）</th>
 				<th>备注</th>
 			</tr>
 		</thead>

@@ -50,5 +50,5 @@ public interface ContractDao {
 	Long countTotalNoBack(Map<String, Object> map);
 
 	// 根据日期获取合同额到款对比表
-	Object findByOneDate(Date Date);
+	List<Object> findByOneDate(String Date);
 }
