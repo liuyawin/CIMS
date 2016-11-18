@@ -105,8 +105,8 @@ public class ReportFormController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
-		jsonObject.put("comoCompareRemo", comoCompareRemo);
+		//ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
+		jsonObject.put("comoCompareRemo", "");
 		return jsonObject.toString();
 	}
 	/*
