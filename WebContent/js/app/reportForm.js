@@ -135,104 +135,6 @@ app.controller('ReportController', [
 			};
 			// zq点击查询list2016-11-17
 			reportForm.selectProjectListBylimits = function() {
-
-app
-		.controller(
-				'ReportController',
-				[
-						'$scope',
-						'services',
-						'$location',
-						function($scope, services, $location) {
-							// zq合同
-							var reportForm = $scope;
-
-							reportForm.getTableDate = function() {
-								var beginYear = $('#begin-year').val();
-								var endYear = $('#end-year').val();
-								services
-										.getRemoAnalyzeDataByYear({
-											beginYear : beginYear,
-											endYear : endYear
-										})
-										.success(
-												function(data) {
-													console.log(data);
-													reportForm.comoCompareRemo = data.reportForm;
-													reportForm.table1Show = false;
-													if (reportForm.comoCompareRemo) {
-														reportForm.table1Show = true;
-													}
-													var chart1Data = [
-															[ 'Firefox', 45.0 ],
-															[ 'IE', 26.8 ],
-															{
-																name : 'Chrome',
-																y : 12.8,
-																sliced : true,
-																selected : true
-															},
-															[ 'Safari', 8.5 ],
-															[ 'Opera', 6.2 ],
-															[ 'Others', 0.7 ] ];
-
-													Highcharts
-															.wrap(
-																	Highcharts.Chart.prototype,
-																	'getSVG',
-																	function(
-																			proceed) {
-																		return proceed
-																				.call(
-																						this)
-																				.replace(
-																						/(fill|stroke)="rgba([ 0-9]+,[ 0-9]+,[ 0-9]+),([ 0-9\.]+)"/g,
-																						'$1="rgb($2)" $1-opacity="$3"');
-																	});
-													if(data){
-														var chart1 = new Chart(
-															{
-																elementId : "#pieChart1",
-																title : "2014年自营项目新签合同额分析图",
-																name : "浏览器",
-																data : chart1Data
-															});
-														chart1.init();
-													}
-													
-												});
-
-							}
-							// zq初始化
-							function initData() {
-								console.log("初始化页面信息");
-								if ($location.path()
-										.indexOf('/remoAnalyzeList') == 0) {
-									var date = new Date();
-									var year = date.getFullYear();
-									$('#begin-year').val(year);
-									$('#end-year').val(year);
-								}
-							}
-							initData();
-
-							var $dateFormat = $(".dateFormat");
-							var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
-							$(".dateFormat").blur(
-									function() {
-										if (!dateRegexp.test(this.value)) {
-											$(this).parent().children("span")
-													.css('display', 'inline');
-										}
-									});
-							$(".dateFormat").click(
-									function() {
-										$(this).parent().children("span").css(
-												'display', 'none');
-									});
-
-						} ]);
-
 				var errorText = $("#errorText").css("display");
 				if (errorText == "inline") {
 					alert("时间格式错误！");
@@ -294,13 +196,57 @@ app
 			reportForm.getTableDate = function() {
 				var beginYear = $('#begin-year').val();
 				var endYear = $('#end-year').val();
-				services.getRemoAnalyzeDataByYear({
-					beginYear : beginYear,
-					endYear : endYear
-				}).success(function(data) {
-					console.log(data);
-					reportForm.comoCompareRemo = data.reportForm;
-				});
+				services
+						.getRemoAnalyzeDataByYear({
+							beginYear : beginYear,
+							endYear : endYear
+						})
+						.success(
+								function(data) {
+									console.log("直接打印从后台获取的数据："+data);
+									reportForm.comoCompareRemo = data.reportForm;
+									reportForm.table1Show = false;
+									if (reportForm.comoCompareRemo) {
+										reportForm.table1Show = true;
+									}
+									var chart1Data = [
+											[ 'Firefox', 45.0 ],
+											[ 'IE', 26.8 ],
+											{
+												name : 'Chrome',
+												y : 12.8,
+												sliced : true,
+												selected : true
+											},
+											[ 'Safari', 8.5 ],
+											[ 'Opera', 6.2 ],
+											[ 'Others', 0.7 ] ];
+
+									Highcharts
+											.wrap(
+													Highcharts.Chart.prototype,
+													'getSVG',
+													function(
+															proceed) {
+														return proceed
+																.call(
+																		this)
+																.replace(
+																		/(fill|stroke)="rgba([ 0-9]+,[ 0-9]+,[ 0-9]+),([ 0-9\.]+)"/g,
+																		'$1="rgb($2)" $1-opacity="$3"');
+													});
+									if(chart1Data){
+										var chart1 = new Chart(
+											{
+												elementId : "#pieChart1",
+												title : "2014年自营项目新签合同额分析图",
+												name : "浏览器",
+												data : chart1Data
+											});
+										chart1.init();
+									}
+									
+								});
 
 			}
 			// 初始化
@@ -337,17 +283,6 @@ app
 					});
 			
 			$(".dateFormatForYM").click(function() {
-				$(this).parent().children("span").css('display', 'none');
-			});
-			// liu
-			var $dateFormat = $(".dateFormat");
-			var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
-			$(".dateFormat").blur(function() {
-				if (!dateRegexp.test(this.value)) {
-					$(this).parent().children("span").css('display', 'inline');
-				}
-			});
-			$(".dateFormat").click(function() {
 				$(this).parent().children("span").css('display', 'none');
 			});
 		} ]);
