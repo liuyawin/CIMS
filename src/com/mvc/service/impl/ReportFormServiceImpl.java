@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -276,30 +277,83 @@ public class ReportFormServiceImpl implements ReportFormService {
 
 	// 根据日期获取合同额到款对比表
 	@Override
-	public ComoCompareRemo findByDate(Date oneDate, Date twoDate) {
-
-		Object objectOne = contractDao.findByOneDate(oneDate);
-		Object objectTwo = contractDao.findByOneDate(twoDate);
-
+	public ComoCompareRemo findByDate(String oneDate, String twoDate) {
+		java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
+		List<Object> objectOne = contractDao.findByOneDate(oneDate);
+		List<Object> objectTwo = contractDao.findByOneDate(twoDate);
 		ComoCompareRemo comoCompareRemo = new ComoCompareRemo();
-		Object[] objOne = (Object[]) objectOne;
-		comoCompareRemo.setComo_one((Float) objOne[0]);
-		comoCompareRemo.setRemo_one((Float) objOne[1]);
-		comoCompareRemo.setCont_num_one((Integer) objOne[2]);
-
-		Object[] objTwo = (Object[]) objectTwo;
-		comoCompareRemo.setComo_two((Float) objTwo[0]);
-		comoCompareRemo.setRemo_two((Float) objTwo[1]);
-		comoCompareRemo.setCont_num_two((Integer) objTwo[2]);
-
-		Float ratio_como = (Float) (((Float) objTwo[0] - (Float) objOne[0]) / ((Float) objOne[0]) * 100);
-		Float ratio_remo = (Float) (((Float) objTwo[1] - (Float) objOne[1]) / ((Float) objOne[1]) * 100);
-		Float ratio_conum = (Float) (((Float) objTwo[2] - (Float) objOne[2]) / ((Float) objOne[2]) * 100);
-
-		comoCompareRemo.setRatio_como(ratio_como + "%");
-		comoCompareRemo.setRatio_remo(ratio_remo + "%");
-		comoCompareRemo.setRatio_conum(ratio_conum + "%");
+		// 获取第一年相关数据
+		Object[] objOne = (Object[]) objectOne.get(0);
+		if (objOne[0].equals(0.0)) {
+			comoCompareRemo.setComo_one("---");
+		} else {
+			comoCompareRemo.setComo_one(df.format(Double.valueOf(objOne[0].toString())));
+		}
+		if (objOne[1].equals(0.0)) {
+			comoCompareRemo.setRemo_one("---");
+		} else {
+			comoCompareRemo.setRemo_one(df.format(Double.valueOf(objOne[1].toString())));
+		}
+		comoCompareRemo.setCont_num_one(objOne[2].toString());
+		// 获取第二年相关数据
+		Object[] objTwo = (Object[]) objectTwo.get(0);
+		if (objTwo[0].equals(0.0)) {
+			comoCompareRemo.setComo_two("---");
+		} else {
+			comoCompareRemo.setComo_two(df.format(Double.valueOf(objTwo[0].toString())));
+		}
+		if (objTwo[1].equals(0.0)) {
+			comoCompareRemo.setRemo_two("---");
+		} else {
+			comoCompareRemo.setRemo_two(df.format(Double.valueOf(objTwo[1].toString())));
+		}
+		comoCompareRemo.setCont_num_two(objTwo[2].toString());
+		// 计算同比增长率
+		if (objOne[0].equals(0.0)) {
+			comoCompareRemo.setRatio_como("---");
+		} else {
+			Double big = Double.valueOf(objTwo[0].toString());
+			Double small = Double.valueOf(objOne[0].toString());
+			Double ratio_como = (big - small) / small * 100;
+			String ratio = String.format("%.2f", ratio_como);
+			if (ratio_como > 0) {
+				comoCompareRemo.setRatio_como("同比增长" + ratio + "%");
+			} else if (ratio_como < 0) {
+				comoCompareRemo.setRatio_como("同比减少" + ratio + "%");
+			} else {
+				comoCompareRemo.setRatio_como("相等");
+			}
+		}
+		if (objOne[1].equals(0.0)) {
+			comoCompareRemo.setRatio_remo("---");
+		} else {
+			Double big = Double.valueOf(objTwo[1].toString());
+			Double small = Double.valueOf(objOne[1].toString());
+			Double ratio_remo = (big - small) / small * 100;
+			String ratio = String.format("%.2f", ratio_remo);
+			if (ratio_remo > 0)
+				comoCompareRemo.setRatio_remo("同比增长" + ratio + "%");
+			else if (ratio_remo < 0) {
+				comoCompareRemo.setRatio_remo("同比减少" + ratio + "%");
+			} else {
+				comoCompareRemo.setRatio_remo("相等");
+			}
+		}
+		if (objOne[2].equals(0)) {
+			comoCompareRemo.setRatio_conum("---");
+		} else {
+			Double big = Double.valueOf(objTwo[2].toString());
+			Double small = Double.valueOf(objOne[2].toString());
+			Double ratio_conum = (big - small) / small * 100;
+			String ratio = String.format("%.2f", ratio_conum);
+			if (ratio_conum > 0)
+				comoCompareRemo.setRatio_conum("同比增长" + ratio + "%");
+			else if (ratio_conum < 0) {
+				comoCompareRemo.setRatio_conum("同比减少" + ratio + "%");
+			} else {
+				comoCompareRemo.setRatio_conum("相等");
+			}
+		}
 		return comoCompareRemo;
 	}
-
 }
