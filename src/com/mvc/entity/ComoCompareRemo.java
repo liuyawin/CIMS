@@ -23,54 +23,6 @@ public class ComoCompareRemo {
 	private String ratio_remo;// 备注：到款两年同比增长比率
 	private String ratio_conum;// 备注：合同数两年同比增长比率
 
-	// public Float getComo_one() {
-	// return como_one;
-	// }
-	//
-	// public void setComo_one(Float como_one) {
-	// this.como_one = como_one;
-	// }
-	//
-	// public Float getRemo_one() {
-	// return remo_one;
-	// }
-	//
-	// public void setRemo_one(Float remo_one) {
-	// this.remo_one = remo_one;
-	// }
-	//
-	// public Integer getCont_num_one() {
-	// return cont_num_one;
-	// }
-	//
-	// public void setCont_num_one(Integer cont_num_one) {
-	// this.cont_num_one = cont_num_one;
-	// }
-	//
-	// public Float getComo_two() {
-	// return como_two;
-	// }
-	//
-	// public void setComo_two(Float como_two) {
-	// this.como_two = como_two;
-	// }
-	//
-	// public Float getRemo_two() {
-	// return remo_two;
-	// }
-	//
-	// public void setRemo_two(Float remo_two) {
-	// this.remo_two = remo_two;
-	// }
-	//
-	// public Integer getCont_num_two() {
-	// return cont_num_two;
-	// }
-	//
-	// public void setCont_num_two(Integer cont_num_two) {
-	// this.cont_num_two = cont_num_two;
-	// }
-
 	public String getRatio_como() {
 		return ratio_como;
 	}
