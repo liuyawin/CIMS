@@ -1,6 +1,5 @@
 package com.mvc.dao;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,8 +39,14 @@ public interface ContractDao {
 	// 光电院项目分项统计表
 	List<Contract> findContByPara(Map<String, Object> map, Pager pager);
 
-	// 查询报表总条数
+	// 未返回合同统计表
+	List<Contract> findContByParaNoBack(Map<String, Object> map, Pager pager);
+
+	// 查询分项统计表总条数
 	Long countTotal(Map<String, Object> map);
+
+	// 查询未返回合同统计表总条数
+	Long countTotalNoBack(Map<String, Object> map);
 
 	// 根据日期获取合同额到款对比表
 	List<Object> findByOneDate(String Date);

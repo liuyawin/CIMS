@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -30,6 +31,8 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.mvc.entity.ProjectStatisticForm;
 
 /**
  * Excel操作类
@@ -123,7 +126,7 @@ public class ExcelHelper<T> {
 	 *            如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
 	 */
 	@SuppressWarnings({ "unchecked", "deprecation", "rawtypes" })
-	private void export2003Excel(HSSFWorkbook workbook, String title, String[] headers, Collection<T> list,
+	private void export2003Excel(HSSFWorkbook workbook, String title, String[] headerSource, Collection<T> list,
 			String pattern) {
 		HSSFSheet sheet = workbook.createSheet(title);
 		// 设置表格默认列宽度为15个字节
@@ -149,6 +152,11 @@ public class ExcelHelper<T> {
 		style2.setFont(font2);
 		// 产生表格标题行
 		HSSFRow row = sheet.createRow(0);
+		Boolean flag = false;
+		String[] headers = hidHeader(headerSource);
+		if (headerSource.length - headers.length > 0) {
+			flag = true;
+		}
 		for (short i = 0; i < headers.length; i++) {
 			HSSFCell cell = row.createCell(i);
 			cell.setCellStyle(style);
@@ -163,7 +171,13 @@ public class ExcelHelper<T> {
 			row = sheet.createRow(index);
 			T t = (T) it.next();
 			// 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
-			Field[] fields = t.getClass().getDeclaredFields();
+			Field[] fieldSource = t.getClass().getDeclaredFields();
+			Field[] fields = null;
+			if (flag) {
+				fields = hidField(fieldSource, t.getClass());
+			} else {
+				fields = fieldSource;
+			}
 			for (short i = 0; i < fields.length; i++) {
 				HSSFCell cell = row.createCell(i);
 				cell.setCellStyle(style2);
@@ -245,7 +259,7 @@ public class ExcelHelper<T> {
 	 *            如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void export2007Excel(XSSFWorkbook workbook, String title, String[] headers, Collection<T> list,
+	private void export2007Excel(XSSFWorkbook workbook, String title, String[] headerSource, Collection<T> list,
 			String pattern) {
 		XSSFSheet sheet = workbook.createSheet(title);
 		// 设置表格默认列宽度为15个字节
@@ -271,6 +285,11 @@ public class ExcelHelper<T> {
 		style2.setFont(font2);
 		// 产生表格标题行
 		XSSFRow row = sheet.createRow(0);
+		Boolean flag = false;
+		String[] headers = hidHeader(headerSource);
+		if (headerSource.length - headers.length > 0) {
+			flag = true;
+		}
 		for (short i = 0; i < headers.length; i++) {
 			XSSFCell cell = row.createCell(i);
 			cell.setCellStyle(style);
@@ -285,7 +304,13 @@ public class ExcelHelper<T> {
 			row = sheet.createRow(index);
 			T t = (T) it.next();
 			// 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
-			Field[] fields = t.getClass().getDeclaredFields();
+			Field[] fieldSource = t.getClass().getDeclaredFields();
+			Field[] fields = null;
+			if (flag) {
+				fields = hidField(fieldSource, t.getClass());
+			} else {
+				fields = fieldSource;
+			}
 			for (short i = 0; i < fields.length; i++) {
 				XSSFCell cell = row.createCell(i);
 				cell.setCellStyle(style2);
@@ -349,6 +374,7 @@ public class ExcelHelper<T> {
 				} finally {
 					// 清理资源
 				}
+
 			}
 		}
 	}
@@ -379,6 +405,54 @@ public class ExcelHelper<T> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 去除需要隐藏的表头
+	 * 
+	 * @param headers
+	 * @return
+	 */
+	private String[] hidHeader(String[] headers) {
+		List<String> list = new ArrayList<String>();
+		for (short i = 0; i < headers.length; i++) {
+			if (!headers[i].contains("hidden")) {
+				list.add(headers[i]);
+			}
+		}
+		String[] arr = new String[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			arr[i] = (String) list.get(i);
+		}
+		return arr;
+	}
+
+	/**
+	 * 去除需要隐藏的字段（属性）
+	 * 
+	 * @param fieldSource
+	 * @param cla
+	 * @return
+	 */
+	private Field[] hidField(Field[] fields, Class<? extends Object> cla) {
+		List<Field> list = new ArrayList<Field>();
+		if (cla == ProjectStatisticForm.class) {// 需要隐藏的字段，并列加到这里
+			String str = null;
+			for (short i = 0; i < fields.length; i++) {
+				str = fields[i].getName();
+				if (!str.equals("cont_type") && !str.equals("cont_stime")) {
+					list.add(fields[i]);
+				}
+			}
+		}
+		Field[] arr = null;
+		if (list.size() > 0) {
+			arr = new Field[list.size()];
+			for (int i = 0; i < list.size(); i++) {
+				arr[i] = (Field) list.get(i);
+			}
+		}
+		return arr;
 	}
 
 }

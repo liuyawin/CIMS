@@ -1,7 +1,6 @@
 package com.mvc.dao.impl;
 
 import java.math.BigInteger;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -269,7 +268,46 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
-	// 查询报表总条数
+	// 未返回合同统计表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Contract> findContByParaNoBack(Map<String, Object> map, Pager pager) {
+		Integer handler = (Integer) map.get("handler");
+		String province = (String) map.get("province");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+
+		Integer offset = null;
+		Integer end = null;
+		if (pager != null) {
+			offset = pager.getOffset();
+			end = pager.getPageSize();
+		}
+
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from contract c where c.cont_ishistory=0");
+
+		if (handler != null) {
+			sql.append(" and c.creator_id=" + handler);
+		}
+		if (province != null) {
+			sql.append(" and c.province='" + province + "'");
+		}
+		if (startTime != null && endTime != null) {
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and'" + endTime + "'");
+		}
+		sql.append(" order by cont_id desc");
+		if (offset != null && end != null) {
+			sql.append(" limit " + offset + "," + end);
+		}
+		Query query = em.createNativeQuery(sql.toString(), Contract.class);
+		List<Contract> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 查询分项统计表总条数
 	@Override
 	public Long countTotal(Map<String, Object> map) {
 		Integer cont_type = (Integer) map.get("cont_type");
@@ -309,6 +347,34 @@ public class ContractDaoImpl implements ContractDao {
 			default:
 				break;
 			}
+		}
+		if (province != null) {
+			sql.append(" and c.province='" + province + "'");
+		}
+		if (startTime != null && endTime != null) {
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and'" + endTime + "'");
+		}
+
+		Query query = em.createNativeQuery(sql.toString());
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
+		em.close();
+		return totalRow.longValue();
+	}
+
+	// 查询未返回合同统计表总条数
+	@Override
+	public Long countTotalNoBack(Map<String, Object> map) {
+		Integer handler = (Integer) map.get("handler");
+		String province = (String) map.get("province");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
+
+		if (handler != null) {
+			sql.append(" and c.creator_id=" + handler);
 		}
 		if (province != null) {
 			sql.append(" and c.province='" + province + "'");

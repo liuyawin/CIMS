@@ -16,4 +16,9 @@ public enum ContractType {
 	private ContractType(int value) {
 		this.value = value;
 	}
+	
+	public static String intToStr(int value) {
+		ContractType cont_type = ContractType.values()[value];
+		return cont_type.name();
+	}
 }
