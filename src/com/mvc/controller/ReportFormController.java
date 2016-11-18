@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mvc.entity.ProjectStatisticForm;
 
 import com.mvc.entity.ComoCompareRemo;
-
+import com.mvc.entity.NoBackContForm;
 import com.mvc.service.ReportFormService;
 import com.utils.Pager;
 import com.utils.StringUtil;
@@ -116,6 +116,65 @@ public class ReportFormController {
 		Pager pager = reportFormService.pagerTotal(map, page);
 		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
 		List<ProjectStatisticForm> list = reportFormService.findProjectStatistic(map, pager, path);
+
+		jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 导出未返回合同统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportUnGetContListBylimits.do")
+	public ResponseEntity<byte[]> exportNoBackCont(HttpServletRequest request) {
+		Integer handler = null;
+		String province = null;
+		String startTime = null;
+		String endTime = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
+			handler = Integer.valueOf(request.getParameter("userId"));// 经手人
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
+			province = request.getParameter("province");// 省份
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
+			startTime = request.getParameter("startDate") + "-01";// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			endTime = request.getParameter("endDate") + "-01";// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("handler", handler);
+		map.put("province", province);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = reportFormService.exportNoBackCont(map, path);
+		return byteArr;
+	}
+
+	/**
+	 * 查询未返回合同统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectUnGetContListBylimits.do")
+	public @ResponseBody String selectNoBackCont(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
+		Integer page = Integer.parseInt(request.getParameter("page"));// 指定页码
+
+		Map<String, Object> map = reportFormService.JsonObjToMapNoBack(jsonObject);
+		Pager pager = reportFormService.pagerTotalNoBack(map, page);
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		List<NoBackContForm> list = reportFormService.findNoBackCont(map, pager, path);
 
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);

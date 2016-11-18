@@ -32,6 +32,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.mvc.entity.ProjectStatisticForm;
+
 /**
  * Excel操作类
  * 
@@ -169,20 +171,19 @@ public class ExcelHelper<T> {
 			row = sheet.createRow(index);
 			T t = (T) it.next();
 			// 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
-			Field[] fields = t.getClass().getDeclaredFields();
-			int num = 0;
+			Field[] fieldSource = t.getClass().getDeclaredFields();
+			Field[] fields = null;
+			if (flag) {
+				fields = hidField(fieldSource, t.getClass());
+			} else {
+				fields = fieldSource;
+			}
 			for (short i = 0; i < fields.length; i++) {
+				HSSFCell cell = row.createCell(i);
+				cell.setCellStyle(style2);
 				Field field = fields[i];
 				String fieldName = field.getName();
 				String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-				if (flag) {
-					if (hiddenColum(getMethodName)) {// 隐藏的列
-						num++;
-						continue;
-					}
-				}
-				HSSFCell cell = row.createCell(i - num);
-				cell.setCellStyle(style2);
 				try {
 					Class tCls = t.getClass();
 					Method getMethod = tCls.getMethod(getMethodName, new Class[] {});
@@ -303,20 +304,19 @@ public class ExcelHelper<T> {
 			row = sheet.createRow(index);
 			T t = (T) it.next();
 			// 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
-			Field[] fields = t.getClass().getDeclaredFields();
-			int num = 0;
+			Field[] fieldSource = t.getClass().getDeclaredFields();
+			Field[] fields = null;
+			if (flag) {
+				fields = hidField(fieldSource, t.getClass());
+			} else {
+				fields = fieldSource;
+			}
 			for (short i = 0; i < fields.length; i++) {
+				XSSFCell cell = row.createCell(i);
+				cell.setCellStyle(style2);
 				Field field = fields[i];
 				String fieldName = field.getName();
 				String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-				if (flag) {
-					if (hiddenColum(getMethodName)) {// 隐藏的列
-						num++;
-						continue;
-					}
-				}
-				XSSFCell cell = row.createCell(i - num);
-				cell.setCellStyle(style2);
 				try {
 					Class tCls = t.getClass();
 					Method getMethod = tCls.getMethod(getMethodName, new Class[] {});
@@ -408,20 +408,6 @@ public class ExcelHelper<T> {
 	}
 
 	/**
-	 * 隐藏指定列
-	 * 
-	 * @param getMethodName
-	 * @return
-	 */
-	private Boolean hiddenColum(String getMethodName) {
-		Boolean flag = false;
-		if (getMethodName.equals("getCont_type") || getMethodName.equals("getCont_stime")) {
-			flag = true;
-		}
-		return flag;
-	}
-
-	/**
 	 * 去除需要隐藏的表头
 	 * 
 	 * @param headers
@@ -437,6 +423,34 @@ public class ExcelHelper<T> {
 		String[] arr = new String[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			arr[i] = (String) list.get(i);
+		}
+		return arr;
+	}
+
+	/**
+	 * 去除需要隐藏的字段（属性）
+	 * 
+	 * @param fieldSource
+	 * @param cla
+	 * @return
+	 */
+	private Field[] hidField(Field[] fields, Class<? extends Object> cla) {
+		List<Field> list = new ArrayList<Field>();
+		if (cla == ProjectStatisticForm.class) {// 需要隐藏的字段，并列加到这里
+			String str = null;
+			for (short i = 0; i < fields.length; i++) {
+				str = fields[i].getName();
+				if (!str.equals("cont_type") && !str.equals("cont_stime")) {
+					list.add(fields[i]);
+				}
+			}
+		}
+		Field[] arr = null;
+		if (list.size() > 0) {
+			arr = new Field[list.size()];
+			for (int i = 0; i < list.size(); i++) {
+				arr[i] = (Field) list.get(i);
+			}
 		}
 		return arr;
 	}

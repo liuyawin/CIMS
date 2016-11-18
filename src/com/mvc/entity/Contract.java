@@ -46,6 +46,7 @@ public class Contract implements Serializable {
 	private Integer cont_hasproxy;// 是否有委托书，0表示没有，1表示有
 	private Integer cont_initiation;// 是否立项，0:未立项，1:已立项(默认已立项)
 	private Float install_capacity;// 新增： 装机容量（MV）.......................
+	private Integer cont_isback;// 新增： 是否返回合同（归档）.......................
 
 	// 业主信息相关
 	private String cont_client;// 业主公司名称
@@ -150,6 +151,15 @@ public class Contract implements Serializable {
 
 	public void setInstall_capacity(Float install_capacity) {
 		this.install_capacity = install_capacity;
+	}
+
+	@Column(columnDefinition = "INT not null default 0")
+	public Integer getCont_isback() {
+		return cont_isback;
+	}
+
+	public void setCont_isback(Integer cont_isback) {
+		this.cont_isback = cont_isback;
 	}
 
 	@Column(length = 64)
