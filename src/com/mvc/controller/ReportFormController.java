@@ -72,7 +72,6 @@ public class ReportFormController {
 			pro_stage = request.getParameter("proStage");// 项目阶段
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
-			System.out.println("dsag" + request.getParameter("userId"));
 			managerId = Integer.valueOf(request.getParameter("userId"));// 设总
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("contStatus"))) {

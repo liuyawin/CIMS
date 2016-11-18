@@ -22,7 +22,6 @@ import com.base.enums.ContractType;
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.Contract;
-import com.mvc.entity.PlanProjectForm;
 import com.mvc.entity.ProjectStatisticForm;
 import com.mvc.service.ReportFormService;
 import com.utils.ExcelHelper;
@@ -52,7 +51,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 		Integer cont_type = (Integer) map.get("cont_type");
 
 		try {
-			ExcelHelper<PlanProjectForm> ex = new ExcelHelper<PlanProjectForm>();
+			ExcelHelper<ProjectStatisticForm> ex = new ExcelHelper<ProjectStatisticForm>();
 			Calendar c = Calendar.getInstance();
 			c.setTime(new Date());
 			int year = c.get(Calendar.YEAR);
@@ -80,18 +79,27 @@ public class ReportFormServiceImpl implements ReportFormService {
 				Iterator<Contract> it_pho = listSource_pho.iterator();
 				List<ProjectStatisticForm> listGoal_pho = contToProStatis(it_pho);
 
+				// 其他项目
+				map.put("cont_type", ContractType.其他.value);
+				List<Contract> listSource_other = contractDao.findContByPara(map, null);
+				Iterator<Contract> it_other = listSource_other.iterator();
+				List<ProjectStatisticForm> listGoal_other = contToProStatis(it_other);
+
 				String[] titles = { year + "年光电院分布式光伏项目统计表", year + "年光电院光伏项目统计表（不含分布式）", year + "年光电院光热项目统计表" };
-				String[] header_dis = { "序号", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）", "合同状态", "备注" };// 顺序必须和对应实体一致
+				String[] header_dis = { "序号", "合同类型hidden", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）",
+						"合同状态", "签订日期hidden", "备注" };// 顺序必须和对应实体一致
 
 				Map<Integer, String[]> headerMap = new HashMap<Integer, String[]>();// 每个sheet的标题，暂时用统一标题
 				headerMap.put(0, header_dis);
 				headerMap.put(1, header_dis);
 				headerMap.put(2, header_dis);
+				headerMap.put(3, header_dis);
 
 				Map<Integer, List> mapList = new HashMap<Integer, List>();// 每个sheet中内容
 				mapList.put(0, listGoal_dis);
 				mapList.put(1, listGoal_tra);
 				mapList.put(2, listGoal_pho);
+				mapList.put(2, listGoal_other);
 
 				ex.export2007MutiExcel(titles, headerMap, mapList, out, "yyyy-MM-dd");
 			} else {// 根据合同类型，只导出对应的单sheet的Excel
@@ -114,7 +122,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 					break;
 				}
 
-				String[] header = { "序号", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）", "合同状态", "备注" };// 顺序必须和对应实体一致
+				String[] header = { "序号", "合同类型hidden", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）", "合同状态",
+						"签订日期hidden", "备注" };// 顺序必须和对应实体一致
 				ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
 			}
 
@@ -143,6 +152,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 			Contract contract = it.next();
 			ProjectStatisticForm projectStatisticForm = new ProjectStatisticForm();
 			projectStatisticForm.setPrsf_id(i);// 序号
+			Integer cont_type = contract.getCont_type();
+			projectStatisticForm.setCont_type(ContractType.intToStr(cont_type));// 合同类型
 			projectStatisticForm.setCont_project(contract.getCont_project());// 项目名称
 			if (contract.getManager() != null) {
 				projectStatisticForm.setManager_name(contract.getManager().getUser_name());// 项目设总
@@ -170,6 +181,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 				cont_status = cont_status.replace('_', '，');// 将_替换成，
 			}
 			projectStatisticForm.setCont_status(cont_status);// 合同状态
+			projectStatisticForm.setCont_stime(contract.getCont_stime());// 合同签订日期
+
 			listGoal.add(projectStatisticForm);
 		}
 		return listGoal;

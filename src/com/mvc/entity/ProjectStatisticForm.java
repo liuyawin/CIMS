@@ -1,5 +1,7 @@
 package com.mvc.entity;
 
+import java.util.Date;
+
 /**
  * 项目统计表
  * 
@@ -9,6 +11,7 @@ package com.mvc.entity;
 public class ProjectStatisticForm {
 
 	private Integer prsf_id;// ID
+	private String cont_type;// 合同类型
 	private String cont_project;// 项目名称
 	private String manager_name;// 项目设总
 	private String province;// 所在地（省）
@@ -16,6 +19,7 @@ public class ProjectStatisticForm {
 	private Float install_capacity;// 装机容量（MV）
 	private Float cont_money;// 合同额（万元）
 	private String cont_status;// 合同状态
+	private Date cont_stime;// 合同签订日期
 	private String remark;// 备注
 
 	public Integer getPrsf_id() {
@@ -24,6 +28,14 @@ public class ProjectStatisticForm {
 
 	public void setPrsf_id(Integer prsf_id) {
 		this.prsf_id = prsf_id;
+	}
+
+	public String getCont_type() {
+		return cont_type;
+	}
+
+	public void setCont_type(String cont_type) {
+		this.cont_type = cont_type;
 	}
 
 	public String getCont_project() {
@@ -80,6 +92,14 @@ public class ProjectStatisticForm {
 
 	public void setCont_status(String cont_status) {
 		this.cont_status = cont_status;
+	}
+
+	public Date getCont_stime() {
+		return cont_stime;
+	}
+
+	public void setCont_stime(Date cont_stime) {
+		this.cont_stime = cont_stime;
 	}
 
 	public String getRemark() {

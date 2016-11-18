@@ -9,48 +9,73 @@
 <div class="rightinfo">
 
 	<div class="tools">
+		<div>
+			<form action="exportUnGetContListBylimits.do" method="post"
+				enctype="multipart/form-data">
+				<ul class="projectListLimit">
+					<li><label>省份</label>
+						<div class="oneinline">
+							<div id="distpicker" class="oneinline">
+								<div class="oneinline">
+									<label class="sr-only" for="province">Province</label> <select
+										class="dfselect layoutStyle" id="province"
+										ng-model="unGetlimit.province" name="province"></select>
+								</div>
+							</div>
+						</div></li>
+					<li><label>起止年月</label><input
+						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
+						ng-model="unGetlimit.startDate" placeholder="2016-01" id="startDate"
+						name="startDate" /><label>—</label><input
+						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
+						ng-model="unGetlimit.endDate" placeholder="2016-01" id="endDate"
+						name="endDate" /><span id="errorText" class="error-span">格式错误</span></li>
+					<li><label>设总</label><select class="dfselect layoutStyle"
+						style="width: 73px" ng-model="unGetlimit.userId" name="userId"><option
+								value="">请选择</option>
+							<option value="{{user.user_id}}" ng-repeat="user in users">{{user.user_name}}</option></select></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="button" value="查询" ng-click="selectUnGetContListBylimits()"></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="submit" value="导出"></li>
+				</ul>
 
-		<form class="toolbar">
-			<input name="" type="text" class="dfinput" id="cName" placeholder="关键字"/> <input
-				class="btn" type="submit" value="查询" ng-click="">
-		</form>
-
-		<ul class="toolbar1" >
-			<li class="click"><a href="" ><span><img
-						src="../images/t01.png" /></span>新建</a></li>
-		</ul>
+			</form>
+		</div>
 
 	</div>
 
 	<table class="tablelist">
 		<thead>
 			<tr>
-				<th>编号</th>
-				<th>合同名称</th>
-				<th>应收金额(万元)</th>
-				<th>实收金额(万元)</th>
-				<th>到款次数</th>
-				<th>工期阶段</th>
-				<th>收款节点</th>
-				<th>项目状态</th>
-				<th>操作</th>
+				<th class="width5">序号</th>
+				<th class="width15">项目名称</th>
+				<th class="width15">业主单位</th>
+				<th class="width10">合同金额(万元)</th>
+				<th class="width10">经手人</th>
+				<th class="width10">负责人</th>
+			
 			</tr>
 		</thead>
 		<tbody>
-			<tr >
+			<tr ng-repeat="un in unGetContForms">
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
-				<td></td>
-				<td></td>
-				<td>
-				</td>
 			</tr>
 		</tbody>
 	</table>
 
 	<div class="tcdPageCode">页码容器</div>
 </div>
+
+<script>
+	$(function() {
+		var $distpicker = $('#distpicker');
+		$distpicker.distpicker();
+	});
+</script>
+
