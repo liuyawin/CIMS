@@ -8,7 +8,7 @@
 
 <div class="rightinfo">
 
-	<div class="tools">
+	<div>
 		<div>
 			<form action="exportProjectListBylimits.do" method="post"
 				enctype="multipart/form-data">
@@ -72,7 +72,6 @@
 		</div>
 
 	</div>
-
 	<table class="tablelist">
 		<thead>
 			<tr>
@@ -103,8 +102,9 @@
 			</tr>
 		</tbody>
 	</table>
-
+<label class="error-label" ng-show="!listShow">对不起，未找到相关数据</label>
 	<div class="tcdPageCode">页码容器</div>
+	
 </div>
 
 <script>

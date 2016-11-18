@@ -196,9 +196,11 @@
 }
 
 .projectListLimit li {
-	display: inline !important;
+	display: inline-block !important;
+	margin-top:4px;
+	margin-bottom:4px;
 }
 
 .oneinline {
-	display: inline !important;
+	display: inline-block !important;
 }

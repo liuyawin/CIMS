@@ -1693,6 +1693,12 @@ h2 {
 	color: red;
 }
 
+.error-label {
+	color: red;
+	font-weight:bold;
+	display: block;
+}
+
 .float {
 	width: 530px;
 	float: left;
@@ -1752,4 +1758,9 @@ h2 {
 .td-fileName{
 	width:400px;
 	height:24px;
+}
+/* 饼图 */
+tspan{
+	font-size:14px;
+	font-weight:bold;
 }
