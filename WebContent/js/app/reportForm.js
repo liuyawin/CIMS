@@ -111,6 +111,13 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	services.outputComoCompareRemo = function(data){
+		return $http({
+			method : 'post',
+			url : baseUrl + 'reportForm/exportWord.do',
+			data : data
+		});
+	}
 	return services;
 } ]);
 app.controller('ReportController', [
@@ -196,15 +203,19 @@ app.controller('ReportController', [
 			reportForm.getTableDate = function() {
 				var beginYear = $('#begin-year').val();
 				var endYear = $('#end-year').val();
+				if(!(/^\d{4}$/.test(beginYear)&&/^\d{4}$/.test(endYear))){
+					alert("输入格式错误");
+					return false;
+				}
 				services
 						.getRemoAnalyzeDataByYear({
 							beginYear : beginYear,
 							endYear : endYear
 						})
 						.success(
-								function(data) {
-									console.log("直接打印从后台获取的数据："+data);
-									reportForm.comoCompareRemo = data.reportForm;
+								function(data) {	
+									//表1
+									reportForm.comoCompareRemo = data.comoCompareRemo;
 									reportForm.table1Show = false;
 									if (reportForm.comoCompareRemo) {
 										reportForm.table1Show = true;
@@ -239,15 +250,61 @@ app.controller('ReportController', [
 										var chart1 = new Chart(
 											{
 												elementId : "#pieChart1",
-												title : "2014年自营项目新签合同额分析图",
+												title : beginYear+"年自营项目新签合同额分析图",
 												name : "浏览器",
 												data : chart1Data
 											});
 										chart1.init();
+										$('#chart1-svg').val($("#pieChart1").highcharts().getSVG());			
 									}
+//									if(chart2Data){
+//										var chart2 = new Chart(
+//											{
+//												elementId : "#pieChart2",
+//												title : "2014年自营项目新签合同额分析图",
+//												name : "浏览器",
+//												data : chart1Data
+//											});
+//										chart2.init();
+//										$('#chart2-svg').val($("#pieChart2").highcharts().getSVG());			
+//									}
+//									if(chart3Data){
+//										var chart3 = new Chart(
+//											{
+//												elementId : "#pieChart3",
+//												title : "2014年自营项目新签合同额分析图",
+//												name : "浏览器",
+//												data : chart1Data
+//											});
+//										chart3.init();
+//										$('#chart3-svg').val($("#pieChart3").highcharts().getSVG());			
+//									}
 									
 								});
 
+			}
+			reportForm.outputComoCompareRemo = function(e){
+				preventDefault(e);
+				services.outputComoCompareRemo({
+					beginYear   : $('#begin-year').val(),
+					endYear     : $('#end-year').val(),
+					chart1SVGStr: $('#chart1-svg').val(),
+					chart2SVGStr: $('#chart2-svg').val(),
+					chart3SVGStr: $('#chart3-svg').val(),
+				}).success(function(){
+					alert("导出成功！")
+				});
+				
+			}
+			function preventDefault(e) {
+				if (e && e.preventDefault) {
+					// 阻止默认浏览器动作(W3C)
+					e.preventDefault();
+				} else {
+					// IE中阻止函数器默认动作的方式
+					window.event.returnValue = false;
+					return false;
+				}
 			}
 			// 初始化
 			function initData() {
@@ -306,5 +363,21 @@ app.filter('numberFloat', function() {
 			money = parseFloat(input).toFixed(2);
 		}
 		return money;
+	}
+});
+//年份
+app.filter('bYear', function() {
+	return function() {
+		return $('#begin-year').val();
+	}
+});
+app.filter('eYear', function() {
+	return function() {
+		return $('#end-year').val();
+	}
+});
+app.filter('nYear', function() {
+	return function() {
+		return +$('#end-year').val()+1;
 	}
 });
