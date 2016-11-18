@@ -1059,9 +1059,7 @@ app
 							function selectUsersFromDesign() {
 								services.selectUsersFromDesign({}).success(
 										function(data) {
-											contract.userDepts = data;
-											console.log("设计部人员"
-													+ JSON.stringify(data));
+											contract.userDepts = data.list;
 										});
 							}
 							function findRoleFromCookie() {
