@@ -10,15 +10,10 @@
 </section>
 <jsp:include page="/jsp/left.jsp" />
 <jsp:include page="/jsp/footer.jsp" />
-<<<<<<< HEAD
 <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"
 	type="text/javascript" charset="utf-8"></script>
 <script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"
 	type="text/javascript" charset="utf-8"></script>
-=======
-<script src="http://cdn.hcharts.cn/highcharts/highcharts.js" type="text/javascript" charset="utf-8"></script>
-<script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js" type="text/javascript" charset="utf-8"></script>
->>>>>>> 5e08ad6960840f46583107d54e6dbabead7f6bd4
 <script src="${ctx}/js/app/chart.js"></script>
 <script src="${ctx}/js/app/reportForm.js"></script>
 <script type="text/javascript"

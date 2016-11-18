@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.ss.formula.functions.Replace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,7 +28,6 @@ import com.mvc.entity.NoBackContForm;
 import com.mvc.service.ReportFormService;
 import com.utils.Pager;
 import com.utils.StringUtil;
-import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.ReplaceDoc;
 
