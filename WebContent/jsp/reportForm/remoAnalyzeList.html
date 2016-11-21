@@ -79,15 +79,15 @@
 			</tr>
 		</thead>
 		<tbody ng-show="table2Show">
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+			<tr ng-repeat="c in newComoAnalyseList">
+				<td>{{$index + 1}}</td>
+				<td>{{c.province}}</td>
+				<td>{{c.como_one}}</td>
+				<td>{{c.como_two}}</td>
+				<td>{{c.ratio_one_provi}}</td>
+				<td>{{c.ratio_two_provi}}</td>
+				<td>{{c.rise_ratio}}</td>
+				<td>{{c.remark}}</td>				
 			</tr>
 		</tbody>
 	</table>
@@ -124,7 +124,7 @@
 	</table>
 	<label class="error-label" ng-show="!table3Show">对不起，未找到相关数据</label>
 	<div id="pieChart1" style="min-width: 400px; height: 400px"></div>
-	<div id="pieChart2" style="width: 400px; height: 400px"></div>
-	<div id="pieChart3" style="width: 400px; height: 400px"></div>
+	<div id="pieChart2" style="min-width: 400px; height: 400px"></div>
+	<div id="pieChart3" style="min-width: 400px; height: 400px"></div>
 </div>
 
