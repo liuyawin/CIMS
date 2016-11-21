@@ -1,8 +1,8 @@
 package com.mvc.dao.impl;
 
 import java.math.BigInteger;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
+import com.utils.Pager;
 
 /**
  * 合同
@@ -201,27 +202,124 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
-	// 光电院承担规划项目表
+	/***** 报表相关 *****/
+	// 光电院项目分项统计表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Contract> findContByState(Integer cont_state, Date startTime, Date endTime) {
+	public List<Contract> findContByPara(Map<String, Object> map, Pager pager) {
+		Integer cont_type = (Integer) map.get("cont_type");
+		String pro_stage = (String) map.get("pro_stage");
+		Integer managerId = (Integer) map.get("managerId");
+		Integer cont_status = (Integer) map.get("cont_status");
+		String province = (String) map.get("province");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+
+		Integer offset = null;
+		Integer end = null;
+		if (pager != null) {
+			offset = pager.getOffset();
+			end = pager.getPageSize();
+		}
+
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from contract c where c.cont_ishistory=0");
-		if (cont_state != null) {
-			sql.append(" and c.cont_state=" + cont_state);
+
+		if (cont_type == -1) {
+			sql.append(" and c.cont_type in(0,1,2,3)");
+		} else {
+			sql.append(" and c.cont_type=" + cont_type);
 		}
-		if (startTime != null) {
-			sql.append(" and c.cont_stime < " + startTime);
+		if (pro_stage != null) {
+			sql.append(" and c.pro_stage like '%" + pro_stage + "%'");
 		}
-		if (endTime != null) {
-			sql.append(" and c.cont_stime < " + endTime);
+		if (managerId != null) {
+			sql.append(" and c.manager_id=" + managerId);
+		}
+		if (cont_status != null) {
+			switch (cont_status) {
+			case 0:
+				sql.append(" and c.cont_initiation=0");
+				break;
+			case 1:
+				sql.append(" and c.cont_initiation=1 and c.cont_stime is null");
+				break;
+			case 2:
+				sql.append(" and c.cont_initiation=1 and c.cont_stime is not null");
+				break;
+			default:
+				break;
+			}
+		}
+		if (province != null) {
+			sql.append(" and c.province='" + province + "'");
+		}
+		if (startTime != null && endTime != null) {
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and'" + endTime + "'");
 		}
 		sql.append(" order by cont_id desc");
+		if (offset != null && end != null) {
+			sql.append(" limit " + offset + "," + end);
+		}
 		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		List<Contract> list = query.getResultList();
 		em.close();
 		return list;
+	}
+
+	// 查询报表总条数
+	@Override
+	public Long countTotal(Map<String, Object> map) {
+		Integer cont_type = (Integer) map.get("cont_type");
+		String pro_stage = (String) map.get("pro_stage");
+		Integer managerId = (Integer) map.get("managerId");
+		Integer cont_status = (Integer) map.get("cont_status");
+		String province = (String) map.get("province");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
+
+		if (cont_type == -1) {
+			sql.append(" and c.cont_type in(0,1,2,3)");
+		} else {
+			sql.append(" and c.cont_type=" + cont_type);
+		}
+		if (pro_stage != null) {
+			sql.append(" and c.pro_stage like '%" + pro_stage + "%'");
+		}
+		if (managerId != null) {
+			sql.append(" and c.manager_id=" + managerId);
+		}
+		if (cont_status != null) {
+			switch (cont_status) {
+			case 0:
+				sql.append(" and c.cont_initiation=0");
+				break;
+			case 1:
+				sql.append(" and c.cont_initiation=1 and c.cont_stime is null");
+				break;
+			case 2:
+				sql.append(" and c.cont_initiation=1 and c.cont_stime is not null");
+				break;
+			default:
+				break;
+			}
+		}
+		if (province != null) {
+			sql.append(" and c.province='" + province + "'");
+		}
+		if (startTime != null && endTime != null) {
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and'" + endTime + "'");
+		}
+
+		Query query = em.createNativeQuery(sql.toString());
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
+		em.close();
+		return totalRow.longValue();
 	}
 
 	// 根据日期获取合同额到款对比表
@@ -233,6 +331,50 @@ public class ContractDaoImpl implements ContractDao {
 		if (date != null) {
 			selectSql += " and (cont_stime like '%" + date + "%') ";
 		}
+		Query query = em.createNativeQuery(selectSql.toString());
+		List<Object> result = query.getResultList();
+		em.close();
+		return result;
+	}
+
+	// 根据日期获取新签合同额分析表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> findComoByDate(String dateOne, String dateTwo) {
+		EntityManager em = emf.createEntityManager();
+		String sql0 = "select cc.province,coalesce(aa.como_one,0.00) como_one,coalesce(bb.como_two,0.00) como_two from ";
+		String sql1 = "(select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
+				+ "%') union all select province from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%')) as cc ";
+		String sql2 = "(select province,coalesce(sum(cont_money),0.00) como_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateOne + "%') group by province) as aa ";
+		String sql3 = "(select province,coalesce(sum(cont_money),0.00) como_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%') group by province) as bb ";
+		String selectSql = sql0 + sql1 + " left join  " + sql2 + " on aa.province=cc.province left join " + sql3
+				+ " on bb.province=cc.province ";
+		selectSql += " group by province ";
+		Query query = em.createNativeQuery(selectSql.toString());
+		List<Object> result = query.getResultList();
+		em.close();
+		return result;
+	}
+
+	// 根据日期获取到款分析表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> findRemoByDate(String dateOne, String dateTwo) {
+		EntityManager em = emf.createEntityManager();
+		String sql0 = "select cc.province,coalesce(aa.remo_one,0.00) remo_one,coalesce(bb.remo_two,0.00) remo_two from ";
+		String sql1 = "(select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
+				+ "%') union all select province from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%')) as cc ";
+		String sql2 = "(select province,coalesce(sum(remo_totalmoney),0.00) remo_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateOne + "%') group by province) as aa ";
+		String sql3 = "(select province,coalesce(sum(remo_totalmoney),0.00) remo_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%') group by province) as bb ";
+		String selectSql = sql0 + sql1 + " left join  " + sql2 + " on aa.province=cc.province left join " + sql3
+				+ " on bb.province=cc.province ";
+		selectSql += " group by province ";
 		Query query = em.createNativeQuery(selectSql.toString());
 		List<Object> result = query.getResultList();
 		em.close();

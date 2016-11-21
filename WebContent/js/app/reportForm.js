@@ -78,12 +78,32 @@ app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/remoAnalyzeList', {
 		templateUrl : '/CIMS/jsp/reportForm/remoAnalyzeList.html',
 		controller : 'ReportController'
+	}).when('/projectList', {
+		templateUrl : '/CIMS/jsp/reportForm/projectList.html',
+		controller : 'ReportController'
 	})
 } ]);
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	
+
+	// zq从设计部取出项目经理人选zq2016-11-17
+	services.selectUsersFromDesign = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'user/selectUsersFromDesign.do',
+			data : data
+		});
+	};
+	// 根据限制条件查询项目统计表zq2016-11-17
+	services.selectProjectListBylimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'reportForm/selectProjectListBylimits.do',
+			data : data
+		});
+	};
+	//根据年份获取合同额到款分析表的数据
 	services.getRemoAnalyzeDataByYear = function(data) {
 		return $http({
 			method : 'post',
@@ -93,6 +113,28 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	};
 	return services;
 } ]);
+app.controller('ReportController', [
+		'$scope',
+		'services',
+		'$location',
+		function($scope, services, $location) {
+			var reportForm = $scope;
+			// zq2016-11-17
+			var reportPage = 1;
+			// zq查询条件实体2016-11-17
+			var proListLimits = {};
+			// zq设定查询条件初始值2016-11-17
+			reportForm.limit = {
+				contType : "-1",
+				proStage : "",
+				contStatus : "",
+				province : "",
+				startDate : "",
+				endDate : "",
+				userId : ""
+			};
+			// zq点击查询list2016-11-17
+			reportForm.selectProjectListBylimits = function() {
 
 app
 		.controller(
@@ -104,23 +146,68 @@ app
 						function($scope, services, $location) {
 							// zq合同
 							var reportForm = $scope;
-							
-							reportForm.getTableDate = function(){
+
+							reportForm.getTableDate = function() {
 								var beginYear = $('#begin-year').val();
 								var endYear = $('#end-year').val();
-								services.getRemoAnalyzeDataByYear({
-									beginYear:beginYear,
-									endYear  :endYear
-								}).success(function(data){
-									console.log(data);
-									reportForm.comoCompareRemo = data.reportForm;
-								});
-								
+								services
+										.getRemoAnalyzeDataByYear({
+											beginYear : beginYear,
+											endYear : endYear
+										})
+										.success(
+												function(data) {
+													console.log(data);
+													reportForm.comoCompareRemo = data.reportForm;
+													reportForm.table1Show = false;
+													if (reportForm.comoCompareRemo) {
+														reportForm.table1Show = true;
+													}
+													var chart1Data = [
+															[ 'Firefox', 45.0 ],
+															[ 'IE', 26.8 ],
+															{
+																name : 'Chrome',
+																y : 12.8,
+																sliced : true,
+																selected : true
+															},
+															[ 'Safari', 8.5 ],
+															[ 'Opera', 6.2 ],
+															[ 'Others', 0.7 ] ];
+
+													Highcharts
+															.wrap(
+																	Highcharts.Chart.prototype,
+																	'getSVG',
+																	function(
+																			proceed) {
+																		return proceed
+																				.call(
+																						this)
+																				.replace(
+																						/(fill|stroke)="rgba([ 0-9]+,[ 0-9]+,[ 0-9]+),([ 0-9\.]+)"/g,
+																						'$1="rgb($2)" $1-opacity="$3"');
+																	});
+													if(data){
+														var chart1 = new Chart(
+															{
+																elementId : "#pieChart1",
+																title : "2014年自营项目新签合同额分析图",
+																name : "浏览器",
+																data : chart1Data
+															});
+														chart1.init();
+													}
+													
+												});
+
 							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
-								if ($location.path().indexOf('/remoAnalyzeList') == 0) {
+								if ($location.path()
+										.indexOf('/remoAnalyzeList') == 0) {
 									var date = new Date();
 									var year = date.getFullYear();
 									$('#begin-year').val(year);
@@ -128,7 +215,7 @@ app
 								}
 							}
 							initData();
-							
+
 							var $dateFormat = $(".dateFormat");
 							var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
 							$(".dateFormat").blur(
@@ -146,3 +233,143 @@ app
 
 						} ]);
 
+				var errorText = $("#errorText").css("display");
+				if (errorText == "inline") {
+					alert("时间格式错误！");
+					return false;
+				}
+				if (reportForm.limit.startDate != "") {
+					if (reportForm.limit.endDate == "") {
+						alert("请输入截止时间！");
+						return false;
+					} else {
+						var date1 = new Date(reportForm.limit.startDate);
+						var date2 = new Date(reportForm.limit.endDate);
+						if (date1.getTime() > date2.getTime()) {
+							alert("截止时间不能大于起始时间！");
+							return false;
+						}
+					}
+				}
+				proListLimits = JSON.stringify(reportForm.limit);
+				services.selectProjectListBylimits({
+					limit : proListLimits,
+					page : 1
+				}).success(function(data) {
+					reportForm.prStForms = data.list;// prstForms查询出来的列表（ProjectStatisticForm）
+					pageTurn(data.totalPage, 1);
+				});
+
+			}
+			// zq换页查找函数2016-11-17
+			function findProjectListBylimits(p) {
+				services.selectProjectListBylimits({
+					limit : proListLimits,
+					page : p
+				}).success(function(data) {
+					reportForm.prStForms = data.list;// prstForms查询出来的列表（ProjectStatisticForm）
+				});
+			}
+			// zq：从设计部查找人员2016-11-17
+			function selectUsersFromDesign() {
+				services.selectUsersFromDesign({}).success(function(data) {
+					reportForm.userDepts = data.list;
+				});
+			}
+			// zq换页2016-11-17
+			function pageTurn(totalPage, page) {
+				var $pages = $(".tcdPageCode");
+				if ($pages.length != 0) {
+					$(".tcdPageCode").createPage({
+						pageCount : totalPage,
+						current : page,
+						backFn : function(p) {
+							reportPage = p;
+							findProjectListBylimits(p);
+						}
+					});
+				}
+			}
+			// liu
+			reportForm.getTableDate = function() {
+				var beginYear = $('#begin-year').val();
+				var endYear = $('#end-year').val();
+				services.getRemoAnalyzeDataByYear({
+					beginYear : beginYear,
+					endYear : endYear
+				}).success(function(data) {
+					console.log(data);
+					reportForm.comoCompareRemo = data.reportForm;
+				});
+
+			}
+			// 初始化
+			function initData() {
+				console.log("初始化页面信息");
+				if ($location.path().indexOf('/remoAnalyzeList') == 0) {
+					var date = new Date();
+					var year = date.getFullYear();
+					$('#begin-year').val(year);
+					$('#end-year').val(year);
+				} else if ($location.path().indexOf('/projectList') == 0) {
+					selectUsersFromDesign();
+				}
+			}
+			initData();
+			// zq控制年月2016-11-17
+			var $dateFormat = $(".dateFormatForYM");
+			var dateRegexpForYM = /^[0-9]{4}-[0-9]{1,2}$/;
+			$(".dateFormatForYM").blur(
+					function() {
+						if (this.value.trim() != "") {
+							if (!dateRegexpForYM.test(this.value)) {
+								$(this).parent().children("span").css(
+										'display', 'inline');
+							} else {
+								var month = parseInt(this.value.split("-")[1]);
+								if (month > 12) {
+									$(this).parent().children("span").css(
+											'display', 'inline');
+								}
+							}
+						}
+
+					});
+			
+			$(".dateFormatForYM").click(function() {
+				$(this).parent().children("span").css('display', 'none');
+			});
+			// liu
+			var $dateFormat = $(".dateFormat");
+			var dateRegexp = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
+			$(".dateFormat").blur(function() {
+				if (!dateRegexp.test(this.value)) {
+					$(this).parent().children("span").css('display', 'inline');
+				}
+			});
+			$(".dateFormat").click(function() {
+				$(this).parent().children("span").css('display', 'none');
+			});
+		} ]);
+// 截取任务内容zq2016-11-17
+app.filter('cutString', function() {
+	return function(input) {
+		var content = "";
+		if (input != "") {
+			var shortInput = input.substr(0, 10);
+			content = shortInput + "……";
+		}
+
+		return content;
+	}
+});
+// 小数过滤器zq2016-11-17
+app.filter('numberFloat', function() {
+	var money = 0.00;
+	return function(input) {
+		if (input) {
+			money = parseFloat(input).toFixed(2);
+		}
+		return money;
+	}
+});

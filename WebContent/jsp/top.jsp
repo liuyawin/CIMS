@@ -8,6 +8,7 @@
 <link href="${ctx}/css/admin.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/css/zhou.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/css/li.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${ctx}/js/lib/jquery-1.9.1.min.js"></script>
 </head>
 
 <body style="background:url(${ctx}/images/topbg.gif) repeat-x;">
@@ -47,8 +48,7 @@
 			<source src="${ctx}/audio/msg.wav"></source>
 		</audio>
 	</header>
-	<section class="containner">
-		<script type="text/javascript" src="${ctx}/js/lib/jquery-1.9.1.min.js"></script>
+	<section class="containner">		
 		<script type="text/javascript"
 			src="${ctx}/js/lib/jquery.json-2.2.min.js"></script>
 		<script type="text/javascript">
