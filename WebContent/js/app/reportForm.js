@@ -89,6 +89,7 @@ app.config([ '$routeProvider', function($routeProvider) {
 app.constant('baseUrl', '/CIMS/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
+
 	// zq从设计部取出项目经理人选zq2016-11-17
 	services.selectUsersFromDesign = function(data) {
 		return $http({
@@ -105,6 +106,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+
 	// 根据年份获取合同额到款分析表的数据
 	services.getRemoAnalyzeDataByYear = function(data) {
 		return $http({
@@ -113,6 +115,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+
 	// zq获取所有用户2016-11-18
 	services.getAllUsers = function() {
 		return $http({
@@ -128,6 +131,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+
+	services.outputComoCompareRemo = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'reportForm/exportWord.do',
+			data : data
+		});
+	}
 	return services;
 } ]);
 app
@@ -143,9 +154,6 @@ app
 							var reportPage = 1;
 							// zq查询条件实体2016-11-17
 							var proListLimits = {};
-							var unGetListLimits = {};
-							//zq显示没查询到数据提醒
-							var listShow = true;
 							// zq设定查询条件初始值2016-11-17
 							reportForm.limit = {
 								contType : "-1",
@@ -156,7 +164,6 @@ app
 								endDate : "",
 								userId : ""
 							};
-
 							// zq设定查询未返回合同查询条件初始值2016-11-18
 							reportForm.unGetlimit = {
 								province : "",
@@ -164,7 +171,6 @@ app
 								endDate : "",
 								userId : ""
 							};
-
 							// zq点击查询list2016-11-17
 							reportForm.selectProjectListBylimits = function() {
 								var errorText = $("#errorText").css("display");
@@ -195,12 +201,8 @@ app
 								}).success(function(data) {
 									reportForm.prStForms = data.list;// prstForms查询出来的列表（ProjectStatisticForm）
 									pageTurn(data.totalPage, 1);
-									if (data.list.length == 0) {
-										listShow = false;
-									} else {
-										listShow = true;
-									}
 								});
+
 							}
 							// zq换页查找函数2016-11-17
 							function findProjectListBylimits(p) {
@@ -209,11 +211,6 @@ app
 									page : p
 								}).success(function(data) {
 									reportForm.prStForms = data.list;// prstForms查询出来的列表（ProjectStatisticForm）
-									if (data.list.length == 0) {
-										listShow = false;
-									} else {
-										listShow = true;
-									}
 								});
 							}
 							// zq：从设计部查找人员2016-11-17
@@ -231,80 +228,12 @@ app
 										pageCount : totalPage,
 										current : page,
 										backFn : function(p) {
+											reportPage = p;
 											findProjectListBylimits(p);
 										}
 									});
 								}
 							}
-							/*
-							 * zq 2016-11-18未返回合同表
-							 */
-							// zq查找所有用户2016-11-18
-							function selectAllUsers() {
-								services.getAllUsers().success(function(data) {
-									reportForm.users = data;
-								});
-							}
-							// zq点击查询list2016-11-17
-							reportForm.selectUnGetContListBylimits = function() {
-								var errorText = $("#errorText").css("display");
-								if (errorText == "inline") {
-									alert("时间格式错误！");
-									return false;
-								}
-								if (reportForm.unGetlimit.startDate != "") {
-									if (reportForm.unGetlimit.endDate == "") {
-										alert("请输入截止时间！");
-										return false;
-									} else {
-										var date1 = new Date(
-												reportForm.unGetlimit.startDate);
-										var date2 = new Date(
-												reportForm.unGetlimit.endDate);
-										if (date1.getTime() > date2.getTime()) {
-											alert("截止时间不能大于起始时间！");
-											return false;
-										}
-									}
-								}
-								unGetListLimits = JSON
-										.stringify(reportForm.unGetlimit);
-								console.log(unGetListLimits);
-								/*
-								 * services.selectUnGetContListBylimits({ limit :
-								 * unGetListLimits, page : 1
-								 * }).success(function(data) {
-								 * reportForm.unGetContForms = data.list;//
-								 * prstForms查询出来的列表（ProjectStatisticForm）
-								 * unGetPageTurn(data.totalPage, 1); });
-								 */
-
-							}
-							// zq换页查找函数2016-11-18
-							function findUnGetContListBylimits(p) {
-								services.selectUnGetContListBylimits({
-									limit : unGetListLimits,
-									page : p
-								}).success(function(data) {
-									reportForm.unGetContForms = data.list;// prstForms查询出来的列表（ProjectStatisticForm）
-								});
-							}
-							// zq换页2016-11-18
-							function unGetPageTurn(totalPage, page) {
-								var $pages = $(".tcdPageCode");
-								if ($pages.length != 0) {
-									$(".tcdPageCode").createPage({
-										pageCount : totalPage,
-										current : page,
-										backFn : function(p) {
-											findUnGetContListBylimits(p);
-										}
-									});
-								}
-							}
-							/*
-							 * zq 2016-11-18未返回合同表结束
-							 */
 							// liu
 							reportForm.getTableDate = function() {
 								var beginYear = $('#begin-year').val();
@@ -321,9 +250,8 @@ app
 										})
 										.success(
 												function(data) {
-													console.log("直接打印从后台获取的数据："
-															+ data);
-													reportForm.comoCompareRemo = data.reportForm;
+													// 表1
+													reportForm.comoCompareRemo = data.comoCompareRemo;
 													reportForm.table1Show = false;
 													if (reportForm.comoCompareRemo) {
 														reportForm.table1Show = true;
@@ -358,16 +286,145 @@ app
 														var chart1 = new Chart(
 																{
 																	elementId : "#pieChart1",
-																	title : "2014年自营项目新签合同额分析图",
+																	title : beginYear
+																			+ "年自营项目新签合同额分析图",
 																	name : "浏览器",
 																	data : chart1Data
 																});
 														chart1.init();
+														$('#chart1-svg')
+																.val(
+																		$(
+																				"#pieChart1")
+																				.highcharts()
+																				.getSVG());
 													}
+													// if(chart2Data){
+													// var chart2 = new Chart(
+													// {
+													// elementId : "#pieChart2",
+													// title :
+													// "2014年自营项目新签合同额分析图",
+													// name : "浏览器",
+													// data : chart1Data
+													// });
+													// chart2.init();
+													// $('#chart2-svg').val($("#pieChart2").highcharts().getSVG());
+													// }
+													// if(chart3Data){
+													// var chart3 = new Chart(
+													// {
+													// elementId : "#pieChart3",
+													// title :
+													// "2014年自营项目新签合同额分析图",
+													// name : "浏览器",
+													// data : chart1Data
+													// });
+													// chart3.init();
+													// $('#chart3-svg').val($("#pieChart3").highcharts().getSVG());
+													// }
 
 												});
 
 							}
+							reportForm.outputComoCompareRemo = function(e) {
+								preventDefault(e);
+								services.outputComoCompareRemo({
+									beginYear : $('#begin-year').val(),
+									endYear : $('#end-year').val(),
+									chart1SVGStr : $('#chart1-svg').val(),
+									chart2SVGStr : $('#chart2-svg').val(),
+									chart3SVGStr : $('#chart3-svg').val(),
+								}).success(function() {
+									alert("导出成功！")
+								});
+
+							}
+							function preventDefault(e) {
+								if (e && e.preventDefault) {
+									// 阻止默认浏览器动作(W3C)
+									e.preventDefault();
+								} else {
+									// IE中阻止函数器默认动作的方式
+									window.event.returnValue = false;
+									return false;
+								}
+							}
+
+							/*
+							 * zq 2016-11-18未返回合同表
+							 */
+							// zq查找所有用户2016-11-18
+							function selectAllUsers() {
+								services.getAllUsers().success(function(data) {
+									reportForm.users = data;
+								});
+							}
+							// zq点击查询list2016-11-17
+							reportForm.selectUnGetContListBylimits = function() {
+								var errorText = $("#errorText").css("display");
+								if (errorText == "inline") {
+									alert("时间格式错误！");
+									return false;
+								}
+								if (reportForm.unGetlimit.startDate != "") {
+									if (reportForm.unGetlimit.endDate == "") {
+										alert("请输入截止时间！");
+										return false;
+									} else {
+										var date1 = new Date(
+												reportForm.unGetlimit.startDate);
+										var date2 = new Date(
+												reportForm.unGetlimit.endDate);
+										if (date1.getTime() > date2.getTime()) {
+											alert("截止时间不能大于起始时间！");
+											return false;
+										}
+									}
+								}
+								unGetListLimits = JSON
+										.stringify(reportForm.unGetlimit);
+								services.selectUnGetContListBylimits({
+									limit : unGetListLimits,
+									page : 1
+								}).success(function(data) {
+									reportForm.unGetContForms = data.list;
+									unGetPageTurn(data.totalPage, 1);
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
+							// zq换页查找函数2016-11-18
+							function findUnGetContListBylimits(p) {
+								services.selectUnGetContListBylimits({
+									limit : unGetListLimits,
+									page : p
+								}).success(function(data) {
+									reportForm.unGetContForms = data.list;// prstForms查询出来的列表（ProjectStatisticForm）
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
+							// zq换页2016-11-18
+							function unGetPageTurn(totalPage, page) {
+								var $pages = $(".tcdPageCode");
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											findUnGetContListBylimits(p);
+										}
+									});
+								}
+							}
+
 							// 初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -379,9 +436,11 @@ app
 									$('#end-year').val(year);
 								} else if ($location.path().indexOf(
 										'/projectList') == 0) {
+									reportForm.listIsShow = false;
 									selectUsersFromDesign();
 								} else if ($location.path().indexOf(
 										'/unGetContList') == 0) {
+									reportForm.listIsShow = false;
 									selectAllUsers();
 								}
 							}
@@ -435,5 +494,34 @@ app.filter('numberFloat', function() {
 			money = parseFloat(input).toFixed(2);
 		}
 		return money;
+	}
+});
+
+// 时间的格式化的判断
+app.filter('dateType', function() {
+	return function(input) {
+		var type = "";
+		if (input) {
+			type = new Date(input).toLocaleDateString().replace(/\//g, '-');
+		}
+
+		return type;
+	}
+});
+
+// 年份
+app.filter('bYear', function() {
+	return function() {
+		return $('#begin-year').val();
+	}
+});
+app.filter('eYear', function() {
+	return function() {
+		return $('#end-year').val();
+	}
+});
+app.filter('nYear', function() {
+	return function() {
+		return +$('#end-year').val() + 1;
 	}
 });

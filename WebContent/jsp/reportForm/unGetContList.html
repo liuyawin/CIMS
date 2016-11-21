@@ -59,16 +59,16 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="unGet in unGetContForms">
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td>{{$index+1}}</td>
+				<td>{{unGet.cont_project |cutString}}</td>
+				<td>{{unGet.cont_client |cutString}}</td>
+				<td>{{unGet.cont_money |numberFloat}}</td>
+				<td>{{unGet.handler}}</td>
+				<td>{{unGet.header}}</td>
 			</tr>
 		</tbody>
 	</table>
-
+<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 	<div class="tcdPageCode">页码容器</div>
 </div>
 

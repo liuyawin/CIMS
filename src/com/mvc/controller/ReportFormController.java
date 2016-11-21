@@ -1,6 +1,10 @@
 package com.mvc.controller;
 
-import java.text.ParseException;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +14,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hwpf.HWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,10 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mvc.entity.ProjectStatisticForm;
 
 import com.mvc.entity.ComoCompareRemo;
-
+import com.mvc.entity.NoBackContForm;
 import com.mvc.service.ReportFormService;
 import com.utils.Pager;
 import com.utils.StringUtil;
+import com.utils.FileHelper;
+import com.utils.ReplaceDoc;
 
 import net.sf.json.JSONObject;
 
@@ -72,7 +79,6 @@ public class ReportFormController {
 			pro_stage = request.getParameter("proStage");// 项目阶段
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
-			System.out.println("dsag" + request.getParameter("userId"));
 			managerId = Integer.valueOf(request.getParameter("userId"));// 设总
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("contStatus"))) {
@@ -124,6 +130,65 @@ public class ReportFormController {
 		return jsonObject.toString();
 	}
 
+	/**
+	 * 导出未返回合同统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportUnGetContListBylimits.do")
+	public ResponseEntity<byte[]> exportNoBackCont(HttpServletRequest request) {
+		Integer handler = null;
+		String province = null;
+		String startTime = null;
+		String endTime = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
+			handler = Integer.valueOf(request.getParameter("userId"));// 经手人
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
+			province = request.getParameter("province");// 省份
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
+			startTime = request.getParameter("startDate") + "-01";// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			endTime = request.getParameter("endDate") + "-01";// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("handler", handler);
+		map.put("province", province);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = reportFormService.exportNoBackCont(map, path);
+		return byteArr;
+	}
+
+	/**
+	 * 查询未返回合同统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectUnGetContListBylimits.do")
+	public @ResponseBody String selectNoBackCont(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
+		Integer page = Integer.parseInt(request.getParameter("page"));// 指定页码
+
+		Map<String, Object> map = reportFormService.JsonObjToMapNoBack(jsonObject);
+		Pager pager = reportFormService.pagerTotalNoBack(map, page);
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		List<NoBackContForm> list = reportFormService.findNoBackCont(map, pager, path);
+
+		jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+	}
+
 	/*
 	 * ***********************************张姣娜报表开始*******************************
 	 */
@@ -137,18 +202,66 @@ public class ReportFormController {
 	@RequestMapping(value = "/selectComoRemoAnalyse.do")
 	public @ResponseBody String findComoRemoAnalyse(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject = new JSONObject();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy");
-		Date dateOne = null;
-		Date dateTwo = null;
-		try {
-			dateOne = format.parse(request.getParameter("beginYear"));
-			dateTwo = format.parse(request.getParameter("endYear"));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		//ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
-		jsonObject.put("comoCompareRemo", "");
+		String dateOne = request.getParameter("beginYear");
+		System.out.println("riqi111:" + request.getParameter("beginYear"));
+		String dateTwo = request.getParameter("endYear");
+		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
+		System.out.println("调取结果成功：" + comoCompareRemo.getComo_two() + "+" + comoCompareRemo.getComo_one());
+		jsonObject.put("comoCompareRemo", comoCompareRemo);
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 导出word格式的报表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportWord.do")
+	public ResponseEntity<byte[]> exportWordReport(HttpServletRequest request) {
+		ResponseEntity<byte[]> byteArr = null;
+		String dateOne = request.getParameter("beginYear");
+		String dateTwo = request.getParameter("endYear");
+		// String dateOne = "2015";
+		// String dateTwo = "2016";
+		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
+		Map<String, String> contentMap = new HashMap<String, String>();
+		contentMap.put("date_one", dateOne);
+		contentMap.put("date_two", dateTwo);
+		contentMap.put("como_one", comoCompareRemo.getComo_one().toString());
+		contentMap.put("remo_one", comoCompareRemo.getRemo_one().toString());
+		contentMap.put("cont_num_one", comoCompareRemo.getCont_num_one().toString());
+		contentMap.put("como_two", comoCompareRemo.getComo_two().toString());
+		contentMap.put("remo_two", comoCompareRemo.getRemo_two().toString());
+		contentMap.put("cont_num_two", comoCompareRemo.getCont_num_two().toString());
+		contentMap.put("ratio_como", comoCompareRemo.getRatio_como());
+		contentMap.put("ratio_remo", comoCompareRemo.getRatio_remo());
+		contentMap.put("ratio_conum", comoCompareRemo.getRatio_conum());
+
+		// 获取模版路径模版
+		String modelPath = request.getSession().getServletContext().getRealPath("/WEB-INF/wordTemp/template.doc");// 上传服务器的路径
+		// 给模版中的变量赋值
+		HWPFDocument document = ReplaceDoc.replaceDoc(modelPath, contentMap);
+		if (document != null) {
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			try {
+				document.write(byteArrayOutputStream);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+				String fileName = sdf.format(new Date()) + ".doc";
+				String path = request.getSession().getServletContext().getRealPath("/WEB-INF/word");// 上传服务器的路径
+				path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+				OutputStream outputStream = new FileOutputStream(path);
+				outputStream.write(byteArrayOutputStream.toByteArray());
+				outputStream.close();
+				// 下载文档
+				byteArr = FileHelper.downloadFile(fileName, path);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return byteArr;
 	}
 	/*
 	 * ***********************************张姣娜报表结束*******************************

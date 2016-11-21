@@ -37,15 +37,20 @@
 
 	<div class="loginbody">
 
-		<span class="systemlogo"></span>
-
+		<span class="systemlogo"></span> <a
+			href="/CIMS//reportForm/exportWord.do">导出word</a>
 		<div class="loginbox">
 			<form action="/CIMS/login/login.do" method="post" id="login-form">
 				<ul>
-					<li><input name="userName" type="text" class="loginuser" id="userName" placeholder="用户名" /><label style="visibility:hidden" id="userError" class="error-label">用户不存在</label></li>
-					<li><input name="password" type="password" class="loginpwd" id="password" placeholder="密码" /><label style="visibility:hidden" id="pwdError" class="error-label">密码错误</label></li>
+					<li><input name="userName" type="text" class="loginuser"
+						id="userName" placeholder="用户名" /><label
+						style="visibility: hidden" id="userError" class="error-label">用户不存在</label></li>
+					<li><input name="password" type="password" class="loginpwd"
+						id="password" placeholder="密码" /><label
+						style="visibility: hidden" id="pwdError" class="error-label">密码错误</label></li>
 					<li><input type="button" class="loginbtn" value="登录"
-						id="login-btn"/><input style="margin-left:24px" type="reset" class="loginbtn" value="重置"/></li>
+						id="login-btn" /><input style="margin-left: 24px" type="reset"
+						class="loginbtn" value="重置" /></li>
 				</ul>
 			</form>
 		</div>
@@ -55,7 +60,7 @@
 		src="${pageContext.request.contextPath}/js/lib/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/js/lib/cloud.js"></script>
-		<script type="text/javascript"
+	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/js/app/loginCheck.js"></script>
 
 	<script type="text/javascript">

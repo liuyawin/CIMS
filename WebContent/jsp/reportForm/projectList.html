@@ -97,12 +97,12 @@
 				<td>{{psf.install_capacity | numberFloat }}</td>
 				<td>{{psf.cont_type}}</td>
 				<td>{{psf.cont_status}}</td>
-				<td>{{psf.cont_stime}}</td>
+				<td>{{psf.cont_stime.time | dateType}}</td>
 				<td>{{psf.cont_money | numberFloat}}</td>
 			</tr>
 		</tbody>
 	</table>
-<label class="error-label" ng-show="!listShow">对不起，未找到相关数据</label>
+<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 	<div class="tcdPageCode">页码容器</div>
 	
 </div>
