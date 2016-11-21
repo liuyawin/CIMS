@@ -38,9 +38,7 @@
 	<div class="loginbody">
 
 		<span class="systemlogo"></span> <a
-			href="/CIMS//reportForm/exportWord.do">张导出word</a>
-			<a
-			href="/CIMS//reportForm/testWord.do">王导出word</a>
+			href="/CIMS//reportForm/exportWord.do">导出word</a>
 		<div class="loginbox">
 			<form action="/CIMS/login/login.do" method="post" id="login-form">
 				<ul>

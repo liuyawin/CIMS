@@ -21,6 +21,7 @@ import com.mvc.entity.ProjectStatisticForm;
 import com.base.constants.ReportFormConstants;
 import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.NewComoAnalyse;
+import com.mvc.entity.NoBackContForm;
 import com.mvc.service.ReportFormService;
 import com.utils.FileHelper;
 import com.utils.Pager;
@@ -75,7 +76,6 @@ public class ReportFormController {
 			pro_stage = request.getParameter("proStage");// 项目阶段
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
-			System.out.println("dsag" + request.getParameter("userId"));
 			managerId = Integer.valueOf(request.getParameter("userId"));// 设总
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("contStatus"))) {
@@ -127,6 +127,65 @@ public class ReportFormController {
 		return jsonObject.toString();
 	}
 
+	/**
+	 * 导出未返回合同统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportUnGetContListBylimits.do")
+	public ResponseEntity<byte[]> exportNoBackCont(HttpServletRequest request) {
+		Integer handler = null;
+		String province = null;
+		String startTime = null;
+		String endTime = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
+			handler = Integer.valueOf(request.getParameter("userId"));// 经手人
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
+			province = request.getParameter("province");// 省份
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
+			startTime = request.getParameter("startDate") + "-01";// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			endTime = request.getParameter("endDate") + "-01";// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("handler", handler);
+		map.put("province", province);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = reportFormService.exportNoBackCont(map, path);
+		return byteArr;
+	}
+
+	/**
+	 * 查询未返回合同统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectUnGetContListBylimits.do")
+	public @ResponseBody String selectNoBackCont(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
+		Integer page = Integer.parseInt(request.getParameter("page"));// 指定页码
+
+		Map<String, Object> map = reportFormService.JsonObjToMapNoBack(jsonObject);
+		Pager pager = reportFormService.pagerTotalNoBack(map, page);
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		List<NoBackContForm> list = reportFormService.findNoBackCont(map, pager, path);
+
+		jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+	}
+
 	/*
 	 * ***********************************张姣娜报表开始*******************************
 	 */
@@ -159,12 +218,12 @@ public class ReportFormController {
 	 */
 	@RequestMapping("/exportWord.do")
 	public ResponseEntity<byte[]> testWord(HttpServletRequest request) {
-//		String firstDate = request.getParameter("beginYear");
-//		String secondDate = request.getParameter("endYear");
-//		String svg = request.getParameter("svg");
-//		System.out.print(svg);
-		 String firstDate = "2015";
-		 String secondDate = "2016";
+		String firstDate = request.getParameter("beginYear");
+		String secondDate = request.getParameter("endYear");
+		String svg = request.getParameter("svg");
+		System.out.print(svg);
+		// String firstDate = "2015";
+		// String secondDate = "2016";
 		WordHelper<NewComoAnalyse> wh = new WordHelper<NewComoAnalyse>();
 		String fileName = "自营项目合同额及到款分析表.docx";// 2007版
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);

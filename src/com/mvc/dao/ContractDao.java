@@ -39,7 +39,10 @@ public interface ContractDao {
 	// 光电院项目分项统计表
 	List<Contract> findContByPara(Map<String, Object> map, Pager pager);
 
-	// 查询报表总条数
+	// 未返回合同统计表
+	List<Contract> findContByParaNoBack(Map<String, Object> map, Pager pager);
+
+	// 查询分项统计表总条数
 	Long countTotal(Map<String, Object> map);
 
 	/**************** 张姣娜 ********************/
@@ -51,4 +54,8 @@ public interface ContractDao {
 
 	// 根据日期获取到款分析表
 	List<Object> findRemoByDate(String oneTime, String twoTime);
+
+	// 查询未返回合同统计表总条数
+	Long countTotalNoBack(Map<String, Object> map);
+
 }

@@ -24,7 +24,7 @@ import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.Contract;
 import com.mvc.entity.NewComoAnalyse;
 import com.mvc.entity.NewRemoAnalyse;
-import com.mvc.entity.PlanProjectForm;
+import com.mvc.entity.NoBackContForm;
 import com.mvc.entity.ProjectStatisticForm;
 import com.mvc.service.ReportFormService;
 import com.utils.ExcelHelper;
@@ -56,7 +56,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 		Integer cont_type = (Integer) map.get("cont_type");
 
 		try {
-			ExcelHelper<PlanProjectForm> ex = new ExcelHelper<PlanProjectForm>();
+			ExcelHelper<ProjectStatisticForm> ex = new ExcelHelper<ProjectStatisticForm>();
 			Calendar c = Calendar.getInstance();
 			c.setTime(new Date());
 			int year = c.get(Calendar.YEAR);
@@ -84,18 +84,27 @@ public class ReportFormServiceImpl implements ReportFormService {
 				Iterator<Contract> it_pho = listSource_pho.iterator();
 				List<ProjectStatisticForm> listGoal_pho = contToProStatis(it_pho);
 
+				// 其他项目
+				map.put("cont_type", ContractType.其他.value);
+				List<Contract> listSource_other = contractDao.findContByPara(map, null);
+				Iterator<Contract> it_other = listSource_other.iterator();
+				List<ProjectStatisticForm> listGoal_other = contToProStatis(it_other);
+
 				String[] titles = { year + "年光电院分布式光伏项目统计表", year + "年光电院光伏项目统计表（不含分布式）", year + "年光电院光热项目统计表" };
-				String[] header_dis = { "序号", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）", "合同状态", "备注" };// 顺序必须和对应实体一致
+				String[] header_dis = { "序号", "合同类型hidden", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）",
+						"合同状态", "签订日期hidden", "备注" };// 顺序必须和对应实体一致
 
 				Map<Integer, String[]> headerMap = new HashMap<Integer, String[]>();// 每个sheet的标题，暂时用统一标题
 				headerMap.put(0, header_dis);
 				headerMap.put(1, header_dis);
 				headerMap.put(2, header_dis);
+				headerMap.put(3, header_dis);
 
 				Map<Integer, List> mapList = new HashMap<Integer, List>();// 每个sheet中内容
 				mapList.put(0, listGoal_dis);
 				mapList.put(1, listGoal_tra);
 				mapList.put(2, listGoal_pho);
+				mapList.put(2, listGoal_other);
 
 				ex.export2007MutiExcel(titles, headerMap, mapList, out, "yyyy-MM-dd");
 			} else {// 根据合同类型，只导出对应的单sheet的Excel
@@ -118,9 +127,41 @@ public class ReportFormServiceImpl implements ReportFormService {
 					break;
 				}
 
-				String[] header = { "序号", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）", "合同状态", "备注" };// 顺序必须和对应实体一致
+				String[] header = { "序号", "合同类型hidden", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）", "合同状态",
+						"签订日期hidden", "备注" };// 顺序必须和对应实体一致
 				ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
 			}
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
+	// 导出未返回合同统计表
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public ResponseEntity<byte[]> exportNoBackCont(Map<String, Object> map, String path) {
+		ResponseEntity<byte[]> byteArr = null;
+
+		try {
+			ExcelHelper<NoBackContForm> ex = new ExcelHelper<NoBackContForm>();
+			String fileName = "未返回合同情况一览表.xlsx";// 2007版
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Contract> listSource = contractDao.findContByParaNoBack(map, null);
+			Iterator<Contract> it = listSource.iterator();
+			List<NoBackContForm> listGoal = contToNoBackCont(it);
+
+			String title = "未返回合同情况一览表";
+			String[] header = { "序号", "项目名称", "业主单位", "合同额（万元）", "经手人", "负责人" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -147,6 +188,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 			Contract contract = it.next();
 			ProjectStatisticForm projectStatisticForm = new ProjectStatisticForm();
 			projectStatisticForm.setPrsf_id(i);// 序号
+			Integer cont_type = contract.getCont_type();
+			projectStatisticForm.setCont_type(ContractType.intToStr(cont_type));// 合同类型
 			projectStatisticForm.setCont_project(contract.getCont_project());// 项目名称
 			if (contract.getManager() != null) {
 				projectStatisticForm.setManager_name(contract.getManager().getUser_name());// 项目设总
@@ -174,7 +217,38 @@ public class ReportFormServiceImpl implements ReportFormService {
 				cont_status = cont_status.replace('_', '，');// 将_替换成，
 			}
 			projectStatisticForm.setCont_status(cont_status);// 合同状态
+			projectStatisticForm.setCont_stime(contract.getCont_stime());// 合同签订日期
+
 			listGoal.add(projectStatisticForm);
+		}
+		return listGoal;
+	}
+
+	/**
+	 * 将contract封装成未返回合同统计表
+	 * 
+	 * @param it
+	 * @return
+	 */
+	private List<NoBackContForm> contToNoBackCont(Iterator<Contract> it) {
+		List<NoBackContForm> listGoal = new ArrayList<NoBackContForm>();
+		int i = 0;
+		while (it.hasNext()) {// 赋值顺序和表头无关
+			i++;
+			Contract contract = it.next();
+			NoBackContForm noBackContForm = new NoBackContForm();
+			noBackContForm.setNb_id(i);// 序号
+			noBackContForm.setCont_project(contract.getCont_project());// 项目名称
+			noBackContForm.setCont_client(contract.getCont_client());// 业主单位
+			noBackContForm.setCont_money(contract.getCont_money());// 合同额(万元)
+			if (contract.getCreator() != null) {
+				noBackContForm.setHandler(contract.getCreator().getUser_name());// 经手人
+			}
+			if (contract.getManager() != null) {
+				noBackContForm.setHeader(contract.getManager().getUser_name());// 负责人
+			}
+
+			listGoal.add(noBackContForm);
 		}
 		return listGoal;
 	}
@@ -189,7 +263,17 @@ public class ReportFormServiceImpl implements ReportFormService {
 		return listGoal;
 	}
 
-	// 将JSONObject转成Map
+	// 查询未返回合同统计表
+	@Override
+	public List<NoBackContForm> findNoBackCont(Map<String, Object> map, Pager pager, String path) {
+		List<Contract> listSource = contractDao.findContByParaNoBack(map, pager);
+		Iterator<Contract> it = listSource.iterator();
+		List<NoBackContForm> listGoal = contToNoBackCont(it);
+
+		return listGoal;
+	}
+
+	// 将JSONObject转成Map分项统计表
 	@Override
 	public Map<String, Object> JsonObjToMap(JSONObject jsonObject) {
 		Integer cont_type = null;
@@ -232,7 +316,6 @@ public class ReportFormServiceImpl implements ReportFormService {
 		if (jsonObject.containsKey("endDate")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("endDate"))) {
 				endTime = jsonObject.getString("endDate") + "-01";// 结束时间
-
 			}
 		}
 
@@ -248,10 +331,58 @@ public class ReportFormServiceImpl implements ReportFormService {
 		return map;
 	}
 
-	// 查询报表页码相关
+	// 将JSONObject转成Map未返回合同统计表
+	@Override
+	public Map<String, Object> JsonObjToMapNoBack(JSONObject jsonObject) {
+		Integer handler = null;
+		String province = null;
+		String startTime = null;
+		String endTime = null;
+		if (jsonObject.containsKey("userId")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("userId"))) {
+				handler = Integer.valueOf(jsonObject.getString("userId"));// 经手人
+			}
+		}
+		if (jsonObject.containsKey("province")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("province"))) {
+				province = jsonObject.getString("province");// 省份
+			}
+		}
+		if (jsonObject.containsKey("startDate")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("startDate"))) {
+				startTime = jsonObject.getString("startDate") + "-01";// 开始时间
+			}
+		}
+		if (jsonObject.containsKey("endDate")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("endDate"))) {
+				endTime = jsonObject.getString("endDate") + "-01";// 结束时间
+			}
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("handler", handler);
+		map.put("province", province);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		return map;
+	}
+
+	// 查询分项统计表页码相关
 	@Override
 	public Pager pagerTotal(Map<String, Object> map, Integer page) {
 		int totalRow = Integer.parseInt(contractDao.countTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(page);
+		pager.setTotalRow(totalRow);
+
+		return pager;
+	}
+
+	// 查询未返回合同统计表页码相关
+	@Override
+	public Pager pagerTotalNoBack(Map<String, Object> map, Integer page) {
+		int totalRow = Integer.parseInt(contractDao.countTotalNoBack(map).toString());
 		Pager pager = new Pager();
 		pager.setPage(page);
 		pager.setTotalRow(totalRow);
@@ -289,12 +420,12 @@ public class ReportFormServiceImpl implements ReportFormService {
 		// 获取第一年相关数据
 		Object[] objOne = (Object[]) objectOne.get(0);
 		if (objOne[0].equals(0.0)) {
-			comoCompareRemo.setComo_one("---");
+			comoCompareRemo.setComo_one("");
 		} else {
 			comoCompareRemo.setComo_one(objOne[0].toString());
 		}
 		if (objOne[1].equals(0.0)) {
-			comoCompareRemo.setRemo_one("---");
+			comoCompareRemo.setRemo_one("");
 		} else {
 			comoCompareRemo.setRemo_one(objOne[1].toString());
 		}
@@ -302,19 +433,19 @@ public class ReportFormServiceImpl implements ReportFormService {
 		// 获取第二年相关数据
 		Object[] objTwo = (Object[]) objectTwo.get(0);
 		if (objTwo[0].equals(0.0)) {
-			comoCompareRemo.setComo_two("---");
+			comoCompareRemo.setComo_two("");
 		} else {
 			comoCompareRemo.setComo_two(objTwo[0].toString());
 		}
 		if (objTwo[1].equals(0.0)) {
-			comoCompareRemo.setRemo_two("---");
+			comoCompareRemo.setRemo_two("");
 		} else {
 			comoCompareRemo.setRemo_two(objTwo[1].toString());
 		}
 		comoCompareRemo.setCont_num_two(objTwo[2].toString());
 		// 计算同比增长率
 		if (objOne[0].equals(0.0)) {
-			comoCompareRemo.setRatio_como("---");
+			comoCompareRemo.setRatio_como("");
 		} else {
 			Double big = Double.valueOf(objTwo[0].toString());
 			Double small = Double.valueOf(objOne[0].toString());
@@ -329,7 +460,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 			}
 		}
 		if (objOne[1].equals(0.0)) {
-			comoCompareRemo.setRatio_remo("---");
+			comoCompareRemo.setRatio_remo("");
 		} else {
 			Double big = Double.valueOf(objTwo[1].toString());
 			Double small = Double.valueOf(objOne[1].toString());
@@ -344,7 +475,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 			}
 		}
 		if (objOne[2].equals(0)) {
-			comoCompareRemo.setRatio_conum("---");
+			comoCompareRemo.setRatio_conum("");
 		} else {
 			Double big = Double.valueOf(objTwo[2].toString());
 			Double small = Double.valueOf(objOne[2].toString());
@@ -382,8 +513,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 			Double como_two = (double) objOne[2];
 			newComoAnalyse.setProvince(objOne[0].toString());
 			if (como_one == 0) {
-				newComoAnalyse.setComo_one("---");
-				newComoAnalyse.setRise_ratio("---");
+				newComoAnalyse.setComo_one("");
+				newComoAnalyse.setRise_ratio("");
 			} else {
 				newComoAnalyse.setComo_one(objOne[1].toString());
 				Double rise_ratio = (como_two - como_one) / como_one * 100;
@@ -391,19 +522,19 @@ public class ReportFormServiceImpl implements ReportFormService {
 				newComoAnalyse.setRise_ratio(ratio);
 			}
 			if (como_two == 0) {
-				newComoAnalyse.setComo_two("---");
+				newComoAnalyse.setComo_two("");
 			} else {
 				newComoAnalyse.setComo_two(objOne[2].toString());
 			}
 			if (totalOne == 0 || como_one == 0) {
-				newComoAnalyse.setRatio_one_provi("---");
+				newComoAnalyse.setRatio_one_provi("");
 			} else {
 				Double ratio_one_provi = como_one / totalOne * 100;
 				String ratio = String.format("%.2f", ratio_one_provi) + "%";
 				newComoAnalyse.setRatio_one_provi(ratio);
 			}
 			if (totalTwo == 0 || como_two == 0) {
-				newComoAnalyse.setRatio_two_provi("---");
+				newComoAnalyse.setRatio_two_provi("");
 			} else {
 				Double ratio_two_provi = como_two / totalTwo * 100;
 				String ratio = String.format("%.2f", ratio_two_provi) + "%";
