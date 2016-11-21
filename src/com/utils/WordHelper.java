@@ -1,5 +1,6 @@
 package com.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,8 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map.Entry;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -25,6 +25,11 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlToken;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTNonVisualDrawingProps;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 
 public class WordHelper<T> {
@@ -44,8 +49,9 @@ public class WordHelper<T> {
 		try {
 			in = new FileInputStream(new File(path));
 			doc = new XWPFDocument(in);
-			// 替换模版中的变量
-			replaceDoc(doc, contentMap);
+
+			// 替换模版中的变量(包含添加图片)
+			generateWord(doc, contentMap);
 			// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
 			dynamicWord(doc, list, tableOrder);
 
@@ -108,89 +114,85 @@ public class WordHelper<T> {
 	}
 
 	/**
-	 * 替换word模板2007版
+	 * 根据指定的参数值、模板，生成 word 文档
 	 * 
-	 * @param templatePath
-	 * @param contentMap
-	 * @return
+	 * @param param
+	 *            需要替换的变量
+	 * @param template
+	 *            模板
 	 */
-	private void replaceDoc(XWPFDocument doc, Map<String, Object> contentMap) {
-		// 替换段落里面的变量
-		this.replaceInPara(doc, contentMap);// 注意2007poi中没有range
-		// 替换表格里面的变量
-		this.replaceInTable(doc, contentMap);
-	}
+	private XWPFDocument generateWord(XWPFDocument doc, Map<String, Object> param) {
+		try {
+			if (param != null && param.size() > 0) {
 
-	/**
-	 * 替换段落里面的变量
-	 * 
-	 * @param doc
-	 *            要替换的文档
-	 * @param params
-	 *            参数
-	 */
-	private void replaceInPara(XWPFDocument doc, Map<String, Object> params) {
-		Iterator<XWPFParagraph> iterator = doc.getParagraphsIterator();
-		XWPFParagraph para;
-		while (iterator.hasNext()) {
-			para = iterator.next();
-			this.replaceInPara(para, params);
-		}
-	}
+				// 处理段落
+				List<XWPFParagraph> paragraphList = doc.getParagraphs();
+				processParagraphs(paragraphList, param, doc);
 
-	/**
-	 * 替换段落里面的变量
-	 * 
-	 * @param para
-	 *            要替换的段落
-	 * @param params
-	 *            参数
-	 */
-	private void replaceInPara(XWPFParagraph para, Map<String, Object> params) {
-		List<XWPFRun> runs;
-		Matcher matcher;
-		if (this.matcher(para.getParagraphText()).find()) {
-			runs = para.getRuns();
-			for (int i = 0; i < runs.size(); i++) {
-				XWPFRun run = runs.get(i);
-				String runText = run.toString();
-				matcher = this.matcher(runText);
-				if (matcher.find()) {
-					while ((matcher = this.matcher(runText)).find()) {
-						runText = matcher.replaceFirst(String.valueOf(params.get(matcher.group(1))));
+				// 处理表格
+				Iterator<XWPFTable> it = doc.getTablesIterator();
+				while (it.hasNext()) {
+					XWPFTable table = it.next();
+					List<XWPFTableRow> rows = table.getRows();
+					for (XWPFTableRow row : rows) {
+						List<XWPFTableCell> cells = row.getTableCells();
+						for (XWPFTableCell cell : cells) {
+							List<XWPFParagraph> paragraphListTable = cell.getParagraphs();
+							processParagraphs(paragraphListTable, param, doc);
+						}
 					}
-					// 直接调用XWPFRun的setText()方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
-					// 所以我们不能直接设值，需要先删除当前run,然后再自己手动插入一个新的run。
-					para.removeRun(i);
-					para.insertNewRun(i).setText(runText);
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return doc;
 	}
 
 	/**
-	 * 替换表格里面的变量
+	 * 处理段落（多个图片）
 	 * 
-	 * @param doc
-	 *            要替换的文档
-	 * @param params
-	 *            参数
+	 * @param paragraphList
 	 */
-	private void replaceInTable(XWPFDocument doc, Map<String, Object> params) {
-		Iterator<XWPFTable> iterator = doc.getTablesIterator();
-		XWPFTable table;
-		List<XWPFTableRow> rows;
-		List<XWPFTableCell> cells;
-		List<XWPFParagraph> paras;
-		while (iterator.hasNext()) {
-			table = iterator.next();
-			rows = table.getRows();
-			for (XWPFTableRow row : rows) {
-				cells = row.getTableCells();
-				for (XWPFTableCell cell : cells) {
-					paras = cell.getParagraphs();
-					for (XWPFParagraph para : paras) {
-						this.replaceInPara(para, params);
+	@SuppressWarnings("unchecked")
+	private void processParagraphs(List<XWPFParagraph> paragraphList, Map<String, Object> param, XWPFDocument doc) {
+		if (paragraphList != null && paragraphList.size() > 0) {
+			for (int m = 0; m < paragraphList.size(); m++) {
+				XWPFParagraph paragraph = paragraphList.get(m);
+				List<XWPFRun> runs = paragraph.getRuns();
+				for (int i = 0; i < runs.size(); i++) {
+					XWPFRun run = runs.get(i);
+					String text = run.getText(0);
+					if (text != null) {
+						boolean isSetText = false;
+						for (Entry<String, Object> entry : param.entrySet()) {
+							String key = entry.getKey();
+							System.out.println("text:" + text);
+							if (text.indexOf(key) != -1) {
+								isSetText = true;
+								Object value = entry.getValue();
+								if (value instanceof String) {// 文本替换
+									text = text.replace(key, value.toString());
+								} else if (value instanceof Map) {// 图片替换
+									text = text.replace(key, "");
+									Map<String, Object> pic = (Map<String, Object>) value;
+									int width = Integer.parseInt(pic.get("width").toString());
+									int height = Integer.parseInt(pic.get("height").toString());
+									int picType = getPictureType(pic.get("type").toString());
+									byte[] byteArray = (byte[]) pic.get("content");
+									ByteArrayInputStream byteInputStream = new ByteArrayInputStream(byteArray);
+									try {
+										String blipId = doc.addPictureData(byteInputStream, picType);
+										createPicture(doc, blipId, width, height, paragraph);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								}
+							}
+						}
+						if (isSetText) {
+							run.setText(text, 0);
+						}
 					}
 				}
 			}
@@ -198,15 +200,80 @@ public class WordHelper<T> {
 	}
 
 	/**
-	 * 正则匹配字符串
+	 * 根据图片类型，取得对应的图片类型代码
 	 * 
-	 * @param str
-	 * @return
+	 * @param picType
+	 * @return int
 	 */
-	private Matcher matcher(String str) {
-		Pattern pattern = Pattern.compile("\\$\\{(.+?)\\}", Pattern.CASE_INSENSITIVE);
-		Matcher matcher = pattern.matcher(str);
-		return matcher;
+	private int getPictureType(String picType) {
+		int res = XWPFDocument.PICTURE_TYPE_PICT;
+		if (picType != null) {
+			if (picType.equalsIgnoreCase("png")) {
+				res = XWPFDocument.PICTURE_TYPE_PNG;
+			} else if (picType.equalsIgnoreCase("dib")) {
+				res = XWPFDocument.PICTURE_TYPE_DIB;
+			} else if (picType.equalsIgnoreCase("emf")) {
+				res = XWPFDocument.PICTURE_TYPE_EMF;
+			} else if (picType.equalsIgnoreCase("jpg") || picType.equalsIgnoreCase("jpeg")) {
+				res = XWPFDocument.PICTURE_TYPE_JPEG;
+			} else if (picType.equalsIgnoreCase("wmf")) {
+				res = XWPFDocument.PICTURE_TYPE_WMF;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * word图片配置
+	 * 
+	 * @param doc
+	 * @param blipId
+	 * @param width
+	 * @param height
+	 * @param paragraph
+	 */
+	private void createPicture(XWPFDocument doc, String blipId, int width, int height, XWPFParagraph paragraph) {
+		int id = doc.getAllPictures().size() - 1;
+		final int EMU = 9525;
+		width *= EMU;
+		height *= EMU;
+		CTInline inline = paragraph.createRun().getCTR().addNewDrawing().addNewInline();
+		String picXml = "" + "<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">"
+				+ "   <a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
+				+ "      <pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
+				+ "         <pic:nvPicPr>" + "            <pic:cNvPr id=\"" + id + "\" name=\"Generated\"/>"
+				+ "            <pic:cNvPicPr/>" + "         </pic:nvPicPr>" + "         <pic:blipFill>"
+				+ "            <a:blip r:embed=\"" + blipId
+				+ "\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"/>"
+				+ "            <a:stretch>" + "               <a:fillRect/>" + "            </a:stretch>"
+				+ "         </pic:blipFill>" + "         <pic:spPr>" + "            <a:xfrm>"
+				+ "               <a:off x=\"0\" y=\"0\"/>" + "               <a:ext cx=\"" + width + "\" cy=\""
+				+ height + "\"/>" + "            </a:xfrm>" + "            <a:prstGeom prst=\"rect\">"
+				+ "               <a:avLst/>" + "            </a:prstGeom>" + "         </pic:spPr>"
+				+ "      </pic:pic>" + "   </a:graphicData>" + "</a:graphic>";
+
+		inline.addNewGraphic().addNewGraphicData();
+		XmlToken xmlToken = null;
+		try {
+			xmlToken = XmlToken.Factory.parse(picXml);
+		} catch (XmlException xe) {
+			xe.printStackTrace();
+		}
+		inline.set(xmlToken);
+
+		inline.setDistT(0);
+		inline.setDistB(0);
+		inline.setDistL(0);
+		inline.setDistR(0);
+
+		CTPositiveSize2D extent = inline.addNewExtent();
+		extent.setCx(width);
+		extent.setCy(height);
+
+		CTNonVisualDrawingProps docPr = inline.addNewDocPr();
+		docPr.setId(id);
+		docPr.setName("图片" + id);
+		docPr.setDescr("");
 	}
 
 	/**
