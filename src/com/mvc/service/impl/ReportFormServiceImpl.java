@@ -22,6 +22,8 @@ import com.base.enums.ContractType;
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.Contract;
+import com.mvc.entity.NewComoAnalyse;
+import com.mvc.entity.NewRemoAnalyse;
 import com.mvc.entity.NoBackContForm;
 import com.mvc.entity.ProjectStatisticForm;
 import com.mvc.service.ReportFormService;
@@ -29,7 +31,6 @@ import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.Pager;
 import com.utils.StringUtil;
-
 import net.sf.json.JSONObject;
 
 /**
@@ -43,6 +44,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 
 	@Autowired
 	ContractDao contractDao;
+
+	java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
 
 	// 导出光电院项目分项统计表
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -405,42 +408,44 @@ public class ReportFormServiceImpl implements ReportFormService {
 		return str;
 	}
 
+	/************************************************ 张姣娜 **********************************/
 	// 根据日期获取合同额到款对比表
 	@Override
-	public ComoCompareRemo findByDate(String oneDate, String twoDate) {
-		java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
-		List<Object> objectOne = contractDao.findByOneDate(oneDate);
-		List<Object> objectTwo = contractDao.findByOneDate(twoDate);
+
+	public ComoCompareRemo findByDate(String firstDate, String secondDate) {
+
+		List<Object> objectOne = contractDao.findByOneDate(firstDate);
+		List<Object> objectTwo = contractDao.findByOneDate(secondDate);
 		ComoCompareRemo comoCompareRemo = new ComoCompareRemo();
 		// 获取第一年相关数据
 		Object[] objOne = (Object[]) objectOne.get(0);
 		if (objOne[0].equals(0.0)) {
-			comoCompareRemo.setComo_one("---");
+			comoCompareRemo.setComo_one("");
 		} else {
-			comoCompareRemo.setComo_one(df.format(Double.valueOf(objOne[0].toString())));
+			comoCompareRemo.setComo_one(objOne[0].toString());
 		}
 		if (objOne[1].equals(0.0)) {
-			comoCompareRemo.setRemo_one("---");
+			comoCompareRemo.setRemo_one("");
 		} else {
-			comoCompareRemo.setRemo_one(df.format(Double.valueOf(objOne[1].toString())));
+			comoCompareRemo.setRemo_one(objOne[1].toString());
 		}
 		comoCompareRemo.setCont_num_one(objOne[2].toString());
 		// 获取第二年相关数据
 		Object[] objTwo = (Object[]) objectTwo.get(0);
 		if (objTwo[0].equals(0.0)) {
-			comoCompareRemo.setComo_two("---");
+			comoCompareRemo.setComo_two("");
 		} else {
-			comoCompareRemo.setComo_two(df.format(Double.valueOf(objTwo[0].toString())));
+			comoCompareRemo.setComo_two(objTwo[0].toString());
 		}
 		if (objTwo[1].equals(0.0)) {
-			comoCompareRemo.setRemo_two("---");
+			comoCompareRemo.setRemo_two("");
 		} else {
-			comoCompareRemo.setRemo_two(df.format(Double.valueOf(objTwo[1].toString())));
+			comoCompareRemo.setRemo_two(objTwo[1].toString());
 		}
 		comoCompareRemo.setCont_num_two(objTwo[2].toString());
 		// 计算同比增长率
 		if (objOne[0].equals(0.0)) {
-			comoCompareRemo.setRatio_como("---");
+			comoCompareRemo.setRatio_como("");
 		} else {
 			Double big = Double.valueOf(objTwo[0].toString());
 			Double small = Double.valueOf(objOne[0].toString());
@@ -455,7 +460,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 			}
 		}
 		if (objOne[1].equals(0.0)) {
-			comoCompareRemo.setRatio_remo("---");
+			comoCompareRemo.setRatio_remo("");
 		} else {
 			Double big = Double.valueOf(objTwo[1].toString());
 			Double small = Double.valueOf(objOne[1].toString());
@@ -470,7 +475,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 			}
 		}
 		if (objOne[2].equals(0)) {
-			comoCompareRemo.setRatio_conum("---");
+			comoCompareRemo.setRatio_conum("");
 		} else {
 			Double big = Double.valueOf(objTwo[2].toString());
 			Double small = Double.valueOf(objOne[2].toString());
@@ -485,5 +490,66 @@ public class ReportFormServiceImpl implements ReportFormService {
 			}
 		}
 		return comoCompareRemo;
+	}
+
+	// 根据日期获取新签合同额分析表
+	@Override
+	public List<NewComoAnalyse> findComoByDate(String firstDate, String secondDate) {
+		List<Object> objects = contractDao.findComoByDate(firstDate, secondDate);
+		Double totalOne = (double) 0;
+		Double totalTwo = (double) 0;
+		for (int i = 0; i < objects.size(); i++) {
+			Object[] object = (Object[]) objects.get(i);
+			totalOne += (double) object[1];
+			totalTwo += (double) object[2];
+		}
+		List<NewComoAnalyse> newComos = new ArrayList<NewComoAnalyse>();
+		for (int i = 0; i < objects.size(); i++) {
+			NewComoAnalyse newComoAnalyse = new NewComoAnalyse();
+			Integer orderNum = i + 1;
+			newComoAnalyse.setOrder_number(orderNum.toString());
+			Object[] objOne = (Object[]) objects.get(i);
+			Double como_one = (double) objOne[1];
+			Double como_two = (double) objOne[2];
+			newComoAnalyse.setProvince(objOne[0].toString());
+			if (como_one == 0) {
+				newComoAnalyse.setComo_one("");
+				newComoAnalyse.setRise_ratio("");
+			} else {
+				newComoAnalyse.setComo_one(objOne[1].toString());
+				Double rise_ratio = (como_two - como_one) / como_one * 100;
+				String ratio = String.format("%.2f", rise_ratio) + "%";
+				newComoAnalyse.setRise_ratio(ratio);
+			}
+			if (como_two == 0) {
+				newComoAnalyse.setComo_two("");
+			} else {
+				newComoAnalyse.setComo_two(objOne[2].toString());
+			}
+			if (totalOne == 0 || como_one == 0) {
+				newComoAnalyse.setRatio_one_provi("");
+			} else {
+				Double ratio_one_provi = como_one / totalOne * 100;
+				String ratio = String.format("%.2f", ratio_one_provi) + "%";
+				newComoAnalyse.setRatio_one_provi(ratio);
+			}
+			if (totalTwo == 0 || como_two == 0) {
+				newComoAnalyse.setRatio_two_provi("");
+			} else {
+				Double ratio_two_provi = como_two / totalTwo * 100;
+				String ratio = String.format("%.2f", ratio_two_provi) + "%";
+				newComoAnalyse.setRatio_two_provi(ratio);
+			}
+			newComoAnalyse.setTotal_one(totalOne.toString());
+			newComoAnalyse.setTotal_two(totalTwo.toString());
+			newComos.add(newComoAnalyse);
+		}
+		return newComos;
+	}
+
+	// 根据日期获取到款分析表
+	@Override
+	public List<NewRemoAnalyse> findRemoByDate(String firstDate, String secondDate) {
+		return null;
 	}
 }

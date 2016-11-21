@@ -11,4 +11,49 @@ package com.mvc.entity;
  */
 public class NewRemoAnalyse {
 
+	private String province;// 省份
+	private String remo_one;// 第一年该省合同到款总金额
+	private String remo_two;// 第二年该省合同到款总金额
+	private String remo_before;// 第二年之前签订合同第二年中到款总金额
+	private String remo_curr;// 第二年新签合同第二年到款总金额
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getRemo_one() {
+		return remo_one;
+	}
+
+	public void setRemo_one(String remo_one) {
+		this.remo_one = remo_one;
+	}
+
+	public String getRemo_two() {
+		return remo_two;
+	}
+
+	public void setRemo_two(String remo_two) {
+		this.remo_two = remo_two;
+	}
+
+	public String getRemo_before() {
+		return remo_before;
+	}
+
+	public void setRemo_before(String remo_before) {
+		this.remo_before = remo_before;
+	}
+
+	public String getRemo_curr() {
+		return remo_curr;
+	}
+
+	public void setRemo_curr(String remo_curr) {
+		this.remo_curr = remo_curr;
+	}
 }

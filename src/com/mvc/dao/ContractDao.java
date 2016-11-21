@@ -48,6 +48,14 @@ public interface ContractDao {
 	// 查询未返回合同统计表总条数
 	Long countTotalNoBack(Map<String, Object> map);
 
+	/**************** 张姣娜 ********************/
 	// 根据日期获取合同额到款对比表
-	List<Object> findByOneDate(String Date);
+	List<Object> findByOneDate(String date);
+
+	// 根据日期获取新签合同额分析表
+	List<Object> findComoByDate(String dateOne, String dateTwo);
+
+	// 根据日期获取到款分析表
+	List<Object> findRemoByDate(String oneTime, String twoTime);
+
 }
