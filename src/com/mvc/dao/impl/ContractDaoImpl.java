@@ -404,4 +404,48 @@ public class ContractDaoImpl implements ContractDao {
 		return result;
 	}
 
+	// 根据日期获取新签合同额分析表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> findComoByDate(String dateOne, String dateTwo) {
+		EntityManager em = emf.createEntityManager();
+		String sql0 = "select cc.province,coalesce(aa.como_one,0.00) como_one,coalesce(bb.como_two,0.00) como_two from ";
+		String sql1 = "(select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
+				+ "%') union all select province from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%')) as cc ";
+		String sql2 = "(select province,coalesce(sum(cont_money),0.00) como_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateOne + "%') group by province) as aa ";
+		String sql3 = "(select province,coalesce(sum(cont_money),0.00) como_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%') group by province) as bb ";
+		String selectSql = sql0 + sql1 + " left join  " + sql2 + " on aa.province=cc.province left join " + sql3
+				+ " on bb.province=cc.province ";
+		selectSql += " group by province ";
+		Query query = em.createNativeQuery(selectSql.toString());
+		List<Object> result = query.getResultList();
+		em.close();
+		return result;
+	}
+
+	// 根据日期获取到款分析表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> findRemoByDate(String dateOne, String dateTwo) {
+		EntityManager em = emf.createEntityManager();
+		String sql0 = "select cc.province,coalesce(aa.remo_one,0.00) remo_one,coalesce(bb.remo_two,0.00) remo_two from ";
+		String sql1 = "(select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
+				+ "%') union all select province from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%')) as cc ";
+		String sql2 = "(select province,coalesce(sum(remo_totalmoney),0.00) remo_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateOne + "%') group by province) as aa ";
+		String sql3 = "(select province,coalesce(sum(remo_totalmoney),0.00) remo_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%') group by province) as bb ";
+		String selectSql = sql0 + sql1 + " left join  " + sql2 + " on aa.province=cc.province left join " + sql3
+				+ " on bb.province=cc.province ";
+		selectSql += " group by province ";
+		Query query = em.createNativeQuery(selectSql.toString());
+		List<Object> result = query.getResultList();
+		em.close();
+		return result;
+	}
+
 }

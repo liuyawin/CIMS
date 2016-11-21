@@ -11,6 +11,8 @@ import com.utils.Pager;
 import net.sf.json.JSONObject;
 
 import com.mvc.entity.ComoCompareRemo;
+import com.mvc.entity.NewComoAnalyse;
+import com.mvc.entity.NewRemoAnalyse;
 import com.mvc.entity.NoBackContForm;
 
 /**
@@ -39,6 +41,8 @@ public interface ReportFormService {
 	// 查询未返回合同统计表页码相关
 	Pager pagerTotalNoBack(Map<String, Object> map, Integer page);
 
+	/************************************************ 张姣娜 ***************************************/
+
 	// 导出未返回合同统计表
 	ResponseEntity<byte[]> exportNoBackCont(Map<String, Object> map, String path);
 
@@ -46,5 +50,12 @@ public interface ReportFormService {
 	List<NoBackContForm> findNoBackCont(Map<String, Object> map, Pager pager, String path);
 
 	// 根据日期获取合同额到款对比表
-	ComoCompareRemo findByDate(String oneTime, String twoTime);
+	ComoCompareRemo findByDate(String firstDate, String secondDate);
+
+	// 根据日期获取新签合同额分析表
+	List<NewComoAnalyse> findComoByDate(String firstDate, String secondDate);
+
+	// 根据日期获取到款分析表
+	List<NewRemoAnalyse> findRemoByDate(String firstDate, String secondDate);
+
 }
