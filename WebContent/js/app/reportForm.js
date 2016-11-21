@@ -252,23 +252,37 @@ app
 												function(data) {
 													// 表1
 													reportForm.comoCompareRemo = data.comoCompareRemo;
+													reportForm.newComoAnalyseList = data.newComoAnalyseList;
+													console.log(reportForm.newComoAnalyseList);
 													reportForm.table1Show = false;
+													reportForm.table2Show = false;
 													if (reportForm.comoCompareRemo) {
 														reportForm.table1Show = true;
 													}
-													var chart1Data = [
-															[ 'Firefox', 45.0 ],
-															[ 'IE', 26.8 ],
-															{
-																name : 'Chrome',
-																y : 12.8,
-																sliced : true,
-																selected : true
-															},
-															[ 'Safari', 8.5 ],
-															[ 'Opera', 6.2 ],
-															[ 'Others', 0.7 ] ];
-
+													if (reportForm.newComoAnalyseList) {
+														reportForm.table2Show = true;
+													}
+													var chart1Data = [];
+													var chart2Data = [];
+													for(var i=0;i<reportForm.newComoAnalyseList.length;i++){
+														var arr1 = [];
+														var arr2 = [];
+														arr1[0] = reportForm.newComoAnalyseList[i].province;
+														arr2[0] = reportForm.newComoAnalyseList[i].province;
+														if(reportForm.newComoAnalyseList[i].como_one){
+															arr1[1] = +reportForm.newComoAnalyseList[i].como_one;
+														}
+														else arr1[1] = 0;
+														if(reportForm.newComoAnalyseList[i].como_two){
+															arr2[1] = +reportForm.newComoAnalyseList[i].como_two;
+														}
+														else arr2[1] = 0;
+														chart1Data[i] = arr1;
+														chart2Data[i] = arr2;
+													}
+													
+													console.log(chart2Data);
+														
 													Highcharts
 															.wrap(
 																	Highcharts.Chart.prototype,
@@ -287,8 +301,8 @@ app
 																{
 																	elementId : "#pieChart1",
 																	title : beginYear
-																			+ "年自营项目新签合同额分析图",
-																	name : "浏览器",
+																			+ "年自营项目新签合同额分析图（单位：万元）",
+																	name : "合同占比",
 																	data : chart1Data
 																});
 														chart1.init();
@@ -296,6 +310,23 @@ app
 																.val(
 																		$(
 																				"#pieChart1")
+																				.highcharts()
+																				.getSVG());
+													}
+													if (chart2Data) {
+														var chart2 = new Chart(
+																{
+																	elementId : "#pieChart2",
+																	title : endYear
+																			+ "年自营项目新签合同额分析图（单位：万元）",
+																	name : "合同占比",
+																	data : chart2Data
+																});
+														chart2.init();
+														$('#chart2-svg')
+																.val(
+																		$(
+																				"#pieChart2")
 																				.highcharts()
 																				.getSVG());
 													}
