@@ -1,5 +1,6 @@
 package com.mvc.controller;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,16 +8,15 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.batik.transcoder.TranscoderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.mvc.entity.ProjectStatisticForm;
 import com.base.constants.ReportFormConstants;
 import com.mvc.entity.ComoCompareRemo;
@@ -26,8 +26,8 @@ import com.mvc.service.ReportFormService;
 import com.utils.FileHelper;
 import com.utils.Pager;
 import com.utils.StringUtil;
+import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
-
 import net.sf.json.JSONObject;
 
 /**
@@ -159,7 +159,7 @@ public class ReportFormController {
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 
-		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		ResponseEntity<byte[]> byteArr = reportFormService.exportNoBackCont(map, path);
 		return byteArr;
 	}
@@ -177,7 +177,7 @@ public class ReportFormController {
 
 		Map<String, Object> map = reportFormService.JsonObjToMapNoBack(jsonObject);
 		Pager pager = reportFormService.pagerTotalNoBack(map, page);
-		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		List<NoBackContForm> list = reportFormService.findNoBackCont(map, pager, path);
 
 		jsonObject = new JSONObject();
@@ -217,13 +217,28 @@ public class ReportFormController {
 	 * @return
 	 */
 	@RequestMapping("/exportWord.do")
-	public ResponseEntity<byte[]> testWord(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportWordReport(HttpServletRequest request) {
+
 		String firstDate = request.getParameter("beginYear");
 		String secondDate = request.getParameter("endYear");
-		String svg = request.getParameter("svg");
-		System.out.print(svg);
+		String svg1 = request.getParameter("chart1SVGStr");
+		String svg2 = request.getParameter("chart2SVGStr");
+		System.out.print("svg1:" + svg1 + "\n");
+		System.out.print("svg2:" + svg2 + "\n");
 		// String firstDate = "2015";
 		// String secondDate = "2016";
+
+		String picFileName = "pic.png";// 2007版
+		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);
+		picPath = FileHelper.transPath(picFileName, picPath);// 解析后的上传路径
+		try {
+			SvgPngConverter.convertToPng(svg1, picPath + "\\" + picFileName);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (TranscoderException e1) {
+			e1.printStackTrace();
+		}
+
 		WordHelper<NewComoAnalyse> wh = new WordHelper<NewComoAnalyse>();
 		String fileName = "自营项目合同额及到款分析表.docx";// 2007版
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
@@ -236,6 +251,23 @@ public class ReportFormController {
 		// 获取表一（合同额到款分析表）的数据
 		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(firstDate, secondDate);
 		Map<String, Object> contentMap = EntryToMap(comoCompareRemo, firstDate, secondDate, total_one, total_two);
+
+		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH) + "\\";// 图片目录路径
+		String[] picPath11 = { picCataPath + "a.png", picCataPath + "b.png" };
+		Map<String, Object> picMap = null;
+
+		for (int i = 0; i < 2; i++) {
+			picMap = new HashMap<String, Object>();
+			picMap.put("width", 300);
+			picMap.put("height", 300);
+			picMap.put("type", "png");
+			try {
+				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath11[i]), true));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			contentMap.put("${pic" + i + "}", picMap);
+		}
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
 			wh.export2007Word(modelPath, newComoAnalyseList, contentMap, out, 1);
@@ -263,22 +295,23 @@ public class ReportFormController {
 			String total_one, String total_two) {
 		Map<String, Object> contentMap = new HashMap<String, Object>();
 		// 表一相关数据
-		contentMap.put("date_one", firstDate);
-		contentMap.put("date_two", secondDate);
-		contentMap.put("como_one", comoCompareRemo.getComo_one().toString());
-		contentMap.put("remo_one", comoCompareRemo.getRemo_one().toString());
-		contentMap.put("cont_num_one", comoCompareRemo.getCont_num_one().toString());
-		contentMap.put("como_two", comoCompareRemo.getComo_two().toString());
-		contentMap.put("remo_two", comoCompareRemo.getRemo_two().toString());
-		contentMap.put("cont_num_two", comoCompareRemo.getCont_num_two().toString());
-		contentMap.put("ratio_como", comoCompareRemo.getRatio_como());
-		contentMap.put("ratio_remo", comoCompareRemo.getRatio_remo());
-		contentMap.put("ratio_conum", comoCompareRemo.getRatio_conum());
+		contentMap.put("${date_one}", firstDate);
+		contentMap.put("${date_two}", secondDate);
+		contentMap.put("${como_one}", comoCompareRemo.getComo_one().toString());
+		contentMap.put("${remo_one}", comoCompareRemo.getRemo_one().toString());
+		contentMap.put("${cont_num_one}", comoCompareRemo.getCont_num_one().toString());
+		contentMap.put("${como_two}", comoCompareRemo.getComo_two().toString());
+		contentMap.put("${remo_two}", comoCompareRemo.getRemo_two().toString());
+		contentMap.put("${cont_num_two}", comoCompareRemo.getCont_num_two().toString());
+		contentMap.put("${ratio_como}", comoCompareRemo.getRatio_como());
+		contentMap.put("${ratio_remo}", comoCompareRemo.getRatio_remo());
+		contentMap.put("${ratio_conum}", comoCompareRemo.getRatio_conum());
 		// 表二相关数据
-		contentMap.put("total_one", total_one);
-		contentMap.put("total_two", total_two);
+		contentMap.put("${total_one}", total_one);
+		contentMap.put("${total_two}", total_two);
 		return contentMap;
 	}
+
 	/*
 	 * ***********************************张姣娜报表结束*******************************
 	 */
