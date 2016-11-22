@@ -222,9 +222,6 @@ public class ReportFormController {
 	public ResponseEntity<byte[]> exportWordReport(HttpServletRequest request, HttpSession session) {
 		String firstDate = (String) session.getAttribute(SessionKeyConstants.BEGIN_YEAR);
 		String secondDate = (String) session.getAttribute(SessionKeyConstants.END_YEAR);
-		String svg1 = request.getParameter("chart1SVGStr");
-		String svg2 = request.getParameter("chart2SVGStr");
-
 		WordHelper<NewComoAnalyse> wh = new WordHelper<NewComoAnalyse>();
 		String fileName = "自营项目合同额及到款分析表.docx";// 2007版
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
@@ -237,34 +234,40 @@ public class ReportFormController {
 		// 获取表一（合同额到款分析表）的数据
 		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(firstDate, secondDate);
 		Map<String, Object> contentMap = EntryToMap(comoCompareRemo, firstDate, secondDate, total_one, total_two);
-		// 获取图片相关数据
-		String picFileName1 = "pic1.png";
-		String picFileName2 = "pic2.png";
-		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");
-		String picPath1 = FileHelper.transPath(picFileName1, picCataPath);// 解析后的上传路径
-		String picPath2 = FileHelper.transPath(picFileName2, picCataPath);// 解析后的上传路径
-		try {
-			// 图片svgCode转化为png格式，并保存到picPath1
-			SvgPngConverter.convertToPng(svg1, picPath1);
-			SvgPngConverter.convertToPng(svg2, picPath2);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (TranscoderException e1) {
-			e1.printStackTrace();
-		}
-		String[] picPath = { picPath1, picPath2 };
-		Map<String, Object> picMap = null;
-		for (int i = 0; i < 2; i++) {
-			picMap = new HashMap<String, Object>();
-			picMap.put("width", 400);
-			picMap.put("height", 280);
-			picMap.put("type", "png");
+		// 图片相关
+		if (StringUtil.strIsNotEmpty(request.getParameter("chart1SVGStr"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("chart2SVGStr"))) {
+			String svg1 = request.getParameter("chart1SVGStr");
+			String svg2 = request.getParameter("chart2SVGStr");
+			String picFileName1 = "pic1.png";
+			String picFileName2 = "pic2.png";
+			String picCataPath = request.getSession().getServletContext()
+					.getRealPath(ReportFormConstants.PIC_PATH + "\\");
+			String picPath1 = FileHelper.transPath(picFileName1, picCataPath);// 解析后的上传路径
+			String picPath2 = FileHelper.transPath(picFileName2, picCataPath);// 解析后的上传路径
 			try {
-				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath[i]), true));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				// 图片svgCode转化为png格式，并保存到picPath1
+				SvgPngConverter.convertToPng(svg1, picPath1);
+				SvgPngConverter.convertToPng(svg2, picPath2);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (TranscoderException e1) {
+				e1.printStackTrace();
 			}
-			contentMap.put("${pic" + i + "}", picMap);
+			String[] picPath = { picPath1, picPath2 };
+			Map<String, Object> picMap = null;
+			for (int i = 0; i < 2; i++) {
+				picMap = new HashMap<String, Object>();
+				picMap.put("width", 420);
+				picMap.put("height", 280);
+				picMap.put("type", "png");
+				try {
+					picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath[i]), true));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				contentMap.put("${pic" + i + "}", picMap);
+			}
 		}
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
@@ -311,71 +314,66 @@ public class ReportFormController {
 	}
 
 	/*
-	 * ***********************************张姣娜报表结束*******************************
-	 */
-	
-	/*
 	 * ***********************************王慧敏报表开始*******************************
 	 */
 	/**
 	 * 查询光伏自营项目催款计划表
 	 */
 	@RequestMapping("/selectPaymentPlanList.do")
-	public @ResponseBody String selectPaymentPlanList(HttpServletRequest request){
-		JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
-		Integer page=Integer.parseInt(request.getParameter("page"));//分页
-		Map<String, Object> map=reportFormService.JsonObjToMap(jsonObject);
-		Pager pager=reportFormService.pagerTotal_payment(map, page);
+	public @ResponseBody String selectPaymentPlanList(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
+		Integer page = Integer.parseInt(request.getParameter("page"));// 分页
+		Map<String, Object> map = reportFormService.JsonObjToMap(jsonObject);
+		Pager pager = reportFormService.pagerTotal_payment(map, page);
 		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
-		List<PaymentPlanListForm> list=reportFormService.findPaymentPlanList(map, pager, path);
-		
-		jsonObject=new JSONObject();
+		List<PaymentPlanListForm> list = reportFormService.findPaymentPlanList(map, pager, path);
+
+		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
-		
-
 
 	}
+
 	/**
 	 * 导出光伏自营项目催款计划表
 	 */
 	@RequestMapping("/exportPaymentPlanList.do")
-	public ResponseEntity<byte[]> exportPaymentPlanList(HttpServletRequest request){
+	public ResponseEntity<byte[]> exportPaymentPlanList(HttpServletRequest request) {
 		String province = null;// 行政区域
-		String cont_project=null;// 工程名称 && 项目名称
-		String cont_client=null;// 业主名称 && 业主公司名称
+		String cont_project = null;// 工程名称 && 项目名称
+		String cont_client = null;// 业主名称 && 业主公司名称
 		Float cont_money = null;// 合同金额
-		Float remo_totalmoney=null;// 2015年累计已到款
-		Float balance_money=null;// 余额
-		Float invo_totalmoney=null;// 已开发票金额
-		Float noinvo_totalmoney=null;// 未开发票金额
+		Float remo_totalmoney = null;// 2015年累计已到款
+		Float balance_money = null;// 余额
+		Float invo_totalmoney = null;// 已开发票金额
+		Float noinvo_totalmoney = null;// 未开发票金额
 		String startTime = null;
 		String endTime = null;
-		
-		if(StringUtil.strIsNotEmpty(request.getParameter("province"))){
-			province=request.getParameter("province");//行政区域
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
+			province = request.getParameter("province");// 行政区域
 		}
-		if(StringUtil.strIsNotEmpty(request.getParameter("contProject"))){
-			cont_project=request.getParameter("contProject");//工程名称 && 项目名称			
+		if (StringUtil.strIsNotEmpty(request.getParameter("contProject"))) {
+			cont_project = request.getParameter("contProject");// 工程名称 && 项目名称
 		}
-		if(StringUtil.strIsNotEmpty(request.getParameter("contClient"))){
-			cont_client=request.getParameter("contClient");//业主名称 && 业主公司名称
+		if (StringUtil.strIsNotEmpty(request.getParameter("contClient"))) {
+			cont_client = request.getParameter("contClient");// 业主名称 && 业主公司名称
 		}
-		if(StringUtil.strIsNotEmpty(request.getParameter("contMoney"))){
-			cont_money=Float.valueOf(request.getParameter("contMoney"));//合同金额
+		if (StringUtil.strIsNotEmpty(request.getParameter("contMoney"))) {
+			cont_money = Float.valueOf(request.getParameter("contMoney"));// 合同金额
 		}
-		if(StringUtil.strIsNotEmpty(request.getParameter("remoTotalmoney"))){
-			remo_totalmoney=Float.valueOf(request.getParameter("remoTotalmoney"));//累计已到款
+		if (StringUtil.strIsNotEmpty(request.getParameter("remoTotalmoney"))) {
+			remo_totalmoney = Float.valueOf(request.getParameter("remoTotalmoney"));// 累计已到款
 		}
-		if(StringUtil.strIsNotEmpty(request.getParameter("balanceMoney"))){
-			balance_money=Float.valueOf(request.getParameter("balanceMoney"));//余额
+		if (StringUtil.strIsNotEmpty(request.getParameter("balanceMoney"))) {
+			balance_money = Float.valueOf(request.getParameter("balanceMoney"));// 余额
 		}
-		if(StringUtil.strIsNotEmpty(request.getParameter("invoTotalmoney"))){
-			invo_totalmoney=Float.valueOf(request.getParameter("invoTotalmoney"));// 已开发票金额
+		if (StringUtil.strIsNotEmpty(request.getParameter("invoTotalmoney"))) {
+			invo_totalmoney = Float.valueOf(request.getParameter("invoTotalmoney"));// 已开发票金额
 		}
-		if(StringUtil.strIsNotEmpty(request.getParameter("noinvoTotalmoney"))){
-			noinvo_totalmoney=Float.valueOf(request.getParameter("noinvoTotalmoney"));// 未开发票金额
+		if (StringUtil.strIsNotEmpty(request.getParameter("noinvoTotalmoney"))) {
+			noinvo_totalmoney = Float.valueOf(request.getParameter("noinvoTotalmoney"));// 未开发票金额
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
 			startTime = request.getParameter("startDate") + "-01";// 开始时间
@@ -384,7 +382,7 @@ public class ReportFormController {
 			endTime = request.getParameter("endDate") + "-01";// 结束时间
 		}
 
-		Map<String, Object> map=new HashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("province", province);
 		map.put("cont_project", cont_project);
 		map.put("cont_client", cont_client);
@@ -395,15 +393,12 @@ public class ReportFormController {
 		map.put("noinvo_totalmoney", noinvo_totalmoney);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
-		
-		String path=request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
-		ResponseEntity<byte[]> byteww=reportFormService.exportProvisionPlan(map, path);
+
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		ResponseEntity<byte[]> byteww = reportFormService.exportProvisionPlan(map, path);
 		return byteww;
 	}
-	
-	
-	
-	
+
 	/*
 	 * ***********************************王慧敏报表结束*******************************
 	 */
