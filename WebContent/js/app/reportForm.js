@@ -138,7 +138,15 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			url : baseUrl + 'reportForm/exportWord.do',
 			data : data
 		});
-	}
+	};
+	//lwt:获取催款计划表-列表
+	services.getPaymentPlanList = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'reportForm/selectPaymentPlanList.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -451,6 +459,66 @@ app
 										current : page,
 										backFn : function(p) {
 											findUnGetContListBylimits(p);
+										}
+									});
+								}
+							}
+							// lwt查询条件实体2016-11-17
+							var paymentPlanListLimits = {};
+							// lwt设定查询条件初始值2016-11-17
+							reportForm.limit = {
+								province : "",
+								startDate : "",
+								endDate : ""
+							};
+							// lwt:根据条件获取催款计划表-列表
+							reportForm.getPaymentPlanList = function() {
+								var errorText = $("#errorText").css("display");
+								if (errorText == "inline") {
+									alert("时间格式错误！");
+									return false;
+								}
+								if (reportForm.limit.startDate != "") {
+									if (reportForm.limit.endDate == "") {
+										alert("请输入截止时间！");
+										return false;
+									} else {
+										var time1 = new Date(reportForm.limit.startDate);
+										var time2 = new Date(reportForm.limit.endDate);
+										if (time1.getTime() > time2.getTime()) {
+											alert("截止时间不能大于起始时间！");
+											return false;
+										}
+									}
+								}
+								paymentPlanListLimits = JSON.stringify(reportForm.limit);
+								services.getPaymentPlanList({
+									limit : paymentPlanListLimits,
+									page : 1
+								}).success(function(data) {
+									reportForm.payPlanForms = data.list;// payPlanForms查询出来的列表（PaymentPlanForm）
+									pageTurn(data.totalPage, 1);
+								});
+							};
+							// lwt换页查找函数
+							function findPaymentPlanListBylimits(p) {
+								services.getPaymentPlanList({
+									limit : paymentPlanListLimits,
+									page : p
+								}).success(function(data) {
+									reportForm.payPlanForms = data.list;// payPlanForms查询出来的列表（PaymentPlanForm）
+								});
+							}
+							// lwt换页
+							function pageTurn(totalPage, page) {
+								var $pages = $(".tcdPageCode");
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											reportPage = p;
+											findPaymentPlanListBylimits(p);
 										}
 									});
 								}
