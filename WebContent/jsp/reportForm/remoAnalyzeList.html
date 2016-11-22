@@ -16,15 +16,15 @@
 				id="end-year" placeholder="请输入年份" /> <input class="btn"
 				type="submit" value="查询" ng-click="getTableDate()">
 		</form>
-
-		<ul class="toolbar1">
-			<li class="click"><a ng-click="outputComoCompareRemo(e)" href=""><span><img
-						src="../images/t01.png" /></span>导出</a></li>
-		</ul>
-		<input id="chart1-svg" class="hidden" type="text" /> <input
-			id="chart2-svg" class="hidden" type="text" /> <input id="chart3-svg"
-			class="hidden" type="text" /> <input id="chart4-svg" class="hidden"
-			type="text" />
+			
+		<form action="/CIMS/reportForm/exportWord.do" method="post"
+				enctype="multipart/form-data" style="float:right">
+			<input name="chart1-svg" class="hidden" type="text" /> 
+			<input name="chart2-svg" class="hidden" type="text" /> 
+			<input name="chart3-svg" class="hidden" type="text" /> 
+			<input name="chart4-svg" class="hidden" type="text" />
+			<input class="btn" type="submit" value="导出">
+		</form>
 	</div>
 
 	<table class="tablelist">
@@ -126,5 +126,6 @@
 	<div id="pieChart1" style="min-width: 400px; height: 400px"></div>
 	<div id="pieChart2" style="min-width: 400px; height: 400px"></div>
 	<div id="pieChart3" style="min-width: 400px; height: 400px"></div>
+	<div id="pieChart4" style="min-width: 400px; height: 400px"></div>
 </div>
 

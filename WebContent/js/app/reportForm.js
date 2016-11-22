@@ -132,13 +132,13 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 
-	services.outputComoCompareRemo = function(data) {
+	/*services.outputComoCompareRemo = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'reportForm/exportWord.do',
 			data : data
 		});
-	}
+	}*/
 	return services;
 } ]);
 app
@@ -264,21 +264,28 @@ app
 													}
 													var chart1Data = [];
 													var chart2Data = [];
+													var n1 = 0;
 													for(var i=0;i<reportForm.newComoAnalyseList.length;i++){
 														var arr1 = [];
-														var arr2 = [];
-														arr1[0] = reportForm.newComoAnalyseList[i].province;
-														arr2[0] = reportForm.newComoAnalyseList[i].province;
 														if(reportForm.newComoAnalyseList[i].como_one){
+															arr1[0] = reportForm.newComoAnalyseList[i].province;
 															arr1[1] = +reportForm.newComoAnalyseList[i].como_one;
 														}
-														else arr1[1] = 0;
+														else continue;
+														
+														chart1Data[n1] = arr1;
+														n1++;
+													}
+													var n2 = 0;
+													for(var i=0;i<reportForm.newComoAnalyseList.length;i++){
+														var arr2 = [];
 														if(reportForm.newComoAnalyseList[i].como_two){
+															arr2[0] = reportForm.newComoAnalyseList[i].province;
 															arr2[1] = +reportForm.newComoAnalyseList[i].como_two;
 														}
-														else arr2[1] = 0;
-														chart1Data[i] = arr1;
-														chart2Data[i] = arr2;
+														else continue;
+														chart2Data[n2] = arr2;
+														n2++;
 													}
 													
 													console.log(chart2Data);
@@ -358,7 +365,7 @@ app
 												});
 
 							}
-							reportForm.outputComoCompareRemo = function(e) {
+							/*reportForm.outputComoCompareRemo = function(e) {
 								preventDefault(e);
 								services.outputComoCompareRemo({
 									beginYear : $('#begin-year').val(),
@@ -370,7 +377,7 @@ app
 									alert("导出成功！")
 								});
 
-							}
+							}*/
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
 									// 阻止默认浏览器动作(W3C)

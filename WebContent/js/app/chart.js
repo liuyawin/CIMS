@@ -9,6 +9,10 @@ Chart.prototype.init = function() {
 	$(this.elementId)
 			.highcharts(
 					{
+						credits:{
+							text:'',
+							href:''
+						},
 						chart : {
 							plotBackgroundColor : null,
 							plotBorderWidth : null,
