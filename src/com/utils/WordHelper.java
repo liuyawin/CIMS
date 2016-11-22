@@ -167,7 +167,6 @@ public class WordHelper<T> {
 						boolean isSetText = false;
 						for (Entry<String, Object> entry : param.entrySet()) {
 							String key = entry.getKey();
-							System.out.println("text:" + text);
 							if (text.indexOf(key) != -1) {
 								isSetText = true;
 								Object value = entry.getValue();

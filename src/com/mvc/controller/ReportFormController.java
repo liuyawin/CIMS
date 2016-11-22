@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.apache.batik.transcoder.TranscoderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import com.mvc.service.ReportFormService;
 import com.utils.FileHelper;
 import com.utils.Pager;
 import com.utils.StringUtil;
+import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 import net.sf.json.JSONObject;
 
@@ -215,13 +218,27 @@ public class ReportFormController {
 	 */
 	@RequestMapping("/exportWord.do")
 	public ResponseEntity<byte[]> exportWordReport(HttpServletRequest request) {
-		/*
-		 * String firstDate = request.getParameter("beginYear"); String
-		 * secondDate = request.getParameter("endYear"); String svg =
-		 * request.getParameter("svg"); System.out.print(svg);
-		 */
-		String firstDate = "2015";
-		String secondDate = "2016";
+
+		String firstDate = request.getParameter("beginYear");
+		String secondDate = request.getParameter("endYear");
+		String svg1 = request.getParameter("chart1SVGStr");
+		String svg2 = request.getParameter("chart2SVGStr");
+		System.out.print("svg1:" + svg1 + "\n");
+		System.out.print("svg2:" + svg2 + "\n");
+		// String firstDate = "2015";
+		// String secondDate = "2016";
+
+		String picFileName = "pic.png";// 2007版
+		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);
+		picPath = FileHelper.transPath(picFileName, picPath);// 解析后的上传路径
+		try {
+			SvgPngConverter.convertToPng(svg1, picPath + "\\" + picFileName);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (TranscoderException e1) {
+			e1.printStackTrace();
+		}
+
 		WordHelper<NewComoAnalyse> wh = new WordHelper<NewComoAnalyse>();
 		String fileName = "自营项目合同额及到款分析表.docx";// 2007版
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
@@ -236,7 +253,7 @@ public class ReportFormController {
 		Map<String, Object> contentMap = EntryToMap(comoCompareRemo, firstDate, secondDate, total_one, total_two);
 
 		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH) + "\\";// 图片目录路径
-		String[] picPath = { picCataPath + "a.png", picCataPath + "b.png" };
+		String[] picPath11 = { picCataPath + "a.png", picCataPath + "b.png" };
 		Map<String, Object> picMap = null;
 
 		for (int i = 0; i < 2; i++) {
@@ -245,7 +262,7 @@ public class ReportFormController {
 			picMap.put("height", 300);
 			picMap.put("type", "png");
 			try {
-				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath[i]), true));
+				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath11[i]), true));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -262,7 +279,6 @@ public class ReportFormController {
 		}
 		ResponseEntity<byte[]> byteArr = FileHelper.downloadFile(fileName, path);
 		return byteArr;
-
 	}
 
 	/**
