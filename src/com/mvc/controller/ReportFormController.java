@@ -258,7 +258,7 @@ public class ReportFormController {
 			Map<String, Object> picMap = null;
 			for (int i = 0; i < 2; i++) {
 				picMap = new HashMap<String, Object>();
-				picMap.put("width", 400);
+				picMap.put("width", 420);
 				picMap.put("height", 280);
 				picMap.put("type", "png");
 				try {
