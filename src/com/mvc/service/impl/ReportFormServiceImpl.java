@@ -582,7 +582,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 				} else {
 					startPeriod = startTime.substring(0, startTime.lastIndexOf("-"));
 					endPeriod = endTime.substring(0, endTime.lastIndexOf("-"));
-					fileName = startPeriod + "-" + endPeriod + "年光伏自营项目催款计划表.xlsx";
+					fileName = startPeriod + "-" + endPeriod + "光伏自营项目催款计划表.xlsx";
 				}
 				path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 				OutputStream out = new FileOutputStream(path);
@@ -598,7 +598,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 				} else {
 					startPeriod = startTime.substring(0, startTime.lastIndexOf("-"));
 					endPeriod = endTime.substring(0, endTime.lastIndexOf("-"));
-					title = "光伏自营项目催款计划表(" + startPeriod + "-" + endPeriod + "年签订项目)";
+					title = "光伏自营项目催款计划表(" + startPeriod + "-" + endPeriod + "签订项目)";
 				}
 
 				String[] header = { "行政区域", "工程名称", "业主名称", "合同金额", "累计已到款", "余额", "已开发票金额", "未开发票金额", "计划可催收款", "实际到款",
