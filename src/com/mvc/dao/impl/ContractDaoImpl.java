@@ -1,7 +1,6 @@
 package com.mvc.dao.impl;
 
 import java.math.BigInteger;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -268,71 +267,47 @@ public class ContractDaoImpl implements ContractDao {
 		em.close();
 		return list;
 	}
-	//王慧敏操作，导出光伏自营项目催款计划表
+
+	// 未返回合同统计表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Contract> findContByParw(Map<String, Object> map, Pager pager) {
-		String province=(String) map.get("province");// 行政区域 
-		String cont_project=(String)map.get("cont_project");// 工程名称 && 项目名称
-		String cont_client=(String)map.get("cont_client");// 业主名称 && 业主公司名称
-		Float cont_money=(Float) map.get("cont_money");// 合同金额
-		Float remo_totalmoney=(Float) map.get("remo_totalmoney");// 2015年累计已到款
-		Float balance_money=(Float) map.get("balance_money");// 余额
-		Float invo_totalmoney=(Float) map.get("invo_totalmoney");// 已开发票金额
-		Float noinvo_totalmoney=(Float) map.get("noinvo_totalmoney");// 未开发票金额
+	public List<Contract> findContByParaNoBack(Map<String, Object> map, Pager pager) {
+		Integer handler = (Integer) map.get("handler");
+		String province = (String) map.get("province");
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
-		
+
 		Integer offset = null;
 		Integer end = null;
 		if (pager != null) {
 			offset = pager.getOffset();
 			end = pager.getPageSize();
 		}
+
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from contract c where c.cont_ishistory=0");
-		if(province!=null){
-			sql.append(" and c.province='"+ province +"'");
+
+		if (handler != null) {
+			sql.append(" and c.creator_id=" + handler);
 		}
-		if(cont_project!=null){
-			sql.append(" and c.cont_project='"+ cont_project +"'");
-		}
-		if(cont_client!=null){
-			sql.append(" and c.cont_client='"+ cont_client +"'");
-		}
-		if(cont_money!=null){
-			sql.append(" and c.cont_money='"+ cont_money +"'");
-		}
-		if(remo_totalmoney!=null){
-			sql.append(" and c.remo_totalmoney='"+ remo_totalmoney +"'");
-		}
-		if(balance_money!=null){
-			sql.append(" and c.balance_money='"+ balance_money +"'");
-		}
-		if(invo_totalmoney!=null){
-			sql.append(" and c.invo_totalmoney='"+ invo_totalmoney +"'");
-		}
-		if(noinvo_totalmoney!=null){
-			sql.append(" and c.noinvo_totalmoney='"+ noinvo_totalmoney +"'");
+		if (province != null) {
+			sql.append(" and c.province='" + province + "'");
 		}
 		if (startTime != null && endTime != null) {
-			sql.append(" and c.cont_stime between '" + startTime + "'" + " and '" + endTime + "'");
-		}		
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and'" + endTime + "'");
+		}
 		sql.append(" order by cont_id desc");
-
 		if (offset != null && end != null) {
-			sql.append(" limit "+offset+","+end);
+			sql.append(" limit " + offset + "," + end);
 		}
 		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		List<Contract> list = query.getResultList();
 		em.close();
 		return list;
 	}
-		
-	
 
-	// 查询报表总条数
+	// 查询分项统计表总条数
 	@Override
 	public Long countTotal(Map<String, Object> map) {
 		Integer cont_type = (Integer) map.get("cont_type");
@@ -385,9 +360,11 @@ public class ContractDaoImpl implements ContractDao {
 		em.close();
 		return totalRow.longValue();
 	}
-	//查询催款列表总条数
+
+	// 查询未返回合同统计表总条数
 	@Override
-	public Long countTotal_payment(Map<String, Object> map) {
+	public Long countTotalNoBack(Map<String, Object> map) {
+		Integer handler = (Integer) map.get("handler");
 		String province = (String) map.get("province");
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
@@ -396,6 +373,9 @@ public class ContractDaoImpl implements ContractDao {
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
 
+		if (handler != null) {
+			sql.append(" and c.creator_id=" + handler);
+		}
 		if (province != null) {
 			sql.append(" and c.province='" + province + "'");
 		}
@@ -410,17 +390,60 @@ public class ContractDaoImpl implements ContractDao {
 	}
 
 	// 根据日期获取合同额到款对比表
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object findByOneDate(Date date) {
+	public List<Object> findByOneDate(String date) {
 		EntityManager em = emf.createEntityManager();
-		StringBuilder sql = new StringBuilder();
-		sql.append(
-				"select sum(cont_money),sum(remo_totalmoney),count(cont_id) from contract c where c.cont_ishistory=0 ");
+		String selectSql = "select coalesce(sum(cont_money),0.00),coalesce(sum(remo_totalmoney),0.00),count(cont_id) from contract c where c.cont_ishistory=0 ";
 		if (date != null) {
-			sql.append(" and cont_stime like '%" + date + "%'");
+			selectSql += " and (cont_stime like '%" + date + "%') ";
 		}
-		Query query = em.createNativeQuery(sql.toString());
-		Object result = query.getResultList();
+		Query query = em.createNativeQuery(selectSql.toString());
+		List<Object> result = query.getResultList();
+		em.close();
+		return result;
+	}
+
+	// 根据日期获取新签合同额分析表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> findComoByDate(String dateOne, String dateTwo) {
+		EntityManager em = emf.createEntityManager();
+		String sql0 = "select cc.province,coalesce(aa.como_one,0.00) como_one,coalesce(bb.como_two,0.00) como_two from ";
+		String sql1 = "(select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
+				+ "%') union all select province from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%')) as cc ";
+		String sql2 = "(select province,coalesce(sum(cont_money),0.00) como_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateOne + "%') group by province) as aa ";
+		String sql3 = "(select province,coalesce(sum(cont_money),0.00) como_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%') group by province) as bb ";
+		String selectSql = sql0 + sql1 + " left join  " + sql2 + " on aa.province=cc.province left join " + sql3
+				+ " on bb.province=cc.province ";
+		selectSql += " group by province ";
+		Query query = em.createNativeQuery(selectSql.toString());
+		List<Object> result = query.getResultList();
+		em.close();
+		return result;
+	}
+
+	// 根据日期获取到款分析表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> findRemoByDate(String dateOne, String dateTwo) {
+		EntityManager em = emf.createEntityManager();
+		String sql0 = "select cc.province,coalesce(aa.remo_one,0.00) remo_one,coalesce(bb.remo_two,0.00) remo_two from ";
+		String sql1 = "(select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
+				+ "%') union all select province from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%')) as cc ";
+		String sql2 = "(select province,coalesce(sum(remo_totalmoney),0.00) remo_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateOne + "%') group by province) as aa ";
+		String sql3 = "(select province,coalesce(sum(remo_totalmoney),0.00) remo_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+				+ dateTwo + "%') group by province) as bb ";
+		String selectSql = sql0 + sql1 + " left join  " + sql2 + " on aa.province=cc.province left join " + sql3
+				+ " on bb.province=cc.province ";
+		selectSql += " group by province ";
+		Query query = em.createNativeQuery(selectSql.toString());
+		List<Object> result = query.getResultList();
 		em.close();
 		return result;
 	}

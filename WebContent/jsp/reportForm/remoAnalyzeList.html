@@ -11,30 +11,34 @@
 	<div class="tools">
 
 		<form class="toolbar">
-			<input type="text" class="short dfinput" id="begin-year" placeholder="请输入年份"/>至
-			<input type="text" class="short dfinput" id="end-year" placeholder="请输入年份"/>
-			<input class="btn" type="submit" value="查询" ng-click="getTableDate()">
+			<input type="text" class="short dfinput" id="begin-year"
+				placeholder="请输入年份" />至 <input type="text" class="short dfinput"
+				id="end-year" placeholder="请输入年份" /> <input class="btn"
+				type="submit" value="查询" ng-click="getTableDate()">
 		</form>
 
-		<ul class="toolbar1" >
-			<li class="click"><a href="" ><span><img
+		<ul class="toolbar1">
+			<li class="click"><a ng-click="outputComoCompareRemo(e)" href=""><span><img
 						src="../images/t01.png" /></span>导出</a></li>
 		</ul>
-
+		<input id="chart1-svg" class="hidden" type="text" /> <input
+			id="chart2-svg" class="hidden" type="text" /> <input id="chart3-svg"
+			class="hidden" type="text" /> <input id="chart4-svg" class="hidden"
+			type="text" />
 	</div>
-	
-<table class="tablelist">
+
+	<table class="tablelist">
 		<caption>自营合同额到款对比表</caption>
-		<thead>
+		<thead ng-show="table1Show">
 			<tr>
 				<th>序号</th>
 				<th>对比项</th>
-				<th>2014年</th>
-				<th>2015年</th>
+				<th>{{1|bYear}}年</th>
+				<th>{{1|eYear}}年</th>
 				<th>备注</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody ng-show="table1Show">
 			<tr>
 				<td>1</td>
 				<td>合同额</td>
@@ -58,52 +62,54 @@
 			</tr>
 		</tbody>
 	</table>
-	
+	<label class="error-label" ng-show="!table1Show">对不起，未找到相关数据</label>
+
 	<table class="tablelist">
-		<caption>2014年、2015年光伏自营项目新签合同额分析表</caption>
-		<thead>
+		<caption>{{1|bYear}}年、{{1|eYear}}年光伏自营项目新签合同额分析表</caption>
+		<thead ng-show="table2Show">
 			<tr>
 				<th>序号</th>
 				<th>省份</th>
-				<th>2014年新签合同额（万元）</th>
-				<th>2015年新签合同额（万元）</th>
-				<th>2014年该省合同占比</th>
-				<th>2015年该省合同占比</th>
-				<th>2015年合同增长比例</th>
+				<th>{{1|bYear}}年新签合同额（万元）</th>
+				<th>{{1|eYear}}年新签合同额（万元）</th>
+				<th>{{1|bYear}}年该省合同占比</th>
+				<th>{{1|eYear}}年该省合同占比</th>
+				<th>{{1|eYear}}年合同增长比例</th>
 				<th>备注</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr >
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+		<tbody ng-show="table2Show">
+			<tr ng-repeat="c in newComoAnalyseList">
+				<td>{{$index + 1}}</td>
+				<td>{{c.province}}</td>
+				<td>{{c.como_one}}</td>
+				<td>{{c.como_two}}</td>
+				<td>{{c.ratio_one_provi}}</td>
+				<td>{{c.ratio_two_provi}}</td>
+				<td>{{c.rise_ratio}}</td>
+				<td>{{c.remark}}</td>				
 			</tr>
 		</tbody>
 	</table>
-	
+	<label class="error-label" ng-show="!table2Show">对不起，未找到相关数据</label>
+
 	<table class="tablelist">
-		<caption>2014年、2015年自营项目到款及2016年预计到款分析表</caption>
-		<thead>
+		<caption>{{1|bYear}}年、{{1|eYear}}年自营项目到款及{{1|nYear}}年预计到款分析表</caption>
+		<thead ng-show="table3Show">
 			<tr class="report-tr">
 				<th>序号</th>
 				<th>省份</th>
-				<th>2014年到款额（万元）</th>
-				<th>2015年到款额（万元）</th>
-				<th>2015年之前项目2015年到款额（万元）</th>
-				<th>2015年当年项目2015年到款额（万元）</th>
-				<th>2015年当年项目2016年预计到款额（万元）</th>
-				<th>2015年之前项目2016年预计到款额（万元）</th>
+				<th>{{1|bYear}}年到款额（万元）</th>
+				<th>{{1|eYear}}年到款额（万元）</th>
+				<th>{{1|eYear}}年之前项目{{1|eYear}}年到款额（万元）</th>
+				<th>{{1|eYear}}年当年项目{{1|eYear}}年到款额（万元）</th>
+				<th>{{1|eYear}}年当年项目{{1|nYear}}年预计到款额（万元）</th>
+				<th>{{1|eYear}}年之前项目{{1|nYear}}年预计到款额（万元）</th>
 				<th>备注</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr >
+		<tbody ng-show="table3Show">
+			<tr>
 				<td></td>
 				<td></td>
 				<td></td>
@@ -112,9 +118,13 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td>
-				</td>
+				<td></td>
 			</tr>
 		</tbody>
 	</table>
+	<label class="error-label" ng-show="!table3Show">对不起，未找到相关数据</label>
+	<div id="pieChart1" style="min-width: 400px; height: 400px"></div>
+	<div id="pieChart2" style="min-width: 400px; height: 400px"></div>
+	<div id="pieChart3" style="min-width: 400px; height: 400px"></div>
 </div>
+
