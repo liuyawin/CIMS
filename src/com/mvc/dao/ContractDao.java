@@ -57,5 +57,12 @@ public interface ContractDao {
 
 	// 查询未返回合同统计表总条数
 	Long countTotalNoBack(Map<String, Object> map);
+	
+	/*****王慧敏  *****/
+	// 光伏自营项目催款计划表
+	List<Contract> findContByParw(Map<String, Object> map, Pager pager);
+	
+	// 查询报表总条数
+	Long countTotal_payment(Map<String, Object> map);
 
 }

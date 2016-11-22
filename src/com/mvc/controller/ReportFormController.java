@@ -22,6 +22,7 @@ import com.base.constants.ReportFormConstants;
 import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.NewComoAnalyse;
 import com.mvc.entity.NoBackContForm;
+import com.mvc.entity.PaymentPlanListForm;
 import com.mvc.service.ReportFormService;
 import com.utils.FileHelper;
 import com.utils.Pager;
@@ -314,5 +315,99 @@ public class ReportFormController {
 
 	/*
 	 * ***********************************张姣娜报表结束*******************************
+	 */
+	
+	/*
+	 * ***********************************王慧敏报表开始*******************************
+	 */
+	/**
+	 * 查询光伏自营项目催款计划表
+	 */
+	@RequestMapping("/selectPaymentPlanList.do")
+	public @ResponseBody String selectPaymentPlanList(HttpServletRequest request){
+		JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
+		Integer page=Integer.parseInt(request.getParameter("page"));//分页
+		Map<String, Object> map=reportFormService.JsonObjToMap(jsonObject);
+		Pager pager=reportFormService.pagerTotal_payment(map, page);
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		List<PaymentPlanListForm> list=reportFormService.findPaymentPlanList(map, pager, path);
+		
+		jsonObject=new JSONObject();
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+		
+
+
+	}
+	/**
+	 * 导出光伏自营项目催款计划表
+	 */
+	@RequestMapping("/exportPaymentPlanList.do")
+	public ResponseEntity<byte[]> exportPaymentPlanList(HttpServletRequest request){
+		String province = null;// 行政区域
+		String cont_project=null;// 工程名称 && 项目名称
+		String cont_client=null;// 业主名称 && 业主公司名称
+		Float cont_money = null;// 合同金额
+		Float remo_totalmoney=null;// 2015年累计已到款
+		Float balance_money=null;// 余额
+		Float invo_totalmoney=null;// 已开发票金额
+		Float noinvo_totalmoney=null;// 未开发票金额
+		String startTime = null;
+		String endTime = null;
+		
+		if(StringUtil.strIsNotEmpty(request.getParameter("province"))){
+			province=request.getParameter("province");//行政区域
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("contProject"))){
+			cont_project=request.getParameter("contProject");//工程名称 && 项目名称			
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("contClient"))){
+			cont_client=request.getParameter("contClient");//业主名称 && 业主公司名称
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("contMoney"))){
+			cont_money=Float.valueOf(request.getParameter("contMoney"));//合同金额
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("remoTotalmoney"))){
+			remo_totalmoney=Float.valueOf(request.getParameter("remoTotalmoney"));//累计已到款
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("balanceMoney"))){
+			balance_money=Float.valueOf(request.getParameter("balanceMoney"));//余额
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("invoTotalmoney"))){
+			invo_totalmoney=Float.valueOf(request.getParameter("invoTotalmoney"));// 已开发票金额
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("noinvoTotalmoney"))){
+			noinvo_totalmoney=Float.valueOf(request.getParameter("noinvoTotalmoney"));// 未开发票金额
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
+			startTime = request.getParameter("startDate") + "-01";// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			endTime = request.getParameter("endDate") + "-01";// 结束时间
+		}
+
+		Map<String, Object> map=new HashMap<String,Object>();
+		map.put("province", province);
+		map.put("cont_project", cont_project);
+		map.put("cont_client", cont_client);
+		map.put("cont_money", cont_money);
+		map.put("remo_totalmoney", remo_totalmoney);
+		map.put("balance_money", balance_money);
+		map.put("invo_totalmoney", invo_totalmoney);
+		map.put("noinvo_totalmoney", noinvo_totalmoney);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+		
+		String path=request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		ResponseEntity<byte[]> byteww=reportFormService.exportProvisionPlan(map, path);
+		return byteww;
+	}
+	
+	
+	
+	
+	/*
+	 * ***********************************王慧敏报表结束*******************************
 	 */
 }

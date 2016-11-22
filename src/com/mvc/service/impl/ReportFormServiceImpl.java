@@ -25,6 +25,7 @@ import com.mvc.entity.Contract;
 import com.mvc.entity.NewComoAnalyse;
 import com.mvc.entity.NewRemoAnalyse;
 import com.mvc.entity.NoBackContForm;
+import com.mvc.entity.PaymentPlanListForm;
 import com.mvc.entity.ProjectStatisticForm;
 import com.mvc.service.ReportFormService;
 import com.utils.ExcelHelper;
@@ -552,5 +553,200 @@ public class ReportFormServiceImpl implements ReportFormService {
 	public List<NewRemoAnalyse> findRemoByDate(String firstDate, String secondDate) {
 		return null;
 	}
+	
+	/*
+	 * 王慧敏
+	 */
+	// 导出光伏自营项目催款计划表
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@Override
+		public ResponseEntity<byte[]> exportProvisionPlan(Map<String, Object> map, String path) {
+			ResponseEntity<byte[]> byteww = null;
 
+			try {
+				ExcelHelper<PaymentPlanListForm> ex = new ExcelHelper<PaymentPlanListForm>();
+				/*
+				 * Calendar c = Calendar.getInstance(); c.setTime(new Date()); int
+				 * year = c.get(Calendar.YEAR);
+				 */
+
+				String startTime = (String) map.get("startTime");
+				String startPeriod;
+				String endPeriod;
+				String endTime = (String) map.get("endTime");
+
+				// String fileName = year + "年光伏自营项目催款计划表.xlsx";// 2007版(2003版受限)
+				String fileName;
+				if (startTime == null || endTime == null) {
+					fileName = "光伏自营项目催款计划表.xlsx";
+				} else {
+					startPeriod = startTime.substring(0, startTime.lastIndexOf("-"));
+					endPeriod = endTime.substring(0, endTime.lastIndexOf("-"));
+					fileName = startPeriod + "-" + endPeriod + "年光伏自营项目催款计划表.xlsx";
+				}
+				path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+				OutputStream out = new FileOutputStream(path);
+				List<Contract> listSource = contractDao.findContByParw(map, null);// 筛选元数据
+				Iterator<Contract> it = listSource.iterator();
+				List<PaymentPlanListForm> listGoal = contToProPlan(it);
+
+				// String titlE = String.valueOf(year);
+				// String title = "光伏自营项目催款计划表(" + titlE + "年签订项目)";
+				String title;
+				if (startTime == null || endTime == null) {
+					title = "光伏自营项目催款计划表签订项目";
+				} else {
+					startPeriod = startTime.substring(0, startTime.lastIndexOf("-"));
+					endPeriod = endTime.substring(0, endTime.lastIndexOf("-"));
+					title = "光伏自营项目催款计划表(" + startPeriod + "-" + endPeriod + "年签订项目)";
+				}
+
+				String[] header = { "行政区域", "工程名称", "业主名称", "合同金额", "累计已到款", "余额", "已开发票金额", "未开发票金额", "计划可催收款", "实际到款",
+						"合同条款", "催款结果", "备注" };
+
+				ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
+				out.close();
+				byteww = FileHelper.downloadFile(fileName, path);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return byteww;
+		}
+
+		private List<PaymentPlanListForm> contToProPlan(Iterator<Contract> it) {
+			List<PaymentPlanListForm> listGoal = new ArrayList<PaymentPlanListForm>();
+			Float sum_cont_money = new Float(0f);// 合同金额
+			Float sum_remo_totalmoney = new Float(0.00f);// 2015年累计已到款
+			Float sum_balance_money = (float) 0.00;// 余额
+			Float sum_invo_totalmoney = (float) 0.00;// 已开发票金额
+			Float sum_invo_not_totalmoney = (float) 0.00;// 未开发票金额
+			// int i =0;
+			while (it.hasNext()) {
+				// i++;//用于弄序号
+				Contract contract = it.next();
+				PaymentPlanListForm provisionPlanForm = new PaymentPlanListForm();
+				provisionPlanForm.setProvince(contract.getProvince());// 行政区域
+				provisionPlanForm.setCont_project(contract.getCont_project());// 工程名称
+				provisionPlanForm.setCont_client(contract.getCont_client());// 业主名称
+				provisionPlanForm.setCont_money(contract.getCont_money());// 合同金额
+				provisionPlanForm.setRemo_totalmoney(contract.getRemo_totalmoney());// 到款金额
+
+				Float balance_money;
+				if (contract.getCont_money() == null) {
+					balance_money = null;
+				} else if (contract.getCont_money() != null && contract.getRemo_totalmoney() == null) {
+					balance_money = contract.getCont_money();
+				} else {
+					balance_money = contract.getCont_money() - contract.getRemo_totalmoney();
+				}
+
+				provisionPlanForm.setBalance_money(balance_money);// 余额
+				provisionPlanForm.setInvo_totalmoney(contract.getInvo_totalmoney());// 已开发票金额
+
+				Float invo_not_totalmoney;
+				if (contract.getCont_money() == null) {
+					invo_not_totalmoney = null;
+				} else if (contract.getCont_money() != null && contract.getInvo_totalmoney() == null) {
+					invo_not_totalmoney = contract.getCont_money();
+				} else {
+					invo_not_totalmoney = contract.getCont_money() - contract.getInvo_totalmoney();
+				}
+				provisionPlanForm.setInvo_not_totalmoney(invo_not_totalmoney);// 未开发票金额
+				provisionPlanForm.setRemark(contract.getCont_remark());// 备注
+
+				if (invo_not_totalmoney != null) {
+					sum_invo_not_totalmoney += invo_not_totalmoney;// 用于总计-未开发票金额
+				}
+				if (contract.getInvo_totalmoney() != null) {
+					sum_invo_totalmoney += contract.getInvo_totalmoney();// 用于总计-已开发票金额
+				}
+				if (contract.getRemo_totalmoney() != null) {
+					sum_remo_totalmoney += contract.getRemo_totalmoney();// 用于总计-累计已到款
+				}
+				if (contract.getCont_money() != null) {
+					sum_cont_money += contract.getCont_money();// 用于总计-合同金额
+				}
+				if (balance_money != null) {
+					sum_balance_money += balance_money;// 用于总计-余额
+				}
+				listGoal.add(provisionPlanForm);
+
+			}
+			System.out.println("sum_cont_money:" + sum_cont_money);
+			System.out.println("sum_remo_totalmoney:" + sum_remo_totalmoney);
+			PaymentPlanListForm provisionPlanForm = new PaymentPlanListForm();
+			provisionPlanForm.setCont_client("总计：");
+			provisionPlanForm.setCont_money(sum_cont_money);
+			provisionPlanForm.setRemo_totalmoney(sum_remo_totalmoney);
+			provisionPlanForm.setBalance_money(sum_balance_money);
+			provisionPlanForm.setInvo_totalmoney(sum_invo_totalmoney);
+			provisionPlanForm.setInvo_not_totalmoney(sum_invo_not_totalmoney);
+			listGoal.add(provisionPlanForm);
+
+			return listGoal;
+		}
+
+		// 查询催款列表
+		@Override
+		public List<PaymentPlanListForm> findPaymentPlanList(Map<String, Object> map, Pager pager, String path) {
+			List<Contract> listSource = contractDao.findContByParw(map, pager);
+			Iterator<Contract> it = listSource.iterator();
+			List<PaymentPlanListForm> listGoal = contToProPlan_payment(it);
+
+			return listGoal;
+		}
+
+		private List<PaymentPlanListForm> contToProPlan_payment(Iterator<Contract> it) {
+			List<PaymentPlanListForm> listGoal = new ArrayList<PaymentPlanListForm>();
+			// int i =0;
+			while (it.hasNext()) {
+				// i++;//用于弄序号
+				Contract contract = it.next();
+				PaymentPlanListForm provisionPlanForm = new PaymentPlanListForm();
+				provisionPlanForm.setProvince(contract.getProvince());// 行政区域
+				provisionPlanForm.setCont_project(contract.getCont_project());// 工程名称
+				provisionPlanForm.setCont_client(contract.getCont_client());// 业主名称
+				provisionPlanForm.setCont_money(contract.getCont_money());// 合同金额
+				provisionPlanForm.setRemo_totalmoney(contract.getRemo_totalmoney());// 到款金额
+
+				Float balance_money;
+				if (contract.getCont_money() == null) {
+					balance_money = null;
+				} else if (contract.getCont_money() != null && contract.getRemo_totalmoney() == null) {
+					balance_money = contract.getCont_money();
+				} else {
+					balance_money = contract.getCont_money() - contract.getRemo_totalmoney();
+				}
+				provisionPlanForm.setBalance_money(balance_money);// 余额
+
+				provisionPlanForm.setInvo_totalmoney(contract.getInvo_totalmoney());// 已开发票金额
+				Float invo_not_totalmoney;
+				if (contract.getCont_money() == null) {
+					invo_not_totalmoney = null;
+				} else if (contract.getCont_money() != null && contract.getInvo_totalmoney() == null) {
+					invo_not_totalmoney = contract.getCont_money();
+				} else {
+					invo_not_totalmoney = contract.getCont_money() - contract.getInvo_totalmoney();
+				}
+				provisionPlanForm.setInvo_not_totalmoney(invo_not_totalmoney);// 未开发票金额
+				provisionPlanForm.setRemark(contract.getCont_remark());// 备注
+				listGoal.add(provisionPlanForm);
+
+			}
+			return listGoal;
+		}
+
+		// 查询催款列表页码相关
+		@Override
+		public Pager pagerTotal_payment(Map<String, Object> map, Integer page) {
+			int totalRow = Integer.parseInt(contractDao.countTotal_payment(map).toString());
+			Pager pager = new Pager();
+			pager.setPage(page);
+			pager.setTotalRow(totalRow);
+
+			return pager;
+		}
 }
