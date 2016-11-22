@@ -222,10 +222,6 @@ public class ReportFormController {
 	public ResponseEntity<byte[]> exportWordReport(HttpServletRequest request, HttpSession session) {
 		String firstDate = (String) session.getAttribute(SessionKeyConstants.BEGIN_YEAR);
 		String secondDate = (String) session.getAttribute(SessionKeyConstants.END_YEAR);
-		String svg1 = request.getParameter("chart1SVGStr");
-		String svg2 = request.getParameter("chart2SVGStr");
-		System.out.println(svg1+"\n");
-		System.out.println(svg1+"\n");
 		WordHelper<NewComoAnalyse> wh = new WordHelper<NewComoAnalyse>();
 		String fileName = "自营项目合同额及到款分析表.docx";// 2007版
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
@@ -238,34 +234,40 @@ public class ReportFormController {
 		// 获取表一（合同额到款分析表）的数据
 		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(firstDate, secondDate);
 		Map<String, Object> contentMap = EntryToMap(comoCompareRemo, firstDate, secondDate, total_one, total_two);
-		// 获取图片相关数据
-		String picFileName1 = "pic1.png";
-		String picFileName2 = "pic2.png";
-		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");
-		String picPath1 = FileHelper.transPath(picFileName1, picCataPath);// 解析后的上传路径
-		String picPath2 = FileHelper.transPath(picFileName2, picCataPath);// 解析后的上传路径
-		try {
-			// 图片svgCode转化为png格式，并保存到picPath1
-			SvgPngConverter.convertToPng(svg1, picPath1);
-			SvgPngConverter.convertToPng(svg2, picPath2);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (TranscoderException e1) {
-			e1.printStackTrace();
-		}
-		String[] picPath = { picPath1, picPath2 };
-		Map<String, Object> picMap = null;
-		for (int i = 0; i < 2; i++) {
-			picMap = new HashMap<String, Object>();
-			picMap.put("width", 400);
-			picMap.put("height", 280);
-			picMap.put("type", "png");
+		// 图片相关
+		if (StringUtil.strIsNotEmpty(request.getParameter("chart1SVGStr"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("chart2SVGStr"))) {
+			String svg1 = request.getParameter("chart1SVGStr");
+			String svg2 = request.getParameter("chart2SVGStr");
+			String picFileName1 = "pic1.png";
+			String picFileName2 = "pic2.png";
+			String picCataPath = request.getSession().getServletContext()
+					.getRealPath(ReportFormConstants.PIC_PATH + "\\");
+			String picPath1 = FileHelper.transPath(picFileName1, picCataPath);// 解析后的上传路径
+			String picPath2 = FileHelper.transPath(picFileName2, picCataPath);// 解析后的上传路径
 			try {
-				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath[i]), true));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				// 图片svgCode转化为png格式，并保存到picPath1
+				SvgPngConverter.convertToPng(svg1, picPath1);
+				SvgPngConverter.convertToPng(svg2, picPath2);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (TranscoderException e1) {
+				e1.printStackTrace();
 			}
-			contentMap.put("${pic" + i + "}", picMap);
+			String[] picPath = { picPath1, picPath2 };
+			Map<String, Object> picMap = null;
+			for (int i = 0; i < 2; i++) {
+				picMap = new HashMap<String, Object>();
+				picMap.put("width", 400);
+				picMap.put("height", 280);
+				picMap.put("type", "png");
+				try {
+					picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath[i]), true));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				contentMap.put("${pic" + i + "}", picMap);
+			}
 		}
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
