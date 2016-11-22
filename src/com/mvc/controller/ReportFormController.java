@@ -224,7 +224,8 @@ public class ReportFormController {
 		String secondDate = (String) session.getAttribute(SessionKeyConstants.END_YEAR);
 		String svg1 = request.getParameter("chart1SVGStr");
 		String svg2 = request.getParameter("chart2SVGStr");
-
+		System.out.println(svg1+"\n");
+		System.out.println(svg1+"\n");
 		WordHelper<NewComoAnalyse> wh = new WordHelper<NewComoAnalyse>();
 		String fileName = "自营项目合同额及到款分析表.docx";// 2007版
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
