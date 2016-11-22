@@ -2,6 +2,7 @@ package com.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -78,4 +79,29 @@ public class FileHelper {
 		return byteArr;
 	}
 
+	/**
+	 * 将输入流中的数据写入字节数组
+	 * 
+	 * @param in
+	 * @return
+	 */
+	public static byte[] inputStream2ByteArray(InputStream in, boolean isClose) {
+		byte[] byteArray = null;
+		try {
+			int total = in.available();
+			byteArray = new byte[total];
+			in.read(byteArray);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (isClose) {
+				try {
+					in.close();
+				} catch (Exception e2) {
+					System.out.println("关闭流失败");
+				}
+			}
+		}
+		return byteArray;
+	}
 }
