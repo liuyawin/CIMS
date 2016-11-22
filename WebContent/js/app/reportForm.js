@@ -84,6 +84,9 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/unGetContList', {
 		templateUrl : '/CIMS/jsp/reportForm/unGetContList.html',
 		controller : 'ReportController'
+	}).when('/paymentPlanList', {
+		templateUrl : '/CIMS/jsp/reportForm/paymentPlanList.html',
+		controller : 'ReportController'
 	})
 } ]);
 app.constant('baseUrl', '/CIMS/');
