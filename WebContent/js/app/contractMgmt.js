@@ -1059,9 +1059,7 @@ app
 							function selectUsersFromDesign() {
 								services.selectUsersFromDesign({}).success(
 										function(data) {
-											contract.userDepts = data;
-											console.log("设计部人员"
-													+ JSON.stringify(data));
+											contract.userDepts = data.list;
 										});
 							}
 							function findRoleFromCookie() {
@@ -1308,7 +1306,6 @@ app
 							// lwt:点击项目状态时弹出模态框
 							contract.modifyStatus = function(conId) {
 								sessionStorage.setItem("conId", conId);
-								var radio = document.getElementsByName("radioState");
 								$(".overlayer").fadeIn(200);
 								$("#tipStatus").fadeIn(200);
 								contract.status = {

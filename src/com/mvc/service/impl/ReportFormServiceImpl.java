@@ -1,18 +1,37 @@
 package com.mvc.service.impl;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.base.enums.ContractState;
+import com.base.enums.ContStatus;
+import com.base.enums.ContractType;
 import com.mvc.dao.ContractDao;
+import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.Contract;
-import com.mvc.entity.PlanProjectForm;
+import com.mvc.entity.ProjectStatisticForm;
+import com.mvc.entity.PaymentPlanListForm;
 import com.mvc.service.ReportFormService;
+import com.utils.ExcelHelper;
+import com.utils.FileHelper;
+import com.utils.Pager;
+import com.utils.StringUtil;
+
+import net.sf.json.JSONObject;
 
 /**
  * 报表业务层实现
@@ -26,30 +45,455 @@ public class ReportFormServiceImpl implements ReportFormService {
 	@Autowired
 	ContractDao contractDao;
 
-	// 光电院承担规划项目表
+	// 导出光电院项目分项统计表
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<PlanProjectForm> findPlanProject(Integer cont_state, Date startTime, Date endTime) {
-		List<Contract> listSource = contractDao.findContByState(cont_state, startTime, endTime);
-		List<PlanProjectForm> listGoal = new ArrayList<PlanProjectForm>();
-		Iterator<Contract> it = listSource.iterator();
+	public ResponseEntity<byte[]> exportProjectStatistic(Map<String, Object> map, String path) {
+		ResponseEntity<byte[]> byteArr = null;
+		Integer cont_type = (Integer) map.get("cont_type");
+
+		try {
+			ExcelHelper<ProjectStatisticForm> ex = new ExcelHelper<ProjectStatisticForm>();
+			Calendar c = Calendar.getInstance();
+			c.setTime(new Date());
+			int year = c.get(Calendar.YEAR);
+
+			String fileName = year + "年光电院项目分项统计表.xlsx";// 2007版(2003版受限)
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			if (cont_type == -1) {// 全部类型，导出3个sheet的Excel
+				// 分布式项目
+				map.put("cont_type", ContractType.分布式.value);
+				List<Contract> listSource_dis = contractDao.findContByPara(map, null);
+				Iterator<Contract> it_dis = listSource_dis.iterator();
+				List<ProjectStatisticForm> listGoal_dis = contToProStatis(it_dis);
+
+				// 传统光伏项目
+				map.put("cont_type", ContractType.传统光伏项目.value);
+				List<Contract> listSource_tra = contractDao.findContByPara(map, null);
+				Iterator<Contract> it_tra = listSource_tra.iterator();
+				List<ProjectStatisticForm> listGoal_tra = contToProStatis(it_tra);
+
+				// 光热项目
+				map.put("cont_type", ContractType.光热.value);
+				List<Contract> listSource_pho = contractDao.findContByPara(map, null);
+				Iterator<Contract> it_pho = listSource_pho.iterator();
+				List<ProjectStatisticForm> listGoal_pho = contToProStatis(it_pho);
+
+				String[] titles = { year + "年光电院分布式光伏项目统计表", year + "年光电院光伏项目统计表（不含分布式）", year + "年光电院光热项目统计表" };
+				String[] header_dis = { "序号", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）", "合同状态", "备注" };// 顺序必须和对应实体一致
+
+				Map<Integer, String[]> headerMap = new HashMap<Integer, String[]>();// 每个sheet的标题，暂时用统一标题
+				headerMap.put(0, header_dis);
+				headerMap.put(1, header_dis);
+				headerMap.put(2, header_dis);
+
+				Map<Integer, List> mapList = new HashMap<Integer, List>();// 每个sheet中内容
+				mapList.put(0, listGoal_dis);
+				mapList.put(1, listGoal_tra);
+				mapList.put(2, listGoal_pho);
+
+				ex.export2007MutiExcel(titles, headerMap, mapList, out, "yyyy-MM-dd");
+			} else {// 根据合同类型，只导出对应的单sheet的Excel
+				List<Contract> listSource = contractDao.findContByPara(map, null);
+				Iterator<Contract> it = listSource.iterator();
+				List<ProjectStatisticForm> listGoal = contToProStatis(it);
+
+				String title = String.valueOf(year);
+				switch (cont_type) {
+				case 0:
+					title += "年光电院光伏项目统计表（不含分布式）";
+					break;
+				case 1:
+					title += "年光电院分布式光伏项目统计表";
+					break;
+				case 2:
+					title += "年光电院光热项目统计表";
+					break;
+				default:
+					break;
+				}
+
+				String[] header = { "序号", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）", "合同状态", "备注" };// 顺序必须和对应实体一致
+				ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
+			}
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
+	/**
+	 * 将contract封装成分项统计报表
+	 * 
+	 * @param it
+	 * @return
+	 */
+	private List<ProjectStatisticForm> contToProStatis(Iterator<Contract> it) {
+		List<ProjectStatisticForm> listGoal = new ArrayList<ProjectStatisticForm>();
 		int i = 0;
-		while (it.hasNext()) {
+		while (it.hasNext()) {// 赋值顺序和表头无关
 			i++;
 			Contract contract = it.next();
-			PlanProjectForm planProjectForm = new PlanProjectForm();
-			planProjectForm.setPlpr_id(i);// 序号
-			planProjectForm.setCont_project(contract.getCont_project());// 项目名称
+			ProjectStatisticForm projectStatisticForm = new ProjectStatisticForm();
+			projectStatisticForm.setPrsf_id(i);// 序号
+			projectStatisticForm.setCont_project(contract.getCont_project());// 项目名称
 			if (contract.getManager() != null) {
-				planProjectForm.setManager(contract.getManager().getUser_name());// 项目设总
+				projectStatisticForm.setManager_name(contract.getManager().getUser_name());// 项目设总
 			}
-			// planProjectForm.setInstall_capacity();//装机容量（MW）
-			String cont_stateStr = ContractState.intToStr(contract.getCont_state());
-			planProjectForm.setCont_state(cont_stateStr);// 合同状态
-			planProjectForm.setCont_money(contract.getCont_money());// 合同额(万元)
-			planProjectForm.setCont_stime(contract.getCont_stime());// 签订时间
-			listGoal.add(planProjectForm);
+			projectStatisticForm.setProvince(contract.getProvince());// 所在地（省）
+
+			String proStageStr = contract.getPro_stage();// 设计阶段（数字类型字符串）
+			proStageStr = intStrToStr(proStageStr);
+			projectStatisticForm.setPro_stage(proStageStr);// 设计阶段（项目阶段）
+			projectStatisticForm.setInstall_capacity(contract.getInstall_capacity());// 装机容量（MW）
+			projectStatisticForm.setCont_money(contract.getCont_money());// 合同额(万元)
+
+			String cont_status = null;
+			Integer isOrNo = contract.getCont_initiation();// 是否立项
+			boolean flag = false;// 是否签订合同
+			if (contract.getCont_stime() != null) {
+				flag = true;
+			}
+			if (isOrNo == 0) {// 未立项
+				cont_status = ContStatus.intToStr(0);
+			} else if (isOrNo == 1 && flag) {// 已签订
+				cont_status = ContStatus.intToStr(2);
+			} else {// 已立项_合同未签
+				cont_status = ContStatus.intToStr(1);
+				cont_status = cont_status.replace('_', '，');// 将_替换成，
+			}
+			projectStatisticForm.setCont_status(cont_status);// 合同状态
+			listGoal.add(projectStatisticForm);
 		}
 		return listGoal;
+	}
+
+	// 查询光电院项目分项统计表
+	@Override
+	public List<ProjectStatisticForm> findProjectStatistic(Map<String, Object> map, Pager pager, String path) {
+		List<Contract> listSource = contractDao.findContByPara(map, pager);
+		Iterator<Contract> it = listSource.iterator();
+		List<ProjectStatisticForm> listGoal = contToProStatis(it);
+
+		return listGoal;
+	}
+
+	// 将JSONObject转成Map
+	@Override
+	public Map<String, Object> JsonObjToMap(JSONObject jsonObject) {
+		Integer cont_type = null;
+		String pro_stage = null;
+		Integer managerId = null;
+		Integer cont_status = null;
+		String province = null;
+		String startTime = null;
+		String endTime = null;
+		if (jsonObject.containsKey("contType")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("contType"))) {
+				cont_type = Integer.valueOf(jsonObject.getString("contType"));// 合同类型
+			}
+		}
+		if (jsonObject.containsKey("proStage")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("proStage"))) {
+				pro_stage = jsonObject.getString("proStage");// 项目阶段
+			}
+		}
+		if (jsonObject.containsKey("userId")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("userId"))) {
+				managerId = Integer.valueOf(jsonObject.getString("userId"));// 设总
+			}
+		}
+		if (jsonObject.containsKey("contStatus")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("contStatus"))) {
+				cont_status = Integer.valueOf(jsonObject.getString("contStatus"));// 合同状态
+			}
+		}
+		if (jsonObject.containsKey("province")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("province"))) {
+				province = jsonObject.getString("province");// 省份
+			}
+		}
+		if (jsonObject.containsKey("startDate")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("startDate"))) {
+				startTime = jsonObject.getString("startDate") + "-01";// 开始时间
+			}
+		}
+		if (jsonObject.containsKey("endDate")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("endDate"))) {
+				endTime = jsonObject.getString("endDate") + "-01";// 结束时间
+
+			}
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cont_type", cont_type);
+		map.put("pro_stage", pro_stage);
+		map.put("managerId", managerId);
+		map.put("cont_status", cont_status);
+		map.put("province", province);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		return map;
+	}
+
+	// 查询报表页码相关
+	@Override
+	public Pager pagerTotal(Map<String, Object> map, Integer page) {
+		int totalRow = Integer.parseInt(contractDao.countTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(page);
+		pager.setTotalRow(totalRow);
+
+		return pager;
+	}
+
+	/**
+	 * 将数字型字符串转换成字符串
+	 * 
+	 * @param str
+	 * @return
+	 */
+	private String intStrToStr(String str) {
+		String[] arr = { "规划", "预可研", "可研", "项目建议书", "初步设计", "发包、招标设计", "施工详图", "竣工图", "其他" };
+		if (StringUtil.strIsNotEmpty(str)) {
+			for (int i = 0; i < arr.length; i++) {
+				if (str.contains(String.valueOf(i))) {
+					str = str.replaceAll(String.valueOf(i), arr[i]);
+				}
+			}
+			str = str.substring(0, str.length() - 1);// 去掉最后一个逗号
+		}
+		return str;
+	}
+
+	// 根据日期获取合同额到款对比表
+	@Override
+	public ComoCompareRemo findByDate(Date oneDate, Date twoDate) {
+
+		Object objectOne = contractDao.findByOneDate(oneDate);
+		Object objectTwo = contractDao.findByOneDate(twoDate);
+
+		ComoCompareRemo comoCompareRemo = new ComoCompareRemo();
+		Object[] objOne = (Object[]) objectOne;
+		comoCompareRemo.setComo_one((Float) objOne[0]);
+		comoCompareRemo.setRemo_one((Float) objOne[1]);
+		comoCompareRemo.setCont_num_one((Integer) objOne[2]);
+
+		Object[] objTwo = (Object[]) objectTwo;
+		comoCompareRemo.setComo_two((Float) objTwo[0]);
+		comoCompareRemo.setRemo_two((Float) objTwo[1]);
+		comoCompareRemo.setCont_num_two((Integer) objTwo[2]);
+
+		Float ratio_como = (Float) (((Float) objTwo[0] - (Float) objOne[0]) / ((Float) objOne[0]) * 100);
+		Float ratio_remo = (Float) (((Float) objTwo[1] - (Float) objOne[1]) / ((Float) objOne[1]) * 100);
+		Float ratio_conum = (Float) (((Float) objTwo[2] - (Float) objOne[2]) / ((Float) objOne[2]) * 100);
+
+		comoCompareRemo.setRatio_como(ratio_como + "%");
+		comoCompareRemo.setRatio_remo(ratio_remo + "%");
+		comoCompareRemo.setRatio_conum(ratio_conum + "%");
+		return comoCompareRemo;
+	}
+
+	// 导出光伏自营项目催款计划表
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public ResponseEntity<byte[]> exportProvisionPlan(Map<String, Object> map, String path) {
+		ResponseEntity<byte[]> byteww = null;
+
+		try {
+			ExcelHelper<PaymentPlanListForm> ex = new ExcelHelper<PaymentPlanListForm>();
+			/*
+			 * Calendar c = Calendar.getInstance(); c.setTime(new Date()); int
+			 * year = c.get(Calendar.YEAR);
+			 */
+
+			String startTime = (String) map.get("startTime");
+			String startPeriod;
+			String endPeriod;
+			String endTime = (String) map.get("endTime");
+
+			// String fileName = year + "年光伏自营项目催款计划表.xlsx";// 2007版(2003版受限)
+			String fileName;
+			if (startTime == null || endTime == null) {
+				fileName = "光伏自营项目催款计划表.xlsx";
+			} else {
+				startPeriod = startTime.substring(0, startTime.lastIndexOf("-"));
+				endPeriod = endTime.substring(0, endTime.lastIndexOf("-"));
+				fileName = startPeriod + "-" + endPeriod + "年光伏自营项目催款计划表.xlsx";
+			}
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+			List<Contract> listSource = contractDao.findContByParw(map, null);// 筛选元数据
+			Iterator<Contract> it = listSource.iterator();
+			List<PaymentPlanListForm> listGoal = contToProPlan(it);
+
+			// String titlE = String.valueOf(year);
+			// String title = "光伏自营项目催款计划表(" + titlE + "年签订项目)";
+			String title;
+			if (startTime == null || endTime == null) {
+				title = "光伏自营项目催款计划表签订项目";
+			} else {
+				startPeriod = startTime.substring(0, startTime.lastIndexOf("-"));
+				endPeriod = endTime.substring(0, endTime.lastIndexOf("-"));
+				title = "光伏自营项目催款计划表(" + startPeriod + "-" + endPeriod + "年签订项目)";
+			}
+
+			String[] header = { "行政区域", "工程名称", "业主名称", "合同金额", "累计已到款", "余额", "已开发票金额", "未开发票金额", "计划可催收款", "实际到款",
+					"合同条款", "催款结果", "备注" };
+
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
+			out.close();
+			byteww = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return byteww;
+	}
+
+	private List<PaymentPlanListForm> contToProPlan(Iterator<Contract> it) {
+		List<PaymentPlanListForm> listGoal = new ArrayList<PaymentPlanListForm>();
+		Float sum_cont_money = new Float(0f);// 合同金额
+		Float sum_remo_totalmoney = new Float(0.00f);// 2015年累计已到款
+		Float sum_balance_money = (float) 0.00;// 余额
+		Float sum_invo_totalmoney = (float) 0.00;// 已开发票金额
+		Float sum_invo_not_totalmoney = (float) 0.00;// 未开发票金额
+		// int i =0;
+		while (it.hasNext()) {
+			// i++;//用于弄序号
+			Contract contract = it.next();
+			PaymentPlanListForm provisionPlanForm = new PaymentPlanListForm();
+			provisionPlanForm.setProvince(contract.getProvince());// 行政区域
+			provisionPlanForm.setCont_project(contract.getCont_project());// 工程名称
+			provisionPlanForm.setCont_client(contract.getCont_client());// 业主名称
+			provisionPlanForm.setCont_money(contract.getCont_money());// 合同金额
+			provisionPlanForm.setRemo_totalmoney(contract.getRemo_totalmoney());// 到款金额
+
+			Float balance_money;
+			if (contract.getCont_money() == null) {
+				balance_money = null;
+			} else if (contract.getCont_money() != null && contract.getRemo_totalmoney() == null) {
+				balance_money = contract.getCont_money();
+			} else {
+				balance_money = contract.getCont_money() - contract.getRemo_totalmoney();
+			}
+
+			provisionPlanForm.setBalance_money(balance_money);// 余额
+			provisionPlanForm.setInvo_totalmoney(contract.getInvo_totalmoney());// 已开发票金额
+
+			Float invo_not_totalmoney;
+			if (contract.getCont_money() == null) {
+				invo_not_totalmoney = null;
+			} else if (contract.getCont_money() != null && contract.getInvo_totalmoney() == null) {
+				invo_not_totalmoney = contract.getCont_money();
+			} else {
+				invo_not_totalmoney = contract.getCont_money() - contract.getInvo_totalmoney();
+			}
+			provisionPlanForm.setInvo_not_totalmoney(invo_not_totalmoney);// 未开发票金额
+			provisionPlanForm.setRemark(contract.getCont_remark());// 备注
+
+			if (invo_not_totalmoney != null) {
+				sum_invo_not_totalmoney += invo_not_totalmoney;// 用于总计-未开发票金额
+			}
+			if (contract.getInvo_totalmoney() != null) {
+				sum_invo_totalmoney += contract.getInvo_totalmoney();// 用于总计-已开发票金额
+			}
+			if (contract.getRemo_totalmoney() != null) {
+				sum_remo_totalmoney += contract.getRemo_totalmoney();// 用于总计-累计已到款
+			}
+			if (contract.getCont_money() != null) {
+				sum_cont_money += contract.getCont_money();// 用于总计-合同金额
+			}
+			if (balance_money != null) {
+				sum_balance_money += balance_money;// 用于总计-余额
+			}
+			listGoal.add(provisionPlanForm);
+
+		}
+		System.out.println("sum_cont_money:" + sum_cont_money);
+		System.out.println("sum_remo_totalmoney:" + sum_remo_totalmoney);
+		PaymentPlanListForm provisionPlanForm = new PaymentPlanListForm();
+		provisionPlanForm.setCont_client("总计：");
+		provisionPlanForm.setCont_money(sum_cont_money);
+		provisionPlanForm.setRemo_totalmoney(sum_remo_totalmoney);
+		provisionPlanForm.setBalance_money(sum_balance_money);
+		provisionPlanForm.setInvo_totalmoney(sum_invo_totalmoney);
+		provisionPlanForm.setInvo_not_totalmoney(sum_invo_not_totalmoney);
+		listGoal.add(provisionPlanForm);
+
+		return listGoal;
+	}
+
+	// 查询催款列表
+	@Override
+	public List<PaymentPlanListForm> findPaymentPlanList(Map<String, Object> map, Pager pager, String path) {
+		List<Contract> listSource = contractDao.findContByParw(map, pager);
+		Iterator<Contract> it = listSource.iterator();
+		List<PaymentPlanListForm> listGoal = contToProPlan_payment(it);
+
+		return listGoal;
+	}
+
+	private List<PaymentPlanListForm> contToProPlan_payment(Iterator<Contract> it) {
+		List<PaymentPlanListForm> listGoal = new ArrayList<PaymentPlanListForm>();
+		// int i =0;
+		while (it.hasNext()) {
+			// i++;//用于弄序号
+			Contract contract = it.next();
+			PaymentPlanListForm provisionPlanForm = new PaymentPlanListForm();
+			provisionPlanForm.setProvince(contract.getProvince());// 行政区域
+			provisionPlanForm.setCont_project(contract.getCont_project());// 工程名称
+			provisionPlanForm.setCont_client(contract.getCont_client());// 业主名称
+			provisionPlanForm.setCont_money(contract.getCont_money());// 合同金额
+			provisionPlanForm.setRemo_totalmoney(contract.getRemo_totalmoney());// 到款金额
+
+			Float balance_money;
+			if (contract.getCont_money() == null) {
+				balance_money = null;
+			} else if (contract.getCont_money() != null && contract.getRemo_totalmoney() == null) {
+				balance_money = contract.getCont_money();
+			} else {
+				balance_money = contract.getCont_money() - contract.getRemo_totalmoney();
+			}
+			provisionPlanForm.setBalance_money(balance_money);// 余额
+
+			provisionPlanForm.setInvo_totalmoney(contract.getInvo_totalmoney());// 已开发票金额
+			Float invo_not_totalmoney;
+			if (contract.getCont_money() == null) {
+				invo_not_totalmoney = null;
+			} else if (contract.getCont_money() != null && contract.getInvo_totalmoney() == null) {
+				invo_not_totalmoney = contract.getCont_money();
+			} else {
+				invo_not_totalmoney = contract.getCont_money() - contract.getInvo_totalmoney();
+			}
+			provisionPlanForm.setInvo_not_totalmoney(invo_not_totalmoney);// 未开发票金额
+			provisionPlanForm.setRemark(contract.getCont_remark());// 备注
+			listGoal.add(provisionPlanForm);
+
+		}
+		return listGoal;
+	}
+
+	// 查询催款列表页码相关
+	@Override
+	public Pager pagerTotal_payment(Map<String, Object> map, Integer page) {
+		int totalRow = Integer.parseInt(contractDao.countTotal_payment(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(page);
+		pager.setTotalRow(totalRow);
+
+		return pager;
 	}
 
 }

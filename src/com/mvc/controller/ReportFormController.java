@@ -1,24 +1,30 @@
 package com.mvc.controller;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mvc.entity.PlanProjectForm;
+import com.mvc.entity.ProjectStatisticForm;
+
+import com.mvc.entity.ComoCompareRemo;
+import com.mvc.entity.PaymentPlanListForm;
 import com.mvc.service.ReportFormService;
-import com.utils.ExcelHelper;
-import com.utils.FileHelper;
+import com.utils.Pager;
+import com.utils.StringUtil;
+
+import net.sf.json.JSONObject;
 
 /**
  * 报表统计控制器
@@ -43,33 +49,205 @@ public class ReportFormController {
 		return "reportForm/index";
 	}
 
-	@RequestMapping("/selectPlanProject.do")
-	public ResponseEntity<byte[]> selectPlanProject(HttpServletRequest request) {
-		// 前台参数暂留
-		// Integer cont_state
-		// =Integer.valueOf(request.getParameter("contState"));
-		ResponseEntity<byte[]> byteArr = null;
-		ExcelHelper<PlanProjectForm> ex = new ExcelHelper<PlanProjectForm>();
-		String[] headers = { "序号", "项目名称", "项目设总", "装机容量（MW）", "合同状态", "合同额（万元）", "签订时间" };
-		List<PlanProjectForm> list = reportFormService.findPlanProject(null, null, null);
-		try {
-			Calendar c = Calendar.getInstance();
-			c.setTime(new Date());
-			int year = c.get(Calendar.YEAR);
-			String fileName = year + "年光电院承担规划项目表.xls";
-			String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
-			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+	/**
+	 * 导出光电院项目分项统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportProjectListBylimits.do")
+	public ResponseEntity<byte[]> exportProjectStatistic(HttpServletRequest request) {
+		Integer cont_type = null;
+		String pro_stage = null;
+		Integer managerId = null;
+		Integer cont_status = null;
+		String province = null;
+		String startTime = null;
+		String endTime = null;
 
-			OutputStream out = new FileOutputStream(path);
-			ex.exportExcel(headers, list, out);
-			out.close();
-			byteArr = FileHelper.downloadFile(fileName, path);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (StringUtil.strIsNotEmpty(request.getParameter("contType"))) {
+			cont_type = Integer.valueOf(request.getParameter("contType"));// 合同类型
 		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("proStage"))) {
+			pro_stage = request.getParameter("proStage");// 项目阶段
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
+			System.out.println("dsag" + request.getParameter("userId"));
+			managerId = Integer.valueOf(request.getParameter("userId"));// 设总
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("contStatus"))) {
+			cont_status = Integer.valueOf(request.getParameter("contStatus"));// 合同状态
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
+			province = request.getParameter("province");// 省份
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
+			startTime = request.getParameter("startDate") + "-01";// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			endTime = request.getParameter("endDate") + "-01";// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cont_type", cont_type);
+		map.put("pro_stage", pro_stage);
+		map.put("managerId", managerId);
+		map.put("cont_status", cont_status);
+		map.put("province", province);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = reportFormService.exportProjectStatistic(map, path);
 		return byteArr;
 	}
+
+	/**
+	 * 查询光电院项目分项统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectProjectListBylimits.do")
+	public @ResponseBody String selectProjectStatistic(HttpServletRequest request) {
+		System.out.println("查询催款列表获取  进来了");
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
+		Integer page = Integer.parseInt(request.getParameter("page"));// 指定页码
+
+		Map<String, Object> map = reportFormService.JsonObjToMap(jsonObject);
+		Pager pager = reportFormService.pagerTotal(map, page);
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		List<ProjectStatisticForm> list = reportFormService.findProjectStatistic(map, pager, path);
+
+		jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+	}
+	
+	/*
+	 * ***********************************王慧敏报表开始*******************************
+	 */
+	/**
+	 * 查询光伏自营项目催款计划表
+	 */
+	@RequestMapping("/selectPaymentPlanList.do")
+	public @ResponseBody String selectPaymentPlanList(HttpServletRequest request){
+		JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
+		Integer page=Integer.parseInt(request.getParameter("page"));//分页
+		Map<String, Object> map=reportFormService.JsonObjToMap(jsonObject);
+		Pager pager=reportFormService.pagerTotal_payment(map, page);
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		List<PaymentPlanListForm> list=reportFormService.findPaymentPlanList(map, pager, path);
+		
+		jsonObject=new JSONObject();
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+		
+
+
+	}
+	/**
+	 * 导出光伏自营项目催款计划表
+	 */
+	@RequestMapping("/exportPaymentPlanList.do")
+	public ResponseEntity<byte[]> exportPaymentPlanList(HttpServletRequest request){
+		String province = null;// 行政区域
+		String cont_project=null;// 工程名称 && 项目名称
+		String cont_client=null;// 业主名称 && 业主公司名称
+		Float cont_money = null;// 合同金额
+		Float remo_totalmoney=null;// 2015年累计已到款
+		Float balance_money=null;// 余额
+		Float invo_totalmoney=null;// 已开发票金额
+		Float noinvo_totalmoney=null;// 未开发票金额
+		String startTime = null;
+		String endTime = null;
+		
+		if(StringUtil.strIsNotEmpty(request.getParameter("province"))){
+			province=request.getParameter("province");//行政区域
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("contProject"))){
+			cont_project=request.getParameter("contProject");//工程名称 && 项目名称			
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("contClient"))){
+			cont_client=request.getParameter("contClient");//业主名称 && 业主公司名称
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("contMoney"))){
+			cont_money=Float.valueOf(request.getParameter("contMoney"));//合同金额
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("remoTotalmoney"))){
+			remo_totalmoney=Float.valueOf(request.getParameter("remoTotalmoney"));//累计已到款
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("balanceMoney"))){
+			balance_money=Float.valueOf(request.getParameter("balanceMoney"));//余额
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("invoTotalmoney"))){
+			invo_totalmoney=Float.valueOf(request.getParameter("invoTotalmoney"));// 已开发票金额
+		}
+		if(StringUtil.strIsNotEmpty(request.getParameter("noinvoTotalmoney"))){
+			noinvo_totalmoney=Float.valueOf(request.getParameter("noinvoTotalmoney"));// 未开发票金额
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
+			startTime = request.getParameter("startDate") + "-01";// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			endTime = request.getParameter("endDate") + "-01";// 结束时间
+		}
+
+		Map<String, Object> map=new HashMap<String,Object>();
+		map.put("province", province);
+		map.put("cont_project", cont_project);
+		map.put("cont_client", cont_client);
+		map.put("cont_money", cont_money);
+		map.put("remo_totalmoney", remo_totalmoney);
+		map.put("balance_money", balance_money);
+		map.put("invo_totalmoney", invo_totalmoney);
+		map.put("noinvo_totalmoney", noinvo_totalmoney);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+		
+		String path=request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		ResponseEntity<byte[]> byteww=reportFormService.exportProvisionPlan(map, path);
+		return byteww;
+	}
+	
+	
+	
+	
+	/*
+	 * ***********************************王慧敏报表结束*******************************
+	 */
+
+	/*
+	 * ***********************************张姣娜报表开始*******************************
+	 */
+	/**
+	 * 根据日期查询合同额到款对比表
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/selectComoRemoAnalyse.do")
+	public @ResponseBody String findComoRemoAnalyse(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy");
+		Date dateOne = null;
+		Date dateTwo = null;
+		try {
+			dateOne = format.parse(request.getParameter("beginYear"));
+			dateTwo = format.parse(request.getParameter("endYear"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
+		jsonObject.put("comoCompareRemo", comoCompareRemo);
+		return jsonObject.toString();
+	}
+	/*
+	 * ***********************************张姣娜报表结束*******************************
+	 */
+
 
 }

@@ -75,7 +75,7 @@ public class ContractServiceImpl implements ContractService {
 		contract = (Contract) JSONUtil.JSONToObj(jsonObject.toString(), Contract.class);// 将json对象转换成实体对象，注意必须和实体类型一致
 		contract.setCont_initiation(1);// 已立项
 		contract.setCont_ishistory(0);// 未删除
-		contract.setCont_state(0);// 合同状态
+		contract.setCont_state(0);// 项目状态
 		contract.setCont_rank(1);// 合同等级
 		contract.setCompany_type("0");// 公司类型
 		contract.setCont_ctime(date);// 合同创建时间
@@ -255,7 +255,7 @@ public class ContractServiceImpl implements ContractService {
 					contract.setCont_cnum(jsonObject.getString("cont_cnum"));// （甲方）业主方编号
 				}
 				if (jsonObject.containsKey("proStage")) {
-					contract.setProStage(jsonObject.getString("proStage"));// 项目阶段
+					contract.setPro_stage(jsonObject.getString("proStage"));// 项目阶段
 				}
 				if (jsonObject.containsKey("cont_stime")) {
 					contract.setCont_stime(format.parse(jsonObject.getString("cont_stime")));// 合同签订时间
@@ -354,7 +354,7 @@ public class ContractServiceImpl implements ContractService {
 					contract.setCont_remark(jsonObject.getString("cont_remark"));// 备注
 				}
 
-				contract.setCont_state(0);// 状态,初始默认为在建 0:在建,1:竣工,2:停建
+				contract.setCont_state(0);// 项目状态,初始默认为在建 0:在建,1:竣工,2:停建
 				// 存入数据库
 				contract = contractRepository.saveAndFlush(contract);
 
