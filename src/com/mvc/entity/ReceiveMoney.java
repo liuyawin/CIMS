@@ -34,6 +34,10 @@ public class ReceiveMoney {
 	private String remo_remark;// 备注
 	private Integer remo_isdelete;// 是否删除，0表示：未删除，1表示已删除
 
+	// 以下为冗余字段，用于报表统计
+	private String province;// 该合同对应的区域
+	private Date cont_stime;// 合同创建时间
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer getRemo_id() {
@@ -124,6 +128,22 @@ public class ReceiveMoney {
 
 	public void setRemo_isdelete(Integer remo_isdelete) {
 		this.remo_isdelete = remo_isdelete;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public Date getCont_stime() {
+		return cont_stime;
+	}
+
+	public void setCont_stime(Date cont_stime) {
+		this.cont_stime = cont_stime;
 	}
 
 }

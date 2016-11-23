@@ -22,6 +22,7 @@ import com.base.constants.ReportFormConstants;
 import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.NewComoAnalyse;
+import com.mvc.entity.NewRemoAnalyse;
 import com.mvc.entity.NoBackContForm;
 import com.mvc.entity.PaymentPlanListForm;
 import com.mvc.service.ReportFormService;
@@ -207,8 +208,16 @@ public class ReportFormController {
 		session.setAttribute(SessionKeyConstants.END_YEAR, dateTwo);
 		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
 		List<NewComoAnalyse> newComoAnalyseList = reportFormService.findComoByDate(dateOne, dateTwo);
+		List<NewRemoAnalyse> newRemoAnalysesList = reportFormService.findRemoByDate(dateOne, dateTwo);
+		for (int i = 0; i < newRemoAnalysesList.size(); i++) {
+			System.out.println("结果集：" + newRemoAnalysesList.get(i).getOrder_number() + ";"
+					+ newRemoAnalysesList.get(i).getProvince() + ";" + newRemoAnalysesList.get(i).getRemo_one() + ";"
+					+ newRemoAnalysesList.get(i).getRemo_two() + ";" + newRemoAnalysesList.get(i).getRemo_before() + ";"
+					+ newRemoAnalysesList.get(i).getRemo_curr());
+		}
 		jsonObject.put("comoCompareRemo", comoCompareRemo);
 		jsonObject.put("newComoAnalyseList", newComoAnalyseList);
+		jsonObject.put("newRemoAnalysesList", newRemoAnalysesList);
 		return jsonObject.toString();
 	}
 
@@ -227,13 +236,13 @@ public class ReportFormController {
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 		String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORD_MODEL_PATH);// 模板路径
+		// 获取表三（到款分析表）的相关数据
+		List<NewRemoAnalyse> newRemoAnalyseList = reportFormService.findRemoByDate(firstDate, secondDate);
 		// 获取表二（合同额分析表）的数据
 		List<NewComoAnalyse> newComoAnalyseList = reportFormService.findComoByDate(firstDate, secondDate);
-		String total_one = newComoAnalyseList.get(0).getTotal_one().toString();// 第一年合同总金额
-		String total_two = newComoAnalyseList.get(0).getTotal_two().toString();// 第二年合同总金额
 		// 获取表一（合同额到款分析表）的数据
 		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(firstDate, secondDate);
-		Map<String, Object> contentMap = EntryToMap(comoCompareRemo, firstDate, secondDate, total_one, total_two);
+		Map<String, Object> contentMap = EntryToMap(comoCompareRemo, firstDate, secondDate);
 		// 图片相关
 		if (StringUtil.strIsNotEmpty(request.getParameter("chart1SVGStr"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("chart2SVGStr"))) {
@@ -271,7 +280,7 @@ public class ReportFormController {
 		}
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, newComoAnalyseList, contentMap, out, 1);
+			wh.export2007WordWithPic(modelPath, newComoAnalyseList, newRemoAnalyseList, contentMap, out);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -292,8 +301,7 @@ public class ReportFormController {
 	 * @param total_two
 	 * @return
 	 */
-	private Map<String, Object> EntryToMap(ComoCompareRemo comoCompareRemo, String firstDate, String secondDate,
-			String total_one, String total_two) {
+	private Map<String, Object> EntryToMap(ComoCompareRemo comoCompareRemo, String firstDate, String secondDate) {
 		Map<String, Object> contentMap = new HashMap<String, Object>();
 		// 表一相关数据
 		contentMap.put("${date_one}", firstDate);
@@ -307,9 +315,6 @@ public class ReportFormController {
 		contentMap.put("${ratio_como}", comoCompareRemo.getRatio_como());
 		contentMap.put("${ratio_remo}", comoCompareRemo.getRatio_remo());
 		contentMap.put("${ratio_conum}", comoCompareRemo.getRatio_conum());
-		// 表二相关数据
-		contentMap.put("${total_one}", total_one);
-		contentMap.put("${total_two}", total_two);
 		return contentMap;
 	}
 
@@ -377,6 +382,7 @@ public class ReportFormController {
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
 			startTime = request.getParameter("startDate") + "-01";// 开始时间
+			System.out.println("startTime:" + startTime);
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
 			endTime = request.getParameter("endDate") + "-01";// 结束时间

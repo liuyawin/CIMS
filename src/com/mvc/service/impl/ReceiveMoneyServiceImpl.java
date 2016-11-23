@@ -118,6 +118,8 @@ public class ReceiveMoneyServiceImpl implements ReceiveMoneyService {
 			if (jsonObject.containsKey("remo_id")) {
 				receiveMoney.setRemo_id(Integer.valueOf(jsonObject.getString("remo_id")));
 			}
+			receiveMoney.setCont_stime(contract.getCont_stime());
+			receiveMoney.setProvince(contract.getProvince());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

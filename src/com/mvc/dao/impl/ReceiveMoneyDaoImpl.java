@@ -180,4 +180,49 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		}
 		return true;
 	}
+
+	// 报表统计相关，根据日期统计到款情况
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> findRemoByDate(String firstDate, String secondDate) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder selectSql = new StringBuilder();
+		String begintime = "2010-01-01";
+		String endTime = firstDate + "-12-31";
+		selectSql.append(
+				"select cc.province,coalesce(aa.remo_one,0.00) remo_one,coalesce(bb.remo_two,0.00) remo_two ,coalesce(dd.remo_before,0.00) remo_before ,coalesce(ee.remo_curr,0.00) remo_curr from ");
+		selectSql.append(" (select province from receive_money r where r.remo_state=1 and (remo_time like '%"
+				+ firstDate + "%') union all ");
+		selectSql.append(" select province from receive_money r where r.remo_state=1 and (remo_time like '%"
+				+ secondDate + "%') union all ");
+		selectSql.append(
+				" select province from receive_money r where r.remo_state=1 and (remo_time like '%" + secondDate
+						+ "%') and (cont_stime between '" + begintime + "'" + " and '" + endTime + "') union all ");
+		selectSql.append(" select province from receive_money r where r.remo_state=1 and (remo_time like '%"
+				+ secondDate + "%') and (cont_stime like '%" + secondDate + "%')) as cc ");
+		selectSql.append(" left join ");
+		selectSql
+				.append("  (select province,coalesce(sum(remo_amoney),0.00) remo_one from receive_money where remo_state=1  and (remo_time like '%"
+						+ firstDate + "%')  group by province) as aa ");
+		selectSql.append(" on aa.province=cc.province left join ");
+		selectSql
+				.append(" (select province,coalesce(sum(remo_amoney),0.00) remo_two from receive_money where remo_state=1  and (remo_time like '%"
+						+ secondDate + "%')  group by province) as bb ");
+		selectSql.append(" on bb.province=cc.province left join  ");
+		selectSql
+				.append(" (select province,coalesce(sum(remo_amoney),0.00) remo_before from receive_money where remo_state=1  and (remo_time like '%"
+						+ secondDate + "%') and (cont_stime between '" + begintime + "'" + " and '" + endTime
+						+ "') group by province) as dd ");
+		selectSql.append(" on dd.province=cc.province left join ");
+		selectSql
+				.append(" (select province,coalesce(sum(remo_amoney),0.00) remo_curr from receive_money where remo_state=1  and (remo_time like '%"
+						+ secondDate + "%') and (cont_stime like '%" + secondDate + "%') group by province) as ee ");
+		selectSql.append(" on ee.province=cc.province ");
+		selectSql.append(" group by province ");
+
+		Query query = em.createNativeQuery(selectSql.toString());
+		List<Object> result = query.getResultList();
+		em.close();
+		return result;
+	}
 }

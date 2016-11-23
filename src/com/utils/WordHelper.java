@@ -32,17 +32,11 @@ import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 
-public class WordHelper<T> {
+import com.mvc.entity.NewRemoAnalyse;
 
-	/**
-	 * 导出2007版word（模板）
-	 * 
-	 * @param path
-	 * @param list
-	 * @param out
-	 */
-	public void export2007Word(String path, Collection<T> list, Map<String, Object> contentMap, OutputStream out,
-			Integer tableOrder) {
+public class WordHelper<T> {
+	public void export2007WordWithPic(String path, Collection<T> list, List<NewRemoAnalyse> newRemoAnalyseList,
+			Map<String, Object> contentMap, OutputStream out) {
 		// 读取模板
 		FileInputStream in = null;
 		XWPFDocument doc = null;
@@ -53,7 +47,96 @@ public class WordHelper<T> {
 			// 替换模版中的变量(包含添加图片)
 			generateWord(doc, contentMap);
 			// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
-			dynamicWord(doc, list, tableOrder);
+			dynamicWord(doc, list, 1);
+			// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
+			dynamicWordqqqqq(doc, newRemoAnalyseList, 2);
+
+			write2007Out(doc, out);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void dynamicWordqqqqq(XWPFDocument doc, List<NewRemoAnalyse> list, Integer tableOrder) {
+		try {
+			List<XWPFTable> tables = doc.getTables();
+			XWPFTable table = tables.get(tableOrder);// 变量******
+			XWPFTableRow row = table.getRow(0);
+			List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
+			List<XWPFTableCell> cells = row.getTableCells();// 表头
+			XWPFTableCell cell = null;
+			CTTcPr cellPr = null;
+			int colNum = cells.size();
+			for (int i = 0; i < colNum; i++) {
+				cell = cells.get(i);
+				cellPr = cell.getCTTc().getTcPr();
+				BigInteger width = cellPr.getTcW().getW();// 获取单元格宽度
+				widthList.add(width);
+			}
+			for (int i = 0; i < list.size(); i++) {
+				row = table.createRow();
+				cells = row.getTableCells();
+				for (int j = 0; j < colNum; j++) {
+					cell = cells.get(j);
+					String value = "";
+					switch (j) {
+					case 0:
+						value = list.get(i).getOrder_number();
+						break;
+					case 1:
+						value = list.get(i).getProvince();
+						break;
+					case 2:
+						value = list.get(i).getRemo_one();
+						break;
+					case 3:
+						value = list.get(i).getRemo_two();
+						break;
+					case 4:
+						value = list.get(i).getRemo_before();
+						break;
+					case 5:
+						value = list.get(i).getRemo_curr();
+						break;
+					default:
+						break;
+					}
+					if (value != null) {
+						cell.setText(value);// 写入单元格内容
+					}
+					cellPr = cell.getCTTc().addNewTcPr();
+					cellPr.addNewTcW().setW(widthList.get(j));// 设置单元格宽度
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 导出2007版word（模板）
+	 * 
+	 * @param path
+	 * @param list
+	 * @param out
+	 */
+	public void export2007Word(String path, Collection<T> list, Collection<T> list2, Map<String, Object> contentMap,
+			OutputStream out) {
+		// 读取模板
+		FileInputStream in = null;
+		XWPFDocument doc = null;
+		try {
+			in = new FileInputStream(new File(path));
+			doc = new XWPFDocument(in);
+
+			// 替换模版中的变量(包含添加图片)
+			generateWord(doc, contentMap);
+			// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
+			dynamicWord(doc, list, 1);
+			// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
+			dynamicWord(doc, list2, 2);
 
 			write2007Out(doc, out);
 		} catch (FileNotFoundException e) {

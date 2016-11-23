@@ -10,7 +10,7 @@ package com.mvc.entity;
  * @date 2016年11月17日
  */
 public class NewRemoAnalyse {
-
+	private String order_number;// 序号
 	private String province;// 省份
 	private String remo_one;// 第一年该省合同到款总金额
 	private String remo_two;// 第二年该省合同到款总金额
@@ -55,5 +55,13 @@ public class NewRemoAnalyse {
 
 	public void setRemo_curr(String remo_curr) {
 		this.remo_curr = remo_curr;
+	}
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
 	}
 }
