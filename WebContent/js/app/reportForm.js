@@ -566,6 +566,7 @@ app
 									}
 								}
 								paymentPlanListLimits = JSON.stringify(reportForm.paymentLimit);
+
 								services.getPaymentPlanList({
 									limit : paymentPlanListLimits,
 									page : 1
