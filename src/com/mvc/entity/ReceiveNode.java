@@ -38,6 +38,10 @@ public class ReceiveNode implements Serializable {
 	private ProjectStage projectStage;// fk外键，关联阶段
 	private Integer reno_isdelete;// 0:未删除，1:已删除
 
+	// 以下为冗余字段，用于报表统计
+	private Date cont_stime;// 合同签订日期
+	private String province;// 该合同对应的区域
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer getReno_id() {
@@ -162,6 +166,22 @@ public class ReceiveNode implements Serializable {
 
 	public void setReno_isdelete(Integer reno_isdelete) {
 		this.reno_isdelete = reno_isdelete;
+	}
+
+	public Date getCont_stime() {
+		return cont_stime;
+	}
+
+	public void setCont_stime(Date cont_stime) {
+		this.cont_stime = cont_stime;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
 	}
 
 }

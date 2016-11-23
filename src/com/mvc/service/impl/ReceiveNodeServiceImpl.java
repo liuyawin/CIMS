@@ -77,6 +77,8 @@ public class ReceiveNodeServiceImpl implements ReceiveNodeService {
 			receiveNode.setUser(user);
 			Contract contract = contractRepository.selectContById(cont_id);// 所属合同
 			receiveNode.setContract(contract);
+			receiveNode.setCont_stime(contract.getCont_stime());
+			receiveNode.setProvince(contract.getProvince());
 			receiveNode.setReno_isdelete(0);// 默认未删除
 
 			if (jsonObject.containsKey("projectStage")) {

@@ -585,6 +585,18 @@ public class ReportFormServiceImpl implements ReportFormService {
 			} else {
 				newRemoAnalyse.setRemo_curr(object[4].toString());
 			}
+			if ((double) object[5] == 0) {
+				newRemoAnalyse.setExp_remo_two_curr("");
+			} else {
+				Double exp_remo_two_curr = (double) object[5] - (double) object[2];
+				newRemoAnalyse.setExp_remo_two_curr(String.format("%.2f", exp_remo_two_curr));
+			}
+			if ((double) object[6] == 0) {
+				newRemoAnalyse.setExp_remo_two_before("");
+			} else {
+				Double exp_remo_two_before = (double) object[6] - (double) object[3];
+				newRemoAnalyse.setExp_remo_two_before(String.format("%.2f", exp_remo_two_before));
+			}
 			newRemos.add(newRemoAnalyse);
 		}
 		// 在列表末尾追加统计信息
@@ -592,12 +604,16 @@ public class ReportFormServiceImpl implements ReportFormService {
 		Double totalRemoTwo = (double) 0;
 		Double totalRemoBefore = (double) 0;
 		Double totalRemoCurr = (double) 0;
+		Double totalExpRemoTwoCurr = (double) 0;
+		Double totalExpRemoTwoBefore = (double) 0;
 		for (int i = 0; i < objects.size(); i++) {
 			Object[] object = (Object[]) objects.get(i);
 			totalRemoOne += (double) object[1];
 			totalRemoTwo += (double) object[2];
 			totalRemoBefore += (double) object[3];
 			totalRemoCurr += (double) object[4];
+			totalExpRemoTwoCurr += (double) object[5];
+			totalExpRemoTwoBefore += (double) object[6];
 		}
 		NewRemoAnalyse newRemoAnalyse = new NewRemoAnalyse();
 		newRemoAnalyse.setProvince("总计：");
@@ -605,6 +621,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 		newRemoAnalyse.setRemo_two(totalRemoTwo.toString());
 		newRemoAnalyse.setRemo_before(totalRemoBefore.toString());
 		newRemoAnalyse.setRemo_curr(totalRemoCurr.toString());
+		newRemoAnalyse.setExp_remo_two_curr(totalExpRemoTwoCurr.toString());
+		newRemoAnalyse.setExp_remo_two_before(totalExpRemoTwoBefore.toString());
 		newRemos.add(newRemoAnalyse);
 		return newRemos;
 	}
