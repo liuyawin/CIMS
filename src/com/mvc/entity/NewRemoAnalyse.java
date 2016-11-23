@@ -16,6 +16,8 @@ public class NewRemoAnalyse {
 	private String remo_two;// 第二年该省合同到款总金额
 	private String remo_before;// 第二年之前签订合同第二年中到款总金额
 	private String remo_curr;// 第二年新签合同第二年到款总金额
+	private String exp_remo_two_curr;// 第二年签订合同下一年预计到款额
+	private String exp_remo_two_before;// 第二年以前签订合同下一年预计到款额
 	private String remark;// 备注
 
 	public String getProvince() {
@@ -72,5 +74,21 @@ public class NewRemoAnalyse {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getExp_remo_two_curr() {
+		return exp_remo_two_curr;
+	}
+
+	public void setExp_remo_two_curr(String exp_remo_two_curr) {
+		this.exp_remo_two_curr = exp_remo_two_curr;
+	}
+
+	public String getExp_remo_two_before() {
+		return exp_remo_two_before;
+	}
+
+	public void setExp_remo_two_before(String exp_remo_two_before) {
+		this.exp_remo_two_before = exp_remo_two_before;
 	}
 }
