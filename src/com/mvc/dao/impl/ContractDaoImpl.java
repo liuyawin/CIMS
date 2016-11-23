@@ -447,77 +447,76 @@ public class ContractDaoImpl implements ContractDao {
 		em.close();
 		return result;
 	}
-	
-	//王慧敏操作，导出光伏自营项目催款计划表
-		@SuppressWarnings("unchecked")
-		@Override
-		public List<Contract> findContByParw(Map<String, Object> map, Pager pager) {
-			String province=(String) map.get("province");// 行政区域 
-			String cont_project=(String)map.get("cont_project");// 工程名称 && 项目名称
-			String cont_client=(String)map.get("cont_client");// 业主名称 && 业主公司名称
-			Float cont_money=(Float) map.get("cont_money");// 合同金额
-			Float remo_totalmoney=(Float) map.get("remo_totalmoney");// 2015年累计已到款
-			Float balance_money=(Float) map.get("balance_money");// 余额
-			Float invo_totalmoney=(Float) map.get("invo_totalmoney");// 已开发票金额
-			Float noinvo_totalmoney=(Float) map.get("noinvo_totalmoney");// 未开发票金额
-			String startTime = (String) map.get("startTime");
-			String endTime = (String) map.get("endTime");
-			
-			Integer offset = null;
-			Integer end = null;
-			if (pager != null) {
-				offset = pager.getOffset();
-				end = pager.getPageSize();
-			}
-			EntityManager em = emf.createEntityManager();
-			StringBuilder sql = new StringBuilder();
-			sql.append("select * from contract c where c.cont_ishistory=0");
-			if(province!=null){
-				sql.append(" and c.province='"+ province +"'");
-			}
-			if(cont_project!=null){
-				sql.append(" and c.cont_project='"+ cont_project +"'");
-			}
-			if(cont_client!=null){
-				sql.append(" and c.cont_client='"+ cont_client +"'");
-			}
-			if(cont_money!=null){
-				sql.append(" and c.cont_money='"+ cont_money +"'");
-			}
-			if(remo_totalmoney!=null){
-				sql.append(" and c.remo_totalmoney='"+ remo_totalmoney +"'");
-			}
-			if(balance_money!=null){
-				sql.append(" and c.balance_money='"+ balance_money +"'");
-			}
-			if(invo_totalmoney!=null){
-				sql.append(" and c.invo_totalmoney='"+ invo_totalmoney +"'");
-			}
-			if(noinvo_totalmoney!=null){
-				sql.append(" and c.noinvo_totalmoney='"+ noinvo_totalmoney +"'");
-			}
-			if (startTime != null && endTime != null) {
-				sql.append(" and c.cont_stime between '" + startTime + "'" + " and '" + endTime + "'");
-			}		
-			sql.append(" order by cont_id desc");
 
-			if (offset != null && end != null) {
-				sql.append(" limit "+offset+","+end);
-			}
-			Query query = em.createNativeQuery(sql.toString(), Contract.class);
-			List<Contract> list = query.getResultList();
-			em.close();
-			return list;
+	// 王慧敏操作，导出光伏自营项目催款计划表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Contract> findContByParw(Map<String, Object> map, Pager pager) {
+		String province = (String) map.get("province");// 行政区域
+		String cont_project = (String) map.get("cont_project");// 工程名称 && 项目名称
+		String cont_client = (String) map.get("cont_client");// 业主名称 && 业主公司名称
+		Float cont_money = (Float) map.get("cont_money");// 合同金额
+		Float remo_totalmoney = (Float) map.get("remo_totalmoney");// 2015年累计已到款
+		Float balance_money = (Float) map.get("balance_money");// 余额
+		Float invo_totalmoney = (Float) map.get("invo_totalmoney");// 已开发票金额
+		Float noinvo_totalmoney = (Float) map.get("noinvo_totalmoney");// 未开发票金额
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+
+		Integer offset = null;
+		Integer end = null;
+		if (pager != null) {
+			offset = pager.getOffset();
+			end = pager.getPageSize();
 		}
-			
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from contract c where c.cont_ishistory=0");
+		if (province != null) {
+			sql.append(" and c.province='" + province + "'");
+		}
+		if (cont_project != null) {
+			sql.append(" and c.cont_project='" + cont_project + "'");
+		}
+		if (cont_client != null) {
+			sql.append(" and c.cont_client='" + cont_client + "'");
+		}
+		if (cont_money != null) {
+			sql.append(" and c.cont_money='" + cont_money + "'");
+		}
+		if (remo_totalmoney != null) {
+			sql.append(" and c.remo_totalmoney='" + remo_totalmoney + "'");
+		}
+		if (balance_money != null) {
+			sql.append(" and c.balance_money='" + balance_money + "'");
+		}
+		if (invo_totalmoney != null) {
+			sql.append(" and c.invo_totalmoney='" + invo_totalmoney + "'");
+		}
+		if (noinvo_totalmoney != null) {
+			sql.append(" and c.noinvo_totalmoney='" + noinvo_totalmoney + "'");
+		}
+		if (startTime != null && endTime != null) {
+			sql.append(" and c.cont_stime between '" + startTime + "'" + " and '" + endTime + "'");
+		}
+		sql.append(" order by cont_id desc");
 
-	//查询催款列表总条数
-		@Override
+		if (offset != null && end != null) {
+			sql.append(" limit " + offset + "," + end);
+		}
+		Query query = em.createNativeQuery(sql.toString(), Contract.class);
+		List<Contract> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 查询催款列表总条数
+	@Override
 	public Long countTotal_payment(Map<String, Object> map) {
 		String province = (String) map.get("province");
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
-
+		
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");

@@ -42,14 +42,13 @@ public interface ReportFormService {
 	// 查询未返回合同统计表页码相关
 	Pager pagerTotalNoBack(Map<String, Object> map, Integer page);
 
-	/************************************************ 张姣娜 ***************************************/
-
 	// 导出未返回合同统计表
 	ResponseEntity<byte[]> exportNoBackCont(Map<String, Object> map, String path);
 
 	// 查询未返回合同统计表
 	List<NoBackContForm> findNoBackCont(Map<String, Object> map, Pager pager, String path);
 
+	/************************************************ 张姣娜 ***************************************/
 	// 根据日期获取合同额到款对比表
 	ComoCompareRemo findByDate(String firstDate, String secondDate);
 
@@ -58,12 +57,12 @@ public interface ReportFormService {
 
 	// 根据日期获取到款分析表
 	List<NewRemoAnalyse> findRemoByDate(String firstDate, String secondDate);
-	
-	/************************************************ 王慧敏 ***************************************/
-	//导出光伏自营项目催款计划表
-	ResponseEntity<byte[]> exportProvisionPlan(Map<String, Object> map,String path);
 
-		//查询光伏自营项目催款计划表
+	/************************************************ 王慧敏 ***************************************/
+	// 导出光伏自营项目催款计划表
+	ResponseEntity<byte[]> exportProvisionPlan(Map<String, Object> map, String path);
+
+	// 查询光伏自营项目催款计划表
 	List<PaymentPlanListForm> findPaymentPlanList(Map<String, Object> map, Pager pager, String path);
 
 	// 查询报表页码相关

@@ -35,4 +35,8 @@ public interface ReceiveMoneyDao {
 	
 	// 根据到款ID删除到款记录
 	Boolean delete(Integer remoId);
+	
+	//报表统计相关，根据日期统计到款情况
+	List<Object> findRemoByDate(String firstDate,String secondDate);
+	
 }
