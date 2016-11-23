@@ -38,6 +38,6 @@ public class PermissionConstants {
 
 	// 左侧功能栏所有权限:{合同管理, 票据管理, 用户管理，发票任务, 到款任务, 收款超时 ,工期超时}
 	public static final String[] leftPer = { "contManager", "billManager", "userManager", "invoiceTask", "remoTask",
-			"remoAlarm", "psAlarm" };
+			"remoAlarm", "psAlarm" ,"reportForm"};
 
 }

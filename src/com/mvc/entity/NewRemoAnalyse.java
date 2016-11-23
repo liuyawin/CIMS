@@ -16,6 +16,7 @@ public class NewRemoAnalyse {
 	private String remo_two;// 第二年该省合同到款总金额
 	private String remo_before;// 第二年之前签订合同第二年中到款总金额
 	private String remo_curr;// 第二年新签合同第二年到款总金额
+	private String remark;// 备注
 
 	public String getProvince() {
 		return province;
@@ -63,5 +64,13 @@ public class NewRemoAnalyse {
 
 	public void setOrder_number(String order_number) {
 		this.order_number = order_number;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

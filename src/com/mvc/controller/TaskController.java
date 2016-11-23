@@ -201,7 +201,7 @@ public class TaskController {
 				subTasks.add("seal");
 			if (jsonObject.containsKey("post")) // 邮寄
 				subTasks.add("post");
-			if (jsonObject.containsKey("file")) // 归档
+			if (jsonObject.containsKey("file")) // 归档（已返回）
 				subTasks.add("file");
 			Task taskResult = taskService.save(task);
 			boolean flag = false;

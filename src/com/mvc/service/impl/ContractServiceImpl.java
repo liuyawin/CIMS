@@ -412,4 +412,10 @@ public class ContractServiceImpl implements ContractService {
 		return list;
 	}
 
+	// 张姣娜：完成文书任务后更新合同状态
+	@Override
+	public Boolean updateContIsback(Integer contId, Integer state) {
+		return contractDao.updateContIsback(contId, state);
+	}
+
 }

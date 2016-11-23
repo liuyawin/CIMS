@@ -54,4 +54,8 @@ public interface ContractService {
 
 	// 根据合同名和方法类别获取合同列表
 	List<Contract> findConByNameAndMType(String contName, Integer methodType, Pager pager);
+
+	// 张姣娜：完成文书任务后更新合同状态
+	Boolean updateContIsback(Integer contId, Integer state);
+
 }

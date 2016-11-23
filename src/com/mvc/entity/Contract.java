@@ -36,49 +36,49 @@ public class Contract implements Serializable {
 	private String cont_onum;// 本公司合同编号
 	private String cont_cnum;// （甲方）业主方编号
 	private String cont_project;// 项目名称
-	private String province;// 新增：项目所在省........................
-	private String city;// 新增：项目所在市............................
-	private String pro_stage;// 新增：项目阶段(0=规划,1=预可研,2=可研,3=项目建议书,4=初步设计,5=发包、招标设计,6=施工详图,7=竣工图,8=其他).........................
+	private String province;// 项目所在省
+	private String city;// 项目所在市
+	private String pro_stage;// 项目阶段(0=规划,1=预可研,2=可研,3=项目建议书,4=初步设计,5=发包、招标设计,6=施工详图,7=竣工图,8=其他)
 	private Integer cont_state;// 项目状态,0:在建,1:竣工,2:停建
 	private Date cont_stime;// 合同签订日期
 	private User manager;// 项目设总（项目经理）
-	private User assistant_manager;// 新增：项目副设总（项目副经理），可为空......................
+	private User assistant_manager;// 项目副设总（项目副经理），可为空
 	private Integer cont_hasproxy;// 是否有委托书，0表示没有，1表示有
 	private Integer cont_initiation;// 是否立项，0:未立项，1:已立项(默认已立项)
-	private Float install_capacity;// 新增： 装机容量（MV）.......................
-	private Integer cont_isback;// 新增： 是否返回合同（归档）.......................
+	private Float install_capacity;// 装机容量（MV）
+	private Integer cont_isback;// 新增： 是否返回合同（归档）..............................
 
 	// 业主信息相关
 	private String cont_client;// 业主公司名称
 	private String cont_orgcodenum;// 组织机构代码证号
-	private String company_type;// 新增：企业性质(0=国有企业，1=事业单位，2=民营企业，3=国外企业，4=政府机关，5=其他)......................
+	private String company_type;// 企业性质(0=国有企业，1=事业单位，2=民营企业，3=国外企业，4=政府机关，5=其他)
 	private String cont_caddress;// 业主通讯地址
 	private String cont_czipcode;// 业主邮编编码
 	private String cont_cfax;// 业主传真
 	private Integer cont_avetaxpayer;// 增税人一般纳税人,(0=一般纳税人，1=小规模纳税人)
-	private Integer invoice_type;// 新增：发票类型(0=增值税专用发票，1=增值税普通发票).......................
+	private Integer invoice_type;// 发票类型(0=增值税专用发票，1=增值税普通发票)
 	private String cont_taxidennum;// 纳税人识别号
-	private String tel;// 新增：固定电话.............................
+	private String tel;// 固定电话
 	private String cont_bank;// 开户行
 	private String cont_account;// 账号
-	private String com_signaddress;// 新增：公司注册地址......................
+	private String com_signaddress;// 公司注册地址
 	private String cont_remark;// 备注（其他需要说明的情况）
 
 	// 业主联系人1相关信息
 	private String cont_cheader;// 联系人姓名
 	private String cont_ctel;// 联系方式
-	private String landline_tel;// 新增：固定电话......................
-	private String post;// 新增：职务...................................
+	private String landline_tel;// 固定电话
+	private String post;// 职务
 	private String cont_cdept;// 所在部门
 	private String cont_cemail;// 电子邮箱
 
 	// 业主联系人2相关信息
-	private String cont_cheader2;// 联系人姓名.........................
-	private String cont_ctel2;// 联系方式..............................
-	private String landline_tel2;// 新增：固定电话......................
-	private String post2;// 新增：职务...................................
-	private String cont_cdept2;// 所在部门..............................
-	private String cont_cemail2;// 电子邮箱.............................
+	private String cont_cheader2;// 联系人姓名
+	private String cont_ctel2;// 联系方式
+	private String landline_tel2;// 新增：固定电话
+	private String post2;// 职务
+	private String cont_cdept2;// 所在部门
+	private String cont_cemail2;// 电子邮箱
 
 	// 该字段暂时未用到
 	private String cont_saddress;// 合同签订地点
