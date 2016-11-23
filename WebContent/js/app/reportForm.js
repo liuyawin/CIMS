@@ -572,7 +572,7 @@ app
 									page : 1
 								}).success(function(data) {
 									reportForm.payPlanForms = data.list;// payPlanForms查询出来的列表（PaymentPlanForm）
-									pageTurn(data.totalPage, 1);
+									paymentPageTurn(data.totalPage, 1);
 								});
 							};
 							// lwt换页查找函数
@@ -585,7 +585,7 @@ app
 								});
 							}
 							// lwt换页
-							function pageTurn(totalPage, page) {
+							function paymentPageTurn(totalPage, page) {
 								var $pages = $(".tcdPageCode");
 								if ($pages.length != 0) {
 									$(".tcdPageCode").createPage({

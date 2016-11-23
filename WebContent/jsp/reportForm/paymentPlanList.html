@@ -50,21 +50,14 @@
 			<tr>
 				<th>行政区域</th>
 				<th>工程名称</th>
-				<th>业主名称</th> <<<<<<< HEAD
+				<th>业主名称</th>
 				<th>合同金额</th>
 				<th>累计已到款</th>
 				<th>余&nbsp;&nbsp;额</th>
 				<th>已开发票金额</th>
 				<th>未开发票金额</th>
 				<th>计划可催收额</th>
-				<th>实际到款</th> =======
-				<th>合同金额(万元)</th>
-				<th>累计已到款</th>
-				<th>余额(万元)</th>
-				<th>已开发票金额(万元)</th>
-				<th>未开发票金额(万元)</th>
-				<th>计划可催收额</th>
-				<th>实际到款(万元)</th> >>>>>>> 5c2c50ea8fb60fa69d8cd67607b3c55f3ccb7e82
+				<th>实际到款</th>
 				<th>合同条款</th>
 				<th>催款结果</th>
 				<th>备注</th>
@@ -72,33 +65,20 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="ppf in payPlanForms">
-				<td>{{ppf.province}}</td> <<<<<<< HEAD
+				<td>{{ppf.province}}</td>
 				<td>{{ppf.cont_project |cutString}}</td>
-				<td>{{ppf.cont_client |cutString}}</td> =======
-				<td>{{ppf.cont_project}}</td>
-				<td>{{ppf.cont_client}}</td> >>>>>>>
-				5c2c50ea8fb60fa69d8cd67607b3c55f3ccb7e82
+				<td>{{ppf.cont_client |cutString}}</td>
 				<td>{{ppf.cont_money}}</td>
-				<td>{{ppf.remo_totalmoney}}</td>
+				<td>{{ppf.remo_totalmoney }}</td>
 				<td>{{ppf.balance_money}}</td>
 				<td>{{ppf.invo_totalmoney}}</td>
-				<td>{{ppf.noinvo_totalmoney}}</td> <<<<<<< HEAD
+				<td>{{ppf.invo_not_totalmoney}}</td> 
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
 				<td>{{ppf.remark}}</td>
 			</tr>
-
-			=======
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td>{{ppf.remark}}</td>
-			</tr>
-
-			>>>>>>> 5c2c50ea8fb60fa69d8cd67607b3c55f3ccb7e82
 		</tbody>
 	</table>
 
