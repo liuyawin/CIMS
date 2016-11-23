@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.base.enums.ConExecStatus;
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
 import com.utils.Pager;
@@ -286,7 +287,7 @@ public class ContractDaoImpl implements ContractDao {
 
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select * from contract c where c.cont_ishistory=0");
+		sql.append("select * from contract c where c.cont_isback=" + ConExecStatus.post.value);
 
 		if (handler != null) {
 			sql.append(" and c.creator_id=" + handler);
@@ -516,7 +517,7 @@ public class ContractDaoImpl implements ContractDao {
 		String province = (String) map.get("province");
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
-		
+
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
@@ -532,5 +533,25 @@ public class ContractDaoImpl implements ContractDao {
 		BigInteger totalRow = (BigInteger) query.getSingleResult();
 		em.close();
 		return totalRow.longValue();
+	}
+
+	// 张姣娜：完成文书任务后更新合同状态
+	@Override
+	public Boolean updateContIsback(Integer contId, Integer state) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		try {
+			em.getTransaction().begin();
+			sql.append("update contract c set c.cont_isback=:cont_isback where c.cont_id=:cont_id");
+			Query query = em.createNativeQuery(sql.toString());
+			query.setParameter("cont_isback", state);
+			query.setParameter("cont_id", contId);
+			query.executeUpdate();
+			em.flush();
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+		return true;
 	}
 }
