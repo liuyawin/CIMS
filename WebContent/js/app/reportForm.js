@@ -284,7 +284,7 @@ app
 													var chart3Data = [];
 													var chart4Data = [];
 													var n1 = 0;
-													for(var i=0;i<reportForm.newComoAnalyseList.length;i++){
+													for(var i=0;i<reportForm.newComoAnalyseList.length-1;i++){
 														var arr1 = [];
 														if(reportForm.newComoAnalyseList[i].como_one){
 															arr1[0] = reportForm.newComoAnalyseList[i].province;
