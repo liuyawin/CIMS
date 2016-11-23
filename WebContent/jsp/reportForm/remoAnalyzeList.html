@@ -109,13 +109,13 @@
 			</tr>
 		</thead>
 		<tbody ng-show="table3Show">
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+			<tr ng-repeat="r in newRemoAnalysesList">
+				<td>{{$index + 1}}</td>
+				<td>{{r.province}}</td>
+				<td>{{r.remo_one}}</td>
+				<td>{{r.remo_two}}</td>
+				<td>{{r.remo_before}}</td>
+				<td>{{r.remo_curr}}</td>
 				<td></td>
 				<td></td>
 				<td></td>
