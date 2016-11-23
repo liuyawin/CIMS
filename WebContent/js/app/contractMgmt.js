@@ -686,40 +686,43 @@ app
 										.success(
 												function(data) {
 													contract.cont = data.contract;
-													var strs = data.contract.proStage
-															.split(",");
-													for (var i = 0; i < strs.length; i++) {
+													if (data.contract.pro_stage) {
+														var strs = data.contract.pro_stage
+																.split(",");
+														for (var i = 0; i < strs.length; i++) {
 
-														switch (strs[i]) {
-														case "0":
-															contract.proStage0 = "true";
-															break;
-														case "1":
-															contract.proStage1 = "true";
-															break;
-														case "2":
-															contract.proStage2 = "true";
-															break;
-														case "3":
-															contract.proStage3 = "true";
-															break;
-														case "4":
-															contract.proStage4 = "true";
-															break;
-														case "5":
-															contract.proStage5 = "true";
-															break;
-														case "6":
-															contract.proStage6 = "true";
-															break;
-														case "7":
-															contract.proStage7 = "true";
-															break;
-														case "8":
-															contract.proStage8 = "true";
-															break;
+															switch (strs[i]) {
+															case "0":
+																contract.proStage0 = "true";
+																break;
+															case "1":
+																contract.proStage1 = "true";
+																break;
+															case "2":
+																contract.proStage2 = "true";
+																break;
+															case "3":
+																contract.proStage3 = "true";
+																break;
+															case "4":
+																contract.proStage4 = "true";
+																break;
+															case "5":
+																contract.proStage5 = "true";
+																break;
+															case "6":
+																contract.proStage6 = "true";
+																break;
+															case "7":
+																contract.proStage7 = "true";
+																break;
+															case "8":
+																contract.proStage8 = "true";
+																break;
+															}
 														}
 													}
+
 												});
 							}
 							// zq：根据合同ID查询工期阶段的内容
@@ -871,9 +874,10 @@ app
 							}
 							// 添加单个工期阶段
 							contract.addOneStage = function() {
-								if(!contract.contract.manager){
+								if (!contract.contract.manager) {
 									alert("请先选择项目设总！");
-									return false;}
+									return false;
+								}
 								// 动态添加工期阶段
 								$(".overlayer").fadeIn(200);
 								$("#prstAdd").fadeIn(200);
@@ -1584,9 +1588,13 @@ app
 														if (data.contract.cont_stime) {
 															contract.contract.cont_stime = changeDateType(data.contract.cont_stime);
 														}
-														$("#province").val(data.contract.province);
+														$("#province")
+																.val(
+																		data.contract.province);
 														$("#province").change();
-														$("#city").val(data.contract.city);
+														$("#city")
+																.val(
+																		data.contract.city);
 														$("#city").change();
 													});
 									selectFileByConId(sessionStorage
@@ -1669,7 +1677,7 @@ app
 
 							// 验证金额输入格式
 							var $numberFormat = $(".numberFormat");
-							var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
+							var numberRegexp = /^\d+(\.{0,1}\d+){0,1}$/;
 							$(".numberFormat").blur(
 									function() {
 										if (!numberRegexp.test(this.value)) {
@@ -2010,6 +2018,27 @@ app.filter('conRank', function() {
 		else if (!input)
 			rank = "";
 		return rank;
+	}
+});
+// 合同状态的判断
+app.filter('conIsBack', function() {
+	return function(input) {
+		var status = "";
+		if (input == "0")
+			status = "待办";
+		else if (input == "1")
+			status = "在办";
+		else if (input == "2")
+			status = "在办";
+		else if (input == "3")
+			status = "在办";
+		else if (input == "4")
+			status = "已邮寄";
+		else if (input == "5")
+			status = "已签";
+		else if (!input)
+			status = "";
+		return status;
 	}
 });
 // 自定义表单验证日期格式

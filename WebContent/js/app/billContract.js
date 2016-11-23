@@ -636,7 +636,7 @@ app
 
 							// 验证金额输入格式
 							var $numberFormat = $(".numberFormat");
-							var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
+							var numberRegexp = /^\d+(\.{0,1}\d+){0,1}$/;
 							$(".numberFormat").blur(
 									function() {
 										if (!numberRegexp.test(this.value)) {
@@ -750,45 +750,46 @@ app.filter('conType', function() {
 	}
 });
 
-// 合同项目阶段的判断
+//合同项目阶段的判断
 app.filter('conProStage', function() {
 	return function(input) {
 		var type = "";
 		if (input) {
 			console.log(input);
 			strs = input.split(","); // 字符分割
-
+			console.log("项目阶段" + strs);
 			for (i = 0; i < strs.length; i++) {
+				var j = i + 1;
 				switch (strs[i]) {
 				case "0":
-					type += "规划   ";
+					type += "  " + j + "、规划  ;  ";
 					break;
 				case "1":
-					type += "预可研   ";
+					type += "  " + j + "、预可研  ;      ";
 					break;
 				case "2":
-					type += "可研   ";
+					type += "  " + j + "、可研  ;      ";
 					break;
 				case "3":
-					type += "项目建议书   ";
+					type += "  " + j + "、项目建议书  ;      ";
 					break;
 				case "4":
-					type += "初步设计   ";
+					type += "  " + j + "、初步设计  ;      ";
 					break;
 				case "5":
-					type += "发包、招标设计   ";
+					type += "  " + j + "、发包、招标设计  ;      ";
 					break;
 				case "6":
-					type += "施工详图   ";
+					type += "  " + j + "、施工详图  ;      ";
 					break;
 				case "7":
-					type += "竣工图    ";
+					type += "  " + j + "、竣工图  ;       ";
 					break;
 				case "8":
-					type += "其他   ";
+					type += "  " + j + "、其他   ;   ";
 					break;
 				default:
-					type += "";
+					type += " ";
 					break;
 				}
 			}
@@ -796,6 +797,7 @@ app.filter('conProStage', function() {
 		}
 	}
 });
+
 
 // 合同项目阶段的判断
 app.filter('conCompanyType', function() {

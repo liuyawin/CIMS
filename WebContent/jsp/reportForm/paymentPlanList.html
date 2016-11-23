@@ -8,8 +8,8 @@
 
 <div class="rightinfo">
 
-	<div class="tools">
-	   	<div>
+	<div>
+		<div>
 			<form action="exportPaymentPlanList.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
@@ -19,16 +19,17 @@
 								<div class="oneinline">
 									<label class="sr-only" for="province">Province</label> <select
 										class="dfselect layoutStyle" id="province"
-										ng-model="limit.province" name="province"></select>
+										ng-model="paymentLimit.province" name="province"></select>
+
 								</div>
 							</div>
 						</div></li>
 					<li><label>起止年月</label><input
 						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
-						ng-model="limit.startDate" placeholder="2016-01" id="beginTime"
-						name="startDate" /><label>—</label><input
+						ng-model="paymentLimit.startDate" placeholder="2016-01"
+						id="beginTime" name="startDate" /><label>—</label><input
 						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
-						ng-model="limit.endDate" placeholder="2016-01" id="endTime"
+						ng-model="paymentLimit.endDate" placeholder="2016-01" id="endTime"
 						name="endDate" /><span id="errorText" class="error-span">格式错误</span></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="getPaymentPlanList()"></li>
@@ -38,6 +39,10 @@
 
 			</form>
 		</div>
+		<ul style="text-align: right">
+			<li><span>金额单位：万元</span></li>
+		</ul>
+
 	</div>
 
 	<table class="tablelist">
@@ -46,13 +51,13 @@
 				<th>行政区域</th>
 				<th>工程名称</th>
 				<th>业主名称</th>
-				<th>合同金额(万元)</th>
+				<th>合同金额</th>
 				<th>累计已到款</th>
-				<th>余额(万元)</th>
-				<th>已开发票金额(万元)</th>
-				<th>未开发票金额(万元)</th>
+				<th>余&nbsp;&nbsp;额</th>
+				<th>已开发票金额</th>
+				<th>未开发票金额</th>
 				<th>计划可催收额</th>
-				<th>实际到款(万元)</th>
+				<th>实际到款</th>
 				<th>合同条款</th>
 				<th>催款结果</th>
 				<th>备注</th>
@@ -61,20 +66,19 @@
 		<tbody>
 			<tr ng-repeat="ppf in payPlanForms">
 				<td>{{ppf.province}}</td>
-				<td>{{ppf.cont_project}}</td>
-				<td>{{ppf.cont_client}}</td>
+				<td>{{ppf.cont_project |cutString}}</td>
+				<td>{{ppf.cont_client |cutString}}</td>
 				<td>{{ppf.cont_money}}</td>
-				<td>{{ppf.remo_totalmoney}}</td>
+				<td>{{ppf.remo_totalmoney }}</td>
 				<td>{{ppf.balance_money}}</td>
 				<td>{{ppf.invo_totalmoney}}</td>
-				<td>{{ppf.noinvo_totalmoney}}</td>
+				<td>{{ppf.invo_not_totalmoney}}</td> 
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
 				<td>{{ppf.remark}}</td>
 			</tr>
-			
 		</tbody>
 	</table>
 

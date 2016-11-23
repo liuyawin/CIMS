@@ -538,7 +538,7 @@ receiveMoneyApp
 							dateformat();// 格式化日期格式
 							// 验证金额输入格式
 							var $numberFormat = $(".numberFormat");
-							var numberRegexp = /^[1-9]\d*(\.\d+)?$/;
+							var numberRegexp = /^\d+(\.{0,1}\d+){0,1}$/;
 							$(".numberFormat").blur(
 									function() {
 										if (!numberRegexp.test(this.value)) {
