@@ -18,8 +18,6 @@ public class NewComoAnalyse {
 	private String ratio_two_provi;// 第二年该省合同占比
 	private String rise_ratio;// 两年的合同增长比例
 	private String remark;// 备注
-	private String total_one;// 第一年新签合同总金额
-	private String total_two;// 第二年新签合同总金额
 
 	public String getProvince() {
 		return province;
@@ -76,23 +74,6 @@ public class NewComoAnalyse {
 	public void setRise_ratio(String rise_ratio) {
 		this.rise_ratio = rise_ratio;
 	}
-
-	public String getTotal_one() {
-		return total_one;
-	}
-
-	public void setTotal_one(String total_one) {
-		this.total_one = total_one;
-	}
-
-	public String getTotal_two() {
-		return total_two;
-	}
-
-	public void setTotal_two(String total_two) {
-		this.total_two = total_two;
-	}
-
 	public String getOrder_number() {
 		return order_number;
 	}

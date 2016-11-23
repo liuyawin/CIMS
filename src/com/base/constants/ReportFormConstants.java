@@ -16,4 +16,7 @@ public class ReportFormConstants {
 
 	// 自营项目合同额及到款分析表word模版路径
 	public static final String WORD_MODEL_PATH = "/WEB-INF/wordTemp/template.docx";
+
+	// 报表图片路径
+	public static final String PIC_PATH = "/WEB-INF/picture";
 }

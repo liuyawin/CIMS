@@ -51,7 +51,12 @@
 			<tr>
 				<td colspan='2' class="width15 text-center">项目名称<label
 					class="left_length5 text_style">*</label></td>
-				<td colspan='2'>{{cont.cont_project}}</td>
+				<td colspan='6'>{{cont.cont_project}}</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="width15 text-center">装机容量（MW）<label
+					class="left_length5 text_style"></label></td>
+				<td colspan='2'>{{cont.install_capacity | receFloat}}</td>
 				<td colspan='2' class="width15 text-center">项目所在省市<label
 					class="left_length5 text_style">*</label></td>
 				<td colspan='2'>{{cont.province}}&nbsp;&nbsp;{{cont.city}}</td>
@@ -59,7 +64,7 @@
 			<tr>
 				<td colspan='2' class="width15 text-center">项目阶段<label
 					class="left_length5 text_style">*</label></td>
-				<td colspan='6'>{{cont.proStage | conProStage}}</td>
+				<td colspan='6'>{{cont.pro_stage | conProStage}}</td>
 			</tr>
 			<tr>
 				<td colspan='2' class="width15 text-center">项目状态<label

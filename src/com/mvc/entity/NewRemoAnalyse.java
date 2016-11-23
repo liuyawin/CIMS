@@ -10,12 +10,13 @@ package com.mvc.entity;
  * @date 2016年11月17日
  */
 public class NewRemoAnalyse {
-
+	private String order_number;// 序号
 	private String province;// 省份
 	private String remo_one;// 第一年该省合同到款总金额
 	private String remo_two;// 第二年该省合同到款总金额
 	private String remo_before;// 第二年之前签订合同第二年中到款总金额
 	private String remo_curr;// 第二年新签合同第二年到款总金额
+	private String remark;// 备注
 
 	public String getProvince() {
 		return province;
@@ -55,5 +56,21 @@ public class NewRemoAnalyse {
 
 	public void setRemo_curr(String remo_curr) {
 		this.remo_curr = remo_curr;
+	}
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

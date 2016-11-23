@@ -77,6 +77,7 @@ public class ContractServiceImpl implements ContractService {
 		contract.setCont_ishistory(0);// 未删除
 		contract.setCont_state(0);// 项目状态
 		contract.setCont_rank(1);// 合同等级
+		contract.setCont_isback(0);// 是否返回合同
 		contract.setCompany_type("0");// 公司类型
 		contract.setCont_ctime(date);// 合同创建时间
 		contract.setCreator(user);// 合同创建者
@@ -254,6 +255,9 @@ public class ContractServiceImpl implements ContractService {
 				if (jsonObject.containsKey("cont_cnum")) {
 					contract.setCont_cnum(jsonObject.getString("cont_cnum"));// （甲方）业主方编号
 				}
+				if (jsonObject.containsKey("install_capacity")) {
+					contract.setInstall_capacity(Float.parseFloat(jsonObject.getString("install_capacity")));// 装机容量
+				}
 				if (jsonObject.containsKey("proStage")) {
 					contract.setPro_stage(jsonObject.getString("proStage"));// 项目阶段
 				}
@@ -410,6 +414,12 @@ public class ContractServiceImpl implements ContractService {
 			break;
 		}
 		return list;
+	}
+
+	// 张姣娜：完成文书任务后更新合同状态
+	@Override
+	public Boolean updateContIsback(Integer contId, Integer state) {
+		return contractDao.updateContIsback(contId, state);
 	}
 
 }

@@ -2,14 +2,19 @@ package com.mvc.service;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
+
 import com.mvc.entity.ProjectStatisticForm;
 import com.utils.Pager;
+
 import net.sf.json.JSONObject;
+
 import com.mvc.entity.ComoCompareRemo;
 import com.mvc.entity.NewComoAnalyse;
 import com.mvc.entity.NewRemoAnalyse;
 import com.mvc.entity.NoBackContForm;
+import com.mvc.entity.PaymentPlanListForm;
 
 /**
  * 报表业务层
@@ -38,9 +43,7 @@ public interface ReportFormService {
 	Pager pagerTotalNoBack(Map<String, Object> map, Integer page);
 
 	// 导出未返回合同统计表
-	ResponseEntity<byte[]>
-
-	exportNoBackCont(Map<String, Object> map, String path);
+	ResponseEntity<byte[]> exportNoBackCont(Map<String, Object> map, String path);
 
 	// 查询未返回合同统计表
 	List<NoBackContForm> findNoBackCont(Map<String, Object> map, Pager pager, String path);
@@ -54,4 +57,14 @@ public interface ReportFormService {
 
 	// 根据日期获取到款分析表
 	List<NewRemoAnalyse> findRemoByDate(String firstDate, String secondDate);
+
+	/************************************************ 王慧敏 ***************************************/
+	// 导出光伏自营项目催款计划表
+	ResponseEntity<byte[]> exportProvisionPlan(Map<String, Object> map, String path);
+
+	// 查询光伏自营项目催款计划表
+	List<PaymentPlanListForm> findPaymentPlanList(Map<String, Object> map, Pager pager, String path);
+
+	// 查询报表页码相关
+	Pager pagerTotal_payment(Map<String, Object> map, Integer page);
 }

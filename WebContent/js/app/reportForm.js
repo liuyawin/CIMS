@@ -84,6 +84,9 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/unGetContList', {
 		templateUrl : '/CIMS/jsp/reportForm/unGetContList.html',
 		controller : 'ReportController'
+	}).when('/paymentPlanList', {
+		templateUrl : '/CIMS/jsp/reportForm/paymentPlanList.html',
+		controller : 'ReportController'
 	})
 } ]);
 app.constant('baseUrl', '/CIMS/');
@@ -132,13 +135,22 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 
-	services.outputComoCompareRemo = function(data) {
+	/*services.outputComoCompareRemo = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'reportForm/exportWord.do',
 			data : data
 		});
-	}
+<<<<<<< HEAD
+	}*/
+	//lwt:获取催款计划表-列表
+	services.getPaymentPlanList = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'reportForm/selectPaymentPlanList.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -252,23 +264,73 @@ app
 												function(data) {
 													// 表1
 													reportForm.comoCompareRemo = data.comoCompareRemo;
+													reportForm.newComoAnalyseList = data.newComoAnalyseList;
+													reportForm.newRemoAnalysesList = data.newRemoAnalysesList;
+													console.log(reportForm.newComoAnalyseList);
 													reportForm.table1Show = false;
+													reportForm.table2Show = false;
+													reportForm.table3Show = false;
 													if (reportForm.comoCompareRemo) {
 														reportForm.table1Show = true;
 													}
-													var chart1Data = [
-															[ 'Firefox', 45.0 ],
-															[ 'IE', 26.8 ],
-															{
-																name : 'Chrome',
-																y : 12.8,
-																sliced : true,
-																selected : true
-															},
-															[ 'Safari', 8.5 ],
-															[ 'Opera', 6.2 ],
-															[ 'Others', 0.7 ] ];
-
+													if (reportForm.newComoAnalyseList) {
+														reportForm.table2Show = true;
+													}
+													if (reportForm.newRemoAnalysesList) {
+														reportForm.table3Show = true;
+													}
+													var chart1Data = [];
+													var chart2Data = [];
+													var chart3Data = [];
+													var chart4Data = [];
+													var n1 = 0;
+													for(var i=0;i<reportForm.newComoAnalyseList.length-1;i++){
+														var arr1 = [];
+														if(reportForm.newComoAnalyseList[i].como_one){
+															arr1[0] = reportForm.newComoAnalyseList[i].province;
+															arr1[1] = +reportForm.newComoAnalyseList[i].como_one;
+														}
+														else continue;
+														
+														chart1Data[n1] = arr1;
+														n1++;
+													}
+													var n2 = 0;
+													for(var i=0;i<reportForm.newComoAnalyseList.length-1;i++){
+														var arr2 = [];
+														if(reportForm.newComoAnalyseList[i].como_two){
+															arr2[0] = reportForm.newComoAnalyseList[i].province;
+															arr2[1] = +reportForm.newComoAnalyseList[i].como_two;
+														}
+														else continue;
+														chart2Data[n2] = arr2;
+														n2++;
+													}
+													var n3 = 0;
+													for(var i=0;i<reportForm.newRemoAnalysesList.length-1;i++){
+														var arr3 = [];
+														if(reportForm.newRemoAnalysesList[i].remo_one){
+															arr3[0] = reportForm.newRemoAnalysesList[i].province;
+															arr3[1] = +reportForm.newRemoAnalysesList[i].remo_one;
+														}
+														else continue;
+														chart3Data[n3] = arr3;
+														n3++;
+													}
+													var n4 = 0;
+													for(var i=0;i<reportForm.newRemoAnalysesList.length-1;i++){
+														var arr4 = [];
+														if(reportForm.newRemoAnalysesList[i].remo_two){
+															arr4[0] = reportForm.newRemoAnalysesList[i].province;
+															arr4[1] = +reportForm.newRemoAnalysesList[i].remo_two;
+														}
+														else continue;
+														chart4Data[n4] = arr4;
+														n4++;
+													}
+													
+													console.log(chart2Data);
+														
 													Highcharts
 															.wrap(
 																	Highcharts.Chart.prototype,
@@ -287,8 +349,8 @@ app
 																{
 																	elementId : "#pieChart1",
 																	title : beginYear
-																			+ "年自营项目新签合同额分析图",
-																	name : "浏览器",
+																			+ "年自营项目新签合同额分析图（单位：万元）",
+																	name : "合同占比",
 																	data : chart1Data
 																});
 														chart1.init();
@@ -296,6 +358,57 @@ app
 																.val(
 																		$(
 																				"#pieChart1")
+																				.highcharts()
+																				.getSVG());
+													}
+													if (chart2Data) {
+														var chart2 = new Chart(
+																{
+																	elementId : "#pieChart2",
+																	title : endYear
+																			+ "年自营项目新签合同额分析图（单位：万元）",
+																	name : "合同占比",
+																	data : chart2Data
+																});
+														chart2.init();
+														$('#chart2-svg')
+																.val(
+																		$(
+																				"#pieChart2")
+																				.highcharts()
+																				.getSVG());
+													}
+													if (chart3Data) {
+														var chart3 = new Chart(
+																{
+																	elementId : "#pieChart3",
+																	title : beginYear
+																			+ "年自营项目到款额分析图（单位：万元）",
+																	name : "合同占比",
+																	data : chart3Data
+																});
+														chart3.init();
+														$('#chart3-svg')
+																.val(
+																		$(
+																				"#pieChart3")
+																				.highcharts()
+																				.getSVG());
+													}
+													if (chart4Data) {
+														var chart4 = new Chart(
+																{
+																	elementId : "#pieChart4",
+																	title : endYear
+																			+ "年自营项目到款额分析图（单位：万元）",
+																	name : "合同占比",
+																	data : chart4Data
+																});
+														chart4.init();
+														$('#chart4-svg')
+																.val(
+																		$(
+																				"#pieChart4")
 																				.highcharts()
 																				.getSVG());
 													}
@@ -327,7 +440,7 @@ app
 												});
 
 							}
-							reportForm.outputComoCompareRemo = function(e) {
+							/*reportForm.outputComoCompareRemo = function(e) {
 								preventDefault(e);
 								services.outputComoCompareRemo({
 									beginYear : $('#begin-year').val(),
@@ -339,7 +452,7 @@ app
 									alert("导出成功！")
 								});
 
-							}
+							}*/
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
 									// 阻止默认浏览器动作(W3C)
@@ -420,6 +533,66 @@ app
 										current : page,
 										backFn : function(p) {
 											findUnGetContListBylimits(p);
+										}
+									});
+								}
+							}
+							// lwt查询条件实体2016-11-17
+							var paymentPlanListLimits = {};
+							// lwt设定查询条件初始值2016-11-17
+							reportForm.paymentLimit = {
+								province : "",
+								startDate : "",
+								endDate : ""
+							};
+							// lwt:根据条件获取催款计划表-列表
+							reportForm.getPaymentPlanList = function() {
+								var errorText = $("#errorText").css("display");
+								if (errorText == "inline") {
+									alert("时间格式错误！");
+									return false;
+								}
+								if (reportForm.paymentLimit.startDate != "") {
+									if (reportForm.paymentLimit.endDate == "") {
+										alert("请输入截止时间！");
+										return false;
+									} else {
+										var time1 = new Date(reportForm.paymentLimit.startDate);
+										var time2 = new Date(reportForm.paymentLimit.endDate);
+										if (time1.getTime() > time2.getTime()) {
+											alert("截止时间不能大于起始时间！");
+											return false;
+										}
+									}
+								}
+								paymentPlanListLimits = JSON.stringify(reportForm.paymentLimit);
+								services.getPaymentPlanList({
+									limit : paymentPlanListLimits,
+									page : 1
+								}).success(function(data) {
+									reportForm.payPlanForms = data.list;// payPlanForms查询出来的列表（PaymentPlanForm）
+									pageTurn(data.totalPage, 1);
+								});
+							};
+							// lwt换页查找函数
+							function findPaymentPlanListBylimits(p) {
+								services.getPaymentPlanList({
+									limit : paymentPlanListLimits,
+									page : p
+								}).success(function(data) {
+									reportForm.payPlanForms = data.list;// payPlanForms查询出来的列表（PaymentPlanForm）
+								});
+							}
+							// lwt换页
+							function pageTurn(totalPage, page) {
+								var $pages = $(".tcdPageCode");
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											reportPage = p;
+											findPaymentPlanListBylimits(p);
 										}
 									});
 								}
