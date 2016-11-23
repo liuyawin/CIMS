@@ -265,17 +265,24 @@ app
 													// 表1
 													reportForm.comoCompareRemo = data.comoCompareRemo;
 													reportForm.newComoAnalyseList = data.newComoAnalyseList;
+													reportForm.newRemoAnalysesList = data.newRemoAnalysesList;
 													console.log(reportForm.newComoAnalyseList);
 													reportForm.table1Show = false;
 													reportForm.table2Show = false;
+													reportForm.table3Show = false;
 													if (reportForm.comoCompareRemo) {
 														reportForm.table1Show = true;
 													}
 													if (reportForm.newComoAnalyseList) {
 														reportForm.table2Show = true;
 													}
+													if (reportForm.newRemoAnalysesList) {
+														reportForm.table3Show = true;
+													}
 													var chart1Data = [];
 													var chart2Data = [];
+													var chart3Data = [];
+													var chart4Data = [];
 													var n1 = 0;
 													for(var i=0;i<reportForm.newComoAnalyseList.length;i++){
 														var arr1 = [];
@@ -289,7 +296,7 @@ app
 														n1++;
 													}
 													var n2 = 0;
-													for(var i=0;i<reportForm.newComoAnalyseList.length;i++){
+													for(var i=0;i<reportForm.newComoAnalyseList.length-1;i++){
 														var arr2 = [];
 														if(reportForm.newComoAnalyseList[i].como_two){
 															arr2[0] = reportForm.newComoAnalyseList[i].province;
@@ -298,6 +305,28 @@ app
 														else continue;
 														chart2Data[n2] = arr2;
 														n2++;
+													}
+													var n3 = 0;
+													for(var i=0;i<reportForm.newRemoAnalysesList.length-1;i++){
+														var arr3 = [];
+														if(reportForm.newRemoAnalysesList[i].remo_one){
+															arr3[0] = reportForm.newRemoAnalysesList[i].province;
+															arr3[1] = +reportForm.newRemoAnalysesList[i].remo_one;
+														}
+														else continue;
+														chart3Data[n3] = arr3;
+														n3++;
+													}
+													var n4 = 0;
+													for(var i=0;i<reportForm.newRemoAnalysesList.length-1;i++){
+														var arr4 = [];
+														if(reportForm.newRemoAnalysesList[i].remo_two){
+															arr4[0] = reportForm.newRemoAnalysesList[i].province;
+															arr4[1] = +reportForm.newRemoAnalysesList[i].remo_two;
+														}
+														else continue;
+														chart4Data[n4] = arr4;
+														n4++;
 													}
 													
 													console.log(chart2Data);
@@ -346,6 +375,40 @@ app
 																.val(
 																		$(
 																				"#pieChart2")
+																				.highcharts()
+																				.getSVG());
+													}
+													if (chart3Data) {
+														var chart3 = new Chart(
+																{
+																	elementId : "#pieChart3",
+																	title : beginYear
+																			+ "年自营项目到款额分析图（单位：万元）",
+																	name : "合同占比",
+																	data : chart3Data
+																});
+														chart3.init();
+														$('#chart3-svg')
+																.val(
+																		$(
+																				"#pieChart3")
+																				.highcharts()
+																				.getSVG());
+													}
+													if (chart4Data) {
+														var chart4 = new Chart(
+																{
+																	elementId : "#pieChart4",
+																	title : endYear
+																			+ "年自营项目到款额分析图（单位：万元）",
+																	name : "合同占比",
+																	data : chart4Data
+																});
+														chart4.init();
+														$('#chart4-svg')
+																.val(
+																		$(
+																				"#pieChart4")
 																				.highcharts()
 																				.getSVG());
 													}
