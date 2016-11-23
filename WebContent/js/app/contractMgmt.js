@@ -758,11 +758,13 @@ app
 									contract.task1.sign = "true";
 									contract.task1.seal = "true";
 									contract.task1.post = "true";
+									contract.task1.file = "true";
 								} else {
 									contract.task1.print = "false";
 									contract.task1.sign = "false";
 									contract.task1.seal = "false";
 									contract.task1.post = "false";
+									contract.task1.file = "false";
 								}
 							}
 

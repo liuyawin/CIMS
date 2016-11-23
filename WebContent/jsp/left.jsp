@@ -80,7 +80,7 @@
 			</ul>
 		</dd>
 		<!-- 报表统计 -->
-		<dd id="reportForm" class="reportForm" >
+		<dd id="reportForm" class="reportForm"  style="display: none">
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>报表统计
 			</div>
