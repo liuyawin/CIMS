@@ -189,17 +189,26 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		StringBuilder selectSql = new StringBuilder();
 		String begintime = "2010-01-01";
 		String endTime = firstDate + "-12-31";
+		Integer time = Integer.valueOf(secondDate) + 1;
+		String nextTime = time.toString();
 		selectSql.append(
-				"select cc.province,coalesce(aa.remo_one,0.00) remo_one,coalesce(bb.remo_two,0.00) remo_two ,coalesce(dd.remo_before,0.00) remo_before ,coalesce(ee.remo_curr,0.00) remo_curr from ");
+				" select cc.province,coalesce(aa.remo_one,0.00) remo_one,coalesce(bb.remo_two,0.00) remo_two ,");
+		selectSql.append(" coalesce(dd.remo_before,0.00) remo_before ,coalesce(ee.remo_curr,0.00) remo_curr , ");
+		selectSql.append(
+				" coalesce(ff.exp_remo_two_curr,0.00) exp_remo_two_curr ,coalesce(gg.exp_remo_two_before,0.00) exp_remo_two_before from ");
 		selectSql.append(" (select province from receive_money r where r.remo_state=1 and (remo_time like '%"
 				+ firstDate + "%') union all ");
 		selectSql.append(" select province from receive_money r where r.remo_state=1 and (remo_time like '%"
 				+ secondDate + "%') union all ");
-		selectSql.append(
-				" select province from receive_money r where r.remo_state=1 and (remo_time like '%" + secondDate
+		selectSql
+				.append(" select province from receive_money r where r.remo_state=1 and (remo_time like '%" + secondDate
 						+ "%') and (cont_stime between '" + begintime + "'" + " and '" + endTime + "') union all ");
 		selectSql.append(" select province from receive_money r where r.remo_state=1 and (remo_time like '%"
-				+ secondDate + "%') and (cont_stime like '%" + secondDate + "%')) as cc ");
+				+ secondDate + "%') and (cont_stime like '%" + secondDate + "%') union all ");
+		selectSql.append("select province from receive_node r where r.reno_isdelete=0 and (reno_time like '%" + nextTime
+				+ "%') and (cont_stime like '%" + secondDate + "%') union all ");
+		selectSql.append("select province from receive_node r where r.reno_isdelete=0 and (reno_time like '%" + nextTime
+				+ "%') and (cont_stime between '" + begintime + "'" + " and'" + endTime + "')) as cc ");
 		selectSql.append(" left join ");
 		selectSql
 				.append("  (select province,coalesce(sum(remo_amoney),0.00) remo_one from receive_money where remo_state=1  and (remo_time like '%"
@@ -217,7 +226,14 @@ public class ReceiveMoneyDaoImpl implements ReceiveMoneyDao {
 		selectSql
 				.append(" (select province,coalesce(sum(remo_amoney),0.00) remo_curr from receive_money where remo_state=1  and (remo_time like '%"
 						+ secondDate + "%') and (cont_stime like '%" + secondDate + "%') group by province) as ee ");
-		selectSql.append(" on ee.province=cc.province ");
+		selectSql.append(" on ee.province=cc.province left join ");
+		selectSql.append(
+				" (select province,coalesce(sum(reno_money),0.00) exp_remo_two_curr from receive_node where (reno_time like '%2016%') and (cont_stime like '%2016%') group by province) as ff ");
+		selectSql.append(" on ff.province=cc.province left join ");
+		selectSql
+				.append(" (select province,coalesce(sum(reno_money),0.00) exp_remo_two_before from receive_node where (reno_time like '%2016%') and (cont_stime between '2014-01-01'"
+						+ " and'2016-01-01') group by province) as gg ");
+		selectSql.append(" on gg.province=cc.province ");
 		selectSql.append(" group by province ");
 
 		Query query = em.createNativeQuery(selectSql.toString());

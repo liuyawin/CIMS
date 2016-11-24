@@ -218,7 +218,9 @@ public class ReportFormController {
 			System.out.println("结果集：" + newRemoAnalysesList.get(i).getOrder_number() + ";"
 					+ newRemoAnalysesList.get(i).getProvince() + ";" + newRemoAnalysesList.get(i).getRemo_one() + ";"
 					+ newRemoAnalysesList.get(i).getRemo_two() + ";" + newRemoAnalysesList.get(i).getRemo_before() + ";"
-					+ newRemoAnalysesList.get(i).getRemo_curr());
+					+ newRemoAnalysesList.get(i).getRemo_curr() + ";"
+					+ newRemoAnalysesList.get(i).getExp_remo_two_curr() + ";"
+					+ newRemoAnalysesList.get(i).getExp_remo_two_before());
 		}
 		jsonObject.put("comoCompareRemo", comoCompareRemo);
 		jsonObject.put("newComoAnalyseList", newComoAnalyseList);
@@ -328,8 +330,10 @@ public class ReportFormController {
 	private Map<String, Object> EntryToMap(ComoCompareRemo comoCompareRemo, String firstDate, String secondDate) {
 		Map<String, Object> contentMap = new HashMap<String, Object>();
 		// 表一相关数据
+		Integer thirdDate=Integer.valueOf(secondDate)+1;
 		contentMap.put("${date_one}", firstDate);
 		contentMap.put("${date_two}", secondDate);
+		contentMap.put("${date_three}", thirdDate.toString());
 		contentMap.put("${como_one}", comoCompareRemo.getComo_one().toString());
 		contentMap.put("${remo_one}", comoCompareRemo.getRemo_one().toString());
 		contentMap.put("${cont_num_one}", comoCompareRemo.getCont_num_one().toString());
