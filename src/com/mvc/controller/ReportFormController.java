@@ -139,12 +139,16 @@ public class ReportFormController {
 	@RequestMapping("/exportUnGetContListBylimits.do")
 	public ResponseEntity<byte[]> exportNoBackCont(HttpServletRequest request) {
 		Integer handler = null;
+		Integer header = null;
 		String province = null;
 		String startTime = null;
 		String endTime = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
-			handler = Integer.valueOf(request.getParameter("userId"));// 经手人
+			handler = Integer.valueOf(request.getParameter("userId"));// 经手人(设总)
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("headerId"))) {
+			header = Integer.valueOf(request.getParameter("headerId"));// 负责人(主任)
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
 			province = request.getParameter("province");// 省份
@@ -158,6 +162,7 @@ public class ReportFormController {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("handler", handler);
+		map.put("header", header);
 		map.put("province", province);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);

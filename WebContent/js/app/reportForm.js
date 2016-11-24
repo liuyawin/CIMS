@@ -616,6 +616,7 @@ app
 										'/unGetContList') == 0) {
 									reportForm.listIsShow = false;
 									selectAllUsers();
+									selectUsersFromDesign();
 								}
 							}
 							initData();
