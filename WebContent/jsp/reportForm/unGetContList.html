@@ -8,7 +8,7 @@
 
 <div class="rightinfo">
 
-	<div >
+	<div>
 		<div>
 			<form action="exportUnGetContListBylimits.do" method="post"
 				enctype="multipart/form-data">
@@ -25,13 +25,17 @@
 						</div></li>
 					<li><label>起止年月</label><input
 						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
-						ng-model="unGetlimit.startDate" placeholder="2016-01" id="startDate"
-						name="startDate" /><label>—</label><input
+						ng-model="unGetlimit.startDate" placeholder="2016-01"
+						id="startDate" name="startDate" /><label>—</label><input
 						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
 						ng-model="unGetlimit.endDate" placeholder="2016-01" id="endDate"
 						name="endDate" /><span id="errorText" class="error-span">格式错误</span></li>
 					<li><label>经手人</label><select class="dfselect layoutStyle"
 						style="width: 73px" ng-model="unGetlimit.userId" name="userId"><option
+								value="">请选择</option>
+							<option value="{{user.user_id}}" ng-repeat="user in userDepts">{{user.user_name}}</option></select></li>
+					<li><label>负责人</label><select class="dfselect layoutStyle"
+						style="width: 73px" ng-model="unGetlimit.headerId" name="headerId"><option
 								value="">请选择</option>
 							<option value="{{user.user_id}}" ng-repeat="user in users">{{user.user_name}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -54,7 +58,7 @@
 				<th class="width10">合同金额(万元)</th>
 				<th class="width10">经手人</th>
 				<th class="width10">负责人</th>
-			
+
 			</tr>
 		</thead>
 		<tbody>
@@ -68,7 +72,7 @@
 			</tr>
 		</tbody>
 	</table>
-<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
+	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 	<div class="tcdPageCode">页码容器</div>
 </div>
 

@@ -274,6 +274,7 @@ public class ContractDaoImpl implements ContractDao {
 	@Override
 	public List<Contract> findContByParaNoBack(Map<String, Object> map, Pager pager) {
 		Integer handler = (Integer) map.get("handler");
+		Integer header = (Integer) map.get("header");
 		String province = (String) map.get("province");
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
@@ -290,7 +291,10 @@ public class ContractDaoImpl implements ContractDao {
 		sql.append("select * from contract c where c.cont_isback=" + ConExecStatus.post.value);
 
 		if (handler != null) {
-			sql.append(" and c.creator_id=" + handler);
+			sql.append(" and c.manager_id=" + handler);
+		}
+		if (header != null) {
+			sql.append(" and c.creator_id=" + header);
 		}
 		if (province != null) {
 			sql.append(" and c.province='" + province + "'");
@@ -366,6 +370,7 @@ public class ContractDaoImpl implements ContractDao {
 	@Override
 	public Long countTotalNoBack(Map<String, Object> map) {
 		Integer handler = (Integer) map.get("handler");
+		Integer header = (Integer) map.get("header");
 		String province = (String) map.get("province");
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
@@ -375,7 +380,10 @@ public class ContractDaoImpl implements ContractDao {
 		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
 
 		if (handler != null) {
-			sql.append(" and c.creator_id=" + handler);
+			sql.append(" and c.manager_id=" + handler);
+		}
+		if (header != null) {
+			sql.append(" and c.creator_id=" + header);
 		}
 		if (province != null) {
 			sql.append(" and c.province='" + province + "'");

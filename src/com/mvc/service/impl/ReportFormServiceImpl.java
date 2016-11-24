@@ -245,11 +245,11 @@ public class ReportFormServiceImpl implements ReportFormService {
 			noBackContForm.setCont_project(contract.getCont_project());// 项目名称
 			noBackContForm.setCont_client(contract.getCont_client());// 业主单位
 			noBackContForm.setCont_money(contract.getCont_money());// 合同额(万元)
-			if (contract.getCreator() != null) {
-				noBackContForm.setHandler(contract.getCreator().getUser_name());// 经手人
-			}
 			if (contract.getManager() != null) {
-				noBackContForm.setHeader(contract.getManager().getUser_name());// 负责人
+				noBackContForm.setHandler(contract.getManager().getUser_name());// 经手人(设总)
+			}
+			if (contract.getCreator() != null) {
+				noBackContForm.setHeader(contract.getCreator().getUser_name());// 负责人(主任)
 			}
 
 			listGoal.add(noBackContForm);
@@ -339,12 +339,18 @@ public class ReportFormServiceImpl implements ReportFormService {
 	@Override
 	public Map<String, Object> JsonObjToMapNoBack(JSONObject jsonObject) {
 		Integer handler = null;
+		Integer header = null;
 		String province = null;
 		String startTime = null;
 		String endTime = null;
 		if (jsonObject.containsKey("userId")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("userId"))) {
-				handler = Integer.valueOf(jsonObject.getString("userId"));// 经手人
+				handler = Integer.valueOf(jsonObject.getString("userId"));// 经手人（设总）
+			}
+		}
+		if (jsonObject.containsKey("headerId")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("headerId"))) {
+				header = Integer.valueOf(jsonObject.getString("headerId"));// 负责人（主任）
 			}
 		}
 		if (jsonObject.containsKey("province")) {
@@ -365,6 +371,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("handler", handler);
+		map.put("header", header);
 		map.put("province", province);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
