@@ -374,6 +374,7 @@ public class ReportFormController {
 		Float noinvo_totalmoney = null;// 未开发票金额
 		String startTime = null;
 		String endTime = null;
+		String planTime=null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
 			province = request.getParameter("province");// 行政区域
@@ -400,11 +401,14 @@ public class ReportFormController {
 			noinvo_totalmoney = Float.valueOf(request.getParameter("noinvoTotalmoney"));// 未开发票金额
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
-			startTime = request.getParameter("startDate") + "-01";// 开始时间
+			startTime = request.getParameter("startDate");// 开始时间
 			System.out.println("startTime:" + startTime);
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-			endTime = request.getParameter("endDate") + "-01";// 结束时间
+			endTime = request.getParameter("endDate");// 结束时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("planDate"))) {
+			planTime = request.getParameter("planDate");// 计划催款年份
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -418,6 +422,7 @@ public class ReportFormController {
 		map.put("noinvo_totalmoney", noinvo_totalmoney);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
+		map.put("planTime", planTime);
 
 		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
 		ResponseEntity<byte[]> byteww = reportFormService.exportProvisionPlan(map, path);

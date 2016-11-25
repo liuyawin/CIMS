@@ -135,15 +135,12 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 
-	/*services.outputComoCompareRemo = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'reportForm/exportWord.do',
-			data : data
-		});
-<<<<<<< HEAD
-	}*/
-	//lwt:获取催款计划表-列表
+	/*
+	 * services.outputComoCompareRemo = function(data) { return $http({ method :
+	 * 'post', url : baseUrl + 'reportForm/exportWord.do', data : data }); <<<<<<<
+	 * HEAD }
+	 */
+	// lwt:获取催款计划表-列表
 	services.getPaymentPlanList = function(data) {
 		return $http({
 			method : 'post',
@@ -200,9 +197,14 @@ app
 										var date2 = new Date(
 												reportForm.limit.endDate);
 										if (date1.getTime() > date2.getTime()) {
-											alert("截止时间不能大于起始时间！");
+											alert("截止时间不能小于起始时间！");
 											return false;
 										}
+									}
+								} else {
+									if (reportForm.limit.endDate != "") {
+										alert("请输入起始日期！");
+										return false;
 									}
 								}
 								proListLimits = JSON
@@ -266,7 +268,8 @@ app
 													reportForm.comoCompareRemo = data.comoCompareRemo;
 													reportForm.newComoAnalyseList = data.newComoAnalyseList;
 													reportForm.newRemoAnalysesList = data.newRemoAnalysesList;
-													console.log(reportForm.newComoAnalyseList);
+													console
+															.log(reportForm.newComoAnalyseList);
 													reportForm.table1Show = false;
 													reportForm.table2Show = false;
 													reportForm.table3Show = false;
@@ -284,53 +287,53 @@ app
 													var chart3Data = [];
 													var chart4Data = [];
 													var n1 = 0;
-													for(var i=0;i<reportForm.newComoAnalyseList.length-1;i++){
+													for (var i = 0; i < reportForm.newComoAnalyseList.length - 1; i++) {
 														var arr1 = [];
-														if(reportForm.newComoAnalyseList[i].como_one){
+														if (reportForm.newComoAnalyseList[i].como_one) {
 															arr1[0] = reportForm.newComoAnalyseList[i].province;
 															arr1[1] = +reportForm.newComoAnalyseList[i].como_one;
-														}
-														else continue;
-														
+														} else
+															continue;
+
 														chart1Data[n1] = arr1;
 														n1++;
 													}
 													var n2 = 0;
-													for(var i=0;i<reportForm.newComoAnalyseList.length-1;i++){
+													for (var i = 0; i < reportForm.newComoAnalyseList.length - 1; i++) {
 														var arr2 = [];
-														if(reportForm.newComoAnalyseList[i].como_two){
+														if (reportForm.newComoAnalyseList[i].como_two) {
 															arr2[0] = reportForm.newComoAnalyseList[i].province;
 															arr2[1] = +reportForm.newComoAnalyseList[i].como_two;
-														}
-														else continue;
+														} else
+															continue;
 														chart2Data[n2] = arr2;
 														n2++;
 													}
 													var n3 = 0;
-													for(var i=0;i<reportForm.newRemoAnalysesList.length-1;i++){
+													for (var i = 0; i < reportForm.newRemoAnalysesList.length - 1; i++) {
 														var arr3 = [];
-														if(reportForm.newRemoAnalysesList[i].remo_one){
+														if (reportForm.newRemoAnalysesList[i].remo_one) {
 															arr3[0] = reportForm.newRemoAnalysesList[i].province;
 															arr3[1] = +reportForm.newRemoAnalysesList[i].remo_one;
-														}
-														else continue;
+														} else
+															continue;
 														chart3Data[n3] = arr3;
 														n3++;
 													}
 													var n4 = 0;
-													for(var i=0;i<reportForm.newRemoAnalysesList.length-1;i++){
+													for (var i = 0; i < reportForm.newRemoAnalysesList.length - 1; i++) {
 														var arr4 = [];
-														if(reportForm.newRemoAnalysesList[i].remo_two){
+														if (reportForm.newRemoAnalysesList[i].remo_two) {
 															arr4[0] = reportForm.newRemoAnalysesList[i].province;
 															arr4[1] = +reportForm.newRemoAnalysesList[i].remo_two;
-														}
-														else continue;
+														} else
+															continue;
 														chart4Data[n4] = arr4;
 														n4++;
 													}
-													
+
 													console.log(chart2Data);
-														
+
 													Highcharts
 															.wrap(
 																	Highcharts.Chart.prototype,
@@ -440,19 +443,18 @@ app
 												});
 
 							}
-							/*reportForm.outputComoCompareRemo = function(e) {
-								preventDefault(e);
-								services.outputComoCompareRemo({
-									beginYear : $('#begin-year').val(),
-									endYear : $('#end-year').val(),
-									chart1SVGStr : $('#chart1-svg').val(),
-									chart2SVGStr : $('#chart2-svg').val(),
-									chart3SVGStr : $('#chart3-svg').val(),
-								}).success(function() {
-									alert("导出成功！")
-								});
-
-							}*/
+							/*
+							 * reportForm.outputComoCompareRemo = function(e) {
+							 * preventDefault(e);
+							 * services.outputComoCompareRemo({ beginYear :
+							 * $('#begin-year').val(), endYear :
+							 * $('#end-year').val(), chart1SVGStr :
+							 * $('#chart1-svg').val(), chart2SVGStr :
+							 * $('#chart2-svg').val(), chart3SVGStr :
+							 * $('#chart3-svg').val(), }).success(function() {
+							 * alert("导出成功！") });
+							 *  }
+							 */
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
 									// 阻止默认浏览器动作(W3C)
@@ -490,9 +492,14 @@ app
 										var date2 = new Date(
 												reportForm.unGetlimit.endDate);
 										if (date1.getTime() > date2.getTime()) {
-											alert("截止时间不能大于起始时间！");
+											alert("截止时间不能小于起始时间！");
 											return false;
 										}
+									}
+								} else {
+									if (reportForm.unGetlimit.endDate != "") {
+										alert("请输入起始时间！");
+										return false;
 									}
 								}
 								unGetListLimits = JSON
@@ -543,29 +550,34 @@ app
 							reportForm.paymentLimit = {
 								province : "",
 								startDate : "",
-								endDate : ""
+								endDate : "",
+								planDate : ""
 							};
 							// lwt:根据条件获取催款计划表-列表
 							reportForm.getPaymentPlanList = function() {
-								var errorText = $("#errorText").css("display");
-								if (errorText == "inline") {
-									alert("时间格式错误！");
-									return false;
-								}
 								if (reportForm.paymentLimit.startDate != "") {
 									if (reportForm.paymentLimit.endDate == "") {
 										alert("请输入截止时间！");
 										return false;
 									} else {
-										var time1 = new Date(reportForm.paymentLimit.startDate);
-										var time2 = new Date(reportForm.paymentLimit.endDate);
+										var time1 = new Date(
+												reportForm.paymentLimit.startDate);
+										var time2 = new Date(
+												reportForm.paymentLimit.endDate);
 										if (time1.getTime() > time2.getTime()) {
-											alert("截止时间不能大于起始时间！");
+											alert("截止时间不能小于起始时间！");
 											return false;
 										}
 									}
+								}else {
+									if (reportForm.paymentLimit.endDate != "") {
+										alert("请输入起始日期！");
+										return false;
+									}
 								}
-								paymentPlanListLimits = JSON.stringify(reportForm.paymentLimit);
+
+								paymentPlanListLimits = JSON
+										.stringify(reportForm.paymentLimit);
 
 								services.getPaymentPlanList({
 									limit : paymentPlanListLimits,
@@ -643,6 +655,45 @@ app
 										}
 									});
 							$(".dateFormatForYM").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
+
+							// lwt控制年份格式
+							var $dateFormatForYear = $(".dateFormatForYear");
+							var dateFormatForYear = /^\d{4}$/;
+							$(".dateFormatForYear").blur(
+									function() {
+										if (this.value.trim() != "") {
+											if (!dateFormatForYear
+													.test(this.value)) {
+												$(this).parent().children(
+														"span").css('display',
+														'inline');
+											}
+										}
+									});
+							$(".dateFormatForYear").click(
+									function() {
+										$(this).parent().children("span").css(
+												'display', 'none');
+									});
+							// lwt:控制年月日格式
+							var $dateFormatForYMD = $(".dateFormatForYMD");
+							var dateFormatForYMD = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
+							$(".dateFormatForYMD").blur(
+									function() {
+										if (this.value.trim() != "") {
+											if (!dateFormatForYMD
+													.test(this.value)) {
+												$(this).parent().children(
+														"span").css('display',
+														'inline');
+											}
+										}
+									});
+							$(".dateFormatForYMD").click(
 									function() {
 										$(this).parent().children("span").css(
 												'display', 'none');
