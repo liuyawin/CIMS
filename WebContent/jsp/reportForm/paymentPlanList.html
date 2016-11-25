@@ -24,14 +24,18 @@
 								</div>
 							</div>
 						</div></li>
-					<li><label>起止年月</label><input
-						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
-						ng-model="paymentLimit.startDate" placeholder="2016-01"
+					<li><label>&nbsp;&nbsp;合同签订起止日期</label><input
+						class="dfselect layoutStyle dateFormatForYMD" style="width: 75px"
+						ng-model="paymentLimit.startDate" placeholder="2016-01-01"
 						id="beginTime" name="startDate" /><label>—</label><input
-						class="dfselect layoutStyle dateFormatForYM" style="width: 63px"
-						ng-model="paymentLimit.endDate" placeholder="2016-01" id="endTime"
+						class="dfselect layoutStyle dateFormatForYMD" style="width: 75px"
+						ng-model="paymentLimit.endDate" placeholder="2016-01-01" id="endTime"
 						name="endDate" /><span id="errorText" class="error-span">格式错误</span></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
+					<li><label>&nbsp;&nbsp;计划催收款年份</label><input
+						class="dfselect layoutStyle dateFormatForYear" style="width: 40px"
+						ng-model="paymentLimit.planDate" placeholder="2016"
+						id="planTime" name="planDate" /><span id="errorText" class="error-span">格式错误</span></li>	
+					<li><label>&nbsp;&nbsp;</label><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="getPaymentPlanList()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
@@ -56,7 +60,7 @@
 				<th>余&nbsp;&nbsp;额</th>
 				<th>已开发票金额</th>
 				<th>未开发票金额</th>
-				<th>计划可催收额</th>
+				<th>{{paymentLimit.planDate}}计划可催收额</th>
 				<th>实际到款</th>
 				<th>合同条款</th>
 				<th>催款结果</th>
@@ -73,11 +77,11 @@
 				<td>{{ppf.balance_money}}</td>
 				<td>{{ppf.invo_totalmoney}}</td>
 				<td>{{ppf.invo_not_totalmoney}}</td> 
+				<td>{{ppf.plan_payment}}</td>
+				<td>{{ppf.actual_money}}</td>
+				<td>{{ppf.con_clause}}</td>
+				<td>{{ppf.result}}</td>
 				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td>{{ppf.remark}}</td>
 			</tr>
 		</tbody>
 	</table>
