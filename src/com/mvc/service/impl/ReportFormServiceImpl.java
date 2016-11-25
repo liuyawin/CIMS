@@ -247,11 +247,11 @@ public class ReportFormServiceImpl implements ReportFormService {
 			noBackContForm.setCont_project(contract.getCont_project());// 项目名称
 			noBackContForm.setCont_client(contract.getCont_client());// 业主单位
 			noBackContForm.setCont_money(contract.getCont_money());// 合同额(万元)
-			if (contract.getCreator() != null) {
-				noBackContForm.setHandler(contract.getCreator().getUser_name());// 经手人
-			}
 			if (contract.getManager() != null) {
-				noBackContForm.setHeader(contract.getManager().getUser_name());// 负责人
+				noBackContForm.setHandler(contract.getManager().getUser_name());// 经手人(设总)
+			}
+			if (contract.getCreator() != null) {
+				noBackContForm.setHeader(contract.getCreator().getUser_name());// 负责人(主任)
 			}
 
 			listGoal.add(noBackContForm);
@@ -349,12 +349,18 @@ public class ReportFormServiceImpl implements ReportFormService {
 	@Override
 	public Map<String, Object> JsonObjToMapNoBack(JSONObject jsonObject) {
 		Integer handler = null;
+		Integer header = null;
 		String province = null;
 		String startTime = null;
 		String endTime = null;
 		if (jsonObject.containsKey("userId")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("userId"))) {
-				handler = Integer.valueOf(jsonObject.getString("userId"));// 经手人
+				handler = Integer.valueOf(jsonObject.getString("userId"));// 经手人（设总）
+			}
+		}
+		if (jsonObject.containsKey("headerId")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("headerId"))) {
+				header = Integer.valueOf(jsonObject.getString("headerId"));// 负责人（主任）
 			}
 		}
 		if (jsonObject.containsKey("province")) {
@@ -375,6 +381,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("handler", handler);
+		map.put("header", header);
 		map.put("province", province);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
@@ -595,6 +602,18 @@ public class ReportFormServiceImpl implements ReportFormService {
 			} else {
 				newRemoAnalyse.setRemo_curr(object[4].toString());
 			}
+			if ((double) object[5] == 0) {
+				newRemoAnalyse.setExp_remo_two_curr("");
+			} else {
+				Double exp_remo_two_curr = (double) object[5] - (double) object[2];
+				newRemoAnalyse.setExp_remo_two_curr(String.format("%.2f", exp_remo_two_curr));
+			}
+			if ((double) object[6] == 0) {
+				newRemoAnalyse.setExp_remo_two_before("");
+			} else {
+				Double exp_remo_two_before = (double) object[6] - (double) object[3];
+				newRemoAnalyse.setExp_remo_two_before(String.format("%.2f", exp_remo_two_before));
+			}
 			newRemos.add(newRemoAnalyse);
 		}
 		// 在列表末尾追加统计信息
@@ -602,12 +621,16 @@ public class ReportFormServiceImpl implements ReportFormService {
 		Double totalRemoTwo = (double) 0;
 		Double totalRemoBefore = (double) 0;
 		Double totalRemoCurr = (double) 0;
+		Double totalExpRemoTwoCurr = (double) 0;
+		Double totalExpRemoTwoBefore = (double) 0;
 		for (int i = 0; i < objects.size(); i++) {
 			Object[] object = (Object[]) objects.get(i);
 			totalRemoOne += (double) object[1];
 			totalRemoTwo += (double) object[2];
 			totalRemoBefore += (double) object[3];
 			totalRemoCurr += (double) object[4];
+			totalExpRemoTwoCurr += (double) object[5];
+			totalExpRemoTwoBefore += (double) object[6];
 		}
 		NewRemoAnalyse newRemoAnalyse = new NewRemoAnalyse();
 		newRemoAnalyse.setProvince("总计：");
@@ -615,6 +638,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 		newRemoAnalyse.setRemo_two(totalRemoTwo.toString());
 		newRemoAnalyse.setRemo_before(totalRemoBefore.toString());
 		newRemoAnalyse.setRemo_curr(totalRemoCurr.toString());
+		newRemoAnalyse.setExp_remo_two_curr(totalExpRemoTwoCurr.toString());
+		newRemoAnalyse.setExp_remo_two_before(totalExpRemoTwoBefore.toString());
 		newRemos.add(newRemoAnalyse);
 		return newRemos;
 	}

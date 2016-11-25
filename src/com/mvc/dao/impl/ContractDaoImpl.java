@@ -274,6 +274,7 @@ public class ContractDaoImpl implements ContractDao {
 	@Override
 	public List<Contract> findContByParaNoBack(Map<String, Object> map, Pager pager) {
 		Integer handler = (Integer) map.get("handler");
+		Integer header = (Integer) map.get("header");
 		String province = (String) map.get("province");
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
@@ -290,7 +291,10 @@ public class ContractDaoImpl implements ContractDao {
 		sql.append("select * from contract c where c.cont_isback=" + ConExecStatus.post.value);
 
 		if (handler != null) {
-			sql.append(" and c.creator_id=" + handler);
+			sql.append(" and c.manager_id=" + handler);
+		}
+		if (header != null) {
+			sql.append(" and c.creator_id=" + header);
 		}
 		if (province != null) {
 			sql.append(" and c.province='" + province + "'");
@@ -366,6 +370,7 @@ public class ContractDaoImpl implements ContractDao {
 	@Override
 	public Long countTotalNoBack(Map<String, Object> map) {
 		Integer handler = (Integer) map.get("handler");
+		Integer header = (Integer) map.get("header");
 		String province = (String) map.get("province");
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
@@ -375,7 +380,10 @@ public class ContractDaoImpl implements ContractDao {
 		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
 
 		if (handler != null) {
-			sql.append(" and c.creator_id=" + handler);
+			sql.append(" and c.manager_id=" + handler);
+		}
+		if (header != null) {
+			sql.append(" and c.creator_id=" + header);
 		}
 		if (province != null) {
 			sql.append(" and c.province='" + province + "'");
@@ -410,17 +418,22 @@ public class ContractDaoImpl implements ContractDao {
 	@Override
 	public List<Object> findComoByDate(String dateOne, String dateTwo) {
 		EntityManager em = emf.createEntityManager();
-		String sql0 = "select cc.province,coalesce(aa.como_one,0.00) como_one,coalesce(bb.como_two,0.00) como_two from ";
-		String sql1 = "(select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
+		StringBuilder selectSql = new StringBuilder();
+		selectSql.append(
+				"select cc.province,coalesce(aa.como_one,0.00) como_one,coalesce(bb.como_two,0.00) como_two from ");
+		selectSql.append(" (select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
 				+ "%') union all select province from contract c where c.cont_ishistory=0 and (cont_stime like '%"
-				+ dateTwo + "%')) as cc ";
-		String sql2 = "(select province,coalesce(sum(cont_money),0.00) como_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
-				+ dateOne + "%') group by province) as aa ";
-		String sql3 = "(select province,coalesce(sum(cont_money),0.00) como_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
-				+ dateTwo + "%') group by province) as bb ";
-		String selectSql = sql0 + sql1 + " left join  " + sql2 + " on aa.province=cc.province left join " + sql3
-				+ " on bb.province=cc.province ";
-		selectSql += " group by province ";
+				+ dateTwo + "%')) as cc ");
+		selectSql.append(" left join  ");
+		selectSql
+				.append(" (select province,coalesce(sum(cont_money),0.00) como_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+						+ dateOne + "%') group by province) as aa  ");
+		selectSql.append(" on aa.province=cc.province left join ");
+		selectSql
+				.append(" (select province,coalesce(sum(cont_money),0.00) como_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+						+ dateTwo + "%') group by province) as bb ");
+		selectSql.append(" on bb.province=cc.province ");
+		selectSql.append(" group by province ");
 		Query query = em.createNativeQuery(selectSql.toString());
 		List<Object> result = query.getResultList();
 		em.close();
@@ -432,17 +445,22 @@ public class ContractDaoImpl implements ContractDao {
 	@Override
 	public List<Object> findRemoByDate(String dateOne, String dateTwo) {
 		EntityManager em = emf.createEntityManager();
-		String sql0 = "select cc.province,coalesce(aa.remo_one,0.00) remo_one,coalesce(bb.remo_two,0.00) remo_two from ";
-		String sql1 = "(select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
+		StringBuilder selectSql = new StringBuilder();
+		selectSql.append(
+				"select cc.province,coalesce(aa.remo_one,0.00) remo_one,coalesce(bb.remo_two,0.00) remo_two from ");
+		selectSql.append(" (select province from contract c where c.cont_ishistory=0 and (cont_stime like '%" + dateOne
 				+ "%') union all select province from contract c where c.cont_ishistory=0 and (cont_stime like '%"
-				+ dateTwo + "%')) as cc ";
-		String sql2 = "(select province,coalesce(sum(remo_totalmoney),0.00) remo_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
-				+ dateOne + "%') group by province) as aa ";
-		String sql3 = "(select province,coalesce(sum(remo_totalmoney),0.00) remo_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
-				+ dateTwo + "%') group by province) as bb ";
-		String selectSql = sql0 + sql1 + " left join  " + sql2 + " on aa.province=cc.province left join " + sql3
-				+ " on bb.province=cc.province ";
-		selectSql += " group by province ";
+				+ dateTwo + "%')) as cc ");
+		selectSql.append(" left join  ");
+		selectSql
+				.append(" (select province,coalesce(sum(remo_totalmoney),0.00) remo_one from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+						+ dateOne + "%') group by province) as aa ");
+		selectSql.append(" on aa.province=cc.province left join ");
+		selectSql
+				.append(" (select province,coalesce(sum(remo_totalmoney),0.00) remo_two from contract c where c.cont_ishistory=0 and (cont_stime like '%"
+						+ dateTwo + "%') group by province) as bb ");
+		selectSql.append(" on bb.province=cc.province ");
+		selectSql.append(" group by province ");
 		Query query = em.createNativeQuery(selectSql.toString());
 		List<Object> result = query.getResultList();
 		em.close();

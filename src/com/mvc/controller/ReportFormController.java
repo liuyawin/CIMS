@@ -139,12 +139,16 @@ public class ReportFormController {
 	@RequestMapping("/exportUnGetContListBylimits.do")
 	public ResponseEntity<byte[]> exportNoBackCont(HttpServletRequest request) {
 		Integer handler = null;
+		Integer header = null;
 		String province = null;
 		String startTime = null;
 		String endTime = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("userId"))) {
-			handler = Integer.valueOf(request.getParameter("userId"));// 经手人
+			handler = Integer.valueOf(request.getParameter("userId"));// 经手人(设总)
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("headerId"))) {
+			header = Integer.valueOf(request.getParameter("headerId"));// 负责人(主任)
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
 			province = request.getParameter("province");// 省份
@@ -158,6 +162,7 @@ public class ReportFormController {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("handler", handler);
+		map.put("header", header);
 		map.put("province", province);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
@@ -213,7 +218,9 @@ public class ReportFormController {
 			System.out.println("结果集：" + newRemoAnalysesList.get(i).getOrder_number() + ";"
 					+ newRemoAnalysesList.get(i).getProvince() + ";" + newRemoAnalysesList.get(i).getRemo_one() + ";"
 					+ newRemoAnalysesList.get(i).getRemo_two() + ";" + newRemoAnalysesList.get(i).getRemo_before() + ";"
-					+ newRemoAnalysesList.get(i).getRemo_curr());
+					+ newRemoAnalysesList.get(i).getRemo_curr() + ";"
+					+ newRemoAnalysesList.get(i).getExp_remo_two_curr() + ";"
+					+ newRemoAnalysesList.get(i).getExp_remo_two_before());
 		}
 		jsonObject.put("comoCompareRemo", comoCompareRemo);
 		jsonObject.put("newComoAnalyseList", newComoAnalyseList);
@@ -323,8 +330,10 @@ public class ReportFormController {
 	private Map<String, Object> EntryToMap(ComoCompareRemo comoCompareRemo, String firstDate, String secondDate) {
 		Map<String, Object> contentMap = new HashMap<String, Object>();
 		// 表一相关数据
+		Integer thirdDate=Integer.valueOf(secondDate)+1;
 		contentMap.put("${date_one}", firstDate);
 		contentMap.put("${date_two}", secondDate);
+		contentMap.put("${date_three}", thirdDate.toString());
 		contentMap.put("${como_one}", comoCompareRemo.getComo_one().toString());
 		contentMap.put("${remo_one}", comoCompareRemo.getRemo_one().toString());
 		contentMap.put("${cont_num_one}", comoCompareRemo.getCont_num_one().toString());

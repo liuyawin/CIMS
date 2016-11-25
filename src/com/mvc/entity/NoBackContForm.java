@@ -12,8 +12,8 @@ public class NoBackContForm {
 	private String cont_project;// 项目名称
 	private String cont_client;// 业主单位（业主公司名称）
 	private Float cont_money;// 合同额（万元）
-	private String handler;// 经手人（暂时理解为创建人）
-	private String header;// 负责人（暂不清楚）
+	private String handler;// 经手人（项目经理）
+	private String header;// 负责人（主任）
 
 	public Integer getNb_id() {
 		return nb_id;
