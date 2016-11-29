@@ -833,7 +833,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 			// j++;
 			Contract contract = it.next();
 			SummarySheet summarySheet = new SummarySheet();
-			summarySheet.setOrder_num(String.valueOf(i + 1));
+			summarySheet.setOrder_num(String.valueOf(i));
 			// summarySheet.setSub_num(String.valueOf(j));
 			summarySheet.setProvince(contract.getProvince());
 			String proStageStr = contract.getPro_stage();// 设计阶段（数字类型字符串）
@@ -841,7 +841,10 @@ public class ReportFormServiceImpl implements ReportFormService {
 			summarySheet.setPro_stage(proStageStr);
 			summarySheet.setCont_project(contract.getCont_project());
 			summarySheet.setCont_client(contract.getCont_client());
-			summarySheet.setInstall_capacity(contract.getInstall_capacity().toString());
+			if (contract.getInstall_capacity() != null) {
+				summarySheet.setInstall_capacity(contract.getInstall_capacity().toString());
+			}
+
 			if (contract.getCont_money() == null) {
 				contract.setCont_money((float) 0);
 			}

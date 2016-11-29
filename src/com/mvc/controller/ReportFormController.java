@@ -351,7 +351,12 @@ public class ReportFormController {
 	@RequestMapping("/selectSummarySheetList.do")
 	public @ResponseBody String selectSummarySheetList(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("summaryLimit"));
-		String date = jsonObject.getString("year");
+		String date = "";
+		if (jsonObject.containsKey("year")) {
+			date = jsonObject.getString("year");
+		} else {
+			date = "";
+		}
 		Integer page = Integer.parseInt(request.getParameter("page"));// 分页
 		// String date = "2016";
 		// Integer page = 1;// 分页
