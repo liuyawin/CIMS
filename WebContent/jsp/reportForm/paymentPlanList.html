@@ -29,14 +29,16 @@
 						ng-model="paymentLimit.startDate" placeholder="2016-01-01"
 						id="beginTime" name="startDate" /><label>—</label><input
 						class="dfselect layoutStyle dateFormatForYMD" style="width: 75px"
-						ng-model="paymentLimit.endDate" placeholder="2016-01-01" id="endTime"
-						name="endDate" /><span id="errorText" class="error-span">格式错误</span></li>
+						ng-model="paymentLimit.endDate" placeholder="2016-01-01"
+						id="endTime" name="endDate" /><span id="errorText"
+						class="error-span">格式错误</span></li>
 					<li><label>&nbsp;&nbsp;计划催收款年份</label><input
 						class="dfselect layoutStyle dateFormatForYear" style="width: 40px"
-						ng-model="paymentLimit.planDate" placeholder="2016"
-						id="planTime" name="planDate" /><span id="errorText" class="error-span">格式错误</span></li>	
-					<li><label>&nbsp;&nbsp;</label><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="getPaymentPlanList()"></li>
+						ng-model="paymentLimit.planDate" placeholder="2016" id="planTime"
+						name="planDate" /><span id="errorText" class="error-span">格式错误</span></li>
+					<li><label>&nbsp;&nbsp;</label><input class="btn layoutStyle"
+						style="width: 60px" type="button" value="查询"
+						ng-click="getPaymentPlanList()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
@@ -52,6 +54,7 @@
 	<table class="tablelist">
 		<thead>
 			<tr>
+				<th>序号</th>
 				<th>行政区域</th>
 				<th>工程名称</th>
 				<th>业主名称</th>
@@ -69,6 +72,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="ppf in payPlanForms">
+				<td>{{$index+1}}</td>
 				<td>{{ppf.province}}</td>
 				<td>{{ppf.cont_project |cutString}}</td>
 				<td>{{ppf.cont_client |cutString}}</td>
@@ -76,7 +80,7 @@
 				<td>{{ppf.remo_totalmoney }}</td>
 				<td>{{ppf.balance_money}}</td>
 				<td>{{ppf.invo_totalmoney}}</td>
-				<td>{{ppf.invo_not_totalmoney}}</td> 
+				<td>{{ppf.invo_not_totalmoney}}</td>
 				<td>{{ppf.plan_payment}}</td>
 				<td>{{ppf.actual_money}}</td>
 				<td>{{ppf.con_clause}}</td>
