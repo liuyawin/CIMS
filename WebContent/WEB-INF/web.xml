@@ -58,7 +58,7 @@
 		<url-pattern>/receiveNode/*</url-pattern>
 		<url-pattern>/subTask/*</url-pattern>
 		<url-pattern>/file/*</url-pattern>
-		<url-pattern>/reportForm/*</url-pattern>
+		<!-- <url-pattern>/reportForm/*</url-pattern> -->
 		<dispatcher>FORWARD</dispatcher>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>

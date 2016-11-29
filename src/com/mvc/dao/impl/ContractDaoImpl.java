@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import com.base.enums.ConExecStatus;
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
-import com.mvc.entity.SummarySheet;
 import com.utils.Pager;
 
 /**
@@ -616,7 +615,7 @@ public class ContractDaoImpl implements ContractDao {
 			sql.append(" limit " + offset + "," + end);
 		}
 
-		Query query = em.createNativeQuery(sql.toString());
+		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		List<Contract> list = query.getResultList();
 		em.close();
 		return list;

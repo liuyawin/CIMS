@@ -820,6 +820,11 @@ public class ReportFormServiceImpl implements ReportFormService {
 	public List<SummarySheet> findSummaryByDate(String date, Pager pager) {
 		List<Contract> listSource = contractDao.findSummaryByDate(date, pager);
 		Iterator<Contract> it = listSource.iterator();
+		List<SummarySheet> listGoal = contToSummarySheet(it);
+		return listGoal;
+	}
+
+	private List<SummarySheet> contToSummarySheet(Iterator<Contract> it) {
 		List<SummarySheet> listGoal = new ArrayList<SummarySheet>();
 		int i = 0;
 		// int j=0;
@@ -828,24 +833,28 @@ public class ReportFormServiceImpl implements ReportFormService {
 			// j++;
 			Contract contract = it.next();
 			SummarySheet summarySheet = new SummarySheet();
-			summarySheet.setOrder_num(String.valueOf(i));
+			summarySheet.setOrder_num(String.valueOf(i + 1));
 			// summarySheet.setSub_num(String.valueOf(j));
 			summarySheet.setProvince(contract.getProvince());
-			summarySheet.setPro_stage(contract.getPro_stage());
+			String proStageStr = contract.getPro_stage();// 设计阶段（数字类型字符串）
+			proStageStr = intStrToStr(proStageStr);
+			summarySheet.setPro_stage(proStageStr);
 			summarySheet.setCont_project(contract.getCont_project());
+			summarySheet.setCont_client(contract.getCont_client());
 			summarySheet.setInstall_capacity(contract.getInstall_capacity().toString());
+			if (contract.getCont_money() == null) {
+				contract.setCont_money((float) 0);
+			}
 			summarySheet.setCont_money(contract.getCont_money().toString());
-			if (contract.getRemo_totalmoney() == 0) {
-				summarySheet.setStatus("合同未执行");
-			} else if (contract.getCont_money() > contract.getRemo_totalmoney()) {
+			if (contract.getRemo_totalmoney() == 0 || contract.getCont_money() == 0
+					|| contract.getRemo_totalmoney() < contract.getCont_money()) {
 				summarySheet.setStatus("未结清");
 			} else {
-				summarySheet.setStatus("执行完毕");
+				summarySheet.setStatus("已结清");
 			}
 
 			listGoal.add(summarySheet);
 		}
-
 		return listGoal;
 	}
 
@@ -858,5 +867,34 @@ public class ReportFormServiceImpl implements ReportFormService {
 		pager.setTotalRow(totalRow);
 
 		return pager;
+	}
+
+	// 根据日期导出当年光伏项目统计表
+	@Override
+	public ResponseEntity<byte[]> exportSummarySheet(String date, String path) {
+		ResponseEntity<byte[]> byteArr = null;
+
+		try {
+			ExcelHelper<SummarySheet> ex = new ExcelHelper<SummarySheet>();
+			String fileName = date + "年光伏自营项目情况表.xlsx";// 2007版
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Contract> listSource = contractDao.findSummaryByDate(date, null);
+			Iterator<Contract> it = listSource.iterator();
+			List<SummarySheet> listGoal = contToSummarySheet(it);
+
+			String title = date + "年光伏自营项目情况表";
+			String[] header = { "序号", "分区域序号", "行政区域", "合同类别", "工程名称", "规模", "业主名称", "合同额（万元）", "项目状态", "备注" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return byteArr;
 	}
 }

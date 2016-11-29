@@ -144,7 +144,7 @@ public class Contract implements Serializable {
 		this.cont_initiation = cont_initiation;
 	}
 
-	@Column(columnDefinition = "float(10,2) default '0.00'")
+	@Column(columnDefinition = "float(10,2) not null default '0.00'")
 	public Float getInstall_capacity() {
 		return install_capacity;
 	}
@@ -390,7 +390,7 @@ public class Contract implements Serializable {
 		this.cont_remark = cont_remark;
 	}
 
-	@Column(columnDefinition = "INT default 0")
+	@Column(columnDefinition = "INT not null default 0")
 	public Integer getInvo_total() {
 		return invo_total;
 	}
@@ -399,7 +399,7 @@ public class Contract implements Serializable {
 		this.invo_total = invo_total;
 	}
 
-	@Column(columnDefinition = "float(10,2) default '0.00'")
+	@Column(columnDefinition = "float(10,2) not null default '0.00'")
 	public Float getInvo_totalmoney() {
 		return invo_totalmoney;
 	}
@@ -417,7 +417,7 @@ public class Contract implements Serializable {
 		this.rece_total = rece_total;
 	}
 
-	@Column(columnDefinition = "float(10,2) default '0.00'")
+	@Column(columnDefinition = "float(10,2) not null default '0.00'")
 	public Float getRece_totalmoney() {
 		return rece_totalmoney;
 	}
@@ -482,7 +482,7 @@ public class Contract implements Serializable {
 		this.remo_count = remo_count;
 	}
 
-	@Column(columnDefinition = "float(10,2) default '0.00'")
+	@Column(columnDefinition = "float(10,2) not null default '0.00'")
 	public Float getRemo_totalmoney() {
 		return remo_totalmoney;
 	}
