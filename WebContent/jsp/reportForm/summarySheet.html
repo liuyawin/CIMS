@@ -1,0 +1,81 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="/CIMS/login/toIndex.do">首页</a></li>
+		<li>项目统计表</li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div class="">
+		<div style="float: left; display: inline;">
+			<form action="exportSummarySheet.do" method="post"
+				enctype="multipart/form-data">
+				<ul class="projectListLimit">
+					<li><label>年份</label><input
+						class="dfselect layoutStyle dateFormatForYear" style="width: 63px"
+						ng-model="summaryLimit.year" placeholder="2016" id="year"
+						name="year" /><span id="errorText1" class="error-span">格式错误</span></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="button" value="查询" ng-click="selectSummarySheetBylimits()"></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="submit" value="导出"></li>
+				</ul>
+
+			</form>
+		</div>
+		<div style="float: right; display: inline;">
+			<form action="" method="post" enctype="multipart/form-data">
+				<ul class="projectListLimit">
+					<li><label>起止年份</label><input
+						class="dfselect layoutStyle dateFormatForYear" style="width: 63px"
+						placeholder="2016" id="startYear" name="startYear" /><label>—</label><input
+						class="dfselect layoutStyle dateFormatForYear" style="width: 63px"
+						placeholder="2016" id="endYear" name="endYear" /><span
+						id="errorText" class="error-span">格式错误</span></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="submit" value="导出"></li>
+				</ul>
+
+			</form>
+		</div>
+		<div style="clear: both"></div>
+		<ul style="text-align: left">
+			<li><span>合同总金额：{{totalMoney}}万元</span></li>
+		</ul>
+	</div>
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width5">分区域序号</th>
+				<th class="width7">行政区域</th>
+				<th class="width7">项目阶段</th>
+				<th class="width10">工程名称</th>
+				<th class="width7">装机容量(MW)</th>
+				<th class="width10">业主名称</th>
+				<th class="width7">合同金额(万元)</th>
+				<th class="width7">项目状态</th>
+				<th class="width7">备注</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="summ in summaryLists">
+				<td>{{$index + 1}}</td>
+				<td>{{$index + 1}}</td>
+				<td>{{summ.povince}}</td>
+				<td>{{summ.pro_stage}}</td>
+				<td>{{summ.cont_project |cutString}}</td>
+				<td>{{summ.install_capacity}}</td>
+				<td>{{summ.cont_client |cutString}}</td>
+				<td>{{summ.cont_money | numberFloat}}</td>
+				<td>{{summ.status}}</td>
+				<td>{{summ.remark}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
+	<div class="tcdPageCode">页码容器</div>
+
+</div>

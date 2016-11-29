@@ -88,11 +88,13 @@
 				<li id="remoAnalyzeList"><cite></cite> <a
 					href="${ctx}/reportForm/toReportFormPage.do#/remoAnalyzeList">合同额到款分析表</a><i></i></li>
 				<li id="paymentPlanList"><cite></cite> <a
-					href="${ctx}/reportForm/toReportFormPage.do#/paymentPlanList">催款计划表</a><i></i></li>
+					href="${ctx}/reportForm/toReportFormPage.do#/paymentPlanList">收款计划表</a><i></i></li>
 				<li id="projectList"><cite></cite> <a
 					href="${ctx}/reportForm/toReportFormPage.do#/projectList">项目统计表</a><i></i></li>
 				<li id="unGetContList"><cite></cite> <a
 					href="${ctx}/reportForm/toReportFormPage.do#/unGetContList">未返合同表</a><i></i></li>
+					<li id="summarySheet"><cite></cite> <a
+					href="${ctx}/reportForm/toReportFormPage.do#/summarySheet">summarySheet</a><i></i></li>
 			</ul>
 		</dd>
 	</dl>
