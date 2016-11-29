@@ -12,16 +12,16 @@
 
 		<form class="toolbar">
 			<input type="text" class="short dfinput" id="begin-year"
-				placeholder="请输入年份" />至 <input type="text" class="short dfinput"
-				id="end-year" placeholder="请输入年份" /> <input class="btn"
+				placeholder="请输入年份" />年与 <input type="text" class="short dfinput"
+				id="end-year" placeholder="请输入年份" />年自营合同额到款分析结果 <input class="btn"
 				type="submit" value="查询" ng-click="getTableDate()">
 		</form>
-			
+
 		<form action="/CIMS/reportForm/exportWord.do" method="post"
-				enctype="multipart/form-data" style="float:right">
-			<input id="chart1-svg" name="chart1SVGStr" class="hidden" type="text" /> 
-			<input id="chart2-svg" name="chart2SVGStr" class="hidden" type="text" /> 
-			<input id="chart3-svg" name="chart3SVGStr" class="hidden" type="text" /> 
+			enctype="multipart/form-data" style="float: right">
+			<input id="chart1-svg" name="chart1SVGStr" class="hidden" type="text" />
+			<input id="chart2-svg" name="chart2SVGStr" class="hidden" type="text" />
+			<input id="chart3-svg" name="chart3SVGStr" class="hidden" type="text" />
 			<input id="chart4-svg" name="chart4SVGStr" class="hidden" type="text" />
 			<input class="btn" type="submit" value="导出">
 		</form>
@@ -87,7 +87,7 @@
 				<td>{{c.ratio_one_provi}}</td>
 				<td>{{c.ratio_two_provi}}</td>
 				<td>{{c.rise_ratio}}</td>
-				<td>{{c.remark}}</td>				
+				<td>{{c.remark}}</td>
 			</tr>
 		</tbody>
 	</table>

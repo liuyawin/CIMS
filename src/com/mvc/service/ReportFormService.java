@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 
 import com.mvc.entity.ProjectStatisticForm;
+import com.mvc.entity.SummarySheet;
 import com.utils.Pager;
 
 import net.sf.json.JSONObject;
@@ -57,6 +58,12 @@ public interface ReportFormService {
 
 	// 根据日期获取到款分析表
 	List<NewRemoAnalyse> findRemoByDate(String firstDate, String secondDate);
+
+	// 查询光伏项目统计列表
+	List<SummarySheet> findSummaryByDate(String date, Pager pager);
+
+	// 查询光伏项目统计表页码
+	Pager pagerTotalSummary(String date, Integer page);
 
 	/************************************************ 王慧敏 ***************************************/
 	// 导出光伏自营项目催款计划表

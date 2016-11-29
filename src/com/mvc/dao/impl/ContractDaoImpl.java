@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.base.enums.ConExecStatus;
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
+import com.mvc.entity.SummarySheet;
 import com.utils.Pager;
 
 /**
@@ -468,8 +469,8 @@ public class ContractDaoImpl implements ContractDao {
 	}
 
 	// 王慧敏操作，导出光伏自营项目催款计划表
-		@SuppressWarnings("unchecked")
-		@Override
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<Object> findContByParw(Map<String, Object> map, Pager pager) {
 		String province = (String) map.get("province");// 行政区域
 		String cont_project = (String) map.get("cont_project");// 工程名称 && 项目名称
@@ -482,7 +483,7 @@ public class ContractDaoImpl implements ContractDao {
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
 
-		String planTime = (String) map.get("planTime");//计划催款时间
+		String planTime = (String) map.get("planTime");// 计划催款时间
 
 		Integer offset = null;
 		Integer end = null;
@@ -492,20 +493,24 @@ public class ContractDaoImpl implements ContractDao {
 		}
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		if (planTime!=null) {
-			String sql0=" (select cont_id,coalesce(sum(remo_amoney),0.00) actual_money from receive_money r where r.remo_state=1 and r.remo_time like '%"+ planTime +"%' GROUP by cont_id) as bb";
-			String sql00="(select cont_id,coalesce(sum(reno_money),0.00) plan_payment from receive_Node r where r.reno_isdelete=0 "
-				  		+ "and r.reno_time like '%"+ planTime +"%' GROUP by cont_id) as aa";
-			sql.append("select c.province,c.cont_project,c.cont_client,c.cont_money,c.remo_totalmoney,c.invo_totalmoney,bb.actual_money,aa.plan_payment "
-						+ "from contract c left join "+sql0+" on c.cont_id=bb.cont_id left join "+sql00+" on c.cont_id=aa.cont_id where c.cont_ishistory=0 ");
-		  System.out.println("sql0:"+sql0);
-		  System.out.println("sql00:"+sql00);
+		if (planTime != null) {
+			String sql0 = " (select cont_id,coalesce(sum(remo_amoney),0.00) actual_money from receive_money r where r.remo_state=1 and r.remo_time like '%"
+					+ planTime + "%' GROUP by cont_id) as bb";
+			String sql00 = "(select cont_id,coalesce(sum(reno_money),0.00) plan_payment from receive_Node r where r.reno_isdelete=0 "
+					+ "and r.reno_time like '%" + planTime + "%' GROUP by cont_id) as aa";
+			sql.append(
+					"select c.province,c.cont_project,c.cont_client,c.cont_money,c.remo_totalmoney,c.invo_totalmoney,bb.actual_money,aa.plan_payment "
+							+ "from contract c left join " + sql0 + " on c.cont_id=bb.cont_id left join " + sql00
+							+ " on c.cont_id=aa.cont_id where c.cont_ishistory=0 ");
+			System.out.println("sql0:" + sql0);
+			System.out.println("sql00:" + sql00);
 
-		}else{
-			sql.append("select c.province,c.cont_project,c.cont_client,c.cont_money,c.remo_totalmoney,c.invo_totalmoney from contract c where c.cont_ishistory=0");
+		} else {
+			sql.append(
+					"select c.province,c.cont_project,c.cont_client,c.cont_money,c.remo_totalmoney,c.invo_totalmoney from contract c where c.cont_ishistory=0");
 		}
 
-		if (province != null) { 
+		if (province != null) {
 			sql.append(" and c.province='" + province + "'");
 		}
 		if (cont_project != null) {
@@ -528,11 +533,11 @@ public class ContractDaoImpl implements ContractDao {
 		}
 		if (noinvo_totalmoney != null) {
 			sql.append(" and c.noinvo_totalmoney='" + noinvo_totalmoney + "'");
-		}			
+		}
 		if (startTime != null && endTime != null) {
 			sql.append(" and c.cont_stime between '" + startTime + "'" + " and '" + endTime + "'");
 		}
-		sql.append(" order by c.cont_id desc");
+		sql.append(" order by c.province desc");
 
 		if (offset != null && end != null) {
 			sql.append(" limit " + offset + "," + end);
@@ -543,7 +548,7 @@ public class ContractDaoImpl implements ContractDao {
 		em.close();
 		return list;
 	}
-	
+
 	// 查询催款列表总条数
 	@Override
 	public Long countTotal_payment(Map<String, Object> map) {
@@ -586,5 +591,51 @@ public class ContractDaoImpl implements ContractDao {
 			em.close();
 		}
 		return true;
+	}
+
+	// 查询光伏项目统计列表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Contract> findSummaryByDate(String date, Pager pager) {
+		Integer offset = null;
+		Integer end = null;
+		if (pager != null) {
+			offset = pager.getOffset();
+			end = pager.getPageSize();
+		}
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from contract c where c.cont_ishistory=0 ");
+
+		if (date != null) {
+			sql.append(" and c.cont_stime like '%" + date + "%' ");
+		}
+		sql.append(" order by c.province desc");
+
+		if (offset != null && end != null) {
+			sql.append(" limit " + offset + "," + end);
+		}
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Contract> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 查询光伏项目统计表页码
+	@Override
+	public Long totalSummary(String date) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
+
+		if (date != null) {
+			sql.append(" and c.cont_stime like '%" + date + "%' ");
+		}
+
+		Query query = em.createNativeQuery(sql.toString());
+		BigInteger totalRow = (BigInteger) query.getSingleResult();
+		em.close();
+		return totalRow.longValue();
 	}
 }

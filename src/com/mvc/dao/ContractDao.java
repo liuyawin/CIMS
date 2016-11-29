@@ -58,6 +58,12 @@ public interface ContractDao {
 	// 根据日期获取到款分析表
 	List<Object> findRemoByDate(String oneTime, String twoTime);
 
+	// 查询光伏项目统计列表
+	List<Contract> findSummaryByDate(String date, Pager pager);
+
+	// 查询光伏项目统计表页码
+	Long totalSummary(String date);
+
 	// 查询未返回合同统计表总条数
 	Long countTotalNoBack(Map<String, Object> map);
 
