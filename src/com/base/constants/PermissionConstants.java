@@ -17,6 +17,7 @@ public class PermissionConstants {
 	public static final String system = "systemPer";
 	public static final String index = "indexPer";
 	public static final String left = "leftPer";
+	
 	// 合同所有权限:{新建, 主任修改 ,文书修改, 删除, 修改状态, 添加工期阶段, 修改工期阶段 ,删除工期阶段, 添加收款节点, 修改收款节点,
 	// 删除收款节点, 新建任务}
 	public static final String[] contPer = { "cAdd", "cHeadEdit", "cBodyEdit", "cDel", "cStateEdit", "cPsAdd",
@@ -36,7 +37,7 @@ public class PermissionConstants {
 	public static final String[] indexPer = { "iAssiTask", "iEditTask", "iAudiInvoTask", "iFiniInvoTask",
 			"iFiniRemoTask", "iDebtAlarm", "iOverdueAlarm" };
 
-	// 左侧功能栏所有权限:{合同管理, 票据管理, 用户管理，发票任务, 到款任务, 收款超时 ,工期超时}
+	// 左侧功能栏所有权限:{合同管理, 票据管理, 用户管理，发票任务, 到款任务, 收款超时 ,工期超时,报表统计}
 	public static final String[] leftPer = { "contManager", "billManager", "userManager", "invoiceTask", "remoTask",
 			"remoAlarm", "psAlarm" ,"reportForm"};
 

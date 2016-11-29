@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.mvc.entity.ProjectStatisticForm;
+import com.mvc.entity.SummarySheet;
 import com.base.constants.ReportFormConstants;
 import com.base.constants.SessionKeyConstants;
 import com.mvc.entity.ComoCompareRemo;
@@ -214,14 +215,6 @@ public class ReportFormController {
 		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
 		List<NewComoAnalyse> newComoAnalyseList = reportFormService.findComoByDate(dateOne, dateTwo);
 		List<NewRemoAnalyse> newRemoAnalysesList = reportFormService.findRemoByDate(dateOne, dateTwo);
-		for (int i = 0; i < newRemoAnalysesList.size(); i++) {
-			System.out.println("结果集：" + newRemoAnalysesList.get(i).getOrder_number() + ";"
-					+ newRemoAnalysesList.get(i).getProvince() + ";" + newRemoAnalysesList.get(i).getRemo_one() + ";"
-					+ newRemoAnalysesList.get(i).getRemo_two() + ";" + newRemoAnalysesList.get(i).getRemo_before() + ";"
-					+ newRemoAnalysesList.get(i).getRemo_curr() + ";"
-					+ newRemoAnalysesList.get(i).getExp_remo_two_curr() + ";"
-					+ newRemoAnalysesList.get(i).getExp_remo_two_before());
-		}
 		jsonObject.put("comoCompareRemo", comoCompareRemo);
 		jsonObject.put("newComoAnalyseList", newComoAnalyseList);
 		jsonObject.put("newRemoAnalysesList", newRemoAnalysesList);
@@ -330,7 +323,7 @@ public class ReportFormController {
 	private Map<String, Object> EntryToMap(ComoCompareRemo comoCompareRemo, String firstDate, String secondDate) {
 		Map<String, Object> contentMap = new HashMap<String, Object>();
 		// 表一相关数据
-		Integer thirdDate=Integer.valueOf(secondDate)+1;
+		Integer thirdDate = Integer.valueOf(secondDate) + 1;
 		contentMap.put("${date_one}", firstDate);
 		contentMap.put("${date_two}", secondDate);
 		contentMap.put("${date_three}", thirdDate.toString());
@@ -344,6 +337,26 @@ public class ReportFormController {
 		contentMap.put("${ratio_remo}", comoCompareRemo.getRatio_remo());
 		contentMap.put("${ratio_conum}", comoCompareRemo.getRatio_conum());
 		return contentMap;
+	}
+
+	/**
+	 * 查询光伏项目统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectSummarySheetList.do")
+	public @ResponseBody String selectSummarySheetList(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
+		String date = request.getParameter("date");
+		Integer page = Integer.parseInt(request.getParameter("page"));// 分页
+		Pager pager = reportFormService.pagerTotalSummary(date, page);
+		List<SummarySheet> list = reportFormService.findSummaryByDate(date, pager);
+
+		jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
 	}
 
 	/*
@@ -383,7 +396,7 @@ public class ReportFormController {
 		Float noinvo_totalmoney = null;// 未开发票金额
 		String startTime = null;
 		String endTime = null;
-		String planTime=null;
+		String planTime = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("province"))) {
 			province = request.getParameter("province");// 行政区域
