@@ -87,6 +87,9 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/paymentPlanList', {
 		templateUrl : '/CIMS/jsp/reportForm/paymentPlanList.html',
 		controller : 'ReportController'
+	}).when('/summarySheet', {
+		templateUrl : '/CIMS/jsp/reportForm/summarySheet.html',
+		controller : 'ReportController'
 	})
 } ]);
 app.constant('baseUrl', '/CIMS/');
@@ -145,6 +148,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'reportForm/selectPaymentPlanList.do',
+			data : data
+		});
+	};
+	// zq2016-11-29
+	services.selectSummarySheetBylimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'reportForm/selectSummarySheetList.do',
 			data : data
 		});
 	};
@@ -452,8 +463,7 @@ app
 							 * $('#chart1-svg').val(), chart2SVGStr :
 							 * $('#chart2-svg').val(), chart3SVGStr :
 							 * $('#chart3-svg').val(), }).success(function() {
-							 * alert("导出成功！") });
-							 *  }
+							 * alert("导出成功！") }); }
 							 */
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
@@ -569,7 +579,7 @@ app
 											return false;
 										}
 									}
-								}else {
+								} else {
 									if (reportForm.paymentLimit.endDate != "") {
 										alert("请输入起始日期！");
 										return false;
@@ -610,7 +620,53 @@ app
 									});
 								}
 							}
-
+							var summaryLimit = null;
+							// zq2016-11-29新增
+							reportForm.selectSummarySheetBylimits = function() {
+								var errorText = $("#errorText1").css("display");
+								if (errorText == "inline") {
+									alert("时间格式错误！");
+									return false;
+								}
+								summaryLimit = JSON
+										.stringify(reportForm.summaryLimit);
+								services.selectSummarySheetBylimits({
+									summaryLimit : summaryLimit,
+									page : 1
+								}).success(function(data) {
+									reportForm.summaryLists = data.list;
+									summaryPageTurn(data.totalPage, 1);
+									reportForm.totalMoney=data.totalMoney;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							};
+							// 2016-11-29
+							function findSummaryBylimits(p) {
+								services.selectSummarySheetBylimits({
+									summaryLimit : summaryLimit,
+									page : p
+								}).success(function(data) {
+									reportForm.summaryLists = data.list;
+								});
+							}
+							// zq换页2016-11-29
+							function summaryPageTurn(totalPage, page) {
+								var $pages = $(".tcdPageCode");
+								if ($pages.length != 0) {
+									$(".tcdPageCode").createPage({
+										pageCount : totalPage,
+										current : page,
+										backFn : function(p) {
+											reportPage = p;
+											findSummaryBylimits(p);
+										}
+									});
+								}
+							}
 							// 初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -629,6 +685,9 @@ app
 									reportForm.listIsShow = false;
 									selectAllUsers();
 									selectUsersFromDesign();
+								} else if ($location.path().indexOf(
+										'/summarySheet') == 0) {
+									reportForm.listIsShow = false;
 								}
 							}
 							initData();
