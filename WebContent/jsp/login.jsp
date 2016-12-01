@@ -36,7 +36,7 @@
 	</div>
 
 	<div class="loginbody">
-		<a href="/CIMS/reportForm/exportSummarySheet.do">导出报表</a> <span
+		<a href="/CIMS/reportForm/exportSummarySheetList.do">导出报表</a> <span
 			class="systemlogo"></span>
 		<div class="loginbox">
 			<form action="/CIMS/login/login.do" method="post" id="login-form">

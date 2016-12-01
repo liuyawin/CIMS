@@ -26,26 +26,26 @@
 			</form>
 		</div>
 		<div style="float: right; display: inline;">
-			<form action="" method="post" enctype="multipart/form-data">
+			<form action="exportSummarySheetList.do" method="post" enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年份</label><input
 						class="dfselect layoutStyle dateFormatForYear" style="width: 63px"
-						placeholder="2016" id="startYear" name="startYear" /><label>—</label><input
+						placeholder="2016" id="startYear" name="startYear" required/><label>—</label><input
 						class="dfselect layoutStyle dateFormatForYear" style="width: 63px"
-						placeholder="2016" id="endYear" name="endYear" /><span
+						placeholder="2016" id="endYear" name="endYear" required/><span
 						id="errorText" class="error-span">格式错误</span></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
-						type="submit" value="导出"></li>
+					<li><input class="btn layoutStyle" style="width: 100px"
+						type="submit" value="批量导出"></li>
 				</ul>
 
 			</form>
 		</div>
 		<div style="clear: both"></div>
 		<ul style="text-align: left">
-			<li><span>合同总金额：{{totalMoney}}万元</span></li>
+			<li><span>共   {{totalRow}} 份合同，合同总金额：{{totalMoney |numberFloat}}万元</span></li>
 		</ul>
 	</div>
-	<table class="tablelist">
+	<table class="tablelist" id="summarySheet">
 		<thead>
 			<tr>
 				<th class="width5">序号</th>
@@ -63,7 +63,7 @@
 		<tbody>
 			<tr ng-repeat="summ in summaryLists">
 				<td>{{$index + 1}}</td>
-				<td>{{$index + 1}}</td>
+				<td>{{summ.sub_num}}</td>
 				<td>{{summ.province}}</td>
 				<td>{{summ.pro_stage}}</td>
 				<td>{{summ.cont_project |cutString}}</td>

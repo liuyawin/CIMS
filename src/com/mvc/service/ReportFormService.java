@@ -25,6 +25,7 @@ import com.mvc.entity.PaymentPlanListForm;
  */
 public interface ReportFormService {
 
+	/************************************************ 王睿 ***************************************/
 	// 导出光电院项目分项统计表
 	ResponseEntity<byte[]> exportProjectStatistic(Map<String, Object> map, String path);
 
@@ -67,6 +68,9 @@ public interface ReportFormService {
 
 	// 根据日期导出当年光伏项目统计表
 	ResponseEntity<byte[]> exportSummarySheet(String date, String path);
+
+	// 根据日期导出多年光伏项目统计表
+	ResponseEntity<byte[]> exportSummarySheetList(Map<String, String> map, String path);
 
 	/************************************************ 王慧敏 ***************************************/
 	// 导出光伏自营项目催款计划表

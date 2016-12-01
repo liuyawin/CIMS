@@ -350,24 +350,27 @@ public class ReportFormController {
 	 */
 	@RequestMapping("/selectSummarySheetList.do")
 	public @ResponseBody String selectSummarySheetList(HttpServletRequest request) {
-		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("summaryLimit"));
+		Float totalMoney = (float) 0;
 		String date = "";
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("summaryLimit"));
+
 		if (jsonObject.containsKey("year")) {
 			date = jsonObject.getString("year");
 		} else {
 			date = "";
 		}
 		Integer page = Integer.parseInt(request.getParameter("page"));// 分页
-		// String date = "2016";
-		// Integer page = 1;// 分页
 		Pager pager = reportFormService.pagerTotalSummary(date, page);
 		List<SummarySheet> list = reportFormService.findSummaryByDate(date, pager);
+
 		for (int i = 0; i < list.size(); i++) {
-			System.out.println("查询结果：" + i + ":" + list.get(i).getProvince() + ";" + list.get(i).getCont_project() + ";"
-					+ list.get(i).getCont_client() + ";" + list.get(i).getCont_money());
+			totalMoney += Float.valueOf(list.get(i).getCont_money());
 		}
+
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+		jsonObject.put("totalMoney", String.format("%.2f", totalMoney));
+		jsonObject.put("totalRow", pager.getTotalRow());
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
@@ -379,12 +382,42 @@ public class ReportFormController {
 	 * @return
 	 */
 	@RequestMapping("/exportSummarySheet.do")
-	public ResponseEntity<byte[]> exportSummarySheetList(HttpServletRequest request) {
-		String date = request.getParameter("year");
-		// String date = "2016";
+	public ResponseEntity<byte[]> exportSummarySheet(HttpServletRequest request) {
+		String date = "";
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("year"))) {
+			date = request.getParameter("year");
+		}
 		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
 		ResponseEntity<byte[]> byteww = reportFormService.exportSummarySheet(date, path);
 		return byteww;
+	}
+
+	/**
+	 * // 根据日期导出多年光伏项目统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportSummarySheetList.do")
+	public ResponseEntity<byte[]> exportSummarySheetList(HttpServletRequest request) {
+
+		String startTime = "";
+		String endTime = "";
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("startYear"))) {
+			startTime = request.getParameter("startYear");// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endYear"))) {
+			endTime = request.getParameter("endYear");// 结束时间
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = reportFormService.exportSummarySheetList(map, path);
+		return byteArr;
 	}
 
 	/*
