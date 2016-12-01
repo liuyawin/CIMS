@@ -8,6 +8,8 @@ package com.mvc.entity;
  */
 
 public class PaymentPlanListForm {
+
+	private String order_num;// 序号
 	private String province;// 行政区域
 	private String cont_project;// 工程名称 && 项目名称
 	private String cont_client;// 业主名称 && 业主公司名称
@@ -46,8 +48,6 @@ public class PaymentPlanListForm {
 	public void setCont_client(String cont_client) {
 		this.cont_client = cont_client;
 	}
-
-	
 
 	public String getCont_money() {
 		return cont_money;
@@ -127,6 +127,14 @@ public class PaymentPlanListForm {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getOrder_num() {
+		return order_num;
+	}
+
+	public void setOrder_num(String order_num) {
+		this.order_num = order_num;
 	}
 
 }

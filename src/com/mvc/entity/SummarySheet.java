@@ -7,16 +7,16 @@ package com.mvc.entity;
  * @date 2016年11月28日
  */
 public class SummarySheet {
-	private String order_num;
-	private String sub_num;
-	private String province;
-	private String pro_stage;
-	private String cont_project;
-	private String install_capacity;
-	private String cont_client;
-	private String cont_money;
-	private String status;
-	private String remark;
+	private String order_num;// 序号
+	private String sub_num;// 分区域编号
+	private String province;// 所在省份
+	private String pro_stage;// 合同类别
+	private String cont_project;// 工程名称
+	private String install_capacity;// 规模
+	private String cont_client;// 业主名称
+	private String cont_money;// 合同金额
+	private String status;// 项目状态
+	private String remark;// 备注
 
 	public String getProvince() {
 		return province;

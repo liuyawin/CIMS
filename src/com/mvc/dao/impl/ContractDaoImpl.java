@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import com.base.enums.ConExecStatus;
 import com.mvc.dao.ContractDao;
 import com.mvc.entity.Contract;
-import com.mvc.entity.SummarySheet;
 import com.utils.Pager;
 
 /**
@@ -607,7 +606,7 @@ public class ContractDaoImpl implements ContractDao {
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from contract c where c.cont_ishistory=0 ");
 
-		if (date != null) {
+		if (!date.equals("")) {
 			sql.append(" and c.cont_stime like '%" + date + "%' ");
 		}
 		sql.append(" order by c.province desc");
@@ -616,7 +615,7 @@ public class ContractDaoImpl implements ContractDao {
 			sql.append(" limit " + offset + "," + end);
 		}
 
-		Query query = em.createNativeQuery(sql.toString());
+		Query query = em.createNativeQuery(sql.toString(), Contract.class);
 		List<Contract> list = query.getResultList();
 		em.close();
 		return list;
@@ -632,7 +631,6 @@ public class ContractDaoImpl implements ContractDao {
 		if (date != null) {
 			sql.append(" and c.cont_stime like '%" + date + "%' ");
 		}
-
 		Query query = em.createNativeQuery(sql.toString());
 		BigInteger totalRow = (BigInteger) query.getSingleResult();
 		em.close();

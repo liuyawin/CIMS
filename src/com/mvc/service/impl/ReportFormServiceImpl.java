@@ -96,9 +96,14 @@ public class ReportFormServiceImpl implements ReportFormService {
 				Iterator<Contract> it_other = listSource_other.iterator();
 				List<ProjectStatisticForm> listGoal_other = contToProStatis(it_other);
 
-				String[] titles = { year + "年光电院分布式光伏项目统计表", year + "年光电院光伏项目统计表（不含分布式）", year + "年光电院光热项目统计表" };
 				String[] header_dis = { "序号", "合同类型hidden", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）",
 						"合同状态", "签订日期hidden", "备注" };// 顺序必须和对应实体一致
+
+				Map<Integer, String> titleMap = new HashMap<Integer, String>();// 每个sheet中内容
+				titleMap.put(0, year + "年光电院分布式光伏项目统计表");
+				titleMap.put(1, year + "年光电院光伏项目统计表（不含分布式）");
+				titleMap.put(2, year + "年光电院光热项目统计表");
+				titleMap.put(3, year + "年光电院其它类型项目统计表");
 
 				Map<Integer, String[]> headerMap = new HashMap<Integer, String[]>();// 每个sheet的标题，暂时用统一标题
 				headerMap.put(0, header_dis);
@@ -110,9 +115,9 @@ public class ReportFormServiceImpl implements ReportFormService {
 				mapList.put(0, listGoal_dis);
 				mapList.put(1, listGoal_tra);
 				mapList.put(2, listGoal_pho);
-				mapList.put(2, listGoal_other);
+				mapList.put(3, listGoal_other);
 
-				ex.export2007MutiExcel(titles, headerMap, mapList, out, "yyyy-MM-dd");
+				ex.export2007MutiExcel(titleMap, headerMap, mapList, out, "yyyy-MM-dd", -1);// -1:表示没有合并单元格的列
 			} else {// 根据合同类型，只导出对应的单sheet的Excel
 				List<Contract> listSource = contractDao.findContByPara(map, null);
 				Iterator<Contract> it = listSource.iterator();
@@ -129,13 +134,16 @@ public class ReportFormServiceImpl implements ReportFormService {
 				case 2:
 					title += "年光电院光热项目统计表";
 					break;
+				case 3:
+					title += "年光电院其它类型项目统计表";
+					break;
 				default:
 					break;
 				}
 
 				String[] header = { "序号", "合同类型hidden", "项目名称", "项目设总", "所在地", "设计阶段", "装机容量（MW）", "合同额（万元）", "合同状态",
 						"签订日期hidden", "备注" };// 顺序必须和对应实体一致
-				ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
+				ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1);
 			}
 
 			out.close();
@@ -167,7 +175,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 
 			String title = "未返回合同情况一览表";
 			String[] header = { "序号", "项目名称", "业主单位", "合同额（万元）", "经手人", "负责人" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1);
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -643,9 +651,153 @@ public class ReportFormServiceImpl implements ReportFormService {
 		return newRemos;
 	}
 
-	/*
-	 * 王慧敏
-	 */
+	// 查询光伏项目统计列表
+	@Override
+	public List<SummarySheet> findSummaryByDate(String date, Pager pager) {
+		List<Contract> listSource = contractDao.findSummaryByDate(date, pager);
+		List<SummarySheet> listGoal = contToSummarySheet(listSource);
+		return listGoal;
+	}
+
+	private List<SummarySheet> contToSummarySheet(List<Contract> listSource) {
+		List<SummarySheet> listGoal = new ArrayList<SummarySheet>();
+		String s_will = "";
+		int count = 1;
+
+		for (int i = 0; i < listSource.size(); i++) {
+			Contract contract = listSource.get(i);
+			SummarySheet summarySheet = new SummarySheet();
+
+			// 处理分区域序号
+			if (i == 0) {
+				s_will = listSource.get(i).getProvince();// 获取第一行的数据,以便后面进行比较
+			} else {
+				String s_current = listSource.get(i).getProvince();
+				if (s_will.equals(s_current)) {
+					count++;
+				} else {
+					count = 1;
+				}
+				s_will = s_current;
+			}
+
+			summarySheet.setSub_num(String.valueOf(count));
+			summarySheet.setOrder_num(String.valueOf(i));
+			summarySheet.setProvince(contract.getProvince());
+			String proStageStr = contract.getPro_stage();// 设计阶段（数字类型字符串）
+			proStageStr = intStrToStr(proStageStr);
+			summarySheet.setPro_stage(proStageStr);
+			summarySheet.setCont_project(contract.getCont_project());
+			summarySheet.setCont_client(contract.getCont_client());
+			if (contract.getInstall_capacity() != null) {
+				summarySheet.setInstall_capacity(contract.getInstall_capacity().toString());
+			}
+			if (contract.getCont_money() == null) {
+				contract.setCont_money((float) 0);
+			}
+			summarySheet.setCont_money(contract.getCont_money().toString());
+			if (contract.getRemo_totalmoney() == 0 || contract.getCont_money() == 0
+					|| contract.getRemo_totalmoney() < contract.getCont_money()) {
+				summarySheet.setStatus("未结清");
+			} else {
+				summarySheet.setStatus("已结清");
+			}
+
+			listGoal.add(summarySheet);
+		}
+		return listGoal;
+	}
+
+	// 查询光伏项目统计表页码
+	@Override
+	public Pager pagerTotalSummary(String date, Integer page) {
+		int totalRow = Integer.parseInt(contractDao.totalSummary(date).toString());
+		Pager pager = new Pager();
+		pager.setPage(page);
+		pager.setTotalRow(totalRow);
+
+		return pager;
+	}
+
+	// 根据日期导出当年光伏项目统计表
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ResponseEntity<byte[]> exportSummarySheet(String date, String path) {
+		ResponseEntity<byte[]> byteArr = null;
+		String fileName = "";
+		String title = "";
+		if (date.equals("")) {
+			fileName = "光伏自营项目情况表.xlsx";
+			title = "光伏自营项目情况表";
+		} else {
+			fileName = date + "年光伏自营项目情况表.xlsx";
+			title = date + "年光伏自营项目情况表";
+		}
+		try {
+			ExcelHelper<SummarySheet> ex = new ExcelHelper<SummarySheet>();
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Contract> listSource = contractDao.findSummaryByDate(date, null);
+			List<SummarySheet> listGoal = contToSummarySheet(listSource);
+
+			String[] header = { "序号", "分区域序号", "行政区域", "合同类别", "工程名称", "规模", "业主名称", "合同额（万元）", "项目状态", "备注" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", 2);// 从0开始数，表格第二列相同数据合并单元格
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return byteArr;
+	}
+
+	// 根据日期导出多个年份光伏项目统计表
+	@SuppressWarnings("rawtypes")
+	public ResponseEntity<byte[]> exportSummarySheetList(Map<String, String> map, String path) {
+		ResponseEntity<byte[]> byteArr = null;
+		if (!map.get("startTime").equals("") && !map.get("endTime").equals("")) {
+			Integer startTime = Integer.valueOf(map.get("startTime"));
+			Integer endTime = Integer.valueOf(map.get("endTime"));
+			Integer sheetNum = endTime - startTime + 1;
+			try {
+				ExcelHelper<ProjectStatisticForm> ex = new ExcelHelper<ProjectStatisticForm>();
+
+				String fileName = startTime + "年至" + endTime + "年光电院项目分项统计表.xlsx";
+				path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+				OutputStream out = new FileOutputStream(path);
+
+				String title = " ";
+				String[] header_dis = { "序号", "分区域序号", "行政区域", "合同类别", "工程名称", "规模", "业主名称", "合同额（万元）", "项目状态", "备注" };// 顺序必须和对应实体一致
+
+				Map<Integer, String> titleMap = new HashMap<Integer, String>();// 每个sheet表名
+				Map<Integer, String[]> headerMap = new HashMap<Integer, String[]>();// 每个sheet标题
+				Map<Integer, List> mapList = new HashMap<Integer, List>();// 每个sheet内容
+				for (int i = 0; i < sheetNum; i++) {
+					title = String.valueOf(startTime + i) + "年光伏自营项目情况表 ";
+					List<Contract> listSource = contractDao.findSummaryByDate(String.valueOf(startTime + i), null);
+					List<SummarySheet> listGoal = contToSummarySheet(listSource);
+
+					headerMap.put(i, header_dis);
+					mapList.put(i, listGoal);
+					titleMap.put(i, title);
+				}
+				ex.export2007MutiExcel(titleMap, headerMap, mapList, out, "yyyy-MM-dd", 2);// 从0开始数，表格第二列相同数据合并单元格
+
+				out.close();
+				byteArr = FileHelper.downloadFile(fileName, path);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return byteArr;
+	}
+
+	/************************************************ 王慧敏 **********************************/
 	// 导出光伏自营项目催款计划表
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
@@ -684,16 +836,16 @@ public class ReportFormServiceImpl implements ReportFormService {
 			}
 			String[] header;
 			if (planTime == null) {
-				String[] headers = { "行政区域", "工程名称", "业主名称", "合同金额", "累计已到款", "余额", "已开发票金额", "未开发票金额", "计划可催收款",
+				String[] headers = { "序号", "行政区域", "工程名称", "业主名称", "合同金额", "累计已到款", "余额", "已开发票金额", "未开发票金额", "计划可催收款",
 						"实际到款", "合同条款", "催款结果", "备注" };
 				header = headers;
 			} else {
-				String[] headers = { "行政区域", "工程名称", "业主名称", "合同金额", "累计已到款", "余额", "已开发票金额", "未开发票金额",
+				String[] headers = { "序号", "行政区域", "工程名称", "业主名称", "合同金额", "累计已到款", "余额", "已开发票金额", "未开发票金额",
 						planTime + "计划可催收款", "实际到款", "合同条款", "催款结果", "备注" };
 				header = headers;
 			}
 
-			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd");
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", 1);// 从0开始数，表格第一列相同数据合并单元格
 			out.close();
 			byteww = FileHelper.downloadFile(fileName, path);
 		} catch (FileNotFoundException e) {
@@ -724,6 +876,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 				}
 			}
 			PaymentPlanListForm provisionPlanForm = new PaymentPlanListForm();
+			provisionPlanForm.setOrder_num(String.valueOf(i + 1));// 序号
 			provisionPlanForm.setProvince(objOne[0].toString());// 行政区域
 			provisionPlanForm.setCont_project(objOne[1].toString());// 工程名称
 			provisionPlanForm.setCont_client(objOne[2].toString());// 业主名称
@@ -750,7 +903,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 		}
 
 		PaymentPlanListForm provisionPlanForm = new PaymentPlanListForm();
-		provisionPlanForm.setCont_client("总计：");
+		provisionPlanForm.setProvince("总计：");
 		provisionPlanForm.setCont_money(sum_cont_money);
 		provisionPlanForm.setRemo_totalmoney(sum_remo_totalmoney);
 		provisionPlanForm.setBalance_money(sum_balance_money);
@@ -784,6 +937,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 				}
 			}
 			PaymentPlanListForm provisionPlanForm = new PaymentPlanListForm();
+			provisionPlanForm.setOrder_num(String.valueOf(i + 1));// 序号
 			provisionPlanForm.setProvince(objOne[0].toString());// 行政区域
 			provisionPlanForm.setCont_project(objOne[1].toString());// 工程名称
 			provisionPlanForm.setCont_client(objOne[2].toString());// 业主名称
@@ -815,48 +969,4 @@ public class ReportFormServiceImpl implements ReportFormService {
 		return pager;
 	}
 
-	// 查询光伏项目统计列表
-	@Override
-	public List<SummarySheet> findSummaryByDate(String date, Pager pager) {
-		List<Contract> listSource = contractDao.findSummaryByDate(date, pager);
-		Iterator<Contract> it = listSource.iterator();
-		List<SummarySheet> listGoal = new ArrayList<SummarySheet>();
-		int i = 0;
-		// int j=0;
-		while (it.hasNext()) {// 赋值顺序和表头无关
-			i++;
-			// j++;
-			Contract contract = it.next();
-			SummarySheet summarySheet = new SummarySheet();
-			summarySheet.setOrder_num(String.valueOf(i));
-			// summarySheet.setSub_num(String.valueOf(j));
-			summarySheet.setProvince(contract.getProvince());
-			summarySheet.setPro_stage(contract.getPro_stage());
-			summarySheet.setCont_project(contract.getCont_project());
-			summarySheet.setInstall_capacity(contract.getInstall_capacity().toString());
-			summarySheet.setCont_money(contract.getCont_money().toString());
-			if (contract.getRemo_totalmoney() == 0) {
-				summarySheet.setStatus("合同未执行");
-			} else if (contract.getCont_money() > contract.getRemo_totalmoney()) {
-				summarySheet.setStatus("未结清");
-			} else {
-				summarySheet.setStatus("执行完毕");
-			}
-
-			listGoal.add(summarySheet);
-		}
-
-		return listGoal;
-	}
-
-	// 查询光伏项目统计表页码
-	@Override
-	public Pager pagerTotalSummary(String date, Integer page) {
-		int totalRow = Integer.parseInt(contractDao.totalSummary(date).toString());
-		Pager pager = new Pager();
-		pager.setPage(page);
-		pager.setTotalRow(totalRow);
-
-		return pager;
-	}
 }

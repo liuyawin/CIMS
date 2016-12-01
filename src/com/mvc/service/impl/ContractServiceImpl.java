@@ -83,6 +83,13 @@ public class ContractServiceImpl implements ContractService {
 		contract.setCreator(user);// 合同创建者
 		contract.setCur_prst("未录入工期阶段");// 当前工期阶段
 		contract.setCur_reno("未录入收款节点");// 当前收款节点
+		contract.setCont_money((float) 0);
+		contract.setRece_total(0);
+		contract.setRece_totalmoney((float) 0);
+		contract.setRemo_count(0);
+		contract.setRemo_totalmoney((float) 0);
+		contract.setInvo_total(0);
+		contract.setInvo_totalmoney((float) 0);
 		contract = contractRepository.saveAndFlush(contract);
 
 		// 合同日志

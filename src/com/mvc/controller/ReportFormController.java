@@ -212,9 +212,11 @@ public class ReportFormController {
 		String dateTwo = request.getParameter("endYear");
 		session.setAttribute(SessionKeyConstants.BEGIN_YEAR, dateOne);
 		session.setAttribute(SessionKeyConstants.END_YEAR, dateTwo);
+
 		ComoCompareRemo comoCompareRemo = reportFormService.findByDate(dateOne, dateTwo);
 		List<NewComoAnalyse> newComoAnalyseList = reportFormService.findComoByDate(dateOne, dateTwo);
 		List<NewRemoAnalyse> newRemoAnalysesList = reportFormService.findRemoByDate(dateOne, dateTwo);
+
 		jsonObject.put("comoCompareRemo", comoCompareRemo);
 		jsonObject.put("newComoAnalyseList", newComoAnalyseList);
 		jsonObject.put("newRemoAnalysesList", newRemoAnalysesList);
@@ -327,6 +329,7 @@ public class ReportFormController {
 		contentMap.put("${date_one}", firstDate);
 		contentMap.put("${date_two}", secondDate);
 		contentMap.put("${date_three}", thirdDate.toString());
+
 		contentMap.put("${como_one}", comoCompareRemo.getComo_one().toString());
 		contentMap.put("${remo_one}", comoCompareRemo.getRemo_one().toString());
 		contentMap.put("${cont_num_one}", comoCompareRemo.getCont_num_one().toString());
@@ -347,16 +350,74 @@ public class ReportFormController {
 	 */
 	@RequestMapping("/selectSummarySheetList.do")
 	public @ResponseBody String selectSummarySheetList(HttpServletRequest request) {
-		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
-		String date = request.getParameter("date");
+		Float totalMoney = (float) 0;
+		String date = "";
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("summaryLimit"));
+
+		if (jsonObject.containsKey("year")) {
+			date = jsonObject.getString("year");
+		} else {
+			date = "";
+		}
 		Integer page = Integer.parseInt(request.getParameter("page"));// 分页
 		Pager pager = reportFormService.pagerTotalSummary(date, page);
 		List<SummarySheet> list = reportFormService.findSummaryByDate(date, pager);
 
+		for (int i = 0; i < list.size(); i++) {
+			totalMoney += Float.valueOf(list.get(i).getCont_money());
+		}
+
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+		jsonObject.put("totalMoney", String.format("%.2f", totalMoney));
+		jsonObject.put("totalRow", pager.getTotalRow());
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
+	}
+
+	/**
+	 * // 根据日期导出当年光伏项目统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportSummarySheet.do")
+	public ResponseEntity<byte[]> exportSummarySheet(HttpServletRequest request) {
+		String date = "";
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("year"))) {
+			date = request.getParameter("year");
+		}
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		ResponseEntity<byte[]> byteww = reportFormService.exportSummarySheet(date, path);
+		return byteww;
+	}
+
+	/**
+	 * // 根据日期导出多年光伏项目统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportSummarySheetList.do")
+	public ResponseEntity<byte[]> exportSummarySheetList(HttpServletRequest request) {
+
+		String startTime = "";
+		String endTime = "";
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("startYear"))) {
+			startTime = request.getParameter("startYear");// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endYear"))) {
+			endTime = request.getParameter("endYear");// 结束时间
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = reportFormService.exportSummarySheetList(map, path);
+		return byteArr;
 	}
 
 	/*
@@ -424,7 +485,6 @@ public class ReportFormController {
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))) {
 			startTime = request.getParameter("startDate");// 开始时间
-			System.out.println("startTime:" + startTime);
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
 			endTime = request.getParameter("endDate");// 结束时间

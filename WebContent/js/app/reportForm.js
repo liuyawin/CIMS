@@ -636,7 +636,10 @@ app
 								}).success(function(data) {
 									reportForm.summaryLists = data.list;
 									summaryPageTurn(data.totalPage, 1);
-									reportForm.totalMoney=data.totalMoney;
+									reportForm.totalMoney = data.totalMoney;
+									reportForm.totalRow = data.totalRow;
+									MergeCell("summarySheet", 0, 2);
+
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 									} else {
@@ -667,6 +670,30 @@ app
 									});
 								}
 							}
+							// 相同省份合并单元格
+							function MergeCell(tableId, startRow, col) {
+								var tb = document.getElementById(tableId);
+								if (col >= tb.rows[0].cells.length) {
+									return false;
+								}
+								// 检查所有行
+								var endRow = tb.rows.length - 1;
+								for (var i = startRow; i < endRow; i++) {
+									// 判断当前行与下一行是否可以合并
+									if (tb.rows[startRow].cells[col].innerHTML == tb.rows[i + 1].cells[col].innerHTML) {
+										// 如果相同则删除下一行的该单元格
+										tb.rows[i + 1]
+												.removeChild(tb.rows[i + 1].cells[col]);
+										// 更新rowSpan属性
+										tb.rows[startRow].cells[col].rowSpan = (tb.rows[startRow].cells[col].rowSpan | 0) + 1;
+										// 当循环到终止行前一行并且起始行和终止行不相同时递归(因为上面的代码已经检查了i+1行，所以此处只到endRow-1)
+									} else {
+										// 增加起始行
+										startRow = i + 1;
+									}
+								}
+							}
+
 							// 初始化
 							function initData() {
 								console.log("初始化页面信息");
