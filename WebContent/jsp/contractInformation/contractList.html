@@ -41,8 +41,8 @@
 			<tr ng-repeat="con in contracts">
 				<td>{{$index + 1}}</td>
 				<td><a class="underline" href="#contractInfo" ng-click="getConId(con.cont_id)">{{con.cont_name |cutString}}</a></td>
-				<td>{{con.cont_money}}</td>
-				<td>{{con.remo_totalmoney}}</td>
+				<td>{{con.cont_money |receFloat}}</td>
+				<td>{{con.remo_totalmoney |receFloat}}</td>
 				<td>{{con.remo_count}}</td>
 				<td>{{con.cur_prst | cutString}}</td>
 				<td>{{con.cur_reno | cutString}}</td>

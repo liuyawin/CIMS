@@ -288,7 +288,7 @@ public class ContractDaoImpl implements ContractDao {
 
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select * from contract c where c.cont_isback=" + ConExecStatus.post.value);
+		sql.append("select * from contract c where c.cont_ishistory=0 and c.cont_isback=" + ConExecStatus.post.value);
 
 		if (handler != null) {
 			sql.append(" and c.manager_id=" + handler);
@@ -377,7 +377,8 @@ public class ContractDaoImpl implements ContractDao {
 
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
+		sql.append("select count(*) from contract c where c.cont_ishistory=0 and c.cont_isback="
+				+ ConExecStatus.post.value);
 
 		if (handler != null) {
 			sql.append(" and c.manager_id=" + handler);

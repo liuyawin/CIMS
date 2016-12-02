@@ -667,7 +667,7 @@ invoiceApp
 // 小数过滤器
 invoiceApp.filter('invoFloat', function() {
 	return function(input) {
-		if (input == null) {
+		if (!input) {
 			var money = parseFloat('0').toFixed(2);
 		} else {
 			var money = parseFloat(input).toFixed(2);
