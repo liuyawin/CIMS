@@ -429,4 +429,10 @@ public class ContractServiceImpl implements ContractService {
 		return contractDao.updateContIsback(contId, state);
 	}
 
+	// 根据日期获取合同总金额
+	@Override
+	public Float getTotalMoney(String date) {
+		return contractDao.getTotalMoney(date);
+	}
+
 }

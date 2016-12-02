@@ -63,14 +63,16 @@ public interface ReportFormService {
 	// 查询光伏项目统计列表
 	List<SummarySheet> findSummaryByDate(String date, Pager pager);
 
-	// 查询光伏项目统计表页码
+	// 查询光伏项目明细表页码
 	Pager pagerTotalSummary(String date, Integer page);
 
-	// 根据日期导出当年光伏项目统计表
+	// 根据日期导出当年光伏项目明细表
 	ResponseEntity<byte[]> exportSummarySheet(String date, String path);
 
-	// 根据日期导出多年光伏项目统计表
+	// 根据日期导出多年光伏项目明细表
 	ResponseEntity<byte[]> exportSummarySheetList(Map<String, String> map, String path);
+	
+	
 
 	/************************************************ 王慧敏 ***************************************/
 	// 导出光伏自营项目催款计划表

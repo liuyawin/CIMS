@@ -651,7 +651,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 		return newRemos;
 	}
 
-	// 查询光伏项目统计列表
+	// 查询光伏项目明细表
 	@Override
 	public List<SummarySheet> findSummaryByDate(String date, Pager pager) {
 		List<Contract> listSource = contractDao.findSummaryByDate(date, pager);
@@ -682,7 +682,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 			}
 
 			summarySheet.setSub_num(String.valueOf(count));
-			summarySheet.setOrder_num(String.valueOf(i));
+			summarySheet.setOrder_num(String.valueOf(i + 1));
 			summarySheet.setProvince(contract.getProvince());
 			String proStageStr = contract.getPro_stage();// 设计阶段（数字类型字符串）
 			proStageStr = intStrToStr(proStageStr);
@@ -708,7 +708,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 		return listGoal;
 	}
 
-	// 查询光伏项目统计表页码
+	// 查询光伏项目明细表页码
 	@Override
 	public Pager pagerTotalSummary(String date, Integer page) {
 		int totalRow = Integer.parseInt(contractDao.totalSummary(date).toString());
@@ -719,7 +719,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 		return pager;
 	}
 
-	// 根据日期导出当年光伏项目统计表
+	// 根据日期导出当年光伏项目明细表
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public ResponseEntity<byte[]> exportSummarySheet(String date, String path) {
@@ -754,7 +754,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 		return byteArr;
 	}
 
-	// 根据日期导出多个年份光伏项目统计表
+	// 根据日期导出多个年份光伏项目明细表
 	@SuppressWarnings("rawtypes")
 	public ResponseEntity<byte[]> exportSummarySheetList(Map<String, String> map, String path) {
 		ResponseEntity<byte[]> byteArr = null;

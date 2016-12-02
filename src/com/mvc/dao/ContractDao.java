@@ -48,6 +48,9 @@ public interface ContractDao {
 	// 查询分项统计表总条数
 	Long countTotal(Map<String, Object> map);
 
+	// 查询未返回合同统计表总条数
+	Long countTotalNoBack(Map<String, Object> map);
+
 	/**************** 张姣娜 ********************/
 	// 根据日期获取合同额到款对比表
 	List<Object> findByOneDate(String date);
@@ -58,14 +61,14 @@ public interface ContractDao {
 	// 根据日期获取到款分析表
 	List<Object> findRemoByDate(String oneTime, String twoTime);
 
-	// 查询光伏项目统计列表
+	// 查询光伏项目明细表
 	List<Contract> findSummaryByDate(String date, Pager pager);
 
-	// 查询光伏项目统计表页码
+	// 查询光伏项目明细表页码
 	Long totalSummary(String date);
 
-	// 查询未返回合同统计表总条数
-	Long countTotalNoBack(Map<String, Object> map);
+	// 根据日期获取合同总金额
+	Float getTotalMoney(String date);
 
 	/***** 王慧敏 *****/
 	List<Object> findContByParw(Map<String, Object> map, Pager pager);
