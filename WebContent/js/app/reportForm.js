@@ -705,6 +705,8 @@ app
 								} else if ($location.path().indexOf(
 										'/summarySheet') == 0) {
 									reportForm.listIsShow = false;
+									reportForm.totalMoney = 0;
+									reportForm.totalRow = 0;
 								}
 							}
 							initData();
@@ -780,11 +782,12 @@ app
 app.filter('cutString', function() {
 	return function(input) {
 		var content = "";
-		if (input != "") {
+		if (input) {
 			var shortInput = input.substr(0, 10);
 			content = shortInput + "……";
+		}else{
+			content="";
 		}
-
 		return content;
 	}
 });
@@ -794,6 +797,8 @@ app.filter('numberFloat', function() {
 	return function(input) {
 		if (input) {
 			money = parseFloat(input).toFixed(2);
+		} else {
+			money = parseFloat(0).toFixed(2);
 		}
 		return money;
 	}
@@ -805,8 +810,9 @@ app.filter('dateType', function() {
 		var type = "";
 		if (input) {
 			type = new Date(input).toLocaleDateString().replace(/\//g, '-');
+		}else{
+			type="";
 		}
-
 		return type;
 	}
 });

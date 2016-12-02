@@ -362,7 +362,7 @@ app
 								};
 
 							};
-							contract.addNewInvoiceTask= function() {
+							contract.addNewInvoiceTask = function() {
 								var taskFormData = JSON
 										.stringify(contract.invoice);
 								services.addInvoiceTask({
@@ -653,7 +653,7 @@ app
 // 小数过滤器
 app.filter('receFloat', function() {
 	return function(input) {
-		if (input == null) {
+		if (!input) {
 			var money = parseFloat('0').toFixed(2);
 		} else {
 			var money = parseFloat(input).toFixed(2);
@@ -750,7 +750,7 @@ app.filter('conType', function() {
 	}
 });
 
-//合同项目阶段的判断
+// 合同项目阶段的判断
 app.filter('conProStage', function() {
 	return function(input) {
 		var type = "";
@@ -798,7 +798,6 @@ app.filter('conProStage', function() {
 	}
 });
 
-
 // 合同项目阶段的判断
 app.filter('conCompanyType', function() {
 	return function(input) {
@@ -829,7 +828,8 @@ app.filter('prstType', function() {
 			type = "未完成";
 		else if (input == "1")
 			type = "已完成";
-
+		else if (!input)
+			type = "";
 		return type;
 	}
 });
@@ -845,6 +845,8 @@ app.filter('renoType', function() {
 			type = "已付全款";
 		else if (input == "3")
 			type = "提前到款";
+		else if (!input)
+			type = "";
 		return type;
 	}
 });
@@ -852,8 +854,10 @@ app.filter('renoType', function() {
 app.filter('dateType', function() {
 	return function(input) {
 		var type = "";
-		if (input != null) {
+		if (input) {
 			type = new Date(input).toLocaleDateString().replace(/\//g, '-');
+		} else {
+			type = "";
 		}
 
 		return type;
@@ -863,11 +867,12 @@ app.filter('dateType', function() {
 app.filter('cutString', function() {
 	return function(input) {
 		var content = "";
-		if (input != "") {
+		if (input) {
 			var shortInput = input.substr(0, 8);
 			content = shortInput + "……";
+		} else {
+			content = "";
 		}
-
 		return content;
 	}
 });
@@ -879,6 +884,8 @@ app.filter('conRank', function() {
 			rank = "重要";
 		else if (input == "1")
 			rank = "一般";
+		else if (!input)
+			rank = "";
 		return rank;
 	}
 });

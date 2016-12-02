@@ -1777,7 +1777,6 @@ app.filter('receFloat', function() {
 		} else {
 			var money = parseFloat(input).toFixed(2);
 		}
-
 		return money;
 	}
 });
