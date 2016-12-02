@@ -80,7 +80,7 @@
 			</ul>
 		</dd>
 		<!-- 报表统计 -->
-		<dd id="reportForm" class="reportForm"  style="display: none">
+		<dd id="reportForm" class="reportForm" style="display: none">
 			<div class="title">
 				<span><img src="${ctx}/images/leftico02.png" /></span>报表统计
 			</div>
@@ -88,13 +88,13 @@
 				<li id="remoAnalyzeList"><cite></cite> <a
 					href="${ctx}/reportForm/toReportFormPage.do#/remoAnalyzeList">合同额到款分析表</a><i></i></li>
 				<li id="paymentPlanList"><cite></cite> <a
-					href="${ctx}/reportForm/toReportFormPage.do#/paymentPlanList">收款计划表</a><i></i></li>
+					href="${ctx}/reportForm/toReportFormPage.do#/paymentPlanList">收款计划明细表</a><i></i></li>
 				<li id="projectList"><cite></cite> <a
-					href="${ctx}/reportForm/toReportFormPage.do#/projectList">项目统计表</a><i></i></li>
+					href="${ctx}/reportForm/toReportFormPage.do#/projectList">分类明细表</a><i></i></li>
 				<li id="unGetContList"><cite></cite> <a
-					href="${ctx}/reportForm/toReportFormPage.do#/unGetContList">未返合同表</a><i></i></li>
-					<li id="summarySheet"><cite></cite> <a
-					href="${ctx}/reportForm/toReportFormPage.do#/summarySheet">summarySheet</a><i></i></li>
+					href="${ctx}/reportForm/toReportFormPage.do#/unGetContList">未返合同明细表</a><i></i></li>
+				<li id="summarySheet"><cite></cite> <a
+					href="${ctx}/reportForm/toReportFormPage.do#/summarySheet">项目明细表</a><i></i></li>
 			</ul>
 		</dd>
 	</dl>

@@ -26,6 +26,7 @@ import com.mvc.entity.NewComoAnalyse;
 import com.mvc.entity.NewRemoAnalyse;
 import com.mvc.entity.NoBackContForm;
 import com.mvc.entity.PaymentPlanListForm;
+import com.mvc.service.ContractService;
 import com.mvc.service.ReportFormService;
 import com.utils.FileHelper;
 import com.utils.Pager;
@@ -46,6 +47,8 @@ public class ReportFormController {
 
 	@Autowired
 	ReportFormService reportFormService;
+	@Autowired
+	ContractService contractService;
 
 	/**
 	 * 返回收据界面
@@ -343,7 +346,7 @@ public class ReportFormController {
 	}
 
 	/**
-	 * 查询光伏项目统计表
+	 * 查询光伏项目明细表
 	 * 
 	 * @param request
 	 * @return
@@ -362,10 +365,7 @@ public class ReportFormController {
 		Integer page = Integer.parseInt(request.getParameter("page"));// 分页
 		Pager pager = reportFormService.pagerTotalSummary(date, page);
 		List<SummarySheet> list = reportFormService.findSummaryByDate(date, pager);
-
-		for (int i = 0; i < list.size(); i++) {
-			totalMoney += Float.valueOf(list.get(i).getCont_money());
-		}
+		totalMoney = contractService.getTotalMoney(date);
 
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
@@ -376,7 +376,7 @@ public class ReportFormController {
 	}
 
 	/**
-	 * // 根据日期导出当年光伏项目统计表
+	 * // 根据日期导出当年光伏项目明细表
 	 * 
 	 * @param request
 	 * @return
@@ -388,13 +388,13 @@ public class ReportFormController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("year"))) {
 			date = request.getParameter("year");
 		}
-		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		ResponseEntity<byte[]> byteww = reportFormService.exportSummarySheet(date, path);
 		return byteww;
 	}
 
 	/**
-	 * // 根据日期导出多年光伏项目统计表
+	 * 根据日期导出多年光伏项目明细表
 	 * 
 	 * @param request
 	 * @return
@@ -432,7 +432,7 @@ public class ReportFormController {
 		Integer page = Integer.parseInt(request.getParameter("page"));// 分页
 		Map<String, Object> map = reportFormService.JsonObjToMap(jsonObject);
 		Pager pager = reportFormService.pagerTotal_payment(map, page);
-		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		List<PaymentPlanListForm> list = reportFormService.findPaymentPlanList(map, pager, path);
 
 		jsonObject = new JSONObject();
@@ -506,7 +506,7 @@ public class ReportFormController {
 		map.put("endTime", endTime);
 		map.put("planTime", planTime);
 
-		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/reportForm");// 上传服务器的路径
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		ResponseEntity<byte[]> byteww = reportFormService.exportProvisionPlan(map, path);
 		return byteww;
 	}

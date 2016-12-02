@@ -280,9 +280,8 @@ public class ExcelHelper<T> {
 		Cell titleCell = titleRow.createCell(0);
 		titleCell.setCellStyle(titleStyle);
 		titleCell.setCellValue(title);
-		sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, headerSource.length));// 起始行
+		sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, headerSource.length-1));// 起始行
 																					// ，结束行，起始列，结束列
-
 		// 产生表格标题行
 		XSSFRow row = sheet.createRow(3);// 从第三行开始生成表格
 		row.setHeight((short) 500);// 行高设置成25px

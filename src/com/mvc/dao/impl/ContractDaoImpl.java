@@ -592,7 +592,7 @@ public class ContractDaoImpl implements ContractDao {
 		return true;
 	}
 
-	// 查询光伏项目统计列表
+	// 查询光伏项目明细表
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Contract> findSummaryByDate(String date, Pager pager) {
@@ -621,19 +621,35 @@ public class ContractDaoImpl implements ContractDao {
 		return list;
 	}
 
-	// 查询光伏项目统计表页码
+	// 查询光伏项目明细表页码
 	@Override
 	public Long totalSummary(String date) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(*) from contract c where c.cont_ishistory=0 ");
 
-		if (date != null) {
+		if (!date.equals("")) {
 			sql.append(" and c.cont_stime like '%" + date + "%' ");
 		}
 		Query query = em.createNativeQuery(sql.toString());
 		BigInteger totalRow = (BigInteger) query.getSingleResult();
 		em.close();
 		return totalRow.longValue();
+	}
+
+	// 根据日期获取合同总金额
+	@Override
+	public Float getTotalMoney(String date) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select coalesce(sum(cont_money),0) from contract c where c.cont_ishistory=0 ");
+
+		if (!date.equals("")) {
+			sql.append(" and c.cont_stime like '%" + date + "%' ");
+		}
+		Query query = em.createNativeQuery(sql.toString());
+		Double totalRow = (Double) query.getSingleResult();
+		em.close();
+		return totalRow.floatValue();
 	}
 }

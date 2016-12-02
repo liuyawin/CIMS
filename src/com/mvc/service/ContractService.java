@@ -58,4 +58,7 @@ public interface ContractService {
 	// 张姣娜：完成文书任务后更新合同状态
 	Boolean updateContIsback(Integer contId, Integer state);
 
+	// 根据日期获取合同总金额
+	Float getTotalMoney(String date);
+
 }
